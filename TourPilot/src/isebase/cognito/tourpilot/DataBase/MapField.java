@@ -10,6 +10,5 @@ import java.lang.annotation.Target;
 
 public @interface MapField {
 	String DatabaseField();
-	int Number(); //0,1,2,3,4
 }
 

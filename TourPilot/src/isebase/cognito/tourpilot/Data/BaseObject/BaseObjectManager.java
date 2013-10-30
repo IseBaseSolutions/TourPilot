@@ -93,25 +93,6 @@ public abstract class BaseObjectManager {
             if (annos != null) {
                 try {
                 	int index = cursor.getColumnIndex(annos.DatabaseField());
-                	switch(annos.Number())
-                	{
-	                	case 0: method.invoke(baseObject, cursor.getInt(index));
-	                	break;
-	                	case 1: method.invoke(baseObject, cursor.getDouble(index));
-	                	break;
-	                	case 2: method.invoke(baseObject, cursor.getFloat(index));
-	                	break;
-	                	case 3: method.invoke(baseObject, cursor.getLong(index));
-	                	break;
-	                	case 4: method.invoke(baseObject,cursor.getShort(index));
-	                	break;
-	                	case 5: method.invoke(baseObject,cursor.getString(index));
-	                	break;
-	                	case 6: method.invoke(baseObject,cursor.getBlob(index));
-	                	break;
-	                	case 7: method.invoke(baseObject,cursor.getBlob(index));
-	                	break;
-                	}
 
                 } catch (Exception e) {
                     e.printStackTrace();
