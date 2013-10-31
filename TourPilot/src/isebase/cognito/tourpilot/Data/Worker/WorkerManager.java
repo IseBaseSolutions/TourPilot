@@ -1,89 +1,87 @@
 package isebase.cognito.tourpilot.Data.Worker;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import android.content.ContentValues;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 
-public class WorkerManager {
+public class WorkerManager extends BaseObjectManager<Worker> {
 	
-	// Database fields
-	private DataBaseWrapper dbHelper;
-	private String[] WORKER_TABLE_COLUMNS = { DataBaseWrapper.ID, DataBaseWrapper.NAME };
-	private SQLiteDatabase database;
-
 	public WorkerManager(Context context) {
-		dbHelper = new DataBaseWrapper(context);
+		super(context, Worker.class);
 	}
 
-	public void open() throws SQLException {
-		database = dbHelper.getWritableDatabase();
+	@Override
+	public String getRecTableName() {
+		return dbHelper.WORKERS;
 	}
 
-	public void close() {
-		dbHelper.close();
-	}
-
-	public Worker addWorker(String name) {
-
-		ContentValues values = new ContentValues();
-
-		values.put(DataBaseWrapper.NAME, name);
-
-		long workerId = database.insert(DataBaseWrapper.WORKERS, null, values);
-
-		// now that the student is created return it ...
-		Cursor cursor = database.query(DataBaseWrapper.WORKERS,
-				WORKER_TABLE_COLUMNS, DataBaseWrapper.ID + " = "
-						+ workerId, null, null, null, null);
-
-		cursor.moveToFirst();
-
-		Worker newComment = parseWorker(cursor);
-		cursor.close();
-		return newComment;
-	}
-
-	public void deleteWorker(Worker worker) {
-		long id = worker.getId();
-		System.out.println("Comment deleted with id: " + id);
-		database.delete(DataBaseWrapper.WORKERS, DataBaseWrapper.ID
-				+ " = " + id, null);
-	}
-
-	public List<Worker> loadAll() {
-		List<Worker> workers = new ArrayList<Worker>();
-
-		Cursor cursor = database.query(DataBaseWrapper.WORKERS,
-				WORKER_TABLE_COLUMNS, null, null, null, null, null);
-
-		cursor.moveToFirst();
-		while (!cursor.isAfterLast()) {
-			Worker worker = parseWorker(cursor);
-			workers.add(worker);
-			cursor.moveToNext();
-		}
-
-		cursor.close();
-		return workers;
-	}
-
-	private Worker parseWorker(Cursor cursor) {
-		Worker worker = new Worker();
-//		int i = 0;
-//		while (cursor.)
+//	private DataBaseWrapper dbHelper;
+//	private String[] WORKER_TABLE_COLUMNS = { DataBaseWrapper.ID, DataBaseWrapper.NAME };
+//	private SQLiteDatabase database;
+//
+//	public void open() throws SQLException {
+//		database = dbHelper.getWritableDatabase();
+//	}
+//
+//	public void close() {
+//		dbHelper.close();
+//	}
+//
+//	public Worker add(String name) {
+//
+//		ContentValues values = new ContentValues();
+//
+//		values.put(DataBaseWrapper.NAME, name);
+//
+//		long workerId = database.insert(DataBaseWrapper.WORKERS, null, values);
+//
+//		Cursor cursor = database.query(DataBaseWrapper.WORKERS,
+//				WORKER_TABLE_COLUMNS, DataBaseWrapper.ID + " = "
+//						+ workerId, null, null, null, null);
+//
+//		cursor.moveToFirst();
+//
+//		Worker newComment = parseWorker(cursor);
+//		cursor.close();
+//		return newComment;
+//	}
+//
+//	public void deleteWorker(Worker worker) {
+//		long id = worker.getId();
+//		System.out.println("Comment deleted with id: " + id);
+//		database.delete(DataBaseWrapper.WORKERS, DataBaseWrapper.ID
+//				+ " = " + id, null);
+//	}
+//
+//	private Worker parseWorker(Cursor cursor) {
+//		Worker worker = new Worker();
+//		for (int i = 0; i < cursor.getColumnCount(); i++)
 //		{
-//			String columnName = cursor.getColumnName(i);
-//			i++;
+//			String a = cursor.getColumnName(i);
+//			Method[] methods = getRecType().getMethods();
+//	        for (Method method : methods) {
+//	        	MapField annos = method.getAnnotation(MapField.class);
+//	            if (annos != null) {
+//	                try 
+//	                {
+//	                	if (annos.DatabaseField().equals(a) && method.getReturnType() == Integer.TYPE)
+//	                		method.invoke(getRecType(), cursor.getInt(i));
+//	                	if (annos.DatabaseField().equals(a) && method.getReturnType() == Integer.TYPE)
+//	                		method.invoke(getRecType(), cursor.getInt(i));
+//	                } catch (Exception e) {
+//	                    e.printStackTrace();
+//	                }
+//	            }
+//	        }
 //		}
-		worker.setId((cursor.getInt(0)));
-		worker.setName(cursor.getString(1));
-		return worker;
-	}
+//		worker.setId((cursor.getInt(0)));
+//		worker.setName(cursor.getString(1));
+//		return worker;
+//	}
+//
+//	@Override
+//	public String getRecTableName() {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 }

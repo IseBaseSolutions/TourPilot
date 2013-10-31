@@ -4,7 +4,6 @@ import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.DataBase.MapField;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,68 +13,68 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-public abstract class BaseObjectManager {
+public abstract class BaseObjectManager <T> {
 
-	// Database fields
-	private DataBaseWrapper dbHelper;
-	private String[] TABLE_COLUMNS;// = { DataBaseWrapper.ID, DataBaseWrapper.NAME };
-	private SQLiteDatabase database;
+	private Class<T> entityClass;
+	protected DataBaseWrapper dbHelper;
+	protected String[] TABLE_COLUMNS;
+	protected SQLiteDatabase database;
 
-	public BaseObjectManager(Context context) {
+	public BaseObjectManager(Context context, Class<T> entityClass) {
+		this.entityClass = entityClass;
 		dbHelper = new DataBaseWrapper(context);
 	}
-	
-	public Type GetRecType()
-	{
-		return BaseObject.class.getClass();
+
+	public Class<T> getRecType()
+	{		
+		return entityClass;
 	}
 
-	public abstract String GetRecTableName();
+	public abstract String getRecTableName();
 
 	public void open() throws SQLException {
 		database = dbHelper.getWritableDatabase();
+		getTableColumns();
 	}
 
 	public void close() {
 		dbHelper.close();
 	}
 
-	public BaseObject addWorker(String name) {
+	public Class<T> add(String name) throws InstantiationException, IllegalAccessException {
 
 		ContentValues values = new ContentValues();
 
 		values.put(DataBaseWrapper.NAME, name);
 
-		long objectID = database.insert(GetRecTableName(), null, values);
+		long objectID = database.insert(getRecTableName(), null, values);
 
-		// now that the student is created return it ...
-		Cursor cursor = database.query(GetRecTableName(),
-				getTableColumns(), DataBaseWrapper.ID + " = "
+		Cursor cursor = database.query(getRecTableName(),
+				TABLE_COLUMNS, DataBaseWrapper.ID + " = "
 						+ objectID, null, null, null, null);
 
 		cursor.moveToFirst();
 
-		BaseObject newComment = parseObject(cursor);
+		Class<T> newComment = parseObject(cursor);
 		cursor.close();
 		return newComment;
 	}
 
-	public void deleteWorker(BaseObject object) {
+	public void delete(BaseObject object) {
 		long id = object.getId();
 		System.out.println("Comment deleted with id: " + id);
-		database.delete(GetRecTableName(), DataBaseWrapper.ID
+		database.delete(getRecTableName(), DataBaseWrapper.ID
 				+ " = " + id, null);
 	}
 
-	public List<BaseObject> loadAll() {
-		List<BaseObject> objects = new ArrayList<BaseObject>();
-
-		Cursor cursor = database.query(GetRecTableName(),
-				getTableColumns(), null, null, null, null, null);
+	public List<Class<T>> load() throws InstantiationException, IllegalAccessException {
+		List<Class<T>> objects = new ArrayList<Class<T>>();
+		Cursor cursor = database.query(getRecTableName(),
+				TABLE_COLUMNS, null, null, null, null, null);
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			BaseObject object = parseObject(cursor);
+			Class<T> object = parseObject(cursor);			
 			objects.add(object);
 			cursor.moveToNext();
 		}
@@ -84,44 +83,41 @@ public abstract class BaseObjectManager {
 		return objects;
 	}
 
-	private BaseObject parseObject(Cursor cursor) {
-		BaseObject baseObject = new BaseObject();
-		Method[] methods = baseObject.getClass().getMethods();
-		int i = 0;
-        for (Method method : methods) {
-        	MapField annos = method.getAnnotation(MapField.class);
-            if (annos != null) {
-                try {
-                	int index = cursor.getColumnIndex(annos.DatabaseField());
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }        
-		baseObject.setId((cursor.getInt(0)));
-		baseObject.setName(cursor.getString(1));
-		return baseObject;
+	private Class<T> parseObject(Cursor cursor) throws InstantiationException, IllegalAccessException {		
+		Class<T> object = getRecType();
+		Method[] methods = object.getClass().getMethods();
+		for (int i = 0; i < cursor.getColumnCount(); i++)
+		{
+			String a = cursor.getColumnName(i);
+	        for (Method method : methods) {
+	        	MapField annos = method.getAnnotation(MapField.class);
+	            if (annos != null) {
+	                try 
+	                {
+	                	if (annos.DatabaseField().equals(a) && method.getReturnType() == Integer.class.getClass())
+	                		method.invoke(getRecType(), cursor.getInt(i));
+	                	if (annos.DatabaseField().equals(a) && method.getReturnType() == String.class.getClass())
+	                		method.invoke(getRecType(), cursor.getString(i));
+	                } catch (Exception e) {
+	                    e.printStackTrace();
+	                }
+	            }
+	        }
+		}
+		return object;
 	}
 	
-	private String[] getTableColumns()
+	private void getTableColumns()
 	{
-		if (TABLE_COLUMNS != null)
-			return TABLE_COLUMNS;
-		BaseObject baseObject = new BaseObject();
-		Method[] methods = baseObject.getClass().getMethods();
-		int i = 0;
+		ArrayList<String> list = new ArrayList<String>();
+		Method[] methods = getRecType().getMethods();
         for (Method method : methods) {
         	MapField annos = method.getAnnotation(MapField.class);
             if (annos != null) {
-                try {
-                	TABLE_COLUMNS[i++] = annos.DatabaseField();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            	list.add(annos.DatabaseField());
             }
         }
-		return TABLE_COLUMNS;		
+        TABLE_COLUMNS = list.toArray(new String[list.size()]);
 	}
 	
 }

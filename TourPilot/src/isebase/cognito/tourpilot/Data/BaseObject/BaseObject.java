@@ -2,7 +2,7 @@ package isebase.cognito.tourpilot.Data.BaseObject;
 
 import isebase.cognito.tourpilot.DataBase.MapField;
 
-public class BaseObject {
+public abstract class BaseObject {
 
 	private int emptyID = -1;
 	private String stringEmpty = "";
@@ -13,7 +13,7 @@ public class BaseObject {
 		return id;
 	}
 	
-	@MapField(DatabaseField = "_id", Number = 0)
+	@MapField(DatabaseField = "_id")
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -24,7 +24,7 @@ public class BaseObject {
 		return name;
 	}
 
-	@MapField(DatabaseField = "name", Number = 1)
+	@MapField(DatabaseField = "name")
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -34,22 +34,22 @@ public class BaseObject {
 		return name;
 	}
 	
-	private long checkSum;
+	/*private long checkSum;
 	
 	public long getCheckSum() {
 		return checkSum;
 	}
 	
-	@MapField(DatabaseField = "checkSum", Number = 2)
+	@MapField(DatabaseField = "checkSum")
 	public void setCheckSum(long checkSum) {
 		this.checkSum = checkSum;  
-	}
+	}*/
 	
 	public void Clear()
 	{
 		id = emptyID;
 		name = stringEmpty;
-		checkSum = 0;
+		//checkSum = 0;
 	}
 	
 }

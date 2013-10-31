@@ -4,6 +4,7 @@ import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -28,36 +29,46 @@ public class WorkersActivity extends Activity {
 	String workerName = new String();
 	Dialog pinDialog;
 	TextView tvWorkerName;
-	EditText evPin;
+	EditText evPin;	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_workers);
-		initActivityComponents();
-		workerManager.open();
-		List<Worker> workers = workerManager.loadAll();
-		InitTable(workers.size());
-		final ListView listView = (ListView) findViewById(R.id.lvWorkers);
-		ArrayAdapter<Worker> adapter = new ArrayAdapter<Worker>(this,
-				android.R.layout.simple_list_item_1, workers);
-		listView.setAdapter(adapter);
-		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		setContentView(R.layout.activity_workers);	
+		try {
+			initActivityComponents();
+			workerManager.open();
+			List<Class<Worker>> workers = new ArrayList<Class<Worker>>();
 
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1,
-					int position, long arg3) {
-				workerName = ((Worker) listView.getItemAtPosition(position))
-						.getName();
-				showDialog(0);
-				if (pinDialog != null) {
-					initDialogComponents();
-					tvWorkerName.setText(workerName);
-					evPin.setText("");
+			workers = workerManager.load();
+
+			InitTable(workers.size());
+
+			final ListView listView = (ListView) findViewById(R.id.lvWorkers);
+			ArrayAdapter<Class<Worker>> adapter = new ArrayAdapter<Class<Worker>>(this,
+					android.R.layout.simple_list_item_1, workers);
+			listView.setAdapter(adapter);
+			listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1,
+						int position, long arg3) {
+					workerName = ((Worker) listView.getItemAtPosition(position))
+							.getName();
+					showDialog(0);
+					if (pinDialog != null) {
+						initDialogComponents();
+						tvWorkerName.setText(workerName);
+						evPin.setText("");
+					}
 				}
-			}
 
-		});
+			});
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	@Override
@@ -70,16 +81,16 @@ public class WorkersActivity extends Activity {
 		workerManager = new WorkerManager(this);
 	}
 
-	private void InitTable(int tableSize) {
+	private void InitTable(int tableSize) throws InstantiationException, IllegalAccessException {
 		if(tableSize > 0)
 			return;
-		workerManager.addWorker("Goncharenko, Andrew");
-		workerManager.addWorker("Begov, Bogdan");
-		workerManager.addWorker("Kiryanov, Igor");
-		workerManager.addWorker("Goenko, Nikolai");
-		workerManager.addWorker("Parker, Peter");
-		workerManager.addWorker("Wayne, Bruce");
-		workerManager.addWorker("Kent, Clark");
+		workerManager.add("Goncharenko, Andrew");
+		workerManager.add("Begov, Bogdan");
+		workerManager.add("Kiryanov, Igor");
+		workerManager.add("Goenko, Nikolai");
+		workerManager.add("Parker, Peter");
+		workerManager.add("Wayne, Bruce");
+		workerManager.add("Kent, Clark");
 	}
 
 	private void initDialogComponents() {
@@ -96,27 +107,6 @@ public class WorkersActivity extends Activity {
 		default:
 			return null;
 		}
-	}
-
-	public void addUser(View view) {
-
-		// EditText text = (EditText) findViewById(R.id.editText1);
-		// Worker worker = workerOperation.addWorker(text.getText().toString());
-		//
-		// adapter.add(worker);
-
-	}
-
-	public void deleteFirstUser(View view) {
-
-		// Worker worker = null;
-		//
-		// if (getListAdapter().getCount() > 0) {
-		// worker = (Worker) getListAdapter().getItem(0);
-		// workerOperation.deleteWorker(worker);
-		// adapter.remove(worker);
-		// }
-
 	}
 
 	private Dialog getPinDialog() {
