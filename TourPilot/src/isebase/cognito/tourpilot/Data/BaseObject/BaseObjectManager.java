@@ -2,13 +2,14 @@ package isebase.cognito.tourpilot.Data.BaseObject;
 
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.DataBase.MapField;
+import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
 import java.lang.reflect.Method;
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -20,9 +21,9 @@ public abstract class BaseObjectManager <T> {
 	protected String[] TABLE_COLUMNS;
 	protected SQLiteDatabase database;
 
-	public BaseObjectManager(Context context, Class<T> entityClass) {
+	public BaseObjectManager(Class<T> entityClass) {
 		this.entityClass = entityClass;
-		dbHelper = new DataBaseWrapper(context);
+		dbHelper = new DataBaseWrapper(StaticResources.getBaseContext());
 	}
 
 	public Class<T> getRecType()
@@ -41,7 +42,7 @@ public abstract class BaseObjectManager <T> {
 		dbHelper.close();
 	}
 
-	public Class<T> add(String name) throws InstantiationException, IllegalAccessException {
+	public T add(String name) {
 
 		ContentValues values = new ContentValues();
 
@@ -54,50 +55,74 @@ public abstract class BaseObjectManager <T> {
 						+ objectID, null, null, null, null);
 
 		cursor.moveToFirst();
-
-		Class<T> newComment = parseObject(cursor);
-		cursor.close();
+		T newComment = null;
+		try {
+			newComment = parseObject(cursor);
+			cursor.close();
+		}
+		catch (Exception e)	{
+			e.printStackTrace();
+		}
 		return newComment;
 	}
 
-	public void delete(BaseObject object) {
-		long id = object.getId();
-		System.out.println("Comment deleted with id: " + id);
-		database.delete(getRecTableName(), DataBaseWrapper.ID
-				+ " = " + id, null);
+	public void delete(Class<T> object) {
+		try {
+			long id = (Long) object.getMethod("getID").invoke(object);
+			System.out.println("Comment deleted with id: " + id);
+			database.delete(getRecTableName(), DataBaseWrapper.ID + " = " + id, null);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
-	public List<Class<T>> load() throws InstantiationException, IllegalAccessException {
-		List<Class<T>> objects = new ArrayList<Class<T>>();
-		Cursor cursor = database.query(getRecTableName(),
-				TABLE_COLUMNS, null, null, null, null, null);
-
-		cursor.moveToFirst();
-		while (!cursor.isAfterLast()) {
-			Class<T> object = parseObject(cursor);			
-			objects.add(object);
-			cursor.moveToNext();
+	public List<T> load() {
+		List<T> objects = new ArrayList<T>();
+		try {
+			Cursor cursor = database.query(getRecTableName(),
+					TABLE_COLUMNS, null, null, null, null, null);	
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				T object = parseObject(cursor);			
+				objects.add(object);
+				cursor.moveToNext();
+			}	
+			cursor.close();
 		}
-
-		cursor.close();
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 		return objects;
 	}
 
-	private Class<T> parseObject(Cursor cursor) throws InstantiationException, IllegalAccessException {		
-		Class<T> object = getRecType();
+	private T parseObject(Cursor cursor) throws InstantiationException, IllegalAccessException {		
+		T object = getRecType().newInstance();
 		Method[] methods = object.getClass().getMethods();
 		for (int i = 0; i < cursor.getColumnCount(); i++)
 		{
-			String a = cursor.getColumnName(i);
 	        for (Method method : methods) {
 	        	MapField annos = method.getAnnotation(MapField.class);
 	            if (annos != null) {
 	                try 
 	                {
-	                	if (annos.DatabaseField().equals(a) && method.getReturnType() == Integer.class.getClass())
-	                		method.invoke(getRecType(), cursor.getInt(i));
-	                	if (annos.DatabaseField().equals(a) && method.getReturnType() == String.class.getClass())
-	                		method.invoke(getRecType(), cursor.getString(i));
+	                	if (!annos.DatabaseField().equals(cursor.getColumnName(i)))
+	                		continue;
+	                	if (method.getParameterTypes()[0] == int.class)
+	                		method.invoke(object, cursor.getInt(i));
+	                	if (method.getParameterTypes()[0] == String.class)
+	                		method.invoke(object, cursor.getString(i));
+	                	if (method.getParameterTypes()[0] == Blob.class)
+	                		method.invoke(object, cursor.getBlob(i));
+	                	if (method.getParameterTypes()[0] == Double.class)
+	                		method.invoke(object, cursor.getDouble(i));
+	                	if (method.getParameterTypes()[0] == Float.class)
+	                		method.invoke(object, cursor.getFloat(i));
+	                	if (method.getParameterTypes()[0] == Long.class)
+	                		method.invoke(object, cursor.getLong(i));
+	                	if (method.getParameterTypes()[0] == Short.class)
+	                		method.invoke(object, cursor.getShort(i));
 	                } catch (Exception e) {
 	                    e.printStackTrace();
 	                }

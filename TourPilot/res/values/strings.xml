@@ -16,11 +16,12 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="synchronization">Synchronization</string>
-	<string name="clear_darabase">Clear database</string>
-	<string name="standart_port">4448</string>
-	<string name="complete_tour">Complete the tour</string>
-	<string name="log_out">Log out</string>
-	<string name="some_text">some text..</string>
-	<string name="enter_pin">Enter the PIN:</string>
+    <string name="clear_darabase">Clear database</string>
+    <string name="standart_port">4448</string>
+    <string name="complete_tour">Complete the tour</string>
+    <string name="log_out">Log out</string>
+    <string name="some_text">some text..</string>
+    <string name="enter_pin">Enter the PIN:</string>
+    <string name="title_activity_base">BaseActivity</string>
 
 </resources>

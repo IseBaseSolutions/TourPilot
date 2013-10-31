@@ -1,8 +1,10 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
+import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,52 +25,20 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class WorkersActivity extends Activity {
+public class WorkersActivity extends BaseActivity {
 
+	List<Worker> workers = new ArrayList<Worker>();
+	
 	WorkerManager workerManager;
-	String workerName = new String();
-	Dialog pinDialog;
-	TextView tvWorkerName;
 	EditText evPin;	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_workers);	
-		try {
-			initActivityComponents();
-			workerManager.open();
-			List<Class<Worker>> workers = new ArrayList<Class<Worker>>();
-
-			workers = workerManager.load();
-
+		setContentView(R.layout.activity_workers);
+			ReloadData();
 			InitTable(workers.size());
-
-			final ListView listView = (ListView) findViewById(R.id.lvWorkers);
-			ArrayAdapter<Class<Worker>> adapter = new ArrayAdapter<Class<Worker>>(this,
-					android.R.layout.simple_list_item_1, workers);
-			listView.setAdapter(adapter);
-			listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-				@Override
-				public void onItemClick(AdapterView<?> arg0, View arg1,
-						int position, long arg3) {
-					workerName = ((Worker) listView.getItemAtPosition(position))
-							.getName();
-					showDialog(0);
-					if (pinDialog != null) {
-						initDialogComponents();
-						tvWorkerName.setText(workerName);
-						evPin.setText("");
-					}
-				}
-
-			});
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-
+			InitList();
 	}
 
 	@Override
@@ -77,86 +47,40 @@ public class WorkersActivity extends Activity {
 		return true;
 	}
 
-	private void initActivityComponents() {
-		workerManager = new WorkerManager(this);
-	}
+	public void InitList() {
+		final ListView listView = (ListView) findViewById(R.id.lvWorkers);
+		ArrayAdapter<Worker> adapter = new ArrayAdapter<Worker>(this,
+				android.R.layout.simple_list_item_1, workers);
+		listView.setAdapter(adapter);
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-	private void InitTable(int tableSize) throws InstantiationException, IllegalAccessException {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1,
+					int position, long arg3) {
+				showDialog(0);
+				((TextView) pinDialog.findViewById(R.id.tvWorkerName)).
+					setText(((Worker)listView.getItemAtPosition(position)).getName());
+				((EditText) pinDialog.findViewById(R.id.evPin)).
+					setText(StaticResources.stringEmpty);
+			}
+
+		});
+	}
+	
+	private void InitTable(int tableSize) {
 		if(tableSize > 0)
 			return;
-		workerManager.add("Goncharenko, Andrew");
-		workerManager.add("Begov, Bogdan");
-		workerManager.add("Kiryanov, Igor");
-		workerManager.add("Goenko, Nikolai");
-		workerManager.add("Parker, Peter");
-		workerManager.add("Wayne, Bruce");
-		workerManager.add("Kent, Clark");
+		WorkerManager.Instance().add("Goncharenko, Andrew");
+		WorkerManager.Instance().add("Begov, Bogdan");
+		WorkerManager.Instance().add("Kiryanov, Igor");
+		WorkerManager.Instance().add("Goenko, Nikolai");
+		WorkerManager.Instance().add("Parker, Peter");
+		WorkerManager.Instance().add("Wayne, Bruce");
+		WorkerManager.Instance().add("Kent, Clark");
 	}
-
-	private void initDialogComponents() {
-		tvWorkerName = (TextView) pinDialog.findViewById(R.id.tvWorkerName);
-		evPin = (EditText) pinDialog.findViewById(R.id.evPin);
-	}
-
-	@Override
-	protected Dialog onCreateDialog(int id) {
-
-		switch (id) {
-		case 0:
-			return getPinDialog();
-		default:
-			return null;
-		}
-	}
-
-	private Dialog getPinDialog() {
-		if (pinDialog != null)
-			return pinDialog;
-		AlertDialog.Builder builder = new AlertDialog.Builder(
-				new ContextThemeWrapper(this, R.style.AppBaseTheme));
-		LayoutInflater inflater = getLayoutInflater();
-		builder.setView(inflater.inflate(R.layout.dialog_pin, null));
-
-		builder.setPositiveButton(getString(R.string.ok),
-				new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int buttonId) {
-						if (!checkPIN())
-							return;
-						Intent toursActivity = new Intent(
-								getApplicationContext(), ToursActivity.class);
-						startActivity(toursActivity);
-					}
-				});
-
-		builder.setNegativeButton(getString(R.string.cancel),
-				new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int buttonId) {
-						return;
-					}
-				});
-		pinDialog = builder.create();
-		return pinDialog;
-	}
-
-	public boolean checkPIN() {
-		String name = tvWorkerName.getText().toString();
-		String pinStr = evPin.getText().toString();
-		if (pinStr.equals(""))
-			return false;
-		Long pin = Long.parseLong(pinStr);
-		long num = 0;
-		int numArray[] = new int[] { 1, 3, 5, 7, 13, 0x11 };
-		try {
-			byte byteText[] = name.getBytes("latin1");
-			for (int i = 0; i < byteText.length; i++)
-				num += (byteText[i]) * numArray[i % 6];
-		} catch (Exception ex) {
-		}
-		return num == pin;
+	
+	public void ReloadData() {
+		workers = WorkerManager.Instance().load();
 	}
 
 	public void switchToOptions(View view) {
@@ -164,4 +88,6 @@ public class WorkersActivity extends Activity {
 				OptionsActivity.class);
 		startActivity(optionsActivity);
 	}
+	
+
 }

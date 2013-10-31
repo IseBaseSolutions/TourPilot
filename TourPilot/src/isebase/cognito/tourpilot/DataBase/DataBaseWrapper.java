@@ -14,7 +14,6 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "TourPilot.db";
 	private static final int DATABASE_VERSION = 1;
 
-	// creation SQLite statement
 	private static final String WORKERS_TABLE_CREATE = "CREATE TABLE " + WORKERS
 			+ "(" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ NAME + " TEXT NOT NULL);";
@@ -25,7 +24,6 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	
 	public DataBaseWrapper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

@@ -1,18 +1,26 @@
 package isebase.cognito.tourpilot.Data.Tour;
 
-import android.content.Context;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 
 public class TourManager extends BaseObjectManager<Tour>{
 
-	public TourManager(Context context) {
-		super(context, Tour.class);
+	private static TourManager instance;
+	
+	public static TourManager Instance() {
+		if (instance != null)
+			return instance;
+		instance = new TourManager();
+		instance.open();
+		return instance;
+	}
+	
+	public TourManager() {
+		super(Tour.class);
 	}
 
 	@Override
 	public String getRecTableName() {
-		// TODO Auto-generated method stub
-		return null;
+		return dbHelper.TOURS;
 	}
 	
 }

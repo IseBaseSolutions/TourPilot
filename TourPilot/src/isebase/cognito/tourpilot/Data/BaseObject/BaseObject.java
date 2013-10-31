@@ -4,8 +4,8 @@ import isebase.cognito.tourpilot.DataBase.MapField;
 
 public abstract class BaseObject {
 
-	private int emptyID = -1;
-	private String stringEmpty = "";
+	public static int emptyID = -1;
+	public static String stringEmpty = "";
 	
 	private int id;
 
