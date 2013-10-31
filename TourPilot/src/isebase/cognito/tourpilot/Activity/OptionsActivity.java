@@ -1,19 +1,19 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
-import android.app.Activity;
+import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
-public class OptionsActivity extends Activity {
+public class OptionsActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_options);
-		getBaseContext();
+		StaticResources.setBaseContext(getBaseContext());
 	}
 
 	@Override
@@ -29,6 +29,7 @@ public class OptionsActivity extends Activity {
 //         nextScreen.putExtra("name", inputName.getText().toString());
 //         nextScreen.putExtra("email", inputEmail.getText().toString());
 //
+        
          startActivity(workersActivity);
 	 }
 }

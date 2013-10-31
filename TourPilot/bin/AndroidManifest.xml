@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="isebase.cognito.tourpilot.Activity.MainActivity"
+            android:name="isebase.cognito.tourpilot.Activity.OptionsActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,15 +22,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="isebase.cognito.tourpilot.Activity.OptionsActivity" >
-        </activity>
         <activity android:name="isebase.cognito.tourpilot.Activity.ToursActivity" >
         </activity>
         <activity android:name="isebase.cognito.tourpilot.Activity.WorkersActivity" >
         </activity>
-        <activity
-            android:name="isebase.cognito.tourpilot.Activity.BaseActivity"
-            android:label="@string/title_activity_base" >
+        <activity android:name="isebase.cognito.tourpilot.Activity.BaseActivity" >
         </activity>
     </application>
 

@@ -1,7 +1,6 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
@@ -9,14 +8,8 @@ import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.ContextThemeWrapper;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -28,9 +21,6 @@ import android.widget.TextView;
 public class WorkersActivity extends BaseActivity {
 
 	List<Worker> workers = new ArrayList<Worker>();
-	
-	WorkerManager workerManager;
-	EditText evPin;	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +74,7 @@ public class WorkersActivity extends BaseActivity {
 	}
 
 	public void switchToOptions(View view) {
-		Intent optionsActivity = new Intent(getApplicationContext(),
-				OptionsActivity.class);
+		Intent optionsActivity = new Intent(getApplicationContext(), OptionsActivity.class);
 		startActivity(optionsActivity);
 	}
 	
