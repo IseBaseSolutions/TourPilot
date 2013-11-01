@@ -41,11 +41,35 @@ public abstract class BaseObjectManager<T> {
 		dbHelper.close();
 	}
 
-	public T add(String name) {
+	public T add(Class<T> object) {
 
 		ContentValues values = new ContentValues();
-
-		values.put(DataBaseWrapper.NAME, name);
+		try {
+			for (Method method : object.getMethods()) {
+				MapField annos = method.getAnnotation(MapField.class);
+				if (annos != null && method.getReturnType() != null) {					
+					if (method.getReturnType()  == int.class)
+						values.put(annos.DatabaseField(), (Integer) method.invoke(object));
+					else if (method.getReturnType()  == String.class)
+						values.put(annos.DatabaseField(), (String) method.invoke(object));
+//					else if (method.getReturnType()  == boolean.class)
+//						values.put(annos.DatabaseField(), (boolean) method.invoke(object));
+					else if (method.getReturnType()  == Double.class)
+						values.put(annos.DatabaseField(), (Double) method.invoke(object));
+					else if (method.getReturnType()  == Float.class)
+						values.put(annos.DatabaseField(), (Float) method.invoke(object));
+					else if (method.getReturnType()  == Long.class)
+						values.put(annos.DatabaseField(), (Long) method.invoke(object));
+					else if (method.getReturnType()  == Short.class)
+						values.put(annos.DatabaseField(), (Short) method.invoke(object));
+					else if (method.getReturnType()  == Byte.class)
+						values.put(annos.DatabaseField(), (Byte) method.invoke(object));	
+				}
+			}		
+		}
+		catch(Exception e)	{
+			e.printStackTrace();
+		}
 
 		long objectID = database.insert(getRecTableName(), null, values);
 
@@ -99,12 +123,12 @@ public abstract class BaseObjectManager<T> {
 		for (int i = 0; i < cursor.getColumnCount(); i++) {
 			for (Method method : methods) {
 				MapField annos = method.getAnnotation(MapField.class);
-				if (annos != null) {
+				if (annos != null && method.getReturnType() == null) {
 					try {
 						if (!annos.DatabaseField().equals(
 								cursor.getColumnName(i)))
 							continue;
-						else if (method.getParameterTypes()[0] == int.class)
+						if (method.getParameterTypes()[0] == int.class)
 							method.invoke(object, cursor.getInt(i));
 						else if (method.getParameterTypes()[0] == String.class)
 							method.invoke(object, cursor.getString(i));

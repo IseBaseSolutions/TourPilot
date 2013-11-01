@@ -8,8 +8,13 @@ import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,6 +26,8 @@ import android.widget.TextView;
 public class WorkersActivity extends BaseActivity {
 
 	List<Worker> workers = new ArrayList<Worker>();
+	
+	private Dialog dialogPin;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +55,10 @@ public class WorkersActivity extends BaseActivity {
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
 				showDialog(0);
-				((TextView) pinDialog.findViewById(R.id.tvWorkerName))
+				((TextView) dialogPin.findViewById(R.id.tvWorkerName))
 						.setText(((Worker) listView.getItemAtPosition(position))
 								.getName());
-				((EditText) pinDialog.findViewById(R.id.evPin))
+				((EditText) dialogPin.findViewById(R.id.evPin))
 						.setText(StaticResources.stringEmpty);
 			}
 
@@ -61,13 +68,13 @@ public class WorkersActivity extends BaseActivity {
 	private void initTable(int tableSize) {
 		if (tableSize > 0)
 			return;
-		WorkerManager.Instance().add("Goncharenko, Andrew");
-		WorkerManager.Instance().add("Begov, Bogdan");
-		WorkerManager.Instance().add("Kiryanov, Igor");
-		WorkerManager.Instance().add("Goenko, Nikolai");
-		WorkerManager.Instance().add("Parker, Peter");
-		WorkerManager.Instance().add("Wayne, Bruce");
-		WorkerManager.Instance().add("Kent, Clark");
+//		WorkerManager.Instance().add(new Worker("Goncharenko, Andrew"));
+//		WorkerManager.Instance().add("Begov, Bogdan");
+//		WorkerManager.Instance().add("Kiryanov, Igor");
+//		WorkerManager.Instance().add("Goenko, Nikolai");
+//		WorkerManager.Instance().add("Parker, Peter");
+//		WorkerManager.Instance().add("Wayne, Bruce");
+//		WorkerManager.Instance().add("Kent, Clark");
 	}
 
 	public void switchToOptions(View view) {
@@ -79,5 +86,53 @@ public class WorkersActivity extends BaseActivity {
 	public void reloadData() {
 		workers = WorkerManager.Instance().load();
 	}
+	
+	@Override
+	protected Dialog onCreateDialog(int id) {
 
+		switch (id) {
+		case 0:
+			return getPinDialog();
+		default:
+			return null;
+		}
+	}
+
+	private Dialog getPinDialog() {
+		if (dialogPin != null)
+			return dialogPin;
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				new ContextThemeWrapper(this, R.style.AppBaseTheme));
+		LayoutInflater inflater = getLayoutInflater();
+		builder.setView(inflater.inflate(R.layout.dialog_pin, null));
+
+		builder.setPositiveButton(getString(R.string.ok),
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int buttonId) {
+						String name = ((TextView) dialogPin
+								.findViewById(R.id.tvWorkerName)).getText()
+								.toString();
+						String pinStr = ((EditText) dialogPin
+								.findViewById(R.id.evPin)).getText().toString();
+						if (!StaticResources.checkWorkerPIN(name, pinStr))
+							return;
+						Intent toursActivity = new Intent(
+								getApplicationContext(), ToursActivity.class);
+						startActivity(toursActivity);
+					}
+				});
+		builder.setNegativeButton(getString(R.string.cancel),
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int buttonId) {
+						return;
+					}
+					
+				});
+		dialogPin = builder.create();
+		return dialogPin;
+	}
 }

@@ -56,13 +56,13 @@ public class ToursActivity extends Activity {
 	private void initTable(int tableSize) {
 		if (tableSize > 0)
 			return;
-		TourManager.Instance().add("First tour");
-		TourManager.Instance().add("Second tour");
-		TourManager.Instance().add("Third tour");
-		TourManager.Instance().add("Fourth tour");
-		TourManager.Instance().add("Fifth tour");
-		TourManager.Instance().add("Sixth tour");
-		TourManager.Instance().add("Seventh tour");
+//		TourManager.Instance().add("First tour");
+//		TourManager.Instance().add("Second tour");
+//		TourManager.Instance().add("Third tour");
+//		TourManager.Instance().add("Fourth tour");
+//		TourManager.Instance().add("Fifth tour");
+//		TourManager.Instance().add("Sixth tour");
+//		TourManager.Instance().add("Seventh tour");
 	}
 
 	public void logOut(View view) {

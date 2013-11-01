@@ -59,14 +59,14 @@ public class PatientsActivity extends BaseActivity {
 	private void initTable(int tableSize) {
 		if (tableSize > 0)
 			return;
-		PatientManager.Instance().add("Goncharenko, Andrew");
-		PatientManager.Instance().add("Begov, Bogdan");
-		PatientManager.Instance().add("Kiryanov, Igor");
-		PatientManager.Instance().add("Goenko, Nikolai");
-		PatientManager.Instance().add("Parker, Peter");
-		PatientManager.Instance().add("Wayne, Bruce");
-		PatientManager.Instance().add("Kent, Clark");
-		PatientManager.Instance().add("Vladimir, Oleynikov");
+//		PatientManager.Instance().add("Goncharenko, Andrew");
+//		PatientManager.Instance().add("Begov, Bogdan");
+//		PatientManager.Instance().add("Kiryanov, Igor");
+//		PatientManager.Instance().add("Goenko, Nikolai");
+//		PatientManager.Instance().add("Parker, Peter");
+//		PatientManager.Instance().add("Wayne, Bruce");
+//		PatientManager.Instance().add("Kent, Clark");
+//		PatientManager.Instance().add("Vladimir, Oleynikov");
 	}
 
 	public void reloadData() {
