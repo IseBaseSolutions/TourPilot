@@ -6,7 +6,7 @@ public class StaticResources {
 
 	private static Context baseContext;
 
-	public static String stringEmpty;
+	public final static String stringEmpty = new String();
 
 	public static void setBaseContext(Context context) {
 		baseContext = context;
