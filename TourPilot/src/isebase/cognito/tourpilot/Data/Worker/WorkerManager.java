@@ -3,9 +3,9 @@ package isebase.cognito.tourpilot.Data.Worker;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 
 public class WorkerManager extends BaseObjectManager<Worker> {
-	
+
 	private static WorkerManager instance;
-	
+
 	public static WorkerManager Instance() {
 		if (instance != null)
 			return instance;
@@ -13,7 +13,7 @@ public class WorkerManager extends BaseObjectManager<Worker> {
 		instance.open();
 		return instance;
 	}
-	
+
 	public WorkerManager() {
 		super(Worker.class);
 	}

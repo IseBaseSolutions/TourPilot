@@ -21,15 +21,16 @@ public class OptionsActivity extends BaseActivity {
 		getMenuInflater().inflate(R.menu.options_menu, menu);
 		return true;
 	}
-	
-	 public void startSync(View view) {		 
-         Intent workersActivity = new Intent(getApplicationContext(), WorkersActivity.class);
-//         
-//         //Sending data to another Activity
-//         nextScreen.putExtra("name", inputName.getText().toString());
-//         nextScreen.putExtra("email", inputEmail.getText().toString());
-//
-        
-         startActivity(workersActivity);
-	 }
+
+	public void startSync(View view) {
+		Intent workersActivity = new Intent(getApplicationContext(),
+				WorkersActivity.class);
+		//
+		// //Sending data to another Activity
+		// nextScreen.putExtra("name", inputName.getText().toString());
+		// nextScreen.putExtra("email", inputEmail.getText().toString());
+		//
+
+		startActivity(workersActivity);
+	}
 }

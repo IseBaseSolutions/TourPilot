@@ -6,18 +6,18 @@ public abstract class BaseObject {
 
 	public static int emptyID = -1;
 	public static String stringEmpty = "";
-	
+
 	private int id;
 
 	public int getId() {
 		return id;
 	}
-	
+
 	@MapField(DatabaseField = "_id")
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	private String name;
 
 	public String getName() {
@@ -33,23 +33,20 @@ public abstract class BaseObject {
 	public String toString() {
 		return name;
 	}
-	
-	/*private long checkSum;
-	
-	public long getCheckSum() {
-		return checkSum;
-	}
-	
-	@MapField(DatabaseField = "checkSum")
-	public void setCheckSum(long checkSum) {
-		this.checkSum = checkSum;  
-	}*/
-	
-	public void Clear()
-	{
+
+	/*
+	 * private long checkSum;
+	 * 
+	 * public long getCheckSum() { return checkSum; }
+	 * 
+	 * @MapField(DatabaseField = "checkSum") public void setCheckSum(long
+	 * checkSum) { this.checkSum = checkSum; }
+	 */
+
+	public void Clear() {
 		id = emptyID;
 		name = stringEmpty;
-		//checkSum = 0;
+		// checkSum = 0;
 	}
-	
+
 }

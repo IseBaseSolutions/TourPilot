@@ -2,10 +2,10 @@ package isebase.cognito.tourpilot.Data.Tour;
 
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 
-public class TourManager extends BaseObjectManager<Tour>{
+public class TourManager extends BaseObjectManager<Tour> {
 
 	private static TourManager instance;
-	
+
 	public static TourManager Instance() {
 		if (instance != null)
 			return instance;
@@ -13,7 +13,7 @@ public class TourManager extends BaseObjectManager<Tour>{
 		instance.open();
 		return instance;
 	}
-	
+
 	public TourManager() {
 		super(Tour.class);
 	}
@@ -22,5 +22,5 @@ public class TourManager extends BaseObjectManager<Tour>{
 	public String getRecTableName() {
 		return dbHelper.TOURS;
 	}
-	
+
 }

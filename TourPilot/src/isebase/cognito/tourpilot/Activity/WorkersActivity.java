@@ -26,9 +26,9 @@ public class WorkersActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_workers);
-			ReloadData();
-			InitTable(workers.size());
-			InitList();
+			reloadData();
+			initTable(workers.size());
+			initListWorkers();
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class WorkersActivity extends BaseActivity {
 		return true;
 	}
 
-	public void InitList() {
+	public void initListWorkers() {
 		final ListView listView = (ListView) findViewById(R.id.lvWorkers);
 		ArrayAdapter<Worker> adapter = new ArrayAdapter<Worker>(this,
 				android.R.layout.simple_list_item_1, workers);
@@ -57,7 +57,7 @@ public class WorkersActivity extends BaseActivity {
 		});
 	}
 	
-	private void InitTable(int tableSize) {
+	private void initTable(int tableSize) {
 		if(tableSize > 0)
 			return;
 		WorkerManager.Instance().add("Goncharenko, Andrew");
@@ -67,16 +67,15 @@ public class WorkersActivity extends BaseActivity {
 		WorkerManager.Instance().add("Parker, Peter");
 		WorkerManager.Instance().add("Wayne, Bruce");
 		WorkerManager.Instance().add("Kent, Clark");
-	}
-	
-	public void ReloadData() {
-		workers = WorkerManager.Instance().load();
-	}
+	}	
 
 	public void switchToOptions(View view) {
 		Intent optionsActivity = new Intent(getApplicationContext(), OptionsActivity.class);
 		startActivity(optionsActivity);
 	}
 	
+	public void reloadData() {
+		workers = WorkerManager.Instance().load();
+	}
 
 }

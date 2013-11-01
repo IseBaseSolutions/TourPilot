@@ -1,15 +1,13 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.R.layout;
-import isebase.cognito.tourpilot.R.menu;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
-import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,7 +17,7 @@ import android.widget.TextView;
 public class BaseActivity extends Activity {
 
 	public Dialog pinDialog;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,7 +30,7 @@ public class BaseActivity extends Activity {
 		getMenuInflater().inflate(R.menu.base, menu);
 		return true;
 	}
-	
+
 	@Override
 	protected Dialog onCreateDialog(int id) {
 
@@ -43,7 +41,7 @@ public class BaseActivity extends Activity {
 			return null;
 		}
 	}
-	
+
 	private Dialog getPinDialog() {
 		if (pinDialog != null)
 			return pinDialog;
@@ -57,8 +55,11 @@ public class BaseActivity extends Activity {
 
 					@Override
 					public void onClick(DialogInterface dialog, int buttonId) {
-						String name = ((TextView) pinDialog.findViewById(R.id.tvWorkerName)).getText().toString();
-						String pinStr = ((EditText) pinDialog.findViewById(R.id.evPin)).getText().toString();
+						String name = ((TextView) pinDialog
+								.findViewById(R.id.tvWorkerName)).getText()
+								.toString();
+						String pinStr = ((EditText) pinDialog
+								.findViewById(R.id.evPin)).getText().toString();
 						if (!StaticResources.checkWorkerPIN(name, pinStr))
 							return;
 						Intent toursActivity = new Intent(
