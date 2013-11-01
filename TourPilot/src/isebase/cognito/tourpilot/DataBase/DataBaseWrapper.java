@@ -8,6 +8,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 
 	public static final String WORKERS = "Workers";
 	public static final String TOURS = "Tours";
+	public static final String PATIENTS = "Patients";
 	public static final String ID = "_id";
 	public static final String NAME = "name";
 
