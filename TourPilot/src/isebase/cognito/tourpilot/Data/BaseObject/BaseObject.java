@@ -34,14 +34,16 @@ public abstract class BaseObject {
 		return name;
 	}
 
-	/*
-	 * private long checkSum;
-	 * 
-	 * public long getCheckSum() { return checkSum; }
-	 * 
-	 * @MapField(DatabaseField = "checkSum") public void setCheckSum(long
-	 * checkSum) { this.checkSum = checkSum; }
-	 */
+	private long checkSum;
+
+	public long getCheckSum() {
+		return checkSum;
+	}
+
+	@MapField(DatabaseField = "checkSum")
+	public void setCheckSum(long checkSum) {
+		this.checkSum = checkSum;
+	}
 
 	public void Clear() {
 		id = emptyID;

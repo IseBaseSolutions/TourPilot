@@ -8,7 +8,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 
 	public static final String WORKERS = "Workers";
 	public static final String TOURS = "Tours";
-	public static final String PATIENTS = "patients";
+	public static final String PATIENTS = "Patients";
 	public static final String ID = "_id";
 	public static final String NAME = "name";
 	public static final String ADDRESS = "address";
@@ -20,9 +20,9 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ WORKERS + "(" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ NAME + " TEXT NOT NULL);";
 
-	private static final String TOURS_TABLE_CREATE = "CREATE TABLE " 
-			+ TOURS	+ "(" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
-			+ NAME + " TEXT NOT NULL);";
+	private static final String TOURS_TABLE_CREATE = "CREATE TABLE " + TOURS
+			+ "(" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + NAME
+			+ " TEXT NOT NULL);";
 
 	private static final String PATIENTS_TABLE_CREATE = "CREATE TABLE "
 			+ PATIENTS + "(" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
