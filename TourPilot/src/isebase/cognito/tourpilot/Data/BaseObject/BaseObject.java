@@ -40,7 +40,7 @@ public abstract class BaseObject {
 		return checkSum;
 	}
 
-	@MapField(DatabaseField = "checkSum")
+	@MapField(DatabaseField = "checksum")
 	public void setCheckSum(long checkSum) {
 		this.checkSum = checkSum;
 	}

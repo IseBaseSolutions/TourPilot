@@ -21,21 +21,21 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ WORKERS + "(" 
 			+ ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ NAME + " TEXT NOT NULL, "
-			+ CHECKSUM + " LONG"
+			+ CHECKSUM + " INTEGER"
 			+ ");";
 
 	private static final String TOURS_TABLE_CREATE = "CREATE TABLE " 
 			+ TOURS	+ "(" 
 			+ ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
-			+ NAME + " TEXT NOT NULL "
-			+ CHECKSUM + " LONG"
+			+ NAME + " TEXT NOT NULL, "
+			+ CHECKSUM + " INTEGER"
 			+ ");";
 
 	private static final String PATIENTS_TABLE_CREATE = "CREATE TABLE "
 			+ PATIENTS + "(" 
 			+ ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ NAME + " TEXT NOT NULL "
-			+ CHECKSUM + " LONG"
+			+ NAME + " TEXT NOT NULL, "
+			+ CHECKSUM + " INTEGER"
 			+ ");";
 
 	public DataBaseWrapper(Context context) {

@@ -48,22 +48,18 @@ public abstract class BaseObjectManager<T> {
 		values.put(DataBaseWrapper.NAME, name);
 
 		long objectID = database.insert(getRecTableName(), null, values);
+
+		Cursor cursor = database.query(getRecTableName(), TABLE_COLUMNS,
+				DataBaseWrapper.ID + " = " + objectID, null, null, null, null);
+
+		cursor.moveToFirst();
+		T newComment = null;
 		try {
-			Cursor cursor = database.query(getRecTableName(), TABLE_COLUMNS,
-					DataBaseWrapper.ID + " = " + objectID, null, null, null, null);
-		}
-		catch(Exception e) {
+			newComment = parseObject(cursor);
+			cursor.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-//		cursor.moveToFirst();
-		T newComment = null;
-//		try {
-//			newComment = parseObject(cursor);
-//			cursor.close();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
 		return newComment;
 	}
 
