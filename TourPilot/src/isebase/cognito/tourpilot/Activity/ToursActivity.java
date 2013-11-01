@@ -45,6 +45,9 @@ public class ToursActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
+				//Открываем форму отображения списка пациентов тура
+				Intent patientsActivity = new Intent(getApplicationContext(), PatientsActivity.class);
+				startActivity(patientsActivity);
 
 			}
 

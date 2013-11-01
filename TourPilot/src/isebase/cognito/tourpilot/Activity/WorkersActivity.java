@@ -26,9 +26,9 @@ public class WorkersActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_workers);
-			reloadData();
-			initTable(workers.size());
-			initListWorkers();
+		reloadData();
+		initTable(workers.size());
+		initListWorkers();
 	}
 
 	@Override
@@ -48,17 +48,18 @@ public class WorkersActivity extends BaseActivity {
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
 				showDialog(0);
-				((TextView) pinDialog.findViewById(R.id.tvWorkerName)).
-					setText(((Worker)listView.getItemAtPosition(position)).getName());
-				((EditText) pinDialog.findViewById(R.id.evPin)).
-					setText(StaticResources.stringEmpty);
+				((TextView) pinDialog.findViewById(R.id.tvWorkerName))
+						.setText(((Worker) listView.getItemAtPosition(position))
+								.getName());
+				((EditText) pinDialog.findViewById(R.id.evPin))
+						.setText(StaticResources.stringEmpty);
 			}
 
 		});
 	}
-	
+
 	private void initTable(int tableSize) {
-		if(tableSize > 0)
+		if (tableSize > 0)
 			return;
 		WorkerManager.Instance().add("Goncharenko, Andrew");
 		WorkerManager.Instance().add("Begov, Bogdan");
@@ -67,13 +68,14 @@ public class WorkersActivity extends BaseActivity {
 		WorkerManager.Instance().add("Parker, Peter");
 		WorkerManager.Instance().add("Wayne, Bruce");
 		WorkerManager.Instance().add("Kent, Clark");
-	}	
+	}
 
 	public void switchToOptions(View view) {
-		Intent optionsActivity = new Intent(getApplicationContext(), OptionsActivity.class);
+		Intent optionsActivity = new Intent(getApplicationContext(),
+				OptionsActivity.class);
 		startActivity(optionsActivity);
 	}
-	
+
 	public void reloadData() {
 		workers = WorkerManager.Instance().load();
 	}
