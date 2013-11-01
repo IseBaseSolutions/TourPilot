@@ -104,19 +104,19 @@ public abstract class BaseObjectManager<T> {
 						if (!annos.DatabaseField().equals(
 								cursor.getColumnName(i)))
 							continue;
-						if (method.getParameterTypes()[0] == int.class)
+						else if (method.getParameterTypes()[0] == int.class)
 							method.invoke(object, cursor.getInt(i));
-						if (method.getParameterTypes()[0] == String.class)
+						else if (method.getParameterTypes()[0] == String.class)
 							method.invoke(object, cursor.getString(i));
-						if (method.getParameterTypes()[0] == Blob.class)
+						else if (method.getParameterTypes()[0] == Blob.class)
 							method.invoke(object, cursor.getBlob(i));
-						if (method.getParameterTypes()[0] == Double.class)
+						else if (method.getParameterTypes()[0] == Double.class)
 							method.invoke(object, cursor.getDouble(i));
-						if (method.getParameterTypes()[0] == Float.class)
+						else if (method.getParameterTypes()[0] == Float.class)
 							method.invoke(object, cursor.getFloat(i));
-						if (method.getParameterTypes()[0] == Long.class)
+						else if (method.getParameterTypes()[0] == Long.class)
 							method.invoke(object, cursor.getLong(i));
-						if (method.getParameterTypes()[0] == Short.class)
+						else if (method.getParameterTypes()[0] == Short.class)
 							method.invoke(object, cursor.getShort(i));
 					} catch (Exception e) {
 						e.printStackTrace();
