@@ -8,7 +8,6 @@ import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class PatientsActivity extends BaseActivity {
 
@@ -24,8 +22,8 @@ public class PatientsActivity extends BaseActivity {
 	List<Patient> donePatients = new ArrayList<Patient>();
 	List<Patient> unDonePatients = new ArrayList<Patient>();
 	
-	private Tour tour;
-	private Worker worker;
+	public static Tour tour;
+	public static Worker worker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,10 +80,5 @@ public class PatientsActivity extends BaseActivity {
 			else
 				unDonePatients.add(patient);
 		}
-		TextView tvTourName = (TextView)findViewById(R.id.tvPatientsWorkerName);
-		Intent i = getIntent();
-		tour = (Tour)i.getParcelableExtra("patientData");
-		tvTourName.setText(tour.getName());
-
 	}
 }
