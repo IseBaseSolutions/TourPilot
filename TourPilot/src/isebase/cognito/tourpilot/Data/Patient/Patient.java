@@ -1,6 +1,7 @@
 package isebase.cognito.tourpilot.Data.Patient;
 
 import android.os.Parcel;
+
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.DataBase.MapField;
 
