@@ -43,8 +43,6 @@ public class PatientsActivity extends BaseActivity {
 	}
 
 	public void initListUndonePatients() {
-		unDonePatients = new ArrayList<Patient>();
-
 		final ArrayAdapter<Patient> adapter = new ArrayAdapter<Patient>(this,android.R.layout.simple_list_item_1, unDonePatients);
 		final ListView lvListUndoneTasks = (ListView) findViewById(R.id.lvUndonePatients);
 
@@ -61,17 +59,17 @@ public class PatientsActivity extends BaseActivity {
 	}
 
 	public void initListDonePatients() {
-		donePatients = new ArrayList<Patient>();
 		final ArrayAdapter<Patient> adapter = new ArrayAdapter<Patient>(this,android.R.layout.simple_list_item_1, donePatients);
-		final ExpandableListView elvListDoneTasks = (ExpandableListView) findViewById(R.id.elvDonePatients);
-		elvListDoneTasks.setAdapter(adapter);
+//		final ExpandableListView elvListDoneTasks = (ExpandableListView) findViewById(R.id.elvDonePatients);
+//		elvListDoneTasks.setAdapter(adapter);
 	}
 
 	private void initPatients(int tableSize) {
 		if (tableSize > 0)
 			return;
-		for (int i = 0; i < 15; i++)
-			PatientManager.Instance().add(new Patient("Patient " + i));
+		for (int i = 0; i < 10; i++)
+			PatientManager.Instance().add(new Patient("Patient " + i, true));
+		reloadData();
 	}
 
 	public void reloadData() {

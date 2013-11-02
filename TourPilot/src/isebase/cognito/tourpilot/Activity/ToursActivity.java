@@ -58,8 +58,9 @@ public class ToursActivity extends Activity {
 	private void initTable(int tableSize) {
 		if (tableSize > 0)
 			return;
-		for (int i = 0; i < 15; i++)
+		for (int i = 0; i < 10; i++)
 			TourManager.Instance().add(new Tour("Tour " + i));
+		reloadData();
 	}
 
 	public void logOut(View view) {

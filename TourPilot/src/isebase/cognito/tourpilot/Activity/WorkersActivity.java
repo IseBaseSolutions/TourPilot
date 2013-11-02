@@ -45,6 +45,17 @@ public class WorkersActivity extends BaseActivity {
 		getMenuInflater().inflate(R.menu.options_menu, menu);
 		return true;
 	}
+	
+	@Override
+	protected Dialog onCreateDialog(int id) {
+
+		switch (id) {
+		case 0:
+			return getPinDialog();
+		default:
+			return null;
+		}
+	}
 
 	public void initListWorkers() {
 		final ListView listView = (ListView) findViewById(R.id.lvWorkers);
@@ -69,8 +80,9 @@ public class WorkersActivity extends BaseActivity {
 	private void initTable(int tableSize) {
 		if (tableSize > 0)
 			return;
-		for (int i = 0; i < 500; i++)
+		for (int i = 0; i < 10; i++)
 			WorkerManager.Instance().add(new Worker("Worker " + i));
+		reloadData();
 	}	
 
 	public void switchToOptions(View view) {
@@ -80,17 +92,6 @@ public class WorkersActivity extends BaseActivity {
 	
 	public void reloadData() {
 		workers = WorkerManager.Instance().load();
-	}
-	
-	@Override
-	protected Dialog onCreateDialog(int id) {
-
-		switch (id) {
-		case 0:
-			return getPinDialog();
-		default:
-			return null;
-		}
 	}
 
 	private Dialog getPinDialog() {
