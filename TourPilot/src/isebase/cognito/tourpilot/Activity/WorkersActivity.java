@@ -10,8 +10,13 @@ import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,7 +27,9 @@ import android.widget.TextView;
 
 public class WorkersActivity extends BaseActivity {
 
-	List<Worker> workers = new ArrayList<Worker>();
+	List<Worker> workers = new ArrayList<Worker>();	
+	
+	public Dialog pinDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,5 +81,55 @@ public class WorkersActivity extends BaseActivity {
 	public void reloadData() {
 		workers = WorkerManager.Instance().load();
 	}
+	
+	@Override
+	protected Dialog onCreateDialog(int id) {
+
+		switch (id) {
+		case 0:
+			return getPinDialog();
+		default:
+			return null;
+		}
+	}
+
+	private Dialog getPinDialog() {
+		if (pinDialog != null)
+			return pinDialog;
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				new ContextThemeWrapper(this, R.style.AppBaseTheme));
+		LayoutInflater inflater = getLayoutInflater();
+		builder.setView(inflater.inflate(R.layout.dialog_pin, null));
+
+		builder.setPositiveButton(getString(R.string.ok),
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int buttonId) {
+						String name = ((TextView) pinDialog
+								.findViewById(R.id.tvWorkerName)).getText()
+								.toString();
+						String pinStr = ((EditText) pinDialog
+								.findViewById(R.id.evPin)).getText().toString();
+						if (!StaticResources.checkWorkerPIN(name, pinStr))
+							return;
+						Intent toursActivity = new Intent(
+								getApplicationContext(), ToursActivity.class);
+						startActivity(toursActivity);
+					}
+				});
+
+		builder.setNegativeButton(getString(R.string.cancel),
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int buttonId) {
+						return;
+					}
+				});
+		pinDialog = builder.create();
+		return pinDialog;
+	}
+
 
 }
