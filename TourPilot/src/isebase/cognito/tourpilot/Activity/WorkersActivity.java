@@ -28,9 +28,9 @@ public class WorkersActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_workers);
-			reloadData();
-			initTable(workers.size());
-			initListWorkers();
+		reloadData();
+		initTable(workers.size());
+		initListWorkers();
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class WorkersActivity extends BaseActivity {
 	private void initTable(int tableSize) {
 		if (tableSize > 0)
 			return;
-		for (int i = 0; i < 15; i++)
+		for (int i = 0; i < 500; i++)
 			WorkerManager.Instance().add(new Worker("Worker " + i));
 	}	
 

@@ -46,30 +46,37 @@ public abstract class BaseObjectManager<T> {
 		try {
 			for (Method method : object.getClass().getMethods()) {
 				MapField annos = method.getAnnotation(MapField.class);
-				if (annos != null && !method.getReturnType().equals(Void.TYPE)) {					
+				if (annos != null && !method.getReturnType().equals(Void.TYPE)) {
 					if (method.getReturnType().equals(int.class))
-						values.put(annos.DatabaseField(), Integer.parseInt(method.invoke(object).toString()));
+						values.put(annos.DatabaseField(), Integer
+								.parseInt(method.invoke(object).toString()));
 					else if (method.getReturnType().equals(String.class))
-						values.put(annos.DatabaseField(), (String) method.invoke(object));
+						values.put(annos.DatabaseField(),
+								(String) method.invoke(object));
 					else if (method.getReturnType().equals(boolean.class))
-						values.put(annos.DatabaseField(), (Integer) Boolean.valueOf((Boolean)method.invoke(object)).compareTo(true));
+						values.put(annos.DatabaseField(), (Integer) Boolean
+								.valueOf((Boolean) method.invoke(object))
+								.compareTo(true));
 					else if (method.getReturnType().equals(double.class))
-						values.put(annos.DatabaseField(), Double.parseDouble(method.invoke(object).toString()));
+						values.put(annos.DatabaseField(), Double
+								.parseDouble(method.invoke(object).toString()));
 					else if (method.getReturnType().equals(float.class))
-						values.put(annos.DatabaseField(), Float.parseFloat(method.invoke(object).toString()));
+						values.put(annos.DatabaseField(), Float
+								.parseFloat(method.invoke(object).toString()));
 					else if (method.getReturnType().equals(long.class))
-						values.put(annos.DatabaseField(), Long.parseLong(method.invoke(object).toString()));
+						values.put(annos.DatabaseField(), Long.parseLong(method
+								.invoke(object).toString()));
 					else if (method.getReturnType().equals(short.class))
-						values.put(annos.DatabaseField(), Short.parseShort(method.invoke(object).toString()));
+						values.put(annos.DatabaseField(), Short
+								.parseShort(method.invoke(object).toString()));
 					else if (method.getReturnType().equals(byte.class))
-						values.put(annos.DatabaseField(), Byte.parseByte(method.invoke(object).toString()));					
+						values.put(annos.DatabaseField(), Byte.parseByte(method
+								.invoke(object).toString()));
 				}
-			}		
-		}
-		catch(Exception e)	{
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 
 		long objectID = database.insert(getRecTableName(), null, values);
 
@@ -120,33 +127,36 @@ public abstract class BaseObjectManager<T> {
 			IllegalAccessException {
 		T object = getRecType().newInstance();
 		Method[] methods = object.getClass().getMethods();
-		for (int i = 0; i < cursor.getColumnCount(); i++) {
-			for (Method method : methods) {
-				MapField annos = method.getAnnotation(MapField.class);
-				if (annos != null) {
-					try {
-						if (!annos.DatabaseField().equals(
-								cursor.getColumnName(i)))
-							continue;
-						else if (method.getParameterTypes()[0] == int.class)
-							method.invoke(object, cursor.getInt(i));
-						else if (method.getParameterTypes()[0] == String.class)
-							method.invoke(object, cursor.getString(i));
-						else if (method.getParameterTypes()[0] == Blob.class)
-							method.invoke(object, cursor.getBlob(i));
-						else if (method.getParameterTypes()[0] == Double.class)
-							method.invoke(object, cursor.getDouble(i));
-						else if (method.getParameterTypes()[0] == Float.class)
-							method.invoke(object, cursor.getFloat(i));
-						else if (method.getParameterTypes()[0] == Long.class)
-							method.invoke(object, cursor.getLong(i));
-						else if (method.getParameterTypes()[0] == Short.class)
-							method.invoke(object, cursor.getShort(i));
-						else if (method.getParameterTypes()[0] == boolean.class)
-							method.invoke(object, cursor.getInt(i) == 1);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+		for (Method method : methods) {
+			MapField annos = method.getAnnotation(MapField.class);
+			if (annos != null && method.getReturnType().equals(Void.TYPE)) {
+				try {
+					if (method.getParameterTypes()[0] == int.class)
+						method.invoke(object, cursor.getInt(cursor
+								.getColumnIndex(annos.DatabaseField())));
+					else if (method.getParameterTypes()[0] == String.class)
+						method.invoke(object, cursor.getString(cursor
+								.getColumnIndex(annos.DatabaseField())));
+					else if (method.getParameterTypes()[0] == Blob.class)
+						method.invoke(object, cursor.getBlob(cursor
+								.getColumnIndex(annos.DatabaseField())));
+					else if (method.getParameterTypes()[0] == Double.class)
+						method.invoke(object, cursor.getDouble(cursor
+								.getColumnIndex(annos.DatabaseField())));
+					else if (method.getParameterTypes()[0] == Float.class)
+						method.invoke(object, cursor.getFloat(cursor
+								.getColumnIndex(annos.DatabaseField())));
+					else if (method.getParameterTypes()[0] == Long.class)
+						method.invoke(object, cursor.getLong(cursor
+								.getColumnIndex(annos.DatabaseField())));
+					else if (method.getParameterTypes()[0] == Short.class)
+						method.invoke(object, cursor.getShort(cursor
+								.getColumnIndex(annos.DatabaseField())));
+					else if (method.getParameterTypes()[0] == boolean.class)
+						method.invoke(object, cursor.getInt(cursor
+								.getColumnIndex(annos.DatabaseField())) == 1);
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		}

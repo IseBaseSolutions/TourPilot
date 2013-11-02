@@ -5,9 +5,14 @@ import isebase.cognito.tourpilot.DataBase.MapField;
 
 public class Patient extends BaseObject {
 
+	public Patient() {
+		
+	}
+	
 	public Patient(String name) {
 		super(name);
 	}
+	
 	private String address;
 	private boolean isDone;
 
