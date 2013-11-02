@@ -41,11 +41,35 @@ public abstract class BaseObjectManager<T> {
 		dbHelper.close();
 	}
 
-	public T add(String name) {
-
+	public T add(T object) {
 		ContentValues values = new ContentValues();
+		try {
+			for (Method method : object.getClass().getMethods()) {
+				MapField annos = method.getAnnotation(MapField.class);
+				if (annos != null && !method.getReturnType().equals(Void.TYPE)) {					
+					if (method.getReturnType().equals(int.class))
+						values.put(annos.DatabaseField(), Integer.parseInt(method.invoke(object).toString()));
+					else if (method.getReturnType().equals(String.class))
+						values.put(annos.DatabaseField(), (String) method.invoke(object));
+					else if (method.getReturnType().equals(boolean.class))
+						values.put(annos.DatabaseField(), (Integer) Boolean.valueOf((Boolean)method.invoke(object)).compareTo(true));
+					else if (method.getReturnType().equals(double.class))
+						values.put(annos.DatabaseField(), Double.parseDouble(method.invoke(object).toString()));
+					else if (method.getReturnType().equals(float.class))
+						values.put(annos.DatabaseField(), Float.parseFloat(method.invoke(object).toString()));
+					else if (method.getReturnType().equals(long.class))
+						values.put(annos.DatabaseField(), Long.parseLong(method.invoke(object).toString()));
+					else if (method.getReturnType().equals(short.class))
+						values.put(annos.DatabaseField(), Short.parseShort(method.invoke(object).toString()));
+					else if (method.getReturnType().equals(byte.class))
+						values.put(annos.DatabaseField(), Byte.parseByte(method.invoke(object).toString()));					
+				}
+			}		
+		}
+		catch(Exception e)	{
+			e.printStackTrace();
+		}
 
-		values.put(DataBaseWrapper.NAME, name);
 
 		long objectID = database.insert(getRecTableName(), null, values);
 
@@ -118,6 +142,8 @@ public abstract class BaseObjectManager<T> {
 							method.invoke(object, cursor.getLong(i));
 						else if (method.getParameterTypes()[0] == Short.class)
 							method.invoke(object, cursor.getShort(i));
+						else if (method.getParameterTypes()[0] == boolean.class)
+							method.invoke(object, cursor.getInt(i) == 1);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
