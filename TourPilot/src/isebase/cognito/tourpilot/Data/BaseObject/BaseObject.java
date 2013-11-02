@@ -56,7 +56,7 @@ public abstract class BaseObject implements Parcelable  {
 		this.checkSum = checkSum;
 	}
 
-	public void Clear() {
+	protected void Clear() {
 		id = emptyID;
 		name = stringEmpty;
 		checkSum = 0;

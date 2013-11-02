@@ -1,6 +1,7 @@
 package isebase.cognito.tourpilot.Data.Tour;
 
 import android.os.Parcel;
+import android.os.Parcelable;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 
 public class Tour extends BaseObject{
@@ -24,5 +25,15 @@ public class Tour extends BaseObject{
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	public static final Parcelable.Creator<Tour> CREATOR = new Parcelable.Creator<Tour>(){
+		 public Tour createFromParcel(Parcel in){
+			 return new Tour();
+		 }
 
+		@Override
+		public Tour[] newArray(int size) {
+			// TODO Auto-generated method stub
+			return new Tour[size];
+		}
+	};
 }

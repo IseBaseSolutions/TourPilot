@@ -11,8 +11,9 @@ public class Patient extends BaseObject {
 		
 	}
 	
-	public Patient(String name) {
+	public Patient(String name, boolean isDone) {
 		super(name);
+		this.isDone = isDone;
 	}
 	
 	private String address;
