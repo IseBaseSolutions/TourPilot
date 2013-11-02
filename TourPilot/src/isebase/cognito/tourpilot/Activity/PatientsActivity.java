@@ -14,7 +14,12 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SlidingDrawer;
+import android.widget.SlidingDrawer.OnDrawerCloseListener;
+import android.widget.SlidingDrawer.OnDrawerOpenListener;
+import android.widget.TextView;
 
 public class PatientsActivity extends BaseActivity {
 
@@ -63,16 +68,38 @@ public class PatientsActivity extends BaseActivity {
 	public void initListDonePatients() {
 		final ArrayAdapter<Patient> adapter = new ArrayAdapter<Patient>(this,
 				android.R.layout.simple_list_item_1, donePatients);
-		// final ExpandableListView elvListDoneTasks = (ExpandableListView)
-		// findViewById(R.id.elvDonePatients);
-		// elvListDoneTasks.setAdapter(adapter);
+		final ListView lvListDoneTasks = (ListView) findViewById(R.id.content);
+		lvListDoneTasks.setAdapter(adapter);
+		
+		final SlidingDrawer slidingDonePatients = (SlidingDrawer) findViewById(R.id.slidingDonePatients);
+		final Button bOpened = (Button) findViewById(R.id.handle);
+		slidingDonePatients.setOnDrawerOpenListener(new OnDrawerOpenListener() {
+
+			@Override
+			public void onDrawerOpened() {
+				// TODO Auto-generated method stub
+				bOpened.setText("OPENED");
+			}
+
+		});
+		slidingDonePatients
+				.setOnDrawerCloseListener(new OnDrawerCloseListener() {
+					@Override
+					public void onDrawerClosed() {
+						// TODO Auto-generated method stub
+						bOpened.setText("CLOSED");
+					}
+				});
 	}
 
 	private void initPatients(int tableSize) {
 		if (tableSize > 0)
 			return;
-		for (int i = 0; i < 10; i++)
-			PatientManager.Instance().add(new Patient("Patient " + i, false));
+		boolean bb = false;
+		for (int i = 0; i < 10; i++) {
+			bb = !bb;
+			PatientManager.Instance().add(new Patient("Patient " + i, bb));
+		}
 		reloadData();
 	}
 
@@ -84,11 +111,9 @@ public class PatientsActivity extends BaseActivity {
 			else
 				unDonePatients.add(patient);
 		}
-		// TextView tvTourName = (TextView)
-		// findViewById(R.id.tvPatientsWorkerName);
-		// Intent i = getIntent();
-		// tour = (Tour) i.getParcelableExtra("patientData");
+		TextView tvTourName = (TextView) findViewById(R.id.tvPatientsWorkerName);
+		// tour = (Tour) getIntent().getParcelableExtra("patientData");
 		// tvTourName.setText(tour.getName());
-
 	}
 }
+

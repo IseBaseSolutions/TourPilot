@@ -24,23 +24,24 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_clearDatabase=0x7f080016;
-        public static final int action_settings=0x7f080015;
-        public static final int btLogOut=0x7f080011;
-        public static final int btOptions=0x7f080012;
+        public static final int action_clearDatabase=0x7f080017;
+        public static final int action_settings=0x7f080016;
+        public static final int btLogOut=0x7f080012;
+        public static final int btOptions=0x7f080013;
         public static final int btSynchronization=0x7f08000a;
         public static final int cb_SavePin=0x7f080003;
-        public static final int elvDonePatients=0x7f08000d;
+        public static final int content=0x7f08000e;
         public static final int etPhoneNumber=0x7f080009;
         public static final int etPinCode=0x7f080002;
         public static final int etPort=0x7f080007;
         public static final int etServer=0x7f080005;
-        public static final int evPin=0x7f080014;
-        public static final int lvTours=0x7f080010;
+        public static final int evPin=0x7f080015;
+        public static final int handle=0x7f08000f;
+        public static final int lvTours=0x7f080011;
         public static final int lvUndonePatients=0x7f08000c;
-        public static final int lvUndoneTasks=0x7f08000e;
-        public static final int lvWorkers=0x7f080013;
-        public static final int tvCurrentInfo=0x7f08000f;
+        public static final int lvWorkers=0x7f080014;
+        public static final int slidingDonePatients=0x7f08000d;
+        public static final int tvCurrentInfo=0x7f080010;
         public static final int tvOptions=0x7f080000;
         public static final int tvPatientsWorkerName=0x7f08000b;
         public static final int tvPhoneNumber=0x7f080008;
