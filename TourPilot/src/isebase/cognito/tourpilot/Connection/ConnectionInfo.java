@@ -7,7 +7,7 @@ import android.net.NetworkInfo;
 
 public class ConnectionInfo {
 
-	private NetworkInfo networkInfo;
+	ConnectivityManager connMgr;
 	
 	private static ConnectionInfo instance;
 	
@@ -19,14 +19,13 @@ public class ConnectionInfo {
 	}
 
 	public NetworkInfo getNetWorkInfo() {
-		return networkInfo;
+		return connMgr.getActiveNetworkInfo();
 	}
 
 	public ConnectionInfo() {
-		ConnectivityManager connMgr = (ConnectivityManager) StaticResources
+		connMgr = (ConnectivityManager) StaticResources
 				.getBaseContext()
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		networkInfo = connMgr.getActiveNetworkInfo();
 	}
 
 }

@@ -9,14 +9,12 @@ import isebase.cognito.tourpilot.Data.Worker.Worker;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class PatientsActivity extends BaseActivity {
 
@@ -86,10 +84,11 @@ public class PatientsActivity extends BaseActivity {
 			else
 				unDonePatients.add(patient);
 		}
-//		TextView tvTourName = (TextView) findViewById(R.id.tvPatientsWorkerName);
-//		Intent i = getIntent();
-//		tour = (Tour) i.getParcelableExtra("patientData");
-//		tvTourName.setText(tour.getName());
+		// TextView tvTourName = (TextView)
+		// findViewById(R.id.tvPatientsWorkerName);
+		// Intent i = getIntent();
+		// tour = (Tour) i.getParcelableExtra("patientData");
+		// tvTourName.setText(tour.getName());
 
 	}
 }

@@ -1,16 +1,15 @@
 package isebase.cognito.tourpilot.Data.BaseObject;
 
 import isebase.cognito.tourpilot.DataBase.MapField;
-import android.os.Parcelable;
 
-public abstract class BaseObject implements Parcelable  {
+public abstract class BaseObject {
 
 	public int emptyID = -1;
-	
+
 	public BaseObject() {
-		
+
 	}
-	
+
 	public BaseObject(String name) {
 		setName(name);
 	}

@@ -24,8 +24,8 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_clearDatabase=0x7f080018;
-        public static final int action_settings=0x7f080017;
+        public static final int action_clearDatabase=0x7f080016;
+        public static final int action_settings=0x7f080015;
         public static final int btLogOut=0x7f080011;
         public static final int btOptions=0x7f080012;
         public static final int btSynchronization=0x7f08000a;
@@ -35,20 +35,18 @@ public final class R {
         public static final int etPinCode=0x7f080002;
         public static final int etPort=0x7f080007;
         public static final int etServer=0x7f080005;
-        public static final int evPin=0x7f080016;
+        public static final int evPin=0x7f080014;
         public static final int lvTours=0x7f080010;
         public static final int lvUndonePatients=0x7f08000c;
         public static final int lvUndoneTasks=0x7f08000e;
         public static final int lvWorkers=0x7f080013;
         public static final int tvCurrentInfo=0x7f08000f;
-        public static final int tvEnterPin=0x7f080015;
         public static final int tvOptions=0x7f080000;
         public static final int tvPatientsWorkerName=0x7f08000b;
         public static final int tvPhoneNumber=0x7f080008;
         public static final int tvPinCode=0x7f080001;
         public static final int tvPort=0x7f080006;
         public static final int tvServer=0x7f080004;
-        public static final int tvWorkerName=0x7f080014;
     }
     public static final class layout {
         public static final int activity_base=0x7f030000;
@@ -72,10 +70,12 @@ public final class R {
         public static final int cancel=0x7f05000d;
         public static final int clear_darabase=0x7f05000f;
         public static final int complete_tour=0x7f050011;
-        public static final int enter_pin=0x7f050014;
+        public static final int connection_problems=0x7f050014;
+        public static final int enter_pin=0x7f050016;
         public static final int first=0x7f050003;
         public static final int hello_world=0x7f050002;
         public static final int log_out=0x7f050012;
+        public static final int no_connection=0x7f050015;
         public static final int ok=0x7f05000c;
         public static final int options=0x7f050005;
         public static final int phone_number=0x7f05000a;
@@ -87,10 +87,10 @@ public final class R {
         public static final int some_text=0x7f050013;
         public static final int standart_port=0x7f050010;
         public static final int synchronization=0x7f05000e;
-        public static final int title_activity_base=0x7f050015;
-        public static final int title_activity_main=0x7f050017;
-        public static final int title_activity_patients=0x7f050018;
-        public static final int title_activity_test=0x7f050016;
+        public static final int title_activity_base=0x7f050017;
+        public static final int title_activity_main=0x7f050019;
+        public static final int title_activity_patients=0x7f05001a;
+        public static final int title_activity_test=0x7f050018;
     }
     public static final class style {
         /** 

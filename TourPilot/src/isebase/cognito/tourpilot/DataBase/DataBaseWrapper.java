@@ -6,16 +6,21 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DataBaseWrapper extends SQLiteOpenHelper {
 
+	//Table names
 	public static final String WORKERS = "Workers";
 	public static final String TOURS = "Tours";
 	public static final String PATIENTS = "Patients";
+	public static final String SETTINGS = "Patients";
+	
+	//Base fields
 	public static final String ID = "_id";
 	public static final String NAME = "name";
 	public static final String CHECKSUM = "checksum";
+	
+	//Patients fields
 	public static final String ADDRESS = "address";
 	public static final String IS_DONE = "is_done";
 	
-
 	private static final String DATABASE_NAME = "TourPilot.db";
 	private static final int DATABASE_VERSION = 1;
 

@@ -5,6 +5,7 @@ import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
+import isebase.cognito.tourpilot.Data.Worker.Worker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,10 @@ public class ToursActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tours);
 		reloadData();
+		
+		Bundle data = getIntent().getExtras();
+
+		
 		initTable(tours.size());
 		initListTours();
 	}
