@@ -1,5 +1,7 @@
 package isebase.cognito.tourpilot.Data.Patient;
 
+import android.os.Parcel;
+
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.DataBase.MapField;
 
@@ -34,5 +36,17 @@ public class Patient extends BaseObject {
 	@MapField(DatabaseField = "is_done")
 	public boolean getIsDone() {
 		return isDone;
+	}
+
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		// TODO Auto-generated method stub
+		
 	}
 }

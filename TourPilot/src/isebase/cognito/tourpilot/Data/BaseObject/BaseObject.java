@@ -1,8 +1,9 @@
 package isebase.cognito.tourpilot.Data.BaseObject;
 
 import isebase.cognito.tourpilot.DataBase.MapField;
+import android.os.Parcelable;
 
-public abstract class BaseObject {
+public abstract class BaseObject implements Parcelable  {
 
 	public int emptyID = -1;
 	public String stringEmpty = "";
@@ -60,5 +61,4 @@ public abstract class BaseObject {
 		name = stringEmpty;
 		checkSum = 0;
 	}
-
 }

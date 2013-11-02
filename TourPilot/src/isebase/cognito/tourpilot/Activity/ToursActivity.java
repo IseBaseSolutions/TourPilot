@@ -47,7 +47,9 @@ public class ToursActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
-
+				Intent patientsActivity = new Intent(getApplicationContext(), PatientsActivity.class);
+				patientsActivity.putExtra("patientData", tours.get(position));
+				startActivity(patientsActivity);
 			}
 
 		});
