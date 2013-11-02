@@ -1,8 +1,6 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Data.Patient.Patient;
-import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
@@ -71,9 +69,8 @@ public class WorkersActivity extends BaseActivity {
 				((TextView) pinDialog.findViewById(R.id.tvWorkerName)).
 					setText(((Worker)listView.getItemAtPosition(position)).getName());
 				((EditText) pinDialog.findViewById(R.id.evPin)).
-					setText(StaticResources.stringEmpty);
+					setText("");
 			}
-
 		});
 	}
 	
@@ -112,7 +109,7 @@ public class WorkersActivity extends BaseActivity {
 								.toString();
 						String pinStr = ((EditText) pinDialog
 								.findViewById(R.id.evPin)).getText().toString();
-						if (!StaticResources.checkWorkerPIN(name, pinStr))
+						if (checkWorkerPIN(name, pinStr))
 							return;
 						Intent toursActivity = new Intent(
 								getApplicationContext(), ToursActivity.class);
@@ -132,5 +129,20 @@ public class WorkersActivity extends BaseActivity {
 		return pinDialog;
 	}
 
-
+	public boolean checkWorkerPIN(String workerName, String strPin) {
+		if (strPin.equals(""))
+			return false;
+		Long pin = Long.parseLong(strPin);
+		long num = 0;
+		int numArray[] = new int[] { 1, 3, 5, 7, 13, 0x11 };
+		try {
+			byte byteText[] = workerName.getBytes("latin1");
+			for (int i = 0; i < byteText.length; i++)
+				num += (byteText[i]) * numArray[i % 6];
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return num == pin;
+	}
+	
 }

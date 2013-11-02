@@ -74,7 +74,7 @@ public class PatientsActivity extends BaseActivity {
 		if (tableSize > 0)
 			return;
 		for (int i = 0; i < 10; i++)
-			PatientManager.Instance().add(new Patient("Patient " + i, true));
+			PatientManager.Instance().add(new Patient("Patient " + i, false));
 		reloadData();
 	}
 
@@ -86,10 +86,10 @@ public class PatientsActivity extends BaseActivity {
 			else
 				unDonePatients.add(patient);
 		}
-		TextView tvTourName = (TextView) findViewById(R.id.tvPatientsWorkerName);
-		Intent i = getIntent();
-		tour = (Tour) i.getParcelableExtra("patientData");
-		tvTourName.setText(tour.getName());
+//		TextView tvTourName = (TextView) findViewById(R.id.tvPatientsWorkerName);
+//		Intent i = getIntent();
+//		tour = (Tour) i.getParcelableExtra("patientData");
+//		tvTourName.setText(tour.getName());
 
 	}
 }

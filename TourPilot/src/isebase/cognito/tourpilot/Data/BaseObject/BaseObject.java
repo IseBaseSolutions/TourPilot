@@ -6,7 +6,6 @@ import android.os.Parcelable;
 public abstract class BaseObject implements Parcelable  {
 
 	public int emptyID = -1;
-	public String stringEmpty = "";
 	
 	public BaseObject() {
 		
@@ -58,7 +57,7 @@ public abstract class BaseObject implements Parcelable  {
 
 	protected void Clear() {
 		id = emptyID;
-		name = stringEmpty;
+		name = "";
 		checkSum = 0;
 	}
 }

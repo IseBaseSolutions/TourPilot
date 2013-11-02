@@ -83,7 +83,7 @@ public abstract class BaseObjectManager<T> {
 
 		Cursor cursor = database.query(getRecTableName(), TABLE_COLUMNS,
 				DataBaseWrapper.ID + " = " + objectID, null, null, null, null);
-		
+
 		cursor.moveToFirst();
 		T newComment = null;
 		try {
