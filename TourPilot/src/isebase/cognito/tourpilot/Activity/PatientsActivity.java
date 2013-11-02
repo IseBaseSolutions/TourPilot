@@ -68,18 +68,10 @@ public class PatientsActivity extends BaseActivity {
 	}
 
 	private void initPatients(int tableSize) {
-
-		if (tableSize > 0) {
+		if (tableSize > 0)
 			return;
-		}
-		PatientManager.Instance().add("Patient 1");
-		PatientManager.Instance().add("Patient 2");
-		PatientManager.Instance().add("Patient 3");
-		PatientManager.Instance().add("Patient 4");
-		PatientManager.Instance().add("Patient 5");
-		PatientManager.Instance().add("Patient 6");
-		PatientManager.Instance().add("Patient 7");
-		PatientManager.Instance().add("Patient 8");
+		for (int i = 0; i < 15; i++)
+			PatientManager.Instance().add(new Patient("Patient " + i));
 	}
 
 	public void reloadData() {

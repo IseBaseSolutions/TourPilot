@@ -1,6 +1,8 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Data.Patient.Patient;
+import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
@@ -58,15 +60,10 @@ public class WorkersActivity extends BaseActivity {
 	}
 	
 	private void initTable(int tableSize) {
-		if(tableSize > 0)
+		if (tableSize > 0)
 			return;
-		WorkerManager.Instance().add("Goncharenko, Andrew");
-		WorkerManager.Instance().add("Begov, Bogdan");
-		WorkerManager.Instance().add("Kiryanov, Igor");
-		WorkerManager.Instance().add("Goenko, Nikolai");
-		WorkerManager.Instance().add("Parker, Peter");
-		WorkerManager.Instance().add("Wayne, Bruce");
-		WorkerManager.Instance().add("Kent, Clark");
+		for (int i = 0; i < 15; i++)
+			WorkerManager.Instance().add(new Worker("Worker " + i));
 	}	
 
 	public void switchToOptions(View view) {
