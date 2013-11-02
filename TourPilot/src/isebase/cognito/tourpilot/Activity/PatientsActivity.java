@@ -8,6 +8,7 @@ import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class PatientsActivity extends BaseActivity {
 
@@ -22,8 +24,8 @@ public class PatientsActivity extends BaseActivity {
 	List<Patient> donePatients = new ArrayList<Patient>();
 	List<Patient> unDonePatients = new ArrayList<Patient>();
 	
-	public static Tour tour;
-	public static Worker worker;
+	private Tour tour;
+	private Worker worker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +45,6 @@ public class PatientsActivity extends BaseActivity {
 	}
 
 	public void initListUndonePatients() {
-		unDonePatients = new ArrayList<Patient>();
 
 		final ArrayAdapter<Patient> adapter = new ArrayAdapter<Patient>(this,android.R.layout.simple_list_item_1, unDonePatients);
 		final ListView lvListUndoneTasks = (ListView) findViewById(R.id.lvUndonePatients);
@@ -64,7 +65,7 @@ public class PatientsActivity extends BaseActivity {
 		donePatients = new ArrayList<Patient>();
 		final ArrayAdapter<Patient> adapter = new ArrayAdapter<Patient>(this,android.R.layout.simple_list_item_1, donePatients);
 		final ExpandableListView elvListDoneTasks = (ExpandableListView) findViewById(R.id.elvDonePatients);
-		elvListDoneTasks.setAdapter(adapter);
+//		elvListDoneTasks.setAdapter(adapter);
 	}
 
 	private void initPatients(int tableSize) {
@@ -82,5 +83,10 @@ public class PatientsActivity extends BaseActivity {
 			else
 				unDonePatients.add(patient);
 		}
+		TextView tvTourName = (TextView)findViewById(R.id.tvPatientsWorkerName);
+		Intent i = getIntent();
+		tour = (Tour)i.getParcelableExtra("patientData");
+		tvTourName.setText(tour.getName());
+
 	}
 }
