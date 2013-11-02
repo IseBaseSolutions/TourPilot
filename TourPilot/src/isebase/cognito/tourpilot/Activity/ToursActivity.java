@@ -1,6 +1,8 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Data.Patient.Patient;
+import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
 
@@ -45,7 +47,9 @@ public class ToursActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
-
+				Intent patientsActivity = new Intent(getApplicationContext(), PatientsActivity.class);
+				patientsActivity.putExtra("patientData", tours.get(position));
+				startActivity(patientsActivity);
 			}
 
 		});
@@ -54,13 +58,8 @@ public class ToursActivity extends Activity {
 	private void initTable(int tableSize) {
 		if (tableSize > 0)
 			return;
-		TourManager.Instance().add("First tour");
-		TourManager.Instance().add("Second tour");
-		TourManager.Instance().add("Third tour");
-		TourManager.Instance().add("Fourth tour");
-		TourManager.Instance().add("Fifth tour");
-		TourManager.Instance().add("Sixth tour");
-		TourManager.Instance().add("Seventh tour");
+		for (int i = 0; i < 15; i++)
+			TourManager.Instance().add(new Tour("Tour " + i));
 	}
 
 	public void logOut(View view) {
