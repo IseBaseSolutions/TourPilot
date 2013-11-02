@@ -1,21 +1,19 @@
 package isebase.cognito.tourpilot.Data.Patient;
 
-import android.os.Parcel;
-
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.DataBase.MapField;
 
 public class Patient extends BaseObject {
 
 	public Patient() {
-		
+
 	}
-	
+
 	public Patient(String name, boolean isDone) {
 		super(name);
 		this.isDone = isDone;
 	}
-	
+
 	private String address;
 	private boolean isDone;
 
@@ -23,7 +21,7 @@ public class Patient extends BaseObject {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	
+
 	@MapField(DatabaseField = "address")
 	public String getAddress() {
 		return this.address;

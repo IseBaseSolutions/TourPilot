@@ -42,44 +42,9 @@ public abstract class BaseObjectManager<T> {
 	}
 
 	public T add(T object) {
-		ContentValues values = new ContentValues();
-		try {
-			for (Method method : object.getClass().getMethods()) {
-				if (method.getReturnType().equals(Void.TYPE))
-					continue;
-				MapField annos = method.getAnnotation(MapField.class);
-				if (annos != null) {
-					if (method.getReturnType().equals(int.class))
-						values.put(annos.DatabaseField(), Integer
-								.parseInt(method.invoke(object).toString()));
-					else if (method.getReturnType().equals(String.class))
-						values.put(annos.DatabaseField(),
-								(String) method.invoke(object));
-					else if (method.getReturnType().equals(boolean.class))
-						values.put(annos.DatabaseField(), Boolean
-								.parseBoolean(method.invoke(object).toString()));
-					else if (method.getReturnType().equals(double.class))
-						values.put(annos.DatabaseField(), Double
-								.parseDouble(method.invoke(object).toString()));
-					else if (method.getReturnType().equals(float.class))
-						values.put(annos.DatabaseField(), Float
-								.parseFloat(method.invoke(object).toString()));
-					else if (method.getReturnType().equals(long.class))
-						values.put(annos.DatabaseField(), Long.parseLong(method
-								.invoke(object).toString()));
-					else if (method.getReturnType().equals(short.class))
-						values.put(annos.DatabaseField(), Short
-								.parseShort(method.invoke(object).toString()));
-					else if (method.getReturnType().equals(byte.class))
-						values.put(annos.DatabaseField(), Byte.parseByte(method
-								.invoke(object).toString()));
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		long objectID = database.insert(getRecTableName(), null, values);
+		long objectID = database.insert(getRecTableName(), null,
+				getValues(object));
 
 		Cursor cursor = database.query(getRecTableName(), TABLE_COLUMNS,
 				DataBaseWrapper.ID + " = " + objectID, null, null, null, null);
@@ -101,6 +66,18 @@ public abstract class BaseObjectManager<T> {
 			System.out.println("Comment deleted with id: " + id);
 			database.delete(getRecTableName(), DataBaseWrapper.ID + " = " + id,
 					null);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void save(T object) {
+		try {
+			long id = (Long) object.getClass().getMethod("getID")
+					.invoke(object);
+			database.update(getRecTableName(), getValues(object),
+					DataBaseWrapper.ID + " = " + id, null);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -155,7 +132,8 @@ public abstract class BaseObjectManager<T> {
 					else if (method.getParameterTypes()[0].equals(short.class))
 						method.invoke(object, cursor.getShort(cursor
 								.getColumnIndex(annos.DatabaseField())));
-					else if (method.getParameterTypes()[0].equals(boolean.class))
+					else if (method.getParameterTypes()[0]
+							.equals(boolean.class))
 						method.invoke(object, cursor.getInt(cursor
 								.getColumnIndex(annos.DatabaseField())) == 1);
 				} catch (Exception e) {
@@ -176,6 +154,46 @@ public abstract class BaseObjectManager<T> {
 			}
 		}
 		TABLE_COLUMNS = list.toArray(new String[list.size()]);
+	}
+
+	private ContentValues getValues(T object) {
+		ContentValues values = new ContentValues();
+		try {
+			for (Method method : object.getClass().getMethods()) {
+				if (method.getReturnType().equals(Void.TYPE))
+					continue;
+				MapField annos = method.getAnnotation(MapField.class);
+				if (annos != null) {
+					if (method.getReturnType().equals(int.class))
+						values.put(annos.DatabaseField(), Integer
+								.parseInt(method.invoke(object).toString()));
+					else if (method.getReturnType().equals(String.class))
+						values.put(annos.DatabaseField(),
+								(String) method.invoke(object));
+					else if (method.getReturnType().equals(boolean.class))
+						values.put(annos.DatabaseField(), Boolean
+								.parseBoolean(method.invoke(object).toString()));
+					else if (method.getReturnType().equals(double.class))
+						values.put(annos.DatabaseField(), Double
+								.parseDouble(method.invoke(object).toString()));
+					else if (method.getReturnType().equals(float.class))
+						values.put(annos.DatabaseField(), Float
+								.parseFloat(method.invoke(object).toString()));
+					else if (method.getReturnType().equals(long.class))
+						values.put(annos.DatabaseField(), Long.parseLong(method
+								.invoke(object).toString()));
+					else if (method.getReturnType().equals(short.class))
+						values.put(annos.DatabaseField(), Short
+								.parseShort(method.invoke(object).toString()));
+					else if (method.getReturnType().equals(byte.class))
+						values.put(annos.DatabaseField(), Byte.parseByte(method
+								.invoke(object).toString()));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return values;
 	}
 
 }
