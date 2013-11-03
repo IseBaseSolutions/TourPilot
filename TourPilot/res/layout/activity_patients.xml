@@ -41,7 +41,7 @@
             android:id="@+id/handle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Handle" />
+            android:text="@string/show_done_patients" />
 
         <ListView
             android:id="@+id/content"

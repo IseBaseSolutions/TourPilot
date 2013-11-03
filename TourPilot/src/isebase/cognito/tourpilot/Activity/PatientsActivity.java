@@ -78,7 +78,7 @@ public class PatientsActivity extends BaseActivity {
 			@Override
 			public void onDrawerOpened() {
 				// TODO Auto-generated method stub
-				bOpened.setText("OPENED");
+				bOpened.setText(R.string.hide_done_patients);
 			}
 
 		});
@@ -87,7 +87,7 @@ public class PatientsActivity extends BaseActivity {
 					@Override
 					public void onDrawerClosed() {
 						// TODO Auto-generated method stub
-						bOpened.setText("CLOSED");
+						bOpened.setText(R.string.show_done_patients);
 					}
 				});
 	}

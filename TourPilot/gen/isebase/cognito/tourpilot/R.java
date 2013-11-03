@@ -75,6 +75,7 @@ public final class R {
         public static final int enter_pin=0x7f050016;
         public static final int first=0x7f050003;
         public static final int hello_world=0x7f050002;
+        public static final int hide_done_patients=0x7f05001c;
         public static final int log_out=0x7f050012;
         public static final int no_connection=0x7f050015;
         public static final int ok=0x7f05000c;
@@ -85,6 +86,7 @@ public final class R {
         public static final int program_options=0x7f050004;
         public static final int save_pin_code=0x7f050007;
         public static final int server=0x7f050008;
+        public static final int show_done_patients=0x7f05001b;
         public static final int some_text=0x7f050013;
         public static final int standart_port=0x7f050010;
         public static final int synchronization=0x7f05000e;
