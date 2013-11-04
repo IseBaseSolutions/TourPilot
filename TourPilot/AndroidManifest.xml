@@ -31,21 +31,7 @@
         </activity>
         <activity android:name="isebase.cognito.tourpilot.Activity.BaseActivity" >
         </activity>
-        <activity
-            android:name="isebase.cognito.tourpilot.Activity.TestActivity"
-            android:label="@string/title_activity_test" >
-        </activity>
-        <activity
-            android:name="isebase.cognito.tourpilot.MainActivity"
-            android:label="@string/title_activity_main" >
-        </activity>
-        <activity
-            android:name="isebase.cognito.tourpilot.Activity.TestActivity"
-            android:label="@string/title_activity_test" >
-        </activity>
-        <activity
-            android:name="isebase.cognito.tourpilot.Activity.PatientsActivity"
-            android:label="@string/title_activity_patients" >
+        <activity android:name="isebase.cognito.tourpilot.Activity.PatientsActivity" >
         </activity>
     </application>
 
