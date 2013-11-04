@@ -125,6 +125,7 @@ public class WorkersActivity extends BaseActivity {
 				});
 		builder.setTitle(R.string.some_text);
 		builder.setMessage(R.string.enter_pin);
+		builder.setIcon(R.drawable.dialog_password);
 		dialogPin = builder.create();
 		return dialogPin;
 	}

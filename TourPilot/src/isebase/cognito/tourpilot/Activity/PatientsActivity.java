@@ -68,17 +68,18 @@ public class PatientsActivity extends BaseActivity {
 	public void initListDonePatients() {
 		final ArrayAdapter<Patient> adapter = new ArrayAdapter<Patient>(this,
 				android.R.layout.simple_list_item_1, donePatients);
-		final ListView lvListDoneTasks = (ListView) findViewById(R.id.content);
+		final ListView lvListDoneTasks = (ListView) findViewById(R.id.lvDonePatients);
 		lvListDoneTasks.setAdapter(adapter);
 		
-		final SlidingDrawer slidingDonePatients = (SlidingDrawer) findViewById(R.id.slidingDonePatients);
-		final Button bOpened = (Button) findViewById(R.id.handle);
+		final SlidingDrawer slidingDonePatients = (SlidingDrawer) findViewById(R.id.sdDonePatients);
+		final Button bOpened = (Button) findViewById(R.id.btHandle);
 		slidingDonePatients.setOnDrawerOpenListener(new OnDrawerOpenListener() {
 
 			@Override
 			public void onDrawerOpened() {
 				// TODO Auto-generated method stub
 				bOpened.setText(R.string.hide_done_patients);
+				bOpened.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
 			}
 
 		});
@@ -88,6 +89,7 @@ public class PatientsActivity extends BaseActivity {
 					public void onDrawerClosed() {
 						// TODO Auto-generated method stub
 						bOpened.setText(R.string.show_done_patients);
+						bOpened.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
 					}
 				});
 	}
@@ -96,7 +98,7 @@ public class PatientsActivity extends BaseActivity {
 		if (tableSize > 0)
 			return;
 		boolean bb = false;
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 20; i++) {
 			bb = !bb;
 			PatientManager.Instance().add(new Patient("Patient " + i, bb));
 		}
@@ -111,7 +113,7 @@ public class PatientsActivity extends BaseActivity {
 			else
 				unDonePatients.add(patient);
 		}
-		TextView tvTourName = (TextView) findViewById(R.id.tvPatientsWorkerName);
+		TextView tvTourName = (TextView) findViewById(R.id.tvCurrentInfo);
 		// tour = (Tour) getIntent().getParcelableExtra("patientData");
 		// tvTourName.setText(tour.getName());
 	}

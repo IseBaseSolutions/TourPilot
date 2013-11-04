@@ -52,10 +52,6 @@ public class OptionsActivity extends BaseActivity {
 		}
 		Intent workersActivity = new Intent(getApplicationContext(),
 				WorkersActivity.class);
-		//
-		// //Sending data to another Activity
-		// nextScreen.putExtra("name", inputName.getText().toString());
-		// nextScreen.putExtra("email", inputEmail.getText().toString());
 
 		startActivity(workersActivity);
 	}
