@@ -2,7 +2,7 @@ package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Settings.Option;
-import isebase.cognito.tourpilot.Data.Settings.OptionsManager;
+import isebase.cognito.tourpilot.Data.Settings.OptionManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 
@@ -28,6 +28,7 @@ public class WorkersActivity extends BaseActivity {
 	List<Worker> workers = new ArrayList<Worker>();
 
 	Worker selectedWorker;
+	Option option;
 
 	public Dialog dialogPin;
 
@@ -91,6 +92,7 @@ public class WorkersActivity extends BaseActivity {
 
 	public void reloadData() {
 		workers = WorkerManager.Instance().load();
+		option = OptionManager.Instance().loadOptions();
 	}
 
 	private Dialog getDialogPin() {
@@ -111,7 +113,11 @@ public class WorkersActivity extends BaseActivity {
 								.findViewById(R.id.evPin)).getText().toString();
 						if (!checkWorkerPIN(name, pinStr))
 							return;
-						OptionsManager.Instance().add(new Option());
+						if (option != null)
+						{
+							option.setWorkerID(selectedWorker.getId());
+							OptionManager.Instance().save(option);
+						}
 						Intent toursActivity = new Intent(
 								getApplicationContext(), ToursActivity.class);
 						startActivity(toursActivity);

@@ -1,6 +1,8 @@
 package isebase.cognito.tourpilot.Data.Settings;
 
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.Worker.Worker;
+import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataBase.MapField;
 
 public class Option extends BaseObject {
@@ -63,6 +65,10 @@ public class Option extends BaseObject {
 	@MapField(DatabaseField = "server_port")
 	public void setServerPort(int serverPort) {
 		this.serverPort = serverPort;
+	}
+	
+	public Worker getWorker() {
+		return WorkerManager.Instance().load(workerID);
 	}
 	
 }

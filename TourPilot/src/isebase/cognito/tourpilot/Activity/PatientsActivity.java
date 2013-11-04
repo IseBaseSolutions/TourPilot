@@ -9,6 +9,7 @@ import isebase.cognito.tourpilot.Data.Worker.Worker;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -77,7 +78,6 @@ public class PatientsActivity extends BaseActivity {
 
 			@Override
 			public void onDrawerOpened() {
-				// TODO Auto-generated method stub
 				bOpened.setText(R.string.hide_done_patients);
 				bOpened.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
 			}
@@ -87,7 +87,6 @@ public class PatientsActivity extends BaseActivity {
 				.setOnDrawerCloseListener(new OnDrawerCloseListener() {
 					@Override
 					public void onDrawerClosed() {
-						// TODO Auto-generated method stub
 						bOpened.setText(R.string.show_done_patients);
 						bOpened.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
 					}

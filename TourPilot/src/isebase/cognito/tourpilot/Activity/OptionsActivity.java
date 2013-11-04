@@ -3,7 +3,7 @@ package isebase.cognito.tourpilot.Activity;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Connection.ConnectionInfo;
 import isebase.cognito.tourpilot.Data.Settings.Option;
-import isebase.cognito.tourpilot.Data.Settings.OptionsManager;
+import isebase.cognito.tourpilot.Data.Settings.OptionManager;
 import isebase.cognito.tourpilot.R.string;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import android.app.AlertDialog;
@@ -65,6 +65,33 @@ public class OptionsActivity extends BaseActivity {
 		startActivity(workersActivity);
 	}
 	
+	private void initOptions() {
+		if (option == null)
+			return;
+		((TextView) findViewById(R.id.etServer)).setText(option.getServerIP());
+		((TextView) findViewById(R.id.etPort)).setText(String.valueOf(option.getServerPort()));
+		TelephonyManager tMgr = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
+		String phoneNumber = (String) (tMgr.getLine1Number().equals("") ? string.unknown_number : tMgr.getLine1Number());
+		((TextView) findViewById(R.id.etPhoneNumber)).setText(phoneNumber);
+	}
+	
+	private void saveOptions() {
+		if (option == null)
+			option = new Option();
+		String serverIP = ((TextView) findViewById(R.id.etServer)).getText().toString();
+		option.setServerIP(serverIP);
+		int serverPort = Integer.parseInt(((TextView) findViewById(R.id.etPort)).getText().toString());
+		option.setServerPort(serverPort);
+		if (option.getId() == option.emptyID)
+			OptionManager.Instance().add(option);
+		else
+			OptionManager.Instance().save(option);
+	}
+	
+	private void reloadData() {
+		option = OptionManager.Instance().loadOptions();
+	}
+	
 	private Dialog getDialogNoConnection() {
 		if (dialogNoConnection != null)
 			return dialogNoConnection;
@@ -87,30 +114,5 @@ public class OptionsActivity extends BaseActivity {
 		return dialogNoConnection;
 	}
 	
-	private void initOptions() {
-		if (option == null)
-			return;
-		((TextView) findViewById(R.id.etServer)).setText(option.getServerIP());
-		((TextView) findViewById(R.id.etPort)).setText(String.valueOf(option.getServerPort()));
-		TelephonyManager tMgr = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
-		String phoneNumber = (String) (tMgr.getLine1Number().equals("") ? string.unknown_number : tMgr.getLine1Number());
-		((TextView) findViewById(R.id.etPhoneNumber)).setText(phoneNumber);
-	}
-	
-	private void saveOptions() {
-		if (option == null)
-			option = new Option();
-		String serverIP = ((TextView) findViewById(R.id.etServer)).getText().toString();
-		option.setServerIP(serverIP);
-		int serverPort = Integer.parseInt(((TextView) findViewById(R.id.etPort)).getText().toString());
-		option.setServerPort(serverPort);
-		if (option.getId() == option.emptyID)
-			OptionsManager.Instance().add(option);
-		else
-			OptionsManager.Instance().save(option);
-	}
-	
-	private void reloadData() {
-		option = OptionsManager.Instance().loadOptions();
-	}
+
 }
