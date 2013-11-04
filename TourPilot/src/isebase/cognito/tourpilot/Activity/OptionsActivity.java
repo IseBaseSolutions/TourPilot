@@ -2,13 +2,18 @@ package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Connection.ConnectionInfo;
+import isebase.cognito.tourpilot.Data.Settings.Option;
+import isebase.cognito.tourpilot.Data.Settings.OptionsManager;
+import isebase.cognito.tourpilot.R.string;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,11 +25,15 @@ public class OptionsActivity extends BaseActivity {
 
 	public Dialog dialogNoConnection;
 	
+	private Option option;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_options);
 		StaticResources.setBaseContext(getBaseContext());
+		reloadData();
+		initOptions();
 	}
 
 	@Override
@@ -52,7 +61,7 @@ public class OptionsActivity extends BaseActivity {
 		}
 		Intent workersActivity = new Intent(getApplicationContext(),
 				WorkersActivity.class);
-
+		saveOptions();
 		startActivity(workersActivity);
 	}
 	
@@ -76,5 +85,32 @@ public class OptionsActivity extends BaseActivity {
 		builder.setIcon(android.R.drawable.ic_dialog_alert);
 		dialogNoConnection = builder.create();
 		return dialogNoConnection;
+	}
+	
+	private void initOptions() {
+		if (option == null)
+			return;
+		((TextView) findViewById(R.id.etServer)).setText(option.getServerIP());
+		((TextView) findViewById(R.id.etPort)).setText(String.valueOf(option.getServerPort()));
+		TelephonyManager tMgr = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
+		String phoneNumber = (String) (tMgr.getLine1Number().equals("") ? string.unknown_number : tMgr.getLine1Number());
+		((TextView) findViewById(R.id.etPhoneNumber)).setText(phoneNumber);
+	}
+	
+	private void saveOptions() {
+		if (option == null)
+			option = new Option();
+		String serverIP = ((TextView) findViewById(R.id.etServer)).getText().toString();
+		option.setServerIP(serverIP);
+		int serverPort = Integer.parseInt(((TextView) findViewById(R.id.etPort)).getText().toString());
+		option.setServerPort(serverPort);
+		if (option.getId() == option.emptyID)
+			OptionsManager.Instance().add(option);
+		else
+			OptionsManager.Instance().save(option);
+	}
+	
+	private void reloadData() {
+		option = OptionsManager.Instance().loadOptions();
 	}
 }

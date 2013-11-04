@@ -10,7 +10,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	public static final String WORKERS = "Workers";
 	public static final String TOURS = "Tours";
 	public static final String PATIENTS = "Patients";
-	public static final String SETTINGS = "Patients";
+	public static final String OPTIONS = "Options";
 	
 	//Base fields
 	public static final String ID = "_id";
@@ -20,6 +20,13 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	//Patients fields
 	public static final String ADDRESS = "address";
 	public static final String IS_DONE = "is_done";
+	
+	//Settings fields
+	public static final String WORKER_ID = "worker_id";
+	public static final String TOUR_ID = "tour_id";
+	public static final String EMPLOYMENT_ID = "employment_id";
+	public static final String SERVER_IP = "server_ip";
+	public static final String SERVER_PORT = "server_port";
 	
 	private static final String DATABASE_NAME = "TourPilot.db";
 	private static final int DATABASE_VERSION = 1;
@@ -46,6 +53,18 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ ADDRESS + " TEXT, "
 			+ IS_DONE + " INTEGER NOT NULL DEFAULT 0 "
 			+ ");";
+	
+	private static final String OPTIONS_TABLE_CREATE = "CREATE TABLE "
+			+ OPTIONS + "(" 
+			+ ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+			+ NAME + " TEXT, "
+			+ CHECKSUM + " INTEGER, "
+			+ WORKER_ID + " INTEGER, "
+			+ TOUR_ID + " INTEGER, "
+			+ EMPLOYMENT_ID + " INTEGER, "
+			+ SERVER_IP + " TEXT, "
+			+ SERVER_PORT + " INTEGER "
+			+ ");";
 
 	public DataBaseWrapper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -56,6 +75,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		db.execSQL(WORKERS_TABLE_CREATE);
 		db.execSQL(TOURS_TABLE_CREATE);
 		db.execSQL(PATIENTS_TABLE_CREATE);
+		db.execSQL(OPTIONS_TABLE_CREATE);
 	}
 
 	@Override

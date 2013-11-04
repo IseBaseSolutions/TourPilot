@@ -1,6 +1,8 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Data.Settings.Option;
+import isebase.cognito.tourpilot.Data.Settings.OptionsManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 
@@ -109,6 +111,7 @@ public class WorkersActivity extends BaseActivity {
 								.findViewById(R.id.evPin)).getText().toString();
 						if (!checkWorkerPIN(name, pinStr))
 							return;
+						OptionsManager.Instance().add(new Option());
 						Intent toursActivity = new Intent(
 								getApplicationContext(), ToursActivity.class);
 						startActivity(toursActivity);

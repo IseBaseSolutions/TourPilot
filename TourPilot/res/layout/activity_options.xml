@@ -52,7 +52,7 @@
         android:layout_alignLeft="@+id/etPinCode"
         android:layout_below="@+id/etPinCode"
         android:layout_marginTop="30dp"
-        android:text="@string/server"
+        android:text="@string/server_ip"
         android:textAppearance="?android:attr/textAppearanceLarge" />
     
 	<EditText
@@ -62,6 +62,7 @@
         android:layout_alignLeft="@+id/tvServer"
         android:layout_below="@+id/tvServer"
         android:ems="10"
+        android:hint="@string/input_server_ip"
         android:inputType="text" >
 
         <requestFocus />
@@ -73,7 +74,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/etServer"
         android:layout_below="@+id/etServer"
-        android:text="@string/port"
+        android:text="@string/server_port"
         android:textAppearance="?android:attr/textAppearanceLarge" />
     
    	<EditText
