@@ -28,5 +28,7 @@
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_patients">PatientsActivity</string>
+    <string name="show_done_patients">Show done patients</string>
+    <string name="hide_done_patients">Hide done patients</string>
 
 </resources>
