@@ -43,26 +43,14 @@ public abstract class BaseObjectManager<T> {
 
 	public T add(T object) {
 
-		long objectID = database.insert(getRecTableName(), null,
+		int objectID = (int) database.insert(getRecTableName(), null,
 				getValues(object));
-
-		Cursor cursor = database.query(getRecTableName(), TABLE_COLUMNS,
-				DataBaseWrapper.ID + " = " + objectID, null, null, null, null);
-
-		cursor.moveToFirst();
-		T newComment = null;
-		try {
-			newComment = parseObject(cursor);
-			cursor.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return newComment;
+		return load(objectID);
 	}
 
 	public void delete(Class<T> object) {
 		try {
-			long id = (Long) object.getMethod("getID").invoke(object);
+			int id = (Integer) object.getMethod("getId").invoke(object);
 			System.out.println("Comment deleted with id: " + id);
 			database.delete(getRecTableName(), DataBaseWrapper.ID + " = " + id,
 					null);
@@ -74,7 +62,7 @@ public abstract class BaseObjectManager<T> {
 
 	public void save(T object) {
 		try {
-			long id = (Long) object.getClass().getMethod("getID")
+			int id = (Integer) object.getClass().getMethod("getId")
 					.invoke(object);
 			database.update(getRecTableName(), getValues(object),
 					DataBaseWrapper.ID + " = " + id, null);
@@ -99,6 +87,21 @@ public abstract class BaseObjectManager<T> {
 			e.printStackTrace();
 		}
 		return objects;
+	}
+
+	public T load(int id) {
+		Cursor cursor = database.query(getRecTableName(), TABLE_COLUMNS,
+				DataBaseWrapper.ID + " = " + id, null, null, null, null);
+
+		cursor.moveToFirst();
+		T newComment = null;
+		try {
+			newComment = parseObject(cursor);
+			cursor.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return newComment;
 	}
 
 	private T parseObject(Cursor cursor) throws InstantiationException,

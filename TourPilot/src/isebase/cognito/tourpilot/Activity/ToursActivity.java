@@ -1,13 +1,14 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Data.Patient.Patient;
-import isebase.cognito.tourpilot.Data.Patient.PatientManager;
+import isebase.cognito.tourpilot.Data.Settings.OptionManager;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
@@ -18,18 +19,21 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class ToursActivity extends Activity {
 
 	List<Tour> tours = new ArrayList<Tour>();
+	Worker worker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tours);
-		reloadData();		
+		reloadData();
 		initTable(tours.size());
 		initListTours();
+		initComnponents();
 	}
 
 	@Override
@@ -48,8 +52,8 @@ public class ToursActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
-				Intent patientsActivity = new Intent(getApplicationContext(), PatientsActivity.class);
-				//patientsActivity.putExtra("patientData", tours.get(position));
+				Intent patientsActivity = new Intent(getApplicationContext(),
+						PatientsActivity.class);
 				startActivity(patientsActivity);
 			}
 
@@ -72,6 +76,12 @@ public class ToursActivity extends Activity {
 
 	public void reloadData() {
 		tours = TourManager.Instance().load();
+		worker = OptionManager.Instance().loadOptions().getWorker();
 	}
 
+	private void initComnponents() {
+		SimpleDateFormat simpleDateformat = new SimpleDateFormat("EE MM.dd");
+		String dayOfTheWeek = simpleDateformat.format(new Date());
+		((TextView) findViewById(R.id.tvCurrentInfo)).setText(String.format("%s - %s", dayOfTheWeek, worker.getName()));
+	}
 }

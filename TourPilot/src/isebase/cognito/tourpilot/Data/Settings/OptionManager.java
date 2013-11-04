@@ -2,19 +2,19 @@ package isebase.cognito.tourpilot.Data.Settings;
 
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 
-public class OptionsManager extends BaseObjectManager<Option> {
+public class OptionManager extends BaseObjectManager<Option> {
 
-	private static OptionsManager instance;
+	private static OptionManager instance;
 
-	public static OptionsManager Instance() {
+	public static OptionManager Instance() {
 		if (instance != null)
 			return instance;
-		instance = new OptionsManager();
+		instance = new OptionManager();
 		instance.open();
 		return instance;
 	}
 
-	public OptionsManager() {
+	public OptionManager() {
 		super(Option.class);
 	}
 
