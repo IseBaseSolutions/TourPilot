@@ -111,8 +111,8 @@ public class WorkersActivity extends BaseActivity {
 						String name = selectedWorker.getName();
 						String pinStr = ((EditText) dialogPin
 								.findViewById(R.id.evPin)).getText().toString();
-						if (!checkWorkerPIN(name, pinStr))
-							return;
+//						if (!checkWorkerPIN(name, pinStr))
+//							return;
 						if (option != null)
 						{
 							option.setWorkerID(selectedWorker.getId());

@@ -9,7 +9,6 @@ import isebase.cognito.tourpilot.Data.Worker.Worker;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -71,7 +70,7 @@ public class PatientsActivity extends BaseActivity {
 				android.R.layout.simple_list_item_1, donePatients);
 		final ListView lvListDoneTasks = (ListView) findViewById(R.id.lvDonePatients);
 		lvListDoneTasks.setAdapter(adapter);
-		
+
 		final SlidingDrawer slidingDonePatients = (SlidingDrawer) findViewById(R.id.sdDonePatients);
 		final Button bOpened = (Button) findViewById(R.id.btHandle);
 		slidingDonePatients.setOnDrawerOpenListener(new OnDrawerOpenListener() {
@@ -79,7 +78,8 @@ public class PatientsActivity extends BaseActivity {
 			@Override
 			public void onDrawerOpened() {
 				bOpened.setText(R.string.hide_done_patients);
-				bOpened.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_down_float, 0);
+				bOpened.setCompoundDrawablesWithIntrinsicBounds(0, 0,
+						android.R.drawable.arrow_down_float, 0);
 			}
 
 		});
@@ -88,7 +88,8 @@ public class PatientsActivity extends BaseActivity {
 					@Override
 					public void onDrawerClosed() {
 						bOpened.setText(R.string.show_done_patients);
-						bOpened.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.arrow_up_float, 0);
+						bOpened.setCompoundDrawablesWithIntrinsicBounds(0, 0,
+								android.R.drawable.arrow_up_float, 0);
 					}
 				});
 	}
@@ -117,4 +118,3 @@ public class PatientsActivity extends BaseActivity {
 		// tvTourName.setText(tour.getName());
 	}
 }
-
