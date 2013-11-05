@@ -31,13 +31,14 @@ public class WorkersActivity extends BaseActivity {
 	Option option;
 
 	private Dialog dialogPin;
-	private EditText evPin = (EditText) dialogPin.findViewById(R.id.evPin);
+	private EditText evPin;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_workers);
 		reloadData();
+		initControls();
 		initTable(workers.size());
 		initListWorkers();
 	}
@@ -57,6 +58,10 @@ public class WorkersActivity extends BaseActivity {
 		default:
 			return null;
 		}
+	}
+	
+	public void initControls() {
+		evPin = (EditText) dialogPin.findViewById(R.id.evPin);
 	}
 
 	public void initListWorkers() {

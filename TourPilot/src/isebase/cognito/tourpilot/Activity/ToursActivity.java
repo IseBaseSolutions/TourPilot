@@ -4,7 +4,6 @@ import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
-import isebase.cognito.tourpilot.Data.Worker.Worker;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

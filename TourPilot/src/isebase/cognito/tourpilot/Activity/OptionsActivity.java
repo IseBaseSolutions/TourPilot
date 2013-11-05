@@ -17,22 +17,22 @@ import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 public class OptionsActivity extends BaseActivity {
 
 	private Dialog dialogNoConnection;
 	private Dialog dialogNoIPEntered;
 
-	private EditText etServerIP = (EditText) findViewById(R.id.etServerIP);
-	private EditText etServerPort = (EditText) findViewById(R.id.etServerPort);
-	private EditText etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
+	private EditText etServerIP;
+	private EditText etServerPort;
+	private EditText etPhoneNumber;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_options);
 		StaticResources.setBaseContext(getBaseContext());
+		initControls();
 		initOptions();
 	}
 
@@ -53,6 +53,12 @@ public class OptionsActivity extends BaseActivity {
 		default:
 			return null;
 		}
+	}
+
+	public void initControls() {
+		etServerIP = (EditText) findViewById(R.id.etServerIP);
+		etServerPort = (EditText) findViewById(R.id.etServerPort);
+		etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
 	}
 
 	public void startSync(View view) {
