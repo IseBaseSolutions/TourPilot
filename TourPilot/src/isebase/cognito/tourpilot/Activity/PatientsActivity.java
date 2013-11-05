@@ -66,6 +66,12 @@ public class PatientsActivity extends BaseActivity {
 	}
 
 	public void initListDonePatients() {
+		for (Patient patient : patients) {
+			if (patient.getIsDone())
+				donePatients.add(patient);
+			else
+				unDonePatients.add(patient);
+		}
 		final ArrayAdapter<Patient> adapter = new ArrayAdapter<Patient>(this,
 				android.R.layout.simple_list_item_1, donePatients);
 		final ListView lvListDoneTasks = (ListView) findViewById(R.id.lvDonePatients);
@@ -107,14 +113,5 @@ public class PatientsActivity extends BaseActivity {
 
 	public void reloadData() {
 		patients = PatientManager.Instance().load();
-		for (Patient patient : patients) {
-			if (patient.getIsDone())
-				donePatients.add(patient);
-			else
-				unDonePatients.add(patient);
-		}
-		TextView tvTourName = (TextView) findViewById(R.id.tvCurrentInfo);
-		// tour = (Tour) getIntent().getParcelableExtra("patientData");
-		// tvTourName.setText(tour.getName());
 	}
 }

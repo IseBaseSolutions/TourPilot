@@ -1,8 +1,8 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Data.Settings.Option;
-import isebase.cognito.tourpilot.Data.Settings.OptionManager;
+import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Data.Option.OptionManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 
@@ -68,6 +68,11 @@ public class WorkersActivity extends BaseActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
+				if (Option.testMode)
+				{
+					switchToTours();
+					return;
+				}
 				showDialog(0);
 				selectedWorker = (Worker) listView.getItemAtPosition(position);
 				dialogPin.setTitle((selectedWorker).getName());
@@ -90,9 +95,15 @@ public class WorkersActivity extends BaseActivity {
 		startActivity(optionsActivity);
 	}
 
+	public void switchToTours() {
+		Intent toursActivity = new Intent(getApplicationContext(),
+				ToursActivity.class);
+		startActivity(toursActivity);
+	}
+
 	public void reloadData() {
 		workers = WorkerManager.Instance().load();
-		option = OptionManager.Instance().loadOptions();
+		option = OptionManager.Instance().loadOption();
 	}
 
 	private Dialog getDialogPin() {
@@ -111,16 +122,13 @@ public class WorkersActivity extends BaseActivity {
 						String name = selectedWorker.getName();
 						String pinStr = ((EditText) dialogPin
 								.findViewById(R.id.evPin)).getText().toString();
-//						if (!checkWorkerPIN(name, pinStr))
-//							return;
-						if (option != null)
-						{
+						if (!checkWorkerPIN(name, pinStr))
+							return;
+						if (option != null) {
 							option.setWorkerID(selectedWorker.getId());
 							OptionManager.Instance().save(option);
 						}
-						Intent toursActivity = new Intent(
-								getApplicationContext(), ToursActivity.class);
-						startActivity(toursActivity);
+						switchToTours();
 					}
 				});
 

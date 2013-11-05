@@ -1,4 +1,4 @@
-package isebase.cognito.tourpilot.Data.Settings;
+package isebase.cognito.tourpilot.Data.Option;
 
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 
@@ -30,7 +30,7 @@ public class OptionManager extends BaseObjectManager<Option> {
 		return super.add(object);
 	}
 
-	public Option loadOptions() {
+	public Option loadOption() {
 		return super.load().size() > 0 ? super.load().get(0) : null;
 	}
 

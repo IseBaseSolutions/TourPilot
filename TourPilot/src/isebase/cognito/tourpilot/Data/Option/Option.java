@@ -1,4 +1,4 @@
-package isebase.cognito.tourpilot.Data.Settings;
+package isebase.cognito.tourpilot.Data.Option;
 
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
@@ -9,9 +9,24 @@ public class Option extends BaseObject {
 
 	private int workerID;
 	private int tourID;
-	private int employmentID;
+	private int employmentID;	
+	private int serverPort;	
+	
 	private String serverIP;
-	private int serverPort;
+	
+	public static boolean testMode = true;
+	
+	private Worker worker; 
+	
+	private static Option instance;
+	
+	public static Option Instance() {
+		if (instance != null)
+			return instance;
+		if (OptionManager.Instance().loadOption() != null)
+			return instance;
+		return instance = new Option();
+	}
 	
 	public Option() {
 		
@@ -68,7 +83,20 @@ public class Option extends BaseObject {
 	}
 	
 	public Worker getWorker() {
-		return WorkerManager.Instance().load(workerID);
+		if (worker != null)
+			return worker;
+		worker = WorkerManager.Instance().load(workerID);
+		return worker;
+	}
+	
+	@Override
+	protected void Clear() {
+		super.Clear();
+		workerID = emptyID;
+		tourID = emptyID;
+		employmentID = emptyID;	
+		serverPort = 4448;		
+		serverIP = "";
 	}
 	
 }
