@@ -1,9 +1,11 @@
 package isebase.cognito.tourpilot.Data.Option;
 
+import android.content.pm.PackageManager.NameNotFoundException;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataBase.MapField;
+import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
 public class Option extends BaseObject {
 
@@ -23,13 +25,14 @@ public class Option extends BaseObject {
 	public static Option Instance() {
 		if (instance != null)
 			return instance;
-		if (OptionManager.Instance().loadOption() != null)
+		instance = OptionManager.Instance().loadOption();
+		if (instance != null)
 			return instance;
 		return instance = new Option();
 	}
 	
 	public Option() {
-		
+
 	}
 	
 	@MapField(DatabaseField = "worker_id")
@@ -87,8 +90,8 @@ public class Option extends BaseObject {
 			return worker;
 		worker = WorkerManager.Instance().load(workerID);
 		return worker;
-	}
-	
+	}	
+
 	@Override
 	protected void Clear() {
 		super.Clear();
@@ -97,6 +100,11 @@ public class Option extends BaseObject {
 		employmentID = emptyID;	
 		serverPort = 4448;		
 		serverIP = "";
+	}
+	
+	public String getVersion() throws NameNotFoundException {
+		return StaticResources.getBaseContext().getPackageManager()
+			    .getPackageInfo(StaticResources.getBaseContext().getPackageName(), 0).versionName;
 	}
 	
 }
