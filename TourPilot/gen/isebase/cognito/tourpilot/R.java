@@ -34,8 +34,8 @@ public final class R {
         public static final int cb_SavePin=0x7f080003;
         public static final int etPhoneNumber=0x7f080009;
         public static final int etPinCode=0x7f080002;
-        public static final int etPort=0x7f080007;
-        public static final int etServer=0x7f080005;
+        public static final int etServerIP=0x7f080005;
+        public static final int etServerPort=0x7f080007;
         public static final int evPin=0x7f080014;
         public static final int lvDonePatients=0x7f08000e;
         public static final int lvTours=0x7f080010;

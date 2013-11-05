@@ -3,8 +3,6 @@ package isebase.cognito.tourpilot.Activity;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
-import isebase.cognito.tourpilot.Data.Tour.Tour;
-import isebase.cognito.tourpilot.Data.Worker.Worker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,16 +17,12 @@ import android.widget.ListView;
 import android.widget.SlidingDrawer;
 import android.widget.SlidingDrawer.OnDrawerCloseListener;
 import android.widget.SlidingDrawer.OnDrawerOpenListener;
-import android.widget.TextView;
 
 public class PatientsActivity extends BaseActivity {
 
 	List<Patient> patients = new ArrayList<Patient>();
 	List<Patient> donePatients = new ArrayList<Patient>();
 	List<Patient> unDonePatients = new ArrayList<Patient>();
-
-	private Tour tour;
-	private Worker worker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,12 +60,6 @@ public class PatientsActivity extends BaseActivity {
 	}
 
 	public void initListDonePatients() {
-		for (Patient patient : patients) {
-			if (patient.getIsDone())
-				donePatients.add(patient);
-			else
-				unDonePatients.add(patient);
-		}
 		final ArrayAdapter<Patient> adapter = new ArrayAdapter<Patient>(this,
 				android.R.layout.simple_list_item_1, donePatients);
 		final ListView lvListDoneTasks = (ListView) findViewById(R.id.lvDonePatients);
@@ -113,5 +101,11 @@ public class PatientsActivity extends BaseActivity {
 
 	public void reloadData() {
 		patients = PatientManager.Instance().load();
+		for (Patient patient : patients) {
+			if (patient.getIsDone())
+				donePatients.add(patient);
+			else
+				unDonePatients.add(patient);
+		}
 	}
 }
