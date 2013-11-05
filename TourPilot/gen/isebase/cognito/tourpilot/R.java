@@ -72,6 +72,7 @@ public final class R {
         public static final int clear_darabase=0x7f050011;
         public static final int complete_tour=0x7f050013;
         public static final int connection_problems=0x7f050016;
+        public static final int empty_text=0x7f050021;
         public static final int enter_pin=0x7f050019;
         public static final int first=0x7f050003;
         public static final int hello_world=0x7f050002;
@@ -91,6 +92,7 @@ public final class R {
         public static final int show_done_patients=0x7f05001e;
         public static final int some_text=0x7f050015;
         public static final int standart_port=0x7f050012;
+        public static final int str_ok=0x7f050020;
         public static final int synchronization=0x7f050010;
         public static final int title_activity_base=0x7f05001a;
         public static final int title_activity_main=0x7f05001c;

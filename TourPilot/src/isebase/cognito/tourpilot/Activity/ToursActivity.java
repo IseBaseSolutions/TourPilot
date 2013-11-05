@@ -1,7 +1,7 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Data.Settings.OptionManager;
+import isebase.cognito.tourpilot.Data.Option.OptionManager;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
@@ -76,7 +76,7 @@ public class ToursActivity extends Activity {
 
 	public void reloadData() {
 		tours = TourManager.Instance().load();
-		worker = OptionManager.Instance().loadOptions().getWorker();
+		worker = OptionManager.Instance().loadOption().getWorker();
 	}
 
 	private void initComnponents() {

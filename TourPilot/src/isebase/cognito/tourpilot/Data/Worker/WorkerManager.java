@@ -8,7 +8,7 @@ public class WorkerManager extends BaseObjectManager<Worker> {
 
 	public static WorkerManager Instance() {
 		if (instance != null)
-			return instance;
+			return instance;	
 		instance = new WorkerManager();
 		instance.open();
 		return instance;

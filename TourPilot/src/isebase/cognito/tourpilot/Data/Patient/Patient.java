@@ -5,6 +5,9 @@ import isebase.cognito.tourpilot.DataBase.MapField;
 
 public class Patient extends BaseObject {
 
+	private String address;
+	private boolean isDone;
+	
 	public Patient() {
 
 	}
@@ -13,9 +16,6 @@ public class Patient extends BaseObject {
 		super(name);
 		this.isDone = isDone;
 	}
-
-	private String address;
-	private boolean isDone;
 
 	@MapField(DatabaseField = "address")
 	public void setAddress(String address) {

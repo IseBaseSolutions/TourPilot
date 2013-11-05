@@ -22,4 +22,5 @@ public class PatientManager extends BaseObjectManager<Patient> {
 	public String getRecTableName() {
 		return dbHelper.PATIENTS;
 	}
+	
 }
