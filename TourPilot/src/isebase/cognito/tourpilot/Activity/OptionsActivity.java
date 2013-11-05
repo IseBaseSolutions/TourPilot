@@ -1,7 +1,6 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.R.string;
 import isebase.cognito.tourpilot.Connection.ConnectionAsyncTask;
 import isebase.cognito.tourpilot.Connection.ConnectionInfo;
 import isebase.cognito.tourpilot.Data.Option.Option;
@@ -12,20 +11,22 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class OptionsActivity extends BaseActivity {
 
-	public Dialog dialogNoConnection;
-	public Dialog dialogNoIPEntered;
+	private Dialog dialogNoConnection;
+	private Dialog dialogNoIPEntered;
+
+	private EditText etServerIP = (EditText) findViewById(R.id.etServerIP);
+	private EditText etServerPort = (EditText) findViewById(R.id.etServerPort);
+	private EditText etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +56,7 @@ public class OptionsActivity extends BaseActivity {
 	}
 
 	public void startSync(View view) {
-		if (((TextView) findViewById(R.id.etServer)).getText().toString()
-				.equals("")) {
+		if (etServerIP.getText().toString().equals("")) {
 			showDialog(0);
 			return;
 		}
@@ -76,22 +76,17 @@ public class OptionsActivity extends BaseActivity {
 	private void initOptions() {
 		TelephonyManager tMgr = (TelephonyManager) getBaseContext()
 				.getSystemService(Context.TELEPHONY_SERVICE);
-		 String phoneNumber = (String) (tMgr.getLine1Number() == null ? getString(R.string.unknown_number)
+		String phoneNumber = (String) (tMgr.getLine1Number() == null ? getString(R.string.unknown_number)
 				: tMgr.getLine1Number());
-		((TextView) findViewById(R.id.etPhoneNumber)).setText(phoneNumber);
-		((TextView) findViewById(R.id.etServer)).setText(Option.Instance().getServerIP());
-		((TextView) findViewById(R.id.etPort)).setText(String.valueOf(Option.Instance()
-				.getServerPort()));
+		etPhoneNumber.setText(phoneNumber);
+		etServerIP.setText(Option.Instance().getServerIP());
+		etServerPort.setText(String.valueOf(Option.Instance().getServerPort()));
 	}
 
 	private void saveOptions() {
-		String serverIP = ((TextView) findViewById(R.id.etServer)).getText()
-				.toString();
-		Option.Instance().setServerIP(serverIP);
-		int serverPort = Integer
-				.parseInt(((TextView) findViewById(R.id.etPort)).getText()
-						.toString());
-		Option.Instance().setServerPort(serverPort);
+		Option.Instance().setServerIP(etServerIP.getText().toString());
+		Option.Instance().setServerPort(
+				Integer.parseInt(etServerPort.getText().toString()));
 		if (Option.Instance().getId() == Option.Instance().emptyID)
 			OptionManager.Instance().add(Option.Instance());
 		else

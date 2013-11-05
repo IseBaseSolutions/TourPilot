@@ -30,7 +30,8 @@ public class WorkersActivity extends BaseActivity {
 	Worker selectedWorker;
 	Option option;
 
-	public Dialog dialogPin;
+	private Dialog dialogPin;
+	private EditText evPin = (EditText) dialogPin.findViewById(R.id.evPin);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +77,7 @@ public class WorkersActivity extends BaseActivity {
 				showDialog(0);
 				selectedWorker = (Worker) listView.getItemAtPosition(position);
 				dialogPin.setTitle((selectedWorker).getName());
-				((EditText) dialogPin.findViewById(R.id.evPin)).setText("");
+				evPin.setText("");
 			}
 		});
 	}

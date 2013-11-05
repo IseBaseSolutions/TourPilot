@@ -1,7 +1,7 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Data.Option.OptionManager;
+import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
@@ -24,7 +24,6 @@ import android.widget.TextView;
 public class ToursActivity extends Activity {
 
 	List<Tour> tours = new ArrayList<Tour>();
-	Worker worker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,12 +75,12 @@ public class ToursActivity extends Activity {
 
 	public void reloadData() {
 		tours = TourManager.Instance().load();
-		worker = OptionManager.Instance().loadOption().getWorker();
 	}
 
 	private void initComnponents() {
 		SimpleDateFormat simpleDateformat = new SimpleDateFormat("EE MM.dd");
 		String dayOfTheWeek = simpleDateformat.format(new Date());
-		((TextView) findViewById(R.id.tvCurrentInfo)).setText(String.format("%s - %s", dayOfTheWeek, worker.getName()));
+		((TextView) findViewById(R.id.tvCurrentInfo)).setText(String.format(
+				"%s - %s", dayOfTheWeek, Option.Instance().getWorker().getName()));
 	}
 }
