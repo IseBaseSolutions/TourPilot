@@ -7,11 +7,10 @@ public abstract class BaseObject {
 	public int emptyID = -1;
 
 	public BaseObject() {
-		Clear();
+
 	}
 
 	public BaseObject(String name) {
-		Clear();
 		setName(name);
 	}
 

@@ -3,11 +3,12 @@ package isebase.cognito.tourpilot.Activity;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
+import isebase.cognito.tourpilot.Data.Tour.Tour;
+import isebase.cognito.tourpilot.Data.Worker.Worker;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -18,12 +19,16 @@ import android.widget.ListView;
 import android.widget.SlidingDrawer;
 import android.widget.SlidingDrawer.OnDrawerCloseListener;
 import android.widget.SlidingDrawer.OnDrawerOpenListener;
+import android.widget.TextView;
 
 public class PatientsActivity extends BaseActivity {
 
 	List<Patient> patients = new ArrayList<Patient>();
 	List<Patient> donePatients = new ArrayList<Patient>();
 	List<Patient> unDonePatients = new ArrayList<Patient>();
+
+	private Tour tour;
+	private Worker worker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +60,6 @@ public class PatientsActivity extends BaseActivity {
 					public void onItemClick(AdapterView<?> arg0, View arg1,
 							int position, long arg3) {
 						// TODO Auto-generated method stub
-						Intent tasksActivity = new Intent(
-								getApplicationContext(), TasksActivity.class);
-						startActivity(tasksActivity);
 					}
 				});
 
@@ -66,11 +68,11 @@ public class PatientsActivity extends BaseActivity {
 	public void initListDonePatients() {
 		final ArrayAdapter<Patient> adapter = new ArrayAdapter<Patient>(this,
 				android.R.layout.simple_list_item_1, donePatients);
-		final ListView lvListDoneTasks = (ListView) findViewById(R.id.lvDonePatients);
+		final ListView lvListDoneTasks = (ListView) findViewById(R.id.content);
 		lvListDoneTasks.setAdapter(adapter);
-
+		
 		final SlidingDrawer slidingDonePatients = (SlidingDrawer) findViewById(R.id.slidingDonePatients);
-		final Button bOpened = (Button) findViewById(R.id.bShowDonePatients);
+		final Button bOpened = (Button) findViewById(R.id.handle);
 		slidingDonePatients.setOnDrawerOpenListener(new OnDrawerOpenListener() {
 
 			@Override
@@ -109,5 +111,9 @@ public class PatientsActivity extends BaseActivity {
 			else
 				unDonePatients.add(patient);
 		}
+		TextView tvTourName = (TextView) findViewById(R.id.tvPatientsWorkerName);
+		// tour = (Tour) getIntent().getParcelableExtra("patientData");
+		// tvTourName.setText(tour.getName());
 	}
 }
+
