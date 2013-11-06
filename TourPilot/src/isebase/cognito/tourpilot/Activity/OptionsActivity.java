@@ -89,8 +89,8 @@ public class OptionsActivity extends BaseActivity {
 			showDialog(1);
 			return;
 		}
-		ConnectionAsyncTask m = new ConnectionAsyncTask();
-		m.execute();
+//		ConnectionAsyncTask m = new ConnectionAsyncTask();
+//		m.execute();
 		saveOptions();
 		Intent workersActivity = new Intent(getApplicationContext(),
 				WorkersActivity.class);
