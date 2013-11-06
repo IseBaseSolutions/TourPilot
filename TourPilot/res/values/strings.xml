@@ -35,5 +35,6 @@
     <string name="hide_done_patients">Hide done patients</string>
     <string name="str_ok">OK</string>
     <string name="empty_text"></string>
+    <string name="version">Version</string>
 
 </resources>

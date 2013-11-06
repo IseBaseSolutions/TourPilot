@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -22,6 +23,7 @@ public class OptionsActivity extends BaseActivity {
 
 	private Dialog dialogNoConnection;
 	private Dialog dialogNoIPEntered;
+	private Dialog dialogVersion;
 
 	private EditText etServerIP;
 	private EditText etServerPort;
@@ -50,9 +52,25 @@ public class OptionsActivity extends BaseActivity {
 			return getDialogNoIPEntered();
 		case 1:
 			return getDialogNoConnection();
+		case 2:
+			return getDialogVersion();
 		default:
 			return null;
 		}
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case R.id.action_clear_database:
+	            //clear database
+	            return true;
+	        case R.id.action_show_version:
+	            showDialog(2);
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
 
 	public void initControls() {
@@ -141,6 +159,32 @@ public class OptionsActivity extends BaseActivity {
 		builder.setIcon(android.R.drawable.ic_dialog_alert);
 		dialogNoConnection = builder.create();
 		return dialogNoConnection;
+	}
+	
+	private Dialog getDialogVersion() {
+		if (dialogVersion != null)
+			return dialogVersion;
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				new ContextThemeWrapper(this, R.style.AppBaseTheme));
+
+		builder.setPositiveButton(getString(R.string.ok),
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int buttonId) {
+						return;
+					}
+
+				});
+		builder.setTitle(R.string.version);
+		try {
+			builder.setMessage(Option.Instance().getVersion());
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		builder.setIcon(android.R.drawable.ic_dialog_info);
+		dialogVersion = builder.create();
+		return dialogVersion;
 	}
 
 }

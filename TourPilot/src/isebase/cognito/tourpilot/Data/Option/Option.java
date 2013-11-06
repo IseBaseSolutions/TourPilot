@@ -99,7 +99,7 @@ public class Option extends BaseObject {
 		tourID = emptyID;
 		employmentID = emptyID;	
 		serverPort = 4448;		
-		serverIP = "";
+		serverIP = "192.168.1.8";
 	}
 	
 	public String getVersion() throws NameNotFoundException {

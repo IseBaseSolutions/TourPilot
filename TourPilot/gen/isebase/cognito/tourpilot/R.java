@@ -25,8 +25,9 @@ public final class R {
         public static final int ic_launcher=0x7f020001;
     }
     public static final class id {
-        public static final int action_clearDatabase=0x7f080016;
+        public static final int action_clear_database=0x7f080016;
         public static final int action_settings=0x7f080015;
+        public static final int action_show_version=0x7f080017;
         public static final int btHandle=0x7f08000f;
         public static final int btLogOut=0x7f080011;
         public static final int btOptions=0x7f080012;
@@ -97,6 +98,7 @@ public final class R {
         public static final int title_activity_patients=0x7f05001d;
         public static final int title_activity_test=0x7f05001b;
         public static final int unknown_number=0x7f05000a;
+        public static final int version=0x7f050022;
     }
     public static final class style {
         /** 
