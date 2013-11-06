@@ -7,6 +7,7 @@ import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -53,7 +54,9 @@ public class PatientsActivity extends BaseActivity {
 					@Override
 					public void onItemClick(AdapterView<?> arg0, View arg1,
 							int position, long arg3) {
-						// TODO Auto-generated method stub
+						Intent tasksActivity = new Intent(
+								getApplicationContext(), TasksActivity.class);
+						startActivity(tasksActivity);
 					}
 				});
 

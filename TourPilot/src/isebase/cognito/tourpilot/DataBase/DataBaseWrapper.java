@@ -11,6 +11,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	public static final String TOURS = "Tours";
 	public static final String PATIENTS = "Patients";
 	public static final String OPTIONS = "Options";
+	public static final String TASKS = "Tasks";
 	
 	//Base fields
 	public static final String ID = "_id";
@@ -27,6 +28,9 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	public static final String EMPLOYMENT_ID = "employment_id";
 	public static final String SERVER_IP = "server_ip";
 	public static final String SERVER_PORT = "server_port";
+	
+	//Tasks fields
+	public static final String TASK_STATE = "task_state";
 	
 	private static final String DATABASE_NAME = "TourPilot.db";
 	private static final int DATABASE_VERSION = 1;
@@ -65,6 +69,14 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ SERVER_IP + " TEXT, "
 			+ SERVER_PORT + " INTEGER "
 			+ ");";
+	
+	private static final String TASKS_TABLE_CREATE = "CREATE TABLE "
+			+ TASKS + "("
+			+ ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+			+ NAME + " TEXT NOT NULL, "
+			+ CHECKSUM + " INTEGER, "
+			+ TASK_STATE + " INTEGER NOT NULL DEFAULT 0 "
+			+ ");";
 
 	public DataBaseWrapper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -76,6 +88,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		db.execSQL(TOURS_TABLE_CREATE);
 		db.execSQL(PATIENTS_TABLE_CREATE);
 		db.execSQL(OPTIONS_TABLE_CREATE);
+		db.execSQL(TASKS_TABLE_CREATE);
 	}
 
 	@Override

@@ -19,49 +19,58 @@ public final class R {
          */
         public static final int activity_horizontal_margin=0x7f040000;
         public static final int activity_vertical_margin=0x7f040001;
+        public static final int btTask_Height=0x7f040002;
+        public static final int btTask_Width=0x7f040003;
     }
     public static final class drawable {
         public static final int dialog_password=0x7f020000;
         public static final int ic_launcher=0x7f020001;
     }
     public static final class id {
-        public static final int action_clear_database=0x7f080016;
-        public static final int action_settings=0x7f080015;
-        public static final int action_show_version=0x7f080017;
+        public static final int action_clear_database=0x7f08001a;
+        public static final int action_settings=0x7f080019;
+        public static final int action_show_version=0x7f08001b;
+        public static final int btChangeTaskState=0x7f080017;
         public static final int btHandle=0x7f08000f;
-        public static final int btLogOut=0x7f080011;
-        public static final int btOptions=0x7f080012;
+        public static final int btLogOut=0x7f080013;
+        public static final int btOptions=0x7f080014;
         public static final int btSynchronization=0x7f08000a;
         public static final int cb_SavePin=0x7f080003;
         public static final int etPhoneNumber=0x7f080009;
         public static final int etPinCode=0x7f080002;
         public static final int etServerIP=0x7f080005;
         public static final int etServerPort=0x7f080007;
-        public static final int evPin=0x7f080014;
+        public static final int evPin=0x7f080016;
         public static final int lvDonePatients=0x7f08000e;
-        public static final int lvTours=0x7f080010;
+        public static final int lvTasksList=0x7f080011;
+        public static final int lvTours=0x7f080012;
         public static final int lvUndonePatients=0x7f08000c;
-        public static final int lvWorkers=0x7f080013;
+        public static final int lvWorkers=0x7f080015;
         public static final int sdDonePatients=0x7f08000d;
         public static final int tvCurrentInfo=0x7f08000b;
+        public static final int tvCustemInfo=0x7f080010;
         public static final int tvOptions=0x7f080000;
         public static final int tvPhoneNumber=0x7f080008;
         public static final int tvPinCode=0x7f080001;
         public static final int tvPort=0x7f080006;
         public static final int tvServer=0x7f080004;
+        public static final int tvTaskName=0x7f080018;
     }
     public static final class layout {
         public static final int activity_base=0x7f030000;
         public static final int activity_options=0x7f030001;
         public static final int activity_patients=0x7f030002;
-        public static final int activity_tours=0x7f030003;
-        public static final int activity_workers=0x7f030004;
-        public static final int dialog_pin=0x7f030005;
+        public static final int activity_tasks=0x7f030003;
+        public static final int activity_tours=0x7f030004;
+        public static final int activity_workers=0x7f030005;
+        public static final int dialog_pin=0x7f030006;
+        public static final int row_task_template=0x7f030007;
     }
     public static final class menu {
         public static final int base=0x7f070000;
         public static final int options_menu=0x7f070001;
         public static final int patients=0x7f070002;
+        public static final int tasks=0x7f070003;
     }
     public static final class string {
         public static final int action_settings=0x7f050001;
@@ -96,6 +105,7 @@ public final class R {
         public static final int title_activity_base=0x7f05001a;
         public static final int title_activity_main=0x7f05001c;
         public static final int title_activity_patients=0x7f05001d;
+        public static final int title_activity_tasks=0x7f050023;
         public static final int title_activity_test=0x7f05001b;
         public static final int unknown_number=0x7f05000a;
         public static final int version=0x7f050022;
