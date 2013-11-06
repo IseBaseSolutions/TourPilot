@@ -74,7 +74,7 @@ public abstract class BaseObjectManager<T> {
 
 	public void save(T object) {
 		try {
-			long id = (Long) object.getClass().getMethod("getID")
+			Integer id = (Integer) object.getClass().getMethod("getId")
 					.invoke(object);
 			database.update(getRecTableName(), getValues(object),
 					DataBaseWrapper.ID + " = " + id, null);
