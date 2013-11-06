@@ -38,7 +38,6 @@ public class WorkersActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_workers);
 		reloadData();
-		initControls();
 		initTable(workers.size());
 		initListWorkers();
 	}
@@ -58,10 +57,6 @@ public class WorkersActivity extends BaseActivity {
 		default:
 			return null;
 		}
-	}
-	
-	public void initControls() {
-		evPin = (EditText) dialogPin.findViewById(R.id.evPin);
 	}
 
 	public void initListWorkers() {
@@ -150,6 +145,7 @@ public class WorkersActivity extends BaseActivity {
 		builder.setMessage(R.string.enter_pin);
 		builder.setIcon(R.drawable.dialog_password);
 		dialogPin = builder.create();
+		evPin = (EditText) dialogPin.findViewById(R.id.evPin);
 		return dialogPin;
 	}
 
