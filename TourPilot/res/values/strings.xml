@@ -11,7 +11,6 @@
     <string name="save_pin_code">Save Pin</string>
     <string name="server_ip">Server:</string>
     <string name="input_server_ip">Input server IP here</string>
-    <string name="unknown_number">Unknown number</string>
     <string name="server_port">Port:</string>
     <string name="phone_number">Phone number:</string>
     <string name="back">Back</string>
