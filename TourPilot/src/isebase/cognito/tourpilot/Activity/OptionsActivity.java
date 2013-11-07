@@ -102,7 +102,6 @@ public class OptionsActivity extends BaseActivity {
 	}
 
 	private void saveOptions() {
-	// xx
 		Option.Instance().setServerIP(etServerIP.getText().toString());
 		Option.Instance().setServerPort(Integer.parseInt(etServerPort.getText().toString()));
 		OptionManager.Instance().save(Option.Instance());
