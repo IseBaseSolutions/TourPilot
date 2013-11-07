@@ -34,9 +34,7 @@
         </activity>
         <activity android:name="isebase.cognito.tourpilot.Activity.PatientsActivity" >
         </activity>
-        <activity
-            android:name="isebase.cognito.tourpilot.Activity.TasksActivity"
-            android:label="@string/title_activity_tasks" >
+        <activity android:name="isebase.cognito.tourpilot.Activity.TasksActivity" >            
         </activity>
     </application>
 
