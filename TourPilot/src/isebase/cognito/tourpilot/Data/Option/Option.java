@@ -9,6 +9,12 @@ import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
 public class Option extends BaseObject {
 
+	public static final String WorkerIDField = "worker_id";
+	public static final String TourIDField = "tour_id";
+	public static final String EmploymentIDField = "employment_id";
+	public static final String ServerIPField = "server_ip";
+	public static final String ServerPortField = "server_port";	
+	
 	private int workerID;
 	private int tourID;
 	private int employmentID;	
@@ -35,52 +41,52 @@ public class Option extends BaseObject {
 
 	}
 	
-	@MapField(DatabaseField = "worker_id")
+	@MapField(DatabaseField = WorkerIDField)
 	public int getWorkerID() {
 		return workerID;
 	}
 	
-	@MapField(DatabaseField = "worker_id")
+	@MapField(DatabaseField = WorkerIDField)
 	public void setWorkerID(int workerID) {
 		this.workerID = workerID;
 	}
 	
-	@MapField(DatabaseField = "tour_id")
+	@MapField(DatabaseField = TourIDField)
 	public int getTourID() {
 		return tourID;
 	}
 	
-	@MapField(DatabaseField = "tour_id")
+	@MapField(DatabaseField = TourIDField)
 	public void setTourID(int tourID) {
 		this.tourID = tourID;
 	}
 	
-	@MapField(DatabaseField = "employment_id")
+	@MapField(DatabaseField = EmploymentIDField)
 	public int getEmploymentID() {
 		return employmentID;
 	}
 	
-	@MapField(DatabaseField = "employment_id")
+	@MapField(DatabaseField = EmploymentIDField)
 	public void setEmploymentID(int employmentID) {
 		this.employmentID = employmentID;
 	}
 	
-	@MapField(DatabaseField = "server_ip")
+	@MapField(DatabaseField = ServerIPField)
 	public String getServerIP() {
 		return serverIP;
 	}
 	
-	@MapField(DatabaseField = "server_ip")
+	@MapField(DatabaseField = ServerIPField)
 	public void setServerIP(String serverIP) {
 		this.serverIP = serverIP;
 	}
 	
-	@MapField(DatabaseField = "server_port")
+	@MapField(DatabaseField = ServerPortField)
 	public int getServerPort() {
 		return serverPort;
 	}
 	
-	@MapField(DatabaseField = "server_port")
+	@MapField(DatabaseField = ServerPortField)
 	public void setServerPort(int serverPort) {
 		this.serverPort = serverPort;
 	}
@@ -95,9 +101,9 @@ public class Option extends BaseObject {
 	@Override
 	protected void Clear() {
 		super.Clear();
-		workerID = emptyID;
-		tourID = emptyID;
-		employmentID = emptyID;	
+		workerID = EMPTY_ID;
+		tourID = EMPTY_ID;
+		employmentID = EMPTY_ID;	
 		serverPort = 4448;		
 		serverIP = "";
 	}

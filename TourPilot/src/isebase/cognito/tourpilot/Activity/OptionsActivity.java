@@ -91,12 +91,8 @@ public class OptionsActivity extends BaseActivity {
 
 	private void saveOptions() {
 		Option.Instance().setServerIP(etServerIP.getText().toString());
-		Option.Instance().setServerPort(
-				Integer.parseInt(etServerPort.getText().toString()));
-		if (Option.Instance().getId() == Option.Instance().emptyID)
-			OptionManager.Instance().add(Option.Instance());
-		else
-			OptionManager.Instance().save(Option.Instance());
+		Option.Instance().setServerPort(Integer.parseInt(etServerPort.getText().toString()));
+		OptionManager.Instance().save(Option.Instance());
 	}
 
 	private Dialog getDialogNoIPEntered() {

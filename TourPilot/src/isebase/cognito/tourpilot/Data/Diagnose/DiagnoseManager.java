@@ -1,32 +1,33 @@
-package isebase.cognito.tourpilot.Data.Patient;
+package isebase.cognito.tourpilot.Data.Diagnose;
 
 import android.database.sqlite.SQLiteDatabase;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 
-public class PatientManager extends BaseObjectManager<Patient> {
+public class DiagnoseManager extends BaseObjectManager<Diagnose>{
+	
+	private static DiagnoseManager instance;
 
-	private static PatientManager instance;
-
-	public static PatientManager Instance() {
+	public static DiagnoseManager Instance() {
 		if (instance != null)
 			return instance;
-		instance = new PatientManager();
+		instance = new DiagnoseManager();
 		instance.open();
 		return instance;
 	}
-
-	public PatientManager() {
-		super(Patient.class);
+	
+	public DiagnoseManager() {
+		super(Diagnose.class);
 	}
 
 	@Override
 	public String getRecTableName() {
-		return "Patients";
+		return "Diagnoses";
 	}
 
 	@Override
 	public void onUpdate(SQLiteDatabase db) {
-			
+		
+		
 	}
-	
+
 }

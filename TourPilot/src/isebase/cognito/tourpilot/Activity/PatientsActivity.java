@@ -94,7 +94,7 @@ public class PatientsActivity extends BaseActivity {
 		boolean bb = false;
 		for (int i = 0; i < 20; i++) {
 			bb = !bb;
-			PatientManager.Instance().add(new Patient("Patient " + i, bb));
+			PatientManager.Instance().save(new Patient("Patient " + i, bb));
 		}
 		reloadData();
 	}
