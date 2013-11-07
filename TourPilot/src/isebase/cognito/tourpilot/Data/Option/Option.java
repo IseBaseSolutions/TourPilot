@@ -17,7 +17,7 @@ public class Option extends BaseObject {
 
 	private String serverIP;
 
-	public static boolean testMode = true;
+	public static boolean testMode = false;;
 
 	private Worker worker;
 

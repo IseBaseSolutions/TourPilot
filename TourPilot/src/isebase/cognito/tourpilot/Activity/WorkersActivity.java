@@ -31,8 +31,7 @@ public class WorkersActivity extends BaseActivity {
 	Option option;
 
 	private Dialog dialogPin;
-	private EditText evPin;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -74,10 +73,11 @@ public class WorkersActivity extends BaseActivity {
 					switchToTours();
 					return;
 				}
+
 				showDialog(0);
 				selectedWorker = (Worker) listView.getItemAtPosition(position);
 				dialogPin.setTitle((selectedWorker).getName());
-				evPin.setText("");
+				((EditText) dialogPin.findViewById(R.id.evPin)).setText("");
 			}
 		});
 	}
@@ -145,7 +145,6 @@ public class WorkersActivity extends BaseActivity {
 		builder.setMessage(R.string.enter_pin);
 		builder.setIcon(R.drawable.dialog_password);
 		dialogPin = builder.create();
-		evPin = (EditText) dialogPin.findViewById(R.id.evPin);
 		return dialogPin;
 	}
 

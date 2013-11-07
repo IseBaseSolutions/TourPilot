@@ -80,6 +80,6 @@ public class ToursActivity extends Activity {
 		SimpleDateFormat simpleDateformat = new SimpleDateFormat("EE MM.dd");
 		String dayOfTheWeek = simpleDateformat.format(new Date());
 		((TextView) findViewById(R.id.tvCurrentInfo)).setText(String.format(
-				"%s - %s", dayOfTheWeek, Option.Instance().getWorker().getName()));
+				"%s - %s", dayOfTheWeek, "Worker 0"));
 	}
 }

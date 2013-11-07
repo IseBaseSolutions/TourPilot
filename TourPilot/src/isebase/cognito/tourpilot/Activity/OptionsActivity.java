@@ -31,6 +31,7 @@ public class OptionsActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_options);
+		//getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		StaticResources.setBaseContext(getBaseContext());
 		initControls();
 		initOptions();
