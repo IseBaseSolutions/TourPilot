@@ -5,6 +5,7 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Option.OptionManager;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
+import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;

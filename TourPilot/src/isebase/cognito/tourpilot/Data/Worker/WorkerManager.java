@@ -1,5 +1,6 @@
 package isebase.cognito.tourpilot.Data.Worker;
 
+import android.database.sqlite.SQLiteDatabase;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 
 public class WorkerManager extends BaseObjectManager<Worker> {
@@ -20,7 +21,12 @@ public class WorkerManager extends BaseObjectManager<Worker> {
 
 	@Override
 	public String getRecTableName() {
-		return dbHelper.WORKERS;
+		return "Workers";
 	}
-
+	
+	@Override
+	public void onUpdate(SQLiteDatabase db){
+		addColumn(db, Worker.IsUseGPSField, "INTEGER");		
+		addColumn(db, Worker.ActualDateField, "INTEGER");	
+	}
 }

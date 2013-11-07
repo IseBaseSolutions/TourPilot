@@ -85,8 +85,11 @@ public class WorkersActivity extends BaseActivity {
 	private void initTable(int tableSize) {
 		if (tableSize > 0)
 			return;
-		for (int i = 0; i < 10; i++)
-			WorkerManager.Instance().add(new Worker("Worker " + i));
+		for (int i = 0; i < 10; i++){
+			Worker w = new Worker();
+			w.setName("Worker " + i);
+			WorkerManager.Instance().save(w);			
+		}
 		reloadData();
 	}
 

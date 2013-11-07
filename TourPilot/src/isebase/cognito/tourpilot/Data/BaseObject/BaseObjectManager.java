@@ -41,73 +41,104 @@ public abstract class BaseObjectManager<T> {
 		dbHelper.close();
 	}
 
-	public T add(T object) {
-
-		int objectID = (int) database.insert(getRecTableName(), null,
-				getValues(object));
-		return load(objectID);
-	}
-
-	public void delete(Class<T> object) {
+	public void delete(int id){
 		try {
-			int id = (Integer) object.getMethod("getId").invoke(object);
 			System.out.println("Comment deleted with id: " + id);
-			database.delete(getRecTableName(), DataBaseWrapper.ID + " = " + id,
-					null);
-
+			database.delete(getRecTableName(), BaseObject.IDField + " = " + id, null);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
-	public void save(T object) {
+	
+	public void delete(Class<T> item) {
 		try {
-			int id = (Integer) object.getClass().getMethod("getId")
-					.invoke(object);
-			database.update(getRecTableName(), getValues(object),
-					DataBaseWrapper.ID + " = " + id, null);
+			int id = (Integer) item.getMethod("getId").invoke(item);
+			delete(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	public void save(List<T> items){
+		for(T item: items)
+			save(item);
+	}
+	
+	public void save(T item) {
+		try {
+			int id = (Integer) item.getClass().getMethod("getId").invoke(item);
+			if(id == BaseObject.EMPTY_ID || load(id) == null ){
+				int itemID = (int) database.insert(getRecTableName(), null, getValues(item));
+				item.getClass().getMethod("setId").invoke(item, itemID);
+			}
+			else{
+				database.update(getRecTableName(), getValues(item), BaseObject.IDField + " = " + id, null);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public List<T> loadAll(){
+		List<T> items = load();
+		afterLoad(items);
+		return items;
+	}
+	
+	public T loadAll(int id){
+		T item = load(id);
+		afterLoad(item);
+		return item;
+	}
+	
+	public void afterLoad(List<T> items){}
+	public void afterLoad(T item){}
+	
 	public List<T> load() {
-		List<T> objects = new ArrayList<T>();
+		List<T> items = new ArrayList<T>();
+		Cursor cursor = null;
 		try {
-			Cursor cursor = database.query(getRecTableName(), TABLE_COLUMNS,
+			cursor = database.query(getRecTableName(), TABLE_COLUMNS,
 					null, null, null, null, null);
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
 				T object = parseObject(cursor);
-				objects.add(object);
+				items.add(object);
 				cursor.moveToNext();
 			}
-			cursor.close();
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			e.printStackTrace();
 		}
-		return objects;
+		finally {
+			if(cursor != null)
+				cursor.close();
+		}
+		return items;
 	}
 
 	public T load(int id) {
-		Cursor cursor = database.query(getRecTableName(), TABLE_COLUMNS,
-				DataBaseWrapper.ID + " = " + id, null, null, null, null);
-
-		cursor.moveToFirst();
-		T newComment = null;
+		Cursor cursor = null;
+		T item = null;
 		try {
-			newComment = parseObject(cursor);
-			cursor.close();
-		} catch (Exception e) {
+			cursor = database.query(getRecTableName(), TABLE_COLUMNS, BaseObject.IDField + " = " + id, null, null, null, null);
+			cursor.moveToFirst();
+			item = parseObject(cursor);			
+		} 
+		catch (Exception e) {
 			e.printStackTrace();
 		}
-		return newComment;
+		finally {
+			if(cursor != null)
+				cursor.close();
+		}
+		return item;
 	}
 
 	private T parseObject(Cursor cursor) throws InstantiationException,
 			IllegalAccessException {
-		T object = getRecType().newInstance();
-		Method[] methods = object.getClass().getMethods();
+		T item = getRecType().newInstance();
+		Method[] methods = item.getClass().getMethods();
 		for (Method method : methods) {
 			if (!method.getReturnType().equals(Void.TYPE))
 				continue;
@@ -115,36 +146,36 @@ public abstract class BaseObjectManager<T> {
 			if (annos != null) {
 				try {
 					if (method.getParameterTypes()[0].equals(int.class))
-						method.invoke(object, cursor.getInt(cursor
+						method.invoke(item, cursor.getInt(cursor
 								.getColumnIndex(annos.DatabaseField())));
 					else if (method.getParameterTypes()[0] == String.class)
-						method.invoke(object, cursor.getString(cursor
+						method.invoke(item, cursor.getString(cursor
 								.getColumnIndex(annos.DatabaseField())));
 					else if (method.getParameterTypes()[0].equals(Blob.class))
-						method.invoke(object, cursor.getBlob(cursor
+						method.invoke(item, cursor.getBlob(cursor
 								.getColumnIndex(annos.DatabaseField())));
 					else if (method.getParameterTypes()[0].equals(double.class))
-						method.invoke(object, cursor.getDouble(cursor
+						method.invoke(item, cursor.getDouble(cursor
 								.getColumnIndex(annos.DatabaseField())));
 					else if (method.getParameterTypes()[0].equals(float.class))
-						method.invoke(object, cursor.getFloat(cursor
+						method.invoke(item, cursor.getFloat(cursor
 								.getColumnIndex(annos.DatabaseField())));
 					else if (method.getParameterTypes()[0].equals(long.class))
-						method.invoke(object, cursor.getLong(cursor
+						method.invoke(item, cursor.getLong(cursor
 								.getColumnIndex(annos.DatabaseField())));
 					else if (method.getParameterTypes()[0].equals(short.class))
-						method.invoke(object, cursor.getShort(cursor
+						method.invoke(item, cursor.getShort(cursor
 								.getColumnIndex(annos.DatabaseField())));
 					else if (method.getParameterTypes()[0]
 							.equals(boolean.class))
-						method.invoke(object, cursor.getInt(cursor
+						method.invoke(item, cursor.getInt(cursor
 								.getColumnIndex(annos.DatabaseField())) == 1);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		return object;
+		return item;
 	}
 
 	private void getTableColumns() {
@@ -159,38 +190,38 @@ public abstract class BaseObjectManager<T> {
 		TABLE_COLUMNS = list.toArray(new String[list.size()]);
 	}
 
-	private ContentValues getValues(T object) {
+	private ContentValues getValues(T item) {
 		ContentValues values = new ContentValues();
 		try {
-			for (Method method : object.getClass().getMethods()) {
+			for (Method method : item.getClass().getMethods()) {
 				if (method.getReturnType().equals(Void.TYPE))
 					continue;
 				MapField annos = method.getAnnotation(MapField.class);
 				if (annos != null) {
 					if (method.getReturnType().equals(int.class))
 						values.put(annos.DatabaseField(), Integer
-								.parseInt(method.invoke(object).toString()));
+								.parseInt(method.invoke(item).toString()));
 					else if (method.getReturnType().equals(String.class))
 						values.put(annos.DatabaseField(),
-								(String) method.invoke(object));
+								(String) method.invoke(item));
 					else if (method.getReturnType().equals(boolean.class))
 						values.put(annos.DatabaseField(), Boolean
-								.parseBoolean(method.invoke(object).toString()));
+								.parseBoolean(method.invoke(item).toString()));
 					else if (method.getReturnType().equals(double.class))
 						values.put(annos.DatabaseField(), Double
-								.parseDouble(method.invoke(object).toString()));
+								.parseDouble(method.invoke(item).toString()));
 					else if (method.getReturnType().equals(float.class))
 						values.put(annos.DatabaseField(), Float
-								.parseFloat(method.invoke(object).toString()));
+								.parseFloat(method.invoke(item).toString()));
 					else if (method.getReturnType().equals(long.class))
 						values.put(annos.DatabaseField(), Long.parseLong(method
-								.invoke(object).toString()));
+								.invoke(item).toString()));
 					else if (method.getReturnType().equals(short.class))
 						values.put(annos.DatabaseField(), Short
-								.parseShort(method.invoke(object).toString()));
+								.parseShort(method.invoke(item).toString()));
 					else if (method.getReturnType().equals(byte.class))
 						values.put(annos.DatabaseField(), Byte.parseByte(method
-								.invoke(object).toString()));
+								.invoke(item).toString()));
 				}
 			}
 		} catch (Exception e) {
@@ -199,4 +230,12 @@ public abstract class BaseObjectManager<T> {
 		return values;
 	}
 
+	public abstract void onUpdate(SQLiteDatabase db);
+	
+	protected void addColumn(SQLiteDatabase db, String colName, String colType){
+		db.execSQL(String.format("ALTER TABLE %1$s ADD %2$s %3$s" 
+					, getRecTableName()
+					, colName
+					, colType));
+	}	
 }

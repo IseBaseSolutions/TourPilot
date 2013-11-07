@@ -1,5 +1,6 @@
 package isebase.cognito.tourpilot.Data.Task;
 
+import android.database.sqlite.SQLiteDatabase;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 
 public class TaskManager extends BaseObjectManager<Task> {
@@ -20,7 +21,12 @@ public class TaskManager extends BaseObjectManager<Task> {
 
 	@Override
 	public String getRecTableName() {
-		return dbHelper.TASKS;
+		return "Tasks";
+	}
+
+	@Override
+	public void onUpdate(SQLiteDatabase db) {
+				
 	}
 
 }

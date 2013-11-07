@@ -1,5 +1,6 @@
 package isebase.cognito.tourpilot.Data.Option;
 
+import android.database.sqlite.SQLiteDatabase;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 
 public class OptionManager extends BaseObjectManager<Option> {
@@ -20,18 +21,22 @@ public class OptionManager extends BaseObjectManager<Option> {
 
 	@Override
 	public String getRecTableName() {
-		return dbHelper.OPTIONS;
+		return "Options";
 	}
 
 	@Override
-	public Option add(Option object) {
-		if (load().size() > 0)
-			return null;
-		return super.add(object);
+	public void save(Option object) {
+		if (load().size() <= 0)
+			super.save(object);
 	}
 
 	public Option loadOption() {
 		return super.load().size() > 0 ? super.load().get(0) : null;
+	}
+
+	@Override
+	public void onUpdate(SQLiteDatabase db) {
+			
 	}
 
 }

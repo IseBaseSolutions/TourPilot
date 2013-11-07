@@ -5,6 +5,8 @@ import isebase.cognito.tourpilot.DataBase.MapField;
 
 public class Task extends BaseObject {
 
+	public static final String StateField = "task_state";
+	
 	public enum eTaskState {
 		Empty, Done, UnDone
 	}
@@ -19,12 +21,12 @@ public class Task extends BaseObject {
 		super(string);
 	}
 
-	@MapField(DatabaseField = "task_state")
+	@MapField(DatabaseField = StateField)
 	public void setTaskState(int taskStateIndex) {
 		this.taskState = eTaskState.values()[taskStateIndex];
 	}
-
-	@MapField(DatabaseField = "task_state")
+	
+	@MapField(DatabaseField = StateField)
 	public int getTaskStateIndex() {
 		return taskState.ordinal();
 	}

@@ -1,5 +1,6 @@
 package isebase.cognito.tourpilot.Data.Tour;
 
+import android.database.sqlite.SQLiteDatabase;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 
 public class TourManager extends BaseObjectManager<Tour> {
@@ -20,7 +21,12 @@ public class TourManager extends BaseObjectManager<Tour> {
 
 	@Override
 	public String getRecTableName() {
-		return dbHelper.TOURS;
+		return "Tours";
+	}
+
+	@Override
+	public void onUpdate(SQLiteDatabase db) {
+				
 	}
 
 }

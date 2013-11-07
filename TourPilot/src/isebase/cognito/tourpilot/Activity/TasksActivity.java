@@ -76,7 +76,7 @@ public class TasksActivity extends BaseActivity {
 		if (tableSize > 0)
 			return;
 		for (int i = 0; i < 10; i++)
-			TaskManager.Instance().add(new Task("Task " + i));
+			TaskManager.Instance().save(new Task("Task " + i));
 		reloadData();
 	}
 }

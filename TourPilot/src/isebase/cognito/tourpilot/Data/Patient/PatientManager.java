@@ -1,5 +1,6 @@
 package isebase.cognito.tourpilot.Data.Patient;
 
+import android.database.sqlite.SQLiteDatabase;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 
 public class PatientManager extends BaseObjectManager<Patient> {
@@ -20,7 +21,12 @@ public class PatientManager extends BaseObjectManager<Patient> {
 
 	@Override
 	public String getRecTableName() {
-		return dbHelper.PATIENTS;
+		return "Patients";
+	}
+
+	@Override
+	public void onUpdate(SQLiteDatabase db) {
+			
 	}
 	
 }
