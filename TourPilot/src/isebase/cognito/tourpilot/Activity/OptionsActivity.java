@@ -8,11 +8,9 @@ import isebase.cognito.tourpilot.Data.Option.OptionManager;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -58,19 +56,19 @@ public class OptionsActivity extends BaseActivity {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    switch (item.getItemId()) {
-	        case R.id.action_clear_database:
-	            //clear database
-	            return true;
-	        case R.id.action_show_version:
-	            showDialog(2);
-	            return true;
-	        default:
-	            return super.onOptionsItemSelected(item);
-	    }
+		switch (item.getItemId()) {
+		case R.id.action_clear_database:
+			// clear database
+			return true;
+		case R.id.action_show_version:
+			showDialog(2);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	public void initControls() {
@@ -98,11 +96,7 @@ public class OptionsActivity extends BaseActivity {
 	}
 
 	private void initOptions() {
-		TelephonyManager tMgr = (TelephonyManager) getBaseContext()
-				.getSystemService(Context.TELEPHONY_SERVICE);
-		String phoneNumber = (String) (tMgr.getLine1Number() == null ? getString(R.string.unknown_number)
-				: tMgr.getLine1Number());
-		etPhoneNumber.setText(phoneNumber);
+		etPhoneNumber.setText(Option.Instance().getPhoneNumber());
 		etServerIP.setText(Option.Instance().getServerIP());
 		etServerPort.setText(String.valueOf(Option.Instance().getServerPort()));
 	}
@@ -160,7 +154,7 @@ public class OptionsActivity extends BaseActivity {
 		dialogNoConnection = builder.create();
 		return dialogNoConnection;
 	}
-	
+
 	private Dialog getDialogVersion() {
 		if (dialogVersion != null)
 			return dialogVersion;
@@ -179,7 +173,7 @@ public class OptionsActivity extends BaseActivity {
 		builder.setTitle(R.string.version);
 		try {
 			builder.setMessage(Option.Instance().getVersion());
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		builder.setIcon(android.R.drawable.ic_dialog_info);
