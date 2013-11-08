@@ -2,6 +2,7 @@ package isebase.cognito.tourpilot.Connection;
 
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Option.OptionManager;
+import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,7 +59,20 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 			String strCheckItems = strMsg;
 			writePack(os, get_SRV_msgStoredData(strCheckItems));
 			strMsg = readPack(is);
-			ServerCommandParser serverCommandParser = new ServerCommandParser();
+			ServerCommandParser serverCommandParser = new ServerCommandParser(new SynchronizationHandler() {
+				
+				@Override
+				public void onSynchronizedFinished(boolean isOK) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onItemSynchronized(String text) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
 			String[] strMsgArr = strMsg.split(";");
 			for (String strMsgLine : strMsgArr)
 				serverCommandParser.parseElement(strMsgLine, false);
