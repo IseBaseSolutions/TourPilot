@@ -20,7 +20,7 @@ public class TaskManager extends BaseObjectManager<Task> {
 	public TaskManager() {
 		super(Task.class);
 	}
-
+	
 	@Override
 	public String getRecTableName() {
 		return TableName;

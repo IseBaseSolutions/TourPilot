@@ -20,6 +20,7 @@ public class TourManager extends BaseObjectManager<Tour> {
 	public TourManager() {
 		super(Tour.class);
 	}
+
 	
 	@Override
 	public String getRecTableName() {

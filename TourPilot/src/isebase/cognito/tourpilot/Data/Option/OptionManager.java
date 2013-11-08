@@ -20,7 +20,7 @@ public class OptionManager extends BaseObjectManager<Option> {
 	public OptionManager() {
 		super(Option.class);
 	}
-
+	
 	@Override
 	public String getRecTableName() {
 		return TableName;
