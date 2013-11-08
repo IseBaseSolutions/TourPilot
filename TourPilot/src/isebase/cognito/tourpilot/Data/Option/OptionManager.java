@@ -19,9 +19,13 @@ public class OptionManager extends BaseObjectManager<Option> {
 		super(Option.class);
 	}
 
+	public static String tableName() {
+		return "Options";
+	}
+	
 	@Override
 	public String getRecTableName() {
-		return "Options";
+		return tableName();
 	}
 
 	@Override

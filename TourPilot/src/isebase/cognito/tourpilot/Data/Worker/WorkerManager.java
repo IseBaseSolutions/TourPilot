@@ -19,9 +19,13 @@ public class WorkerManager extends BaseObjectManager<Worker> {
 		super(Worker.class);
 	}
 
+	public static String tableName() {
+		return "Workers";
+	}
+	
 	@Override
 	public String getRecTableName() {
-		return "Workers";
+		return tableName();
 	}
 	
 	@Override

@@ -7,9 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -60,51 +58,17 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 			String strCheckItems = strMsg;
 			writePack(os, get_SRV_msgStoredData(strCheckItems));
 			strMsg = readPack(is);
-			int a = 2;
+			ServerCommandParser serverCommandParser = new ServerCommandParser();
+			String[] strMsgArr = strMsg.split(";");
+			for (String strMsgLine : strMsgArr)
+				serverCommandParser.parseElement(strMsgLine, false);
+			writeToStream(os, "OK" + "\0");
+			is.close();
+			os.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return true;
-	}
-
-	private String readFromStream(InputStream is) throws InterruptedException,
-			IOException {
-		String retVal = "";
-		int timeoutCount = 120000;
-		long startTime = new Date().getTime();
-		long currentTime = startTime;
-		while (currentTime - startTime < timeoutCount) {
-			int av = 0;
-			try {
-				av = is.available();
-			} finally {
-				if (av == 0) {
-					Thread.sleep(100);
-					currentTime = new Date().getTime();
-					continue;
-				}
-			}
-			while (av != 0) {
-				byte[] charI = { (byte) is.read() };
-				retVal += new String(charI, "cp1252");
-				av = is.available();
-			}
-			return retVal;
-		}
-		return retVal;
-	}
-
-	private void writeToStream(OutputStream os, String text) {
-		int timeoutCount = 1200;
-		for (int i = 0; i < timeoutCount; i++) {
-			try {
-				os.write(text.getBytes());
-				os.flush();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return;
-		}
 	}
 
 	private String getStrHello() {
@@ -210,78 +174,51 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 	private String get_SRV_msgStoredData(String strNeedSend) {
 		String strMsg = "";
 		if (strNeedSend.charAt(18) == '1')
-		strMsg += /*CAutoQuestionSettings.Instance().forServer()*/0;
+			strMsg += /* CAutoQuestionSettings.Instance().forServer() */"\0.\0";
 		if (strNeedSend.charAt(17) == '1')
-		strMsg += /*CFreeQuestionSettings.Instance().forServer()*/0;
+			strMsg += /* CFreeQuestionSettings.Instance().forServer() */"\0.\0";
 		if (strNeedSend.charAt(16) == '1')
-		strMsg += /*CFreeTopics.Instance().forServer()*/0;
+			strMsg += /* CFreeTopics.Instance().forServer() */"\0.\0";
 		if (strNeedSend.charAt(15) == '1')
-		strMsg += /*CFreeQuestions.Instance().forServer()*/0;
+			strMsg += /* CFreeQuestions.Instance().forServer() */"\0.\0";
 		if (strNeedSend.charAt(14) == '1')
-		strMsg += /*CQuestionSettings.Instance().forServer()*/0;
+			strMsg += /* CQuestionSettings.Instance().forServer() */"\0.\0";
 		if (strNeedSend.charAt(13) == '1')
-		strMsg += /*CLinks.Instance().forServer()*/0;
+			strMsg += /* CLinks.Instance().forServer() */"\0.\0";
 		if (strNeedSend.charAt(12) == '1')
-		strMsg += /*CTopics.Instance().forServer()*/0;
+			strMsg += /* CTopics.Instance().forServer() */"\0.\0";
 		if (strNeedSend.charAt(11) == '1')
-		strMsg += /*CQuestions.Instance().forServer()*/0;
+			strMsg += /* CQuestions.Instance().forServer() */"\0.\0";
 		if (strNeedSend.charAt(10) == '1')
-		strMsg += /*CTasks.Instance().forServer()*/0;
+			strMsg += /* CTasks.Instance().forServer() */"\0.\0";
 		if (strNeedSend.charAt(9) == '1')
-		strMsg += /*CAddWorks.Instance().forServer()*/0;
+			strMsg += /* CAddWorks.Instance().forServer() */"\0.\0";
 		if (strNeedSend.charAt(8) == '1')
-		strMsg += /*CTours.Instance().forServer()*/0;
+			strMsg += /* CTours.Instance().forServer() */"\0.\0";
 		if (strNeedSend.charAt(7) == '1') // Informations
-		strMsg += /*CInformations.Instance().forServer()*/0;
+			strMsg += /* CInformations.Instance().forServer() */"\0.\0";
 		if (strNeedSend.charAt(6) == '1') // patient remarks
-		strMsg += /*CPatientRemarks.Instance().forServer()*/0;
+			strMsg += /* CPatientRemarks.Instance().forServer() */"\0.\0";
 		if (strNeedSend.charAt(5) == '1') // patients
-		strMsg += /*CPatients.Instance().forServer()*/0;
+			strMsg += /* CPatients.Instance().forServer() */"\0.\0";
 		if (strNeedSend.charAt(4) == '1') // doctors
-		strMsg += /*CDoctors.Instance().forServer()*/0;
+			strMsg += /* CDoctors.Instance().forServer() */"\0.\0";
 		if (strNeedSend.charAt(3) == '1') // relatives
-		strMsg += /*CRelatives.Instance().forServer()*/0;
+			strMsg += /* CRelatives.Instance().forServer() */"\0.\0";
 		if (strNeedSend.charAt(2) == '1') // diagnoses
-		strMsg += /*CDiagnoses.Instance().forServer()*/0;
+			strMsg += /* CDiagnoses.Instance().forServer() */"\0.\0";
 		if (strNeedSend.charAt(1) == '1') // users
-		strMsg += /*CUsers.Instance().forServer()*/0;
+			strMsg += /* CUsers.Instance().forServer() */"\0.\0";
 		if (strNeedSend.charAt(0) == '1') // add tasks
-		strMsg += /*CAddTasks.Instance().forServer()*/0;
+			strMsg += /* CAddTasks.Instance().forServer() */"\0.\0";
 		if (strNeedSend.indexOf("1") == -1)
-		strMsg += ".";
+			strMsg += ".";
 		return strMsg;
 	}
 
-	public void writePack(OutputStream os, String strToWrite)
-			throws IOException {
-		GZIPOutputStream zos = new GZIPOutputStream(os);
-		try {
-			zos.write(strToWrite.getBytes());
-			zos.finish();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public String readPack(InputStream is) throws IOException, InterruptedException {
+	private String readFromStream(InputStream is) throws InterruptedException,
+			IOException {
 		String retVal = "";
-//		while (is.available() == 0)
-//			try {
-//				Thread.sleep(1000);
-//			} catch (InterruptedException ex) {
-//				ex.printStackTrace();
-//			}
-//		while (is.available() != 0)
-//			arr.add((byte) is.read());
-//		byte[] buf = new byte[arr.size() - 5];
-//		int counter = 0;
-//			for (Byte item : arr)
-//				if (counter < (arr.size() - 5))
-//					buf[counter++] = (Byte) item;
-//				else
-//					break;
-//		String data = new String(GZIP.inflate(buf), codePage);
-		GZIPInputStream zis;
 		int timeoutCount = 120000;
 		long startTime = new Date().getTime();
 		long currentTime = startTime;
@@ -296,28 +233,52 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 					continue;
 				}
 			}
-
 			while (av != 0) {
-				zis = new GZIPInputStream(is);
-				byte[] charI = { (byte) zis.read() };
+				byte[] charI = { (byte) is.read() };
 				retVal += new String(charI, "cp1252");
-				av = zis.available();
+				av = is.available();
 			}
 			return retVal;
 		}
 		return retVal;
+	}
 
-		/*
-		 * while (is.available() == 0) try { Thread.sleep(1000); } catch
-		 * (InterruptedException ex) { ex.printStackTrace(); } try { byte[]
-		 * resultLength = new byte[4]; is.read(resultLength); int length =
-		 * byteArrayToInt(resultLength); byte[] arr = new byte[length - 5]; for
-		 * (int i = 0; i < length; i++) if (is.available() == 0) i--; else if (i
-		 * < arr.length) arr[i] = (byte)is.read(); byte[] data =
-		 * GZIP.inflate(arr); System.gc(); //fruckt //return new String(data);
-		 * return new String(data, codePage); } catch(Exception ex) {
-		 * ex.printStackTrace(); } return "";//
-		 */
+	private void writeToStream(OutputStream os, String text) {
+		try {
+			os.write(text.getBytes());
+			os.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return;
+	}
+
+	public void writePack(OutputStream os, String strToWrite)
+			throws IOException {
+		GZIPOutputStream zos = new GZIPOutputStream(os);
+		try {
+			zos.write(strToWrite.getBytes());
+			zos.finish();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public String readPack(InputStream is) throws IOException,
+			InterruptedException {
+		String retVal = "";
+		while (is.available() == 0)
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException ex) {
+				ex.printStackTrace();
+			}
+		GZIPInputStream zis = new GZIPInputStream(is);
+		byte[] buffer = new byte[1024];
+		for (int length = 0; (zis.read(buffer)) != -1;) {
+			retVal += new String(buffer, "cp1252");
+		}
+		return retVal;
 	}
 
 }

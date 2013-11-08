@@ -18,55 +18,53 @@ import android.util.Log;
 public class DataBaseWrapper extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "TourPilot.db";
-	private static final int DATABASE_VERSION = 2;
-
-	private static final String WORKERS_TABLE_CREATE = "CREATE TABLE "
-			+ WorkerManager.Instance().getRecTableName() + "(" 
+	private static final int DATABASE_VERSION = 3;
+	
+	private static final String WORKERS_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
+			+ WorkerManager.tableName() + "("
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ BaseObject.NameField + " TEXT NOT NULL, "
-			+ BaseObject.CheckSumField + " INTEGER "
-			+ Worker.IsUseGPSField + " INTEGER "
-			+ Worker.ActualDateField + " INTEGER "
+			+ BaseObject.CheckSumField + " INTEGER, " 
+			+ Worker.IsUseGPSField + " INTEGER, " 
+			+ Worker.ActualDateField + " INTEGER " 
 			+ ");";
 
-	private static final String TOURS_TABLE_CREATE = "CREATE TABLE " 
-			+ TourManager.Instance().getRecTableName() + "(" 
-			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
+	private static final String TOURS_TABLE_CREATE = "CREATE TABLE "
+			+ TourManager.tableName() + "("
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ BaseObject.NameField + " TEXT NOT NULL, "
-			+ BaseObject.CheckSumField + " INTEGER "
-			+ ");";
+			+ BaseObject.CheckSumField + " INTEGER " + ");";
 
 	private static final String PATIENTS_TABLE_CREATE = "CREATE TABLE "
-			+ PatientManager.Instance().getRecTableName() + "(" 
+			+ PatientManager.tableName() + "("
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ BaseObject.NameField + " TEXT NOT NULL, "
-			+ BaseObject.CheckSumField + " INTEGER, "
-			+ Patient.AddressField + " TEXT, "
-			+ Patient.IsDoneField + " INTEGER NOT NULL DEFAULT 0 "
+			+ BaseObject.CheckSumField + " INTEGER, " + Patient.AddressField
+			+ " TEXT, " + Patient.IsDoneField + " INTEGER NOT NULL DEFAULT 0 "
 			+ ");";
-	
+
 	private static final String OPTIONS_TABLE_CREATE = "CREATE TABLE "
-			+ OptionManager.Instance().getRecTableName() + "(" 
+			+ OptionManager.tableName() + "("
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ BaseObject.NameField + " TEXT, "
-			+ BaseObject.CheckSumField + " INTEGER, "
+			+ BaseObject.NameField + " TEXT, " 
+			+ BaseObject.CheckSumField	+ " INTEGER, " 
 			+ Option.WorkerIDField + " INTEGER, "
-			+ Option.TourIDField  + " INTEGER, "
-			+ Option.EmploymentIDField + " INTEGER, "
+			+ Option.TourIDField + " INTEGER, " 
+			+ Option.EmploymentIDField	+ " INTEGER, " 
 			+ Option.ServerIPField + " TEXT, "
-			+ Option.ServerPortField + " INTEGER "
+			+ Option.ServerPortField + " INTEGER " 
 			+ ");";
-	
+
 	private static final String TASKS_TABLE_CREATE = "CREATE TABLE "
-			+ TaskManager.Instance().getRecTableName() + "("
+			+ TaskManager.tableName() + "("
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ BaseObject.NameField + " TEXT NOT NULL, "
-			+ BaseObject.CheckSumField + " INTEGER, "
-			+ Task.StateField + " INTEGER NOT NULL DEFAULT 0 "
+			+ BaseObject.CheckSumField + " INTEGER, " 
+			+ Task.StateField + " INTEGER NOT NULL DEFAULT 0 " 
 			+ ");";
 
 	public DataBaseWrapper(Context context) {
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+ 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
 	@Override

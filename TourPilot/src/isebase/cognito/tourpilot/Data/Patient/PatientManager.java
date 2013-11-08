@@ -19,9 +19,13 @@ public class PatientManager extends BaseObjectManager<Patient> {
 		super(Patient.class);
 	}
 
+	public static String tableName() {
+		return "Patients";
+	}
+	
 	@Override
 	public String getRecTableName() {
-		return "Patients";
+		return tableName();
 	}
 
 	@Override

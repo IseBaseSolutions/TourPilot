@@ -19,9 +19,13 @@ public class TourManager extends BaseObjectManager<Tour> {
 		super(Tour.class);
 	}
 
+	public static String tableName() {
+		return "Tours";
+	}
+	
 	@Override
 	public String getRecTableName() {
-		return "Tours";
+		return tableName();
 	}
 
 	@Override

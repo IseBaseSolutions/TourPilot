@@ -19,9 +19,13 @@ public class TaskManager extends BaseObjectManager<Task> {
 		super(Task.class);
 	}
 
+	public static String tableName() {
+		return "Tasks";
+	}
+	
 	@Override
 	public String getRecTableName() {
-		return "Tasks";
+		return tableName();
 	}
 
 	@Override
