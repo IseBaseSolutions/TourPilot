@@ -1,8 +1,12 @@
 package isebase.cognito.tourpilot.Data.Worker;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 import isebase.cognito.tourpilot.Connection.ServerCommandParser;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.Tour.Tour;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.NCryptor;
 import isebase.cognito.tourpilot.Utils.StringParser;
@@ -24,25 +28,28 @@ public class Worker extends BaseObject {
 		this.isUseGPS = isUseGPS;
 	}
 	
-	public Date ActualDate;
+	public Date actualDate;
 	
 	@MapField(DatabaseField = ActualDateField)
 	public Date getActualDate() {
-		return ActualDate;
+		return actualDate;
 	}
 
 	@MapField(DatabaseField = ActualDateField)
 	public void setActualDate(Date actualDate) {
-		ActualDate = actualDate;
+		this.actualDate = actualDate;
 	}
 
 	public String getNameWithDate(){
-		return "[" + ActualDate.toString().substring(4,10) + "] " + getName();
+		return "[" + actualDate.toString().substring(4,10) + "] " + getName();
 	}
+	
+	public List<Tour> tours = new ArrayList<Tour>();
 	
 	public Worker() {
+		clear();
 	}
-	
+		
     public Worker(String strInitString)
     {
         this(strInitString, new Date());

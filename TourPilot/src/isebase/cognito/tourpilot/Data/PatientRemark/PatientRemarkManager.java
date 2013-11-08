@@ -25,7 +25,7 @@ public class PatientRemarkManager extends BaseObjectManager<PatientRemark>{
 	}
 
 	@Override
-	public void onUpdate(SQLiteDatabase db) {
+	public void onUpgrade(SQLiteDatabase db) {
 			
 	}
 

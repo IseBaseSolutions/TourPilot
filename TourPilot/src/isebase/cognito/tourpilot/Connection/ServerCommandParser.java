@@ -20,6 +20,7 @@ import isebase.cognito.tourpilot.Data.Tour.Tour;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
+import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
 
 public class ServerCommandParser {
 
@@ -53,9 +54,15 @@ public class ServerCommandParser {
 	public static final char FREE_QUESTION_SETTING = '*';
 	public static final char AUTO_QUESTION_SETTING = '^';
 	
+	private SynchronizationHandler syncHandler;
+	
 	private String strVerlink;
 	private boolean needShowVersion;
 	private static long timeDiff = 0;
+	
+	public ServerCommandParser(SynchronizationHandler sh){
+		syncHandler = sh;
+	}
 	
 	public boolean parseElement(String commandLine, boolean isAutomaticSync) {
 		
@@ -88,6 +95,7 @@ public class ServerCommandParser {
 			//TODO Show message
 			//	if (GetSyncStatus().indexOf(context.getString(org.microemu.android.R.string.employee)) == -1)
 			//		setSyncStatus(context.getString(org.microemu.android.R.string.employee),5, isAutomaticSync);
+				syncHandler.onItemSynchronized("Worker synchronization done");
 				//TODO Use constructor with viewDate
 				Worker worker = new Worker(commandLine);
 				WorkerManager.Instance().save(worker);

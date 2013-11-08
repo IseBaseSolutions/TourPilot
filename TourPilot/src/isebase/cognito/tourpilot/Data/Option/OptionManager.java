@@ -5,6 +5,8 @@ import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 
 public class OptionManager extends BaseObjectManager<Option> {
 
+	public static final String TableName = "Options";
+	
 	private static OptionManager instance;
 
 	public static OptionManager Instance() {
@@ -21,7 +23,7 @@ public class OptionManager extends BaseObjectManager<Option> {
 
 	@Override
 	public String getRecTableName() {
-		return "Options";
+		return TableName;
 	}
 
 	@Override
@@ -35,7 +37,7 @@ public class OptionManager extends BaseObjectManager<Option> {
 	}
 
 	@Override
-	public void onUpdate(SQLiteDatabase db) {
+	public void onUpgrade(SQLiteDatabase db) {
 			
 	}
 

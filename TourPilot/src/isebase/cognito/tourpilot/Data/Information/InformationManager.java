@@ -25,7 +25,7 @@ public class InformationManager extends BaseObjectManager<Information>{
 	}
 
 	@Override
-	public void onUpdate(SQLiteDatabase db) {
+	public void onUpgrade(SQLiteDatabase db) {
 			
 	}
 

@@ -25,7 +25,7 @@ public class RelativeManager extends BaseObjectManager<Relative>{
 	}
 
 	@Override
-	public void onUpdate(SQLiteDatabase db) {
+	public void onUpgrade(SQLiteDatabase db) {
 				
 	}
 

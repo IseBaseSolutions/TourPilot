@@ -5,6 +5,8 @@ import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 
 public class PatientManager extends BaseObjectManager<Patient> {
 
+	public static final String TableName = "Patients";
+	
 	private static PatientManager instance;
 
 	public static PatientManager Instance() {
@@ -21,11 +23,11 @@ public class PatientManager extends BaseObjectManager<Patient> {
 
 	@Override
 	public String getRecTableName() {
-		return "Patients";
+		return TableName;
 	}
 
 	@Override
-	public void onUpdate(SQLiteDatabase db) {
+	public void onUpgrade(SQLiteDatabase db) {
 			
 	}
 	
