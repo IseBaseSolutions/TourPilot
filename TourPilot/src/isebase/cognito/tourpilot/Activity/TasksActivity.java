@@ -29,7 +29,6 @@ public class TasksActivity extends BaseActivity {
 		reloadData();
 		InitTable(tasks.size());
 		initTaskList();
-
 	}
 
 	@Override

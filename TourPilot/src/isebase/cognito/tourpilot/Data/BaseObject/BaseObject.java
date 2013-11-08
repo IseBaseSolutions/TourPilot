@@ -11,11 +11,11 @@ public abstract class BaseObject {
 	public static final int EMPTY_ID = -1;
 
 	public BaseObject() {
-		Clear();
+		clear();
 	}
 
 	public BaseObject(String name) {
-		Clear();
+		clear();
 		setName(name);
 	}
 
@@ -59,7 +59,7 @@ public abstract class BaseObject {
 		this.checkSum = checkSum;
 	}
 
-	protected void Clear() {
+	protected void clear() {
 		id = EMPTY_ID;
 		name = "";
 		checkSum = 0;

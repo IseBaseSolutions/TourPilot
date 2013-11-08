@@ -25,7 +25,7 @@ public class AdditionalWorkManager extends BaseObjectManager<AdditionalWork>{
 	}
 
 	@Override
-	public void onUpdate(SQLiteDatabase db) {
+	public void onUpgrade(SQLiteDatabase db) {
 			
 	}
 

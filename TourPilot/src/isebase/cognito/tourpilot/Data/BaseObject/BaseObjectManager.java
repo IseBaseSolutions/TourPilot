@@ -2,7 +2,6 @@ package isebase.cognito.tourpilot.Data.BaseObject;
 
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.DataBase.MapField;
-import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
 import java.lang.reflect.Method;
 import java.sql.Blob;
@@ -17,13 +16,10 @@ import android.database.sqlite.SQLiteDatabase;
 public abstract class BaseObjectManager<T> {
 
 	private Class<T> entityClass;
-	protected DataBaseWrapper dbHelper;
 	protected String[] TABLE_COLUMNS;
-	protected SQLiteDatabase database;
 
 	public BaseObjectManager(Class<T> entityClass) {
 		this.entityClass = entityClass;
-		dbHelper = new DataBaseWrapper(StaticResources.getBaseContext());
 	}
 
 	public Class<T> getRecType() {
@@ -33,20 +29,23 @@ public abstract class BaseObjectManager<T> {
 	public abstract String getRecTableName();
 
 	public void open() throws SQLException {
-		database = dbHelper.getWritableDatabase();
 		getTableColumns();
 	}
 
 	public void close() {
-		dbHelper.close();
+		if(DataBaseWrapper.Instance().getReadableDatabase() != null)
+			DataBaseWrapper.Instance().getReadableDatabase().close();
+		DataBaseWrapper.Instance().close();
 	}
 
 	public void delete(int id){
 		try {
-			System.out.println("Comment deleted with id: " + id);
-			database.delete(getRecTableName(), BaseObject.IDField + " = " + id, null);
+			DataBaseWrapper.Instance().getReadableDatabase().delete(getRecTableName(), BaseObject.IDField + " = " + id, null);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		finally{
+			close();
 		}
 	}
 	
@@ -59,6 +58,30 @@ public abstract class BaseObjectManager<T> {
 		}
 	}
 
+	public List<T> load(String whereField, String whereClouse){
+		List<T> items = new ArrayList<T>();
+		Cursor cursor = null;
+		try {
+			cursor = DataBaseWrapper.Instance().getReadableDatabase().query(getRecTableName()
+					, TABLE_COLUMNS, whereField + " = " + whereClouse, null, null, null, null);
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				T object = parseObject(cursor);
+				items.add(object);
+				cursor.moveToNext();
+			}
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			if(cursor != null)
+				cursor.close();
+			close();
+		}
+		return items;
+	}
+	
 	public void save(List<T> items){
 		for(T item: items)
 			save(item);
@@ -68,14 +91,18 @@ public abstract class BaseObjectManager<T> {
 		try {
 			int id = (Integer) item.getClass().getMethod("getId").invoke(item);
 			if(id == BaseObject.EMPTY_ID || load(id) == null ){
-				int itemID = (int) database.insert(getRecTableName(), null, getValues(item));
-				item.getClass().getMethod("setId").invoke(item, itemID);
+				int itemID = (int) DataBaseWrapper.Instance().getReadableDatabase().insert(getRecTableName(), null, getValues(item));
+				item.getClass().getMethod("setId", int.class).invoke(item, (int)itemID);
 			}
 			else{
-				database.update(getRecTableName(), getValues(item), BaseObject.IDField + " = " + id, null);
+				DataBaseWrapper.Instance().getReadableDatabase().update(getRecTableName()
+						, getValues(item), BaseObject.IDField + " = " + id, null);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		finally{
+			close();
 		}
 	}
 
@@ -98,7 +125,7 @@ public abstract class BaseObjectManager<T> {
 		List<T> items = new ArrayList<T>();
 		Cursor cursor = null;
 		try {
-			cursor = database.query(getRecTableName(), TABLE_COLUMNS,
+			cursor = DataBaseWrapper.Instance().getReadableDatabase().query(getRecTableName(), TABLE_COLUMNS,
 					null, null, null, null, null);
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
@@ -113,6 +140,7 @@ public abstract class BaseObjectManager<T> {
 		finally {
 			if(cursor != null)
 				cursor.close();
+			close();
 		}
 		return items;
 	}
@@ -121,7 +149,8 @@ public abstract class BaseObjectManager<T> {
 		Cursor cursor = null;
 		T item = null;
 		try {
-			cursor = database.query(getRecTableName(), TABLE_COLUMNS, BaseObject.IDField + " = " + id, null, null, null, null);
+			cursor = DataBaseWrapper.Instance().getReadableDatabase().query(getRecTableName()
+					, TABLE_COLUMNS, BaseObject.IDField + " = " + id, null, null, null, null);
 			cursor.moveToFirst();
 			item = parseObject(cursor);			
 		} 
@@ -131,6 +160,7 @@ public abstract class BaseObjectManager<T> {
 		finally {
 			if(cursor != null)
 				cursor.close();
+			close();
 		}
 		return item;
 	}
@@ -230,12 +260,37 @@ public abstract class BaseObjectManager<T> {
 		return values;
 	}
 
-	public abstract void onUpdate(SQLiteDatabase db);
+	public abstract void onUpgrade(SQLiteDatabase db);
 	
 	protected void addColumn(SQLiteDatabase db, String colName, String colType){
-		db.execSQL(String.format("ALTER TABLE %1$s ADD %2$s %3$s" 
-					, getRecTableName()
-					, colName
-					, colType));
+		Cursor tableInfo = null;
+		try{
+			tableInfo = db.rawQuery(String.format("PRAGMA table_info(%1$s)", getRecTableName()), null);
+			tableInfo.moveToFirst();
+			boolean isColumnExists = false;
+			while(!tableInfo.isAfterLast()){
+				String currColName = tableInfo.getString(1);
+				System.out.println(currColName);
+			    if(currColName.equals(colName)){
+			    	isColumnExists = true;
+			    	break;
+			    }
+				tableInfo.moveToNext();
+			}		     
+			if(!isColumnExists){
+				db.execSQL(String.format("ALTER TABLE %1$s ADD %2$s %3$s" 
+							, getRecTableName()
+							, colName
+							, colType));
+			}
+		}
+		catch(Exception ex){
+			System.out.println(ex.getMessage());
+			ex.printStackTrace();
+		}
+		finally{
+			if(tableInfo != null)
+				tableInfo.close();
+		}		
 	}	
 }

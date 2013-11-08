@@ -25,7 +25,7 @@ public class DoctorManager extends BaseObjectManager<Doctor>{
 	}
 
 	@Override
-	public void onUpdate(SQLiteDatabase db) {
+	public void onUpgrade(SQLiteDatabase db) {
 			
 	}
 

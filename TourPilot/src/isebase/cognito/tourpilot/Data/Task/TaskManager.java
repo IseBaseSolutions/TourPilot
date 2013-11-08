@@ -5,6 +5,8 @@ import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 
 public class TaskManager extends BaseObjectManager<Task> {
 
+	public static String TableName = "Tasks";
+	
 	private static TaskManager instance;
 
 	public static TaskManager Instance() {
@@ -21,11 +23,11 @@ public class TaskManager extends BaseObjectManager<Task> {
 
 	@Override
 	public String getRecTableName() {
-		return "Tasks";
+		return TableName;
 	}
 
 	@Override
-	public void onUpdate(SQLiteDatabase db) {
+	public void onUpgrade(SQLiteDatabase db) {
 				
 	}
 
