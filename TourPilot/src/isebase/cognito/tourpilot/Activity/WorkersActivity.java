@@ -2,9 +2,9 @@ package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Data.Option.OptionManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
-import isebase.cognito.tourpilot.Templates.WorkerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,26 +19,29 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
 public class WorkersActivity extends BaseActivity {
 
-	List<Worker> workers;
+	List<Worker> workers = new ArrayList<Worker>();
 
 	Worker selectedWorker;
+	Option option;
 
 	private Dialog dialogPin;
+	private EditText evPin;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_workers);
 		reloadData();
-		initPinDialog();
+		initTable(workers.size());
 		initListWorkers();
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.options_menu, menu);
@@ -50,13 +53,66 @@ public class WorkersActivity extends BaseActivity {
 
 		switch (id) {
 		case 0:
-			return dialogPin;
+			return getDialogPin();
 		default:
 			return null;
 		}
 	}
 
-	private void initPinDialog(){
+	public void initListWorkers() {
+		final ListView listView = (ListView) findViewById(R.id.lvWorkers);
+		ArrayAdapter<Worker> adapter = new ArrayAdapter<Worker>(this,
+				android.R.layout.simple_list_item_1, workers);
+		listView.setAdapter(adapter);
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1,
+					int position, long arg3) {
+				if (Option.testMode)
+				{
+					switchToTours();
+					return;
+				}
+				showDialog(0);
+				selectedWorker = (Worker) listView.getItemAtPosition(position);
+				dialogPin.setTitle((selectedWorker).getName());
+				evPin.setText("");
+			}
+		});
+	}
+
+	private void initTable(int tableSize) {
+		if (tableSize > 0)
+			return;
+		for (int i = 0; i < 10; i++){
+			Worker w = new Worker();
+			w.setName("Worker " + i);
+			WorkerManager.Instance().save(w);			
+		}
+		reloadData();
+	}
+
+	public void switchToOptions(View view) {
+		Intent optionsActivity = new Intent(getApplicationContext(),
+				OptionsActivity.class);
+		startActivity(optionsActivity);
+	}
+
+	public void switchToTours() {
+		Intent toursActivity = new Intent(getApplicationContext(),
+				ToursActivity.class);
+		startActivity(toursActivity);
+	}
+
+	public void reloadData() {
+		workers = WorkerManager.Instance().load();
+		option = OptionManager.Instance().loadOption();
+	}
+
+	private Dialog getDialogPin() {
+		if (dialogPin != null)
+			return dialogPin;
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				new ContextThemeWrapper(this, R.style.AppBaseTheme));
 		LayoutInflater inflater = getLayoutInflater();
@@ -68,11 +124,14 @@ public class WorkersActivity extends BaseActivity {
 					@Override
 					public void onClick(DialogInterface dialog, int buttonId) {
 						String name = selectedWorker.getName();
-						String pinStr = ((EditText) dialogPin.findViewById(R.id.evPin)).getText().toString();
-					//	if (!checkWorkerPIN(name, pinStr))
-					//		return;
-
-						Option.Instance().setWorkerID(selectedWorker.getId());
+						String pinStr = ((EditText) dialogPin
+								.findViewById(R.id.evPin)).getText().toString();
+						if (!checkWorkerPIN(name, pinStr))
+							return;
+						if (option != null) {
+							option.setWorkerID(selectedWorker.getId());
+							OptionManager.Instance().save(option);
+						}
 						switchToTours();
 					}
 				});
@@ -89,44 +148,8 @@ public class WorkersActivity extends BaseActivity {
 		builder.setMessage(R.string.enter_pin);
 		builder.setIcon(R.drawable.dialog_password);
 		dialogPin = builder.create();
-	}
-	
-	private void initListWorkers() {
-		final ListView listView = (ListView) findViewById(R.id.lvWorkers);
-		WorkerAdapter adapter = new WorkerAdapter(this, R.layout.row_worker_template, workers);
-		listView.setAdapter(adapter);
-		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1,
-					int position, long arg3) {
-				selectedWorker = (Worker)listView.getItemAtPosition(position);
-				if (Option.testMode)
-				{
-					switchToTours();
-					return;
-				}
-				showDialog(0);
-				dialogPin.setTitle((selectedWorker).getName());
-				((EditText) dialogPin.findViewById(R.id.evPin)).setText("");
-			}
-		});
-	}
-
-	public void switchToOptions(View view) {
-		Intent optionsActivity = new Intent(getApplicationContext(),
-				OptionsActivity.class);
-		startActivity(optionsActivity);
-	}
-
-	private void switchToTours() {
-		Intent toursActivity = new Intent(getApplicationContext(),
-				ToursActivity.class);
-		startActivity(toursActivity);
-	}
-
-	private void reloadData() {
-		workers = WorkerManager.Instance().load();
+		evPin = (EditText) dialogPin.findViewById(R.id.evPin);
+		return dialogPin;
 	}
 
 	public boolean checkWorkerPIN(String workerName, String strPin) {
