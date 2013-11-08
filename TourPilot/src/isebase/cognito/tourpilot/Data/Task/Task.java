@@ -40,8 +40,8 @@ public class Task extends BaseObject {
 	}
 
 	@Override
-	protected void Clear() {
-		super.Clear();
+	protected void clear() {
+		super.clear();
 		setTaskState(eTaskState.Empty);
 	}
 }

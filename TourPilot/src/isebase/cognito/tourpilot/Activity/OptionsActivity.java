@@ -1,10 +1,13 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Connection.ConnectionAsyncTask;
 import isebase.cognito.tourpilot.Connection.ConnectionInfo;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Option.OptionManager;
+import isebase.cognito.tourpilot.Data.Tour.Tour;
+import isebase.cognito.tourpilot.Data.Tour.TourManager;
+import isebase.cognito.tourpilot.Data.Worker.Worker;
+import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -32,6 +35,7 @@ public class OptionsActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_options);
 		StaticResources.setBaseContext(getBaseContext());
+						
 		initControls();
 		initOptions();
 	}
@@ -176,5 +180,4 @@ public class OptionsActivity extends BaseActivity {
 		dialogVersion = builder.create();
 		return dialogVersion;
 	}
-
 }

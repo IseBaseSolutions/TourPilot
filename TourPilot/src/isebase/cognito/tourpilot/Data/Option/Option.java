@@ -23,7 +23,7 @@ public class Option extends BaseObject {
 
 	private String serverIP;
 
-	public static boolean testMode = true;
+	public static boolean testMode = false;
 
 	private Worker worker;
 
@@ -95,15 +95,15 @@ public class Option extends BaseObject {
 	}
 
 	public Worker getWorker() {
-		if (worker != null)
+		if (worker != null && worker.getId() == getWorkerID())
 			return worker;
-		worker = WorkerManager.Instance().load(workerID);
+		worker = WorkerManager.Instance().loadAll(workerID);
 		return worker;
 	}
 
 	@Override
-	protected void Clear() {
-		super.Clear();
+	protected void clear() {
+		super.clear();
 		workerID = EMPTY_ID;
 		tourID = EMPTY_ID;
 		employmentID = EMPTY_ID;	

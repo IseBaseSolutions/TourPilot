@@ -25,7 +25,7 @@ public class AdditionalTaskManager extends BaseObjectManager<AdditionalTask>{
 	}
 
 	@Override
-	public void onUpdate(SQLiteDatabase db) {
+	public void onUpgrade(SQLiteDatabase db) {
 				
 	}
 

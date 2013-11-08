@@ -10,41 +10,56 @@ import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
+import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 public class DataBaseWrapper extends SQLiteOpenHelper {
 
-	private static final String DATABASE_NAME = "TourPilot.db";
-	private static final int DATABASE_VERSION = 3;
+	public static final String TYPE_INTEGER = "INTEGER";
+	public static final String TYPE_DATE = TYPE_INTEGER;
+	public static final String TYPE_ENUM = TYPE_INTEGER;
 	
-	private static final String WORKERS_TABLE_CREATE = "CREATE TABLE IF NOT EXISTS "
-			+ WorkerManager.tableName() + "("
+	public static final String TYPE_TEXT = "TEXT";
+	
+	public static final String TYPE_REAL = "REAL";
+	public static final String TYPE_FLOAT = TYPE_REAL;
+	public static final String TYPE_DOUBLE = TYPE_REAL;
+	
+	public static final String TYPE_BLOB = "BLOB";
+	
+	public static final String TYPE_NULL = "NULL";	
+	
+	private static final String DATABASE_NAME = "TourPilot.db";
+	private static final int DATABASE_VERSION = 7;
+
+	private static final String WORKERS_TABLE_CREATE = "CREATE TABLE "
+			+ WorkerManager.TableName + "(" 
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ BaseObject.NameField + " TEXT NOT NULL, "
-			+ BaseObject.CheckSumField + " INTEGER, " 
-			+ Worker.IsUseGPSField + " INTEGER, " 
-			+ Worker.ActualDateField + " INTEGER " 
+			+ BaseObject.CheckSumField + " INTEGER, "
+			+ Worker.IsUseGPSField + " INTEGER, "
+			+ Worker.ActualDateField + " INTEGER "
 			+ ");";
 
-	private static final String TOURS_TABLE_CREATE = "CREATE TABLE "
-			+ TourManager.tableName() + "("
+	private static final String TOURS_TABLE_CREATE = "CREATE TABLE " 
+			+ TourManager.TableName + "(" 
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ BaseObject.NameField + " TEXT NOT NULL, "
 			+ BaseObject.CheckSumField + " INTEGER " + ");";
 
 	private static final String PATIENTS_TABLE_CREATE = "CREATE TABLE "
-			+ PatientManager.tableName() + "("
+			+ PatientManager.TableName + "("
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ BaseObject.NameField + " TEXT NOT NULL, "
-			+ BaseObject.CheckSumField + " INTEGER, " + Patient.AddressField
-			+ " TEXT, " + Patient.IsDoneField + " INTEGER NOT NULL DEFAULT 0 "
+			+ BaseObject.CheckSumField + " INTEGER, " 
+			+ Patient.AddressField + " TEXT, " 
+			+ Patient.IsDoneField + " INTEGER NOT NULL DEFAULT 0 "
 			+ ");";
 
 	private static final String OPTIONS_TABLE_CREATE = "CREATE TABLE "
-			+ OptionManager.tableName() + "("
+			+ OptionManager.TableName + "(" 
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ BaseObject.NameField + " TEXT, " 
 			+ BaseObject.CheckSumField	+ " INTEGER, " 
@@ -56,29 +71,46 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ ");";
 
 	private static final String TASKS_TABLE_CREATE = "CREATE TABLE "
-			+ TaskManager.tableName() + "("
+			+ TaskManager.TableName + "("
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ BaseObject.NameField + " TEXT NOT NULL, "
 			+ BaseObject.CheckSumField + " INTEGER, " 
 			+ Task.StateField + " INTEGER NOT NULL DEFAULT 0 " 
 			+ ");";
-
+	
 	public DataBaseWrapper(Context context) {
  		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
+	private static DataBaseWrapper instance;
+
+	public static DataBaseWrapper Instance() {
+		if (instance != null)
+			return instance;
+		instance = new DataBaseWrapper(StaticResources.getBaseContext());
+		return instance;
+	}	
+		
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(WORKERS_TABLE_CREATE);
-		db.execSQL(TOURS_TABLE_CREATE);
-		db.execSQL(PATIENTS_TABLE_CREATE);
-		db.execSQL(OPTIONS_TABLE_CREATE);
-		db.execSQL(TASKS_TABLE_CREATE);
+		try{
+			db.execSQL(WORKERS_TABLE_CREATE);
+			db.execSQL(TOURS_TABLE_CREATE);
+			db.execSQL(PATIENTS_TABLE_CREATE);
+			db.execSQL(OPTIONS_TABLE_CREATE);
+			db.execSQL(TASKS_TABLE_CREATE);			
+		}
+		catch(Exception ex){
+			
+		}
+		finally{
+			db.close();
+		}
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.w("database log", "on update");
-		WorkerManager.Instance().onUpdate(db);
+		WorkerManager.Instance().onUpgrade(db);
+		TourManager.Instance().onUpgrade(db);
 	}
 }

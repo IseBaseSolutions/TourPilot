@@ -5,6 +5,8 @@ import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 
 public class TourManager extends BaseObjectManager<Tour> {
 
+	public static final String TableName = "Tours";
+
 	private static TourManager instance;
 
 	public static TourManager Instance() {
@@ -19,18 +21,15 @@ public class TourManager extends BaseObjectManager<Tour> {
 		super(Tour.class);
 	}
 
-	public static String tableName() {
-		return "Tours";
-	}
 	
 	@Override
 	public String getRecTableName() {
-		return tableName();
+		return TableName;
 	}
 
 	@Override
-	public void onUpdate(SQLiteDatabase db) {
-				
+	public void onUpgrade(SQLiteDatabase db) {
+		addColumn(db, Tour.WorkerIDField, "INTEGER");
 	}
 
 }
