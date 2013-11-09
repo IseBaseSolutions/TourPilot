@@ -57,7 +57,6 @@ public class Worker extends BaseObject {
 
     public Worker(String strInitString, Date _actualDate) {
         StringParser initString = new StringParser(strInitString);
-        //TODO [Palm server changes required] Next line should be removed 
         initString.next(";");
         setId(Integer.parseInt(initString.next(";")));
         setName(initString.next(";"));

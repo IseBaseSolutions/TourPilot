@@ -1,5 +1,6 @@
 package isebase.cognito.tourpilot.Data.AdditionalTask;
 
+import isebase.cognito.tourpilot.Connection.ServerCommandParser;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.NCryptor;
@@ -50,7 +51,7 @@ public class AdditionalTask extends BaseObject {
     public String forServer()
     {
     	NCryptor nCryptor = new NCryptor();
-        String strValue = new String("Z;");
+        String strValue = new String(ServerCommandParser.ADDITIONAL_TASK_Z + ";");
         strValue += IdentID() + ";";
         strValue += nCryptor.LToNcode(getCheckSum()); //use ncriptor
         return strValue;
