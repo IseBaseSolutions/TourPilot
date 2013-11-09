@@ -32,6 +32,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	public static final String TYPE_NULL = "NULL";	
 	
 	private static final String DATABASE_NAME = "TourPilot.db";
+
 	public static final int DATABASE_VERSION = 7;
 
 	private static final String WORKERS_TABLE_CREATE = "CREATE TABLE "
@@ -45,41 +46,42 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 
 	private static final String TOURS_TABLE_CREATE = "CREATE TABLE " 
 			+ TourManager.TableName + "(" 
-			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
 			+ BaseObject.NameField + " TEXT NOT NULL, "
-			+ BaseObject.CheckSumField + " INTEGER " + ");";
-
-	private static final String PATIENTS_TABLE_CREATE = "CREATE TABLE "
-			+ PatientManager.TableName + "("
-			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ BaseObject.NameField + " TEXT NOT NULL, "
-			+ BaseObject.CheckSumField + " INTEGER, " 
-			+ Patient.AddressField + " TEXT, " 
-			+ Patient.IsDoneField + " INTEGER NOT NULL DEFAULT 0 "
+			+ BaseObject.CheckSumField + " INTEGER "
 			+ ");";
 
+	private static final String PATIENTS_TABLE_CREATE = "CREATE TABLE "
+			+ PatientManager.TableName + "(" 
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+			+ BaseObject.NameField + " TEXT NOT NULL, "
+			+ BaseObject.CheckSumField + " INTEGER, "
+			+ Patient.AddressField + " TEXT, "
+			+ Patient.IsDoneField + " INTEGER NOT NULL DEFAULT 0 "
+			+ ");";
+	
 	private static final String OPTIONS_TABLE_CREATE = "CREATE TABLE "
 			+ OptionManager.TableName + "(" 
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ BaseObject.NameField + " TEXT, " 
-			+ BaseObject.CheckSumField	+ " INTEGER, " 
+			+ BaseObject.NameField + " TEXT, "
+			+ BaseObject.CheckSumField + " INTEGER, "
 			+ Option.WorkerIDField + " INTEGER, "
-			+ Option.TourIDField + " INTEGER, " 
-			+ Option.EmploymentIDField	+ " INTEGER, " 
+			+ Option.TourIDField  + " INTEGER, "
+			+ Option.EmploymentIDField + " INTEGER, "
 			+ Option.ServerIPField + " TEXT, "
-			+ Option.ServerPortField + " INTEGER " 
+			+ Option.ServerPortField + " INTEGER "
 			+ ");";
-
+	
 	private static final String TASKS_TABLE_CREATE = "CREATE TABLE "
 			+ TaskManager.TableName + "("
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ BaseObject.NameField + " TEXT NOT NULL, "
-			+ BaseObject.CheckSumField + " INTEGER, " 
-			+ Task.StateField + " INTEGER NOT NULL DEFAULT 0 " 
+			+ BaseObject.CheckSumField + " INTEGER, "
+			+ Task.StateField + " INTEGER NOT NULL DEFAULT 0 "
 			+ ");";
 	
 	public DataBaseWrapper(Context context) {
- 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
 	private static DataBaseWrapper instance;

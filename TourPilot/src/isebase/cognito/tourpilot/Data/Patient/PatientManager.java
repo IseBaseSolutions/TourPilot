@@ -20,7 +20,7 @@ public class PatientManager extends BaseObjectManager<Patient> {
 	public PatientManager() {
 		super(Patient.class);
 	}
-	
+
 	@Override
 	public String getRecTableName() {
 		return TableName;
