@@ -5,6 +5,8 @@ import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 
 public class AdditionalTaskManager extends BaseObjectManager<AdditionalTask>{
 	
+	public static final String TableName = "AdditionalTasks";
+	
 	private static AdditionalTaskManager instance;
 
 	public static AdditionalTaskManager Instance() {
@@ -21,7 +23,7 @@ public class AdditionalTaskManager extends BaseObjectManager<AdditionalTask>{
 
 	@Override
 	public String getRecTableName() {
-		return "AdditionalTasks";
+		return TableName;
 	}
 
 	@Override

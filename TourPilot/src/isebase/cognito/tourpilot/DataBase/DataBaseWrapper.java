@@ -32,6 +32,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	public static final String TYPE_NULL = "NULL";	
 	
 	private static final String DATABASE_NAME = "TourPilot.db";
+
 	private static final int DATABASE_VERSION = 8;
 
 	private static final String WORKERS_TABLE_CREATE = "CREATE TABLE "
