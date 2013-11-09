@@ -9,18 +9,18 @@
     tools:context=".TasksActivity" >
 
     <TextView
-        android:id="@+id/tvCustemInfo"
+        android:id="@+id/tvCurrentInfo"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Large Text"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:text="@string/some_text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 	<ListView
 	    android:id="@+id/lvTasksList"
 	    android:layout_width="fill_parent"
 	    android:layout_height="match_parent"
-	    android:layout_alignLeft="@+id/tvCustemInfo"
-	    android:layout_below="@+id/tvCustemInfo"
+	    android:layout_alignLeft="@+id/tvCurrentInfo"
+	    android:layout_below="@+id/tvCurrentInfo"
 	    android:visibility="visible" >
 
 	</ListView>

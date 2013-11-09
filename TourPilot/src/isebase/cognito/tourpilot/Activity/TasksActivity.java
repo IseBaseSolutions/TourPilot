@@ -5,9 +5,6 @@ import isebase.cognito.tourpilot.Activity.AddTasks.AddTasksCategoryActivity;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
-import isebase.cognito.tourpilot.R.id;
-import isebase.cognito.tourpilot.R.layout;
-import isebase.cognito.tourpilot.R.menu;
 import isebase.cognito.tourpilot.Templates.TaskAdapter;
 
 import java.util.List;
@@ -35,7 +32,6 @@ public class TasksActivity extends BaseActivity {
 		reloadData();
 		InitTable(tasks.size());
 		initTaskList();
-
 	}
 
 	@Override
@@ -44,19 +40,16 @@ public class TasksActivity extends BaseActivity {
 		getMenuInflater().inflate(R.menu.tasks, menu);
 		return true;
 	}
-	
-	
+
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) 
-	{
+			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.tasks, menu);
 	}
-	
-	
+
 	public void onChangeState(View view) {
 		Task task = (Task) view.getTag();
 		task.setTaskState((task.getTaskState() == eTaskState.Done) ? eTaskState.UnDone
@@ -85,7 +78,7 @@ public class TasksActivity extends BaseActivity {
 		if (tableSize > 0)
 			return;
 		for (int i = 0; i < 10; i++)
-			TaskManager.Instance().add(new Task("Task " + i));
+			TaskManager.Instance().save(new Task("Task " + i));
 		reloadData();
 	}
 	@Override

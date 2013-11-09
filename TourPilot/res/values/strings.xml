@@ -11,7 +11,6 @@
     <string name="save_pin_code">Save Pin</string>
     <string name="server_ip">Server:</string>
     <string name="input_server_ip">Input server IP here</string>
-    <string name="unknown_number">Unknown number</string>
     <string name="server_port">Port:</string>
     <string name="phone_number">Phone number:</string>
     <string name="back">Back</string>
@@ -26,7 +25,6 @@
     <string name="connection_problems">Connection problems</string>
     <string name="no_connection">Please enable internet connection</string>
     <string name="no_ip_entered">Please enter server IP address</string>
-    <string name="enter_pin">Enter the PIN:</string>
     <string name="title_activity_base">BaseActivity</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_main">MainActivity</string>
@@ -36,6 +34,7 @@
     <string name="str_ok">OK</string>
     <string name="empty_text"></string>
     <string name="version">Version</string>
+    
     <string name="title_activity_tasks">TasksActivity</string>
     <string name="title_activity_add_tasks_category">AddTasksCategoryActivity</string>
     <string name="add_tasks_category">Additionaly categories</string>
@@ -47,6 +46,28 @@
     <string name="title_activity_address">AddressActivity</string>
     <string name="title_activity_doctors">DoctorsActivity</string>
     <string name="title_activity_relatives">RelativesActivity</string>
-    <string name="title_activity_comments">CommentsActivity</string>
+    <string name="title_activity_comments">CommentsActivity</string>    
+    <string name="program_version">Program version:</string>
+    <string name="data_base_version">Database version:</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="close">Close</string>
+    <string name="program_info">Program info</string>
+    <string name="enter_pin">Enter Your PIN code here..</string>
+    <string name="connection_try">Trying to connect</string>
+    <string name="connection_ok">Connection OK. Recieving invintation...</string>
+    <string name="invitation_ok">Invitation OK. Sycnhronizing...</string>
+    <string name="invitation_fail">Invitation FAIL</string>
+    <string name="sycnhronizing_ok">Sycnhronizing OK. Sending hello msg...</string>
+    <string name="sycnhronizing_fail">Sycnhronizing FAIL</string>
+    <string name="hello_request_ok">Hello request OK. Calculating checksum...</string>
+    <string name="hello_request_fail">Hello request FAIL</string>
+    <string name="checksum_ok">Checksum OK. Processing data...</string>
+    <string name="checksum_fail">Checksum FAIL</string>
+    <string name="processing_data_ok">Processing data OK</string>
+    <string name="processing_data_fail">Processing data FAIL</string>
+    <string name="data_to_download">Data to download</string>
+    <string name="connection_close_ok">Connection closing OK</string>
+    <string name="connection_close_fail">Connection closing FAIL</string>
 
 </resources>

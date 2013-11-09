@@ -3,7 +3,6 @@ package isebase.cognito.tourpilot.Activity;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
-import isebase.cognito.tourpilot.Data.Tour.TourManager;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,8 +27,7 @@ public class ToursActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tours);
-		reloadData();
-		initTable(tours.size());
+		tours = Option.Instance().getWorker().tours;
 		initListTours();
 		initComnponents();
 	}
@@ -58,22 +56,10 @@ public class ToursActivity extends Activity {
 		});
 	}
 
-	private void initTable(int tableSize) {
-		if (tableSize > 0)
-			return;
-		for (int i = 0; i < 10; i++)
-			TourManager.Instance().add(new Tour("Tour " + i));
-		reloadData();
-	}
-
 	public void logOut(View view) {
 		Intent workersActivity = new Intent(getApplicationContext(),
 				WorkersActivity.class);
 		startActivity(workersActivity);
-	}
-
-	public void reloadData() {
-		tours = TourManager.Instance().load();
 	}
 
 	private void initComnponents() {

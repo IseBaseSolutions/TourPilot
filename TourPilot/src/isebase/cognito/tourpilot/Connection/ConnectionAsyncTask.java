@@ -1,20 +1,39 @@
 package isebase.cognito.tourpilot.Connection;
 
+import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Option.OptionManager;
+import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Date;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import android.os.AsyncTask;
 
 public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 
+	private ConnectionStatus conStatus;
+
+	public ConnectionAsyncTask(ConnectionStatus cs) {
+		conStatus = cs;
+	}
+
 	@Override
 	protected void onPostExecute(Void result) {
+		if (!conStatus.lastExecuteOK || conStatus.isFinished) {
+			conStatus.UISynchHandler.onSynchronizedFinished(
+					conStatus.isFinished, conStatus.getMessage());
+			if (!conStatus.lastExecuteOK)
+				closeConnection();
+			return;
+		}
+		conStatus.UISynchHandler.onItemSynchronized(conStatus.getMessage());
+		conStatus.nextState();
 	}
 
 	@Override
@@ -23,44 +42,205 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void... params) {
+		switch (conStatus.CurrentState) {
+		case ConnectionStatus.InitState:
+			conStatus.setMessage(String.format(
+					"%1$s %2$s : %3$s ...",
+					StaticResources.getBaseContext().getString(
+							R.string.connection_try), OptionManager.Instance()
+							.loadOption().getServerIP(), OptionManager
+							.Instance().loadOption().getServerPort()));
+			break;
+		case ConnectionStatus.ConnectionState:
+			conStatus.lastExecuteOK = initializeConnection();
+			break;
+		case ConnectionStatus.Invitation:
+			conStatus.lastExecuteOK = recievingInvitation();
+			break;
+		case ConnectionStatus.Sycnhronizing:
+			conStatus.lastExecuteOK = sendSycnhronizationRequest();
+			break;
+		case ConnectionStatus.SendHelloRequest:
+			conStatus.lastExecuteOK = sendHelloRequest();
+			break;
+		case ConnectionStatus.CompareCkeckSums:
+			conStatus.lastExecuteOK = compareCkeckSums();
+			break;
+		case ConnectionStatus.ParseRecievedData:
+			conStatus.lastExecuteOK = parseRecievedData();
+			break;
+		case ConnectionStatus.CloseConnection:
+			conStatus.lastExecuteOK = closeConnection();
+			break;
+		default:
+			conStatus.isFinished = true;
+			break;
+		}
+
+		return null;
+
+	}
+
+	private boolean initializeConnection() {
 		try {
-			Socket socket = new Socket(OptionManager.Instance().loadOption()
+
+			conStatus.socket = new Socket(OptionManager.Instance().loadOption()
 					.getServerIP(), OptionManager.Instance().loadOption()
 					.getServerPort());
 
-			OutputStream os = socket.getOutputStream();
-			InputStream is = socket.getInputStream();
-			mainSync(os, is);
+			conStatus.OS = conStatus.socket.getOutputStream();
+			conStatus.IS = conStatus.socket.getInputStream();
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			conStatus.setMessage(String.format("%1$s ...", ex.getMessage()));
+			return false;
 		}
-		return null;
+		conStatus.setMessage(StaticResources.getBaseContext().getString(
+				R.string.connection_ok));
+		return true;
 	}
 
-	private boolean mainSync(OutputStream os, InputStream is) {
+	private boolean recievingInvitation() {
+		String strInvitation = "";
+		boolean retVal = true;
 		try {
-			String strInvitation = readFromStream(is);
-			if (strInvitation.substring(0, 2).compareTo("OK") != 0)
-				return false;
-			writeToStream(os, "GETTIME");
-			os.flush();
-			String strMsg = readFromStream(is);
-			writePack(os, "U;-1;-1;:359704043511397;+380636173121@1033"
-					+ "\0.\0");
-			// writeToStream(os, "U;-1;-1;:359704043511397;+380636173121@1033"
-			// + "\0.\0");
-			strMsg = readFromStream(is);
-			int a = 2;
+
+			strInvitation = readFromStream(conStatus.IS);
+			if (strInvitation.length() > 2
+					&& strInvitation.substring(0, 2).compareTo("OK") != 0)
+				retVal = false;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			retVal = false;
+		} finally {
+			if (retVal)
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.invitation_ok));
+			else
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.invitation_fail));
+		}
+		return retVal;
+	}
+
+	private boolean sendSycnhronizationRequest() {
+		boolean retVal = true;
+
+		try {
+			writeToStream(conStatus.OS, "GETTIME");
+			conStatus.OS.flush();
+			String recievedDate = readFromStream(conStatus.IS);
+			conStatus.serverCommandParser.parseElement(recievedDate, true);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			retVal = false;
+		} finally {
+			if (retVal)
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.sycnhronizing_ok));
+			else
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.sycnhronizing_fail));
+		}
+
+		return retVal;
+	}
+
+	private boolean sendHelloRequest() {
+		boolean retVal = true;
+		try {
+			writePack(conStatus.OS, getStrHello() + "\0.\0");
+			String recievedStatus = readFromStream(conStatus.IS);
+			if (recievedStatus.startsWith("OVER")) {
+				// License is over
+				retVal = false;
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			retVal = false;
+		} finally {
+			if (retVal)
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.hello_request_ok));
+			else
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.hello_request_fail));
+		}
+		return retVal;
+	}
+
+	private boolean compareCkeckSums() {
+		boolean retVal = true;
+		try {
+			writePack(conStatus.OS, getStrChecksums());
+			String strChecksumRecieve = readFromStream(conStatus.IS);
+			String strCheckItems = strChecksumRecieve;
+
+			writePack(conStatus.OS, get_SRV_msgStoredData(strCheckItems));
+			String dataFromServer = readPack(conStatus.IS);
+			conStatus.dataFromServer = dataFromServer.split("\0");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			retVal = false;
+		} finally {
+			if (retVal)
+				conStatus.setMessage(String.format(
+						"%1$s \n %2$s: %3$s",
+						StaticResources.getBaseContext().getString(
+								R.string.checksum_ok),
+						StaticResources.getBaseContext().getString(
+								R.string.data_to_download),
+						conStatus.dataFromServer.length));
+			else
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.checksum_fail));
+		}
+		return retVal;
+	}
+
+	private boolean parseRecievedData() {
+		boolean retVal = true;
+		try {
+			for (String data : conStatus.dataFromServer)
+				conStatus.serverCommandParser.parseElement(data, false);
+			writeToStream(conStatus.OS, "OK" + "\0");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			retVal = false;
+		} finally {
+			if (retVal)
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.processing_data_ok));
+			else
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.processing_data_fail));
+		}
+		return retVal;
+	}
+
+	private boolean closeConnection() {
+		boolean retVal = true;
+		try {
+			conStatus.closeConnection();
 		} catch (Exception e) {
 			e.printStackTrace();
+			retVal = false;
+		} finally {
+			if (retVal)
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.connection_close_ok));
+			else
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.connection_close_fail));
 		}
 		return true;
 	}
 
-	private String readFromStream(InputStream is) throws InterruptedException, IOException {
+	private String readFromStream(InputStream is) throws InterruptedException,
+			IOException {
 		String retVal = "";
-		int timeoutCount = 30000;
+		int timeoutCount = 120000;
 		long startTime = new Date().getTime();
 		long currentTime = startTime;
 		while (currentTime - startTime < timeoutCount) {
@@ -97,24 +277,20 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 		}
 	}
 
-	private String getMsgHello() {
-		// String strMsg = new String("U;");
-		// int userID = Option.Instance().getId();
-		// if (userID != 0)
-		// strMsg += userID;
-		// else
-		// strMsg += "-1"; // userID
-		// strMsg += ";";
-		// strMsg += CSettings.Instance().PrevUserID(); // beforeUser.ID()
-		// strMsg += ";:";
-		// strMsg += CSettings.Instance().DeviceID() + ";";
-		// strMsg += CSettings.Instance().PhoneNumber() + "@";
-		// strMsg += String.valueOf(GetVersion()) + "\0R;";
+	private String getStrHello() {
+		String strMsg = new String("U;");
+		strMsg += Option.Instance().getWorkerID();
+		strMsg += ";";
+		strMsg += "-1"; // beforeUser.ID()
+		strMsg += ";:";
+		strMsg += Option.Instance().getDeviceID() + ";";
+		strMsg += Option.Instance().getPhoneNumber() + "@";
+		strMsg += Option.Instance().getVersion() + "\0R;";
 		// if (User != null)
 		// strMsg += CSettings.Instance().TroubleFlags();
 		// else
 		// strMsg += "0";
-		// strMsg += "\0x1\0";
+		strMsg += "\0x1\0";
 		// String strDone = new String();
 		// strDone += CEmployments.Instance().GetDone();
 		//
@@ -130,7 +306,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 		// strDone += CMergedEmploymentTimes.Instance().GetDone(); // Andrew
 		//
 		// strDone += CCoordinates.Instance().GetDone(); // Andrew
-		//
+
 		// String patAnswers[] =
 		// CPatientAnswers.Instance().GetDone().split("\0");
 		// ArrayList<String> patAnsw = new ArrayList<String>();
@@ -143,11 +319,107 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 		// }
 		//
 		// strDone += CFreeAnswers.Instance().GetDone();
-
-		return "";
+		return strMsg;
 	}
 
-	public void writePack(OutputStream os, String strToWrite) throws IOException {
+	private String getStrChecksums() {
+		String strMsg = "";
+		strMsg += "z" + /* CAddTasks.Instance().Checksum() */0 + "\0.\0";
+		strMsg += "a" + /* CUsers.Instance().Checksum() */0 + "\0.\0";
+		boolean userPresent = Option.Instance().getWorkerID() != -1;
+		strMsg += "d"
+				+ (userPresent ? /* CDiagnoses.Instance().Checksum() */0 : 0)
+				+ "\0.\0";
+		strMsg += "b"
+				+ (userPresent ? /* CPatientRemarks.Instance().Checksum() */0
+						: 0) + "\0.\0";
+		strMsg += "v"
+				+ (userPresent ? /* CRelatives.Instance().Checksum() */0 : 0)
+				+ "\0.\0";
+		strMsg += "m"
+				+ (userPresent ? /* CDoctors.Instance().Checksum() */0 : 0)
+				+ "\0.\0";
+		strMsg += "p"
+				+ (userPresent ? /* CPatients.Instance().Checksum() */0 : 0)
+				+ "\0.\0";
+		strMsg += "i"
+				+ (userPresent ? /* CInformations.Instance().Checksum() */0 : 0)
+				+ "\0.\0";
+		strMsg += "r"
+				+ (userPresent ? /* CTours.Instance().Checksum() */0 : 0)
+				+ "\0.\0";
+		strMsg += "t"
+				+ (userPresent ? /* CEmployments.Instance().Checksum() */0 : 0)
+				+ "\0.\0";
+		strMsg += "u" + /* CAddWorks.Instance().Checksum() */0 + "\0.\0";
+		strMsg += "q" + /* CQuestions.Instance().Checksum() */0 + "\0.\0";
+		strMsg += "y" + /* CTopics.Instance().Checksum() */0 + "\0.\0";
+		strMsg += "j" + /* CLinks.Instance().Checksum() */0 + "\0.\0";
+		strMsg += "x" + (userPresent ? /*
+										 * CQuestionSettings.Instance().Checksum(
+										 * )
+										 */0 : 0) + "\0.\0";
+
+		strMsg += ">" + /* CFreeQuestions.Instance().Checksum() */0 + "\0.\0";
+		strMsg += "<" + /* CFreeTopics.Instance().Checksum() */0 + "\0.\0";
+		strMsg += "*" + (userPresent ? /*
+										 * CFreeQuestionSettings.Instance()
+										 * .Checksum()
+										 */0 : 0) + "\0.\0";
+		strMsg += "^" + (userPresent ? /*
+										 * CAutoQuestionSettings.Instance()
+										 * .Checksum()
+										 */0 : 0) + "\0.\0";
+		return strMsg;
+	}
+
+	private String get_SRV_msgStoredData(String strNeedSend) {
+		String strMsg = "";
+		if (strNeedSend.charAt(18) == '1')
+			strMsg += /* CAutoQuestionSettings.Instance().forServer() */0;
+		if (strNeedSend.charAt(17) == '1')
+			strMsg += /* CFreeQuestionSettings.Instance().forServer() */0;
+		if (strNeedSend.charAt(16) == '1')
+			strMsg += /* CFreeTopics.Instance().forServer() */0;
+		if (strNeedSend.charAt(15) == '1')
+			strMsg += /* CFreeQuestions.Instance().forServer() */0;
+		if (strNeedSend.charAt(14) == '1')
+			strMsg += /* CQuestionSettings.Instance().forServer() */0;
+		if (strNeedSend.charAt(13) == '1')
+			strMsg += /* CLinks.Instance().forServer() */0;
+		if (strNeedSend.charAt(12) == '1')
+			strMsg += /* CTopics.Instance().forServer() */0;
+		if (strNeedSend.charAt(11) == '1')
+			strMsg += /* CQuestions.Instance().forServer() */0;
+		if (strNeedSend.charAt(10) == '1')
+			strMsg += /* CTasks.Instance().forServer() */0;
+		if (strNeedSend.charAt(9) == '1')
+			strMsg += /* CAddWorks.Instance().forServer() */0;
+		if (strNeedSend.charAt(8) == '1')
+			strMsg += /* CTours.Instance().forServer() */0;
+		if (strNeedSend.charAt(7) == '1') // Informations
+			strMsg += /* CInformations.Instance().forServer() */0;
+		if (strNeedSend.charAt(6) == '1') // patient remarks
+			strMsg += /* CPatientRemarks.Instance().forServer() */0;
+		if (strNeedSend.charAt(5) == '1') // patients
+			strMsg += /* CPatients.Instance().forServer() */0;
+		if (strNeedSend.charAt(4) == '1') // doctors
+			strMsg += /* CDoctors.Instance().forServer() */0;
+		if (strNeedSend.charAt(3) == '1') // relatives
+			strMsg += /* CRelatives.Instance().forServer() */0;
+		if (strNeedSend.charAt(2) == '1') // diagnoses
+			strMsg += /* CDiagnoses.Instance().forServer() */0;
+		if (strNeedSend.charAt(1) == '1') // users
+			strMsg += /* CUsers.Instance().forServer() */0;
+		if (strNeedSend.charAt(0) == '1') // add tasks
+			strMsg += /* CAddTasks.Instance().forServer() */0;
+		if (strNeedSend.indexOf("1") == -1)
+			strMsg += ".";
+		return strMsg;
+	}
+
+	public void writePack(OutputStream os, String strToWrite)
+			throws IOException {
 		GZIPOutputStream zos = new GZIPOutputStream(os);
 		try {
 			zos.write(strToWrite.getBytes());
@@ -155,6 +427,64 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public String readPack(InputStream is) throws IOException,
+			InterruptedException {
+		String retVal = "";
+		// while (is.available() == 0)
+		// try {
+		// Thread.sleep(1000);
+		// } catch (InterruptedException ex) {
+		// ex.printStackTrace();
+		// }
+		// while (is.available() != 0)
+		// arr.add((byte) is.read());
+		// byte[] buf = new byte[arr.size() - 5];
+		// int counter = 0;
+		// for (Byte item : arr)
+		// if (counter < (arr.size() - 5))
+		// buf[counter++] = (Byte) item;
+		// else
+		// break;
+		// String data = new String(GZIP.inflate(buf), codePage);
+		GZIPInputStream zis;
+		int timeoutCount = 120000;
+		long startTime = new Date().getTime();
+		long currentTime = startTime;
+		while (currentTime - startTime < timeoutCount) {
+			int av = 0;
+			try {
+				av = is.available();
+			} finally {
+				if (av == 0) {
+					Thread.sleep(100);
+					currentTime = new Date().getTime();
+					continue;
+				}
+			}
+
+			while (av != 0) {
+				zis = new GZIPInputStream(is);
+				byte[] charI = { (byte) zis.read() };
+				retVal += new String(charI, "cp1252");
+				av = zis.available();
+			}
+			return retVal;
+		}
+		return retVal;
+
+		/*
+		 * while (is.available() == 0) try { Thread.sleep(1000); } catch
+		 * (InterruptedException ex) { ex.printStackTrace(); } try { byte[]
+		 * resultLength = new byte[4]; is.read(resultLength); int length =
+		 * byteArrayToInt(resultLength); byte[] arr = new byte[length - 5]; for
+		 * (int i = 0; i < length; i++) if (is.available() == 0) i--; else if (i
+		 * < arr.length) arr[i] = (byte)is.read(); byte[] data =
+		 * GZIP.inflate(arr); System.gc(); //fruckt //return new String(data);
+		 * return new String(data, codePage); } catch(Exception ex) {
+		 * ex.printStackTrace(); } return "";//
+		 */
 	}
 
 }

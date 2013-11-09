@@ -1,101 +1,104 @@
 package isebase.cognito.tourpilot.DataBase;
 
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Data.Option.OptionManager;
+import isebase.cognito.tourpilot.Data.Patient.Patient;
+import isebase.cognito.tourpilot.Data.Patient.PatientManager;
+import isebase.cognito.tourpilot.Data.Task.Task;
+import isebase.cognito.tourpilot.Data.Task.TaskManager;
+import isebase.cognito.tourpilot.Data.Tour.TourManager;
+import isebase.cognito.tourpilot.Data.Worker.Worker;
+import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
+import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DataBaseWrapper extends SQLiteOpenHelper {
 
-	//Table names
-	public static final String WORKERS = "Workers";
-	public static final String TOURS = "Tours";
-	public static final String PATIENTS = "Patients";
-	public static final String OPTIONS = "Options";
-	public static final String TASKS = "Tasks";
-	
-	//Base fields
-	public static final String ID = "_id";
-	public static final String NAME = "name";
-	public static final String CHECKSUM = "checksum";
-	
-	//Patients fields
-	public static final String ADDRESS = "address";
-	public static final String IS_DONE = "is_done";
-	
-	//Settings fields
-	public static final String WORKER_ID = "worker_id";
-	public static final String TOUR_ID = "tour_id";
-	public static final String EMPLOYMENT_ID = "employment_id";
-	public static final String SERVER_IP = "server_ip";
-	public static final String SERVER_PORT = "server_port";
-	
-	//Tasks fields
-	public static final String TASK_STATE = "task_state";
-	
+	public static final String TYPE_INTEGER = "INTEGER";
+	public static final String TYPE_DATE = TYPE_INTEGER;
+	public static final String TYPE_ENUM = TYPE_INTEGER;
+
+	public static final String TYPE_TEXT = "TEXT";
+
+	public static final String TYPE_REAL = "REAL";
+	public static final String TYPE_FLOAT = TYPE_REAL;
+	public static final String TYPE_DOUBLE = TYPE_REAL;
+
+	public static final String TYPE_BLOB = "BLOB";
+
+	public static final String TYPE_NULL = "NULL";
+
 	private static final String DATABASE_NAME = "TourPilot.db";
-	private static final int DATABASE_VERSION = 1;
+
+	public static final int DATABASE_VERSION = 8;
 
 	private static final String WORKERS_TABLE_CREATE = "CREATE TABLE "
-			+ WORKERS + "(" 
-			+ ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ NAME + " TEXT NOT NULL, "
-			+ CHECKSUM + " INTEGER "
-			+ ");";
+			+ WorkerManager.TableName + "(" + BaseObject.IDField
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + BaseObject.NameField
+			+ " TEXT NOT NULL, " + BaseObject.CheckSumField + " INTEGER, "
+			+ Worker.IsUseGPSField + " INTEGER, " + Worker.ActualDateField
+			+ " INTEGER " + ");";
 
-	private static final String TOURS_TABLE_CREATE = "CREATE TABLE " 
-			+ TOURS	+ "(" 
-			+ ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
-			+ NAME + " TEXT NOT NULL, "
-			+ CHECKSUM + " INTEGER "
+	private static final String TOURS_TABLE_CREATE = "CREATE TABLE "
+			+ TourManager.TableName + "(" + BaseObject.IDField
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + BaseObject.NameField
+			+ " TEXT NOT NULL, " + BaseObject.CheckSumField + " INTEGER "
 			+ ");";
 
 	private static final String PATIENTS_TABLE_CREATE = "CREATE TABLE "
-			+ PATIENTS + "(" 
-			+ ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ NAME + " TEXT NOT NULL, "
-			+ CHECKSUM + " INTEGER, "
-			+ ADDRESS + " TEXT, "
-			+ IS_DONE + " INTEGER NOT NULL DEFAULT 0 "
-			+ ");";
-	
+			+ PatientManager.TableName + "(" + BaseObject.IDField
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + BaseObject.NameField
+			+ " TEXT NOT NULL, " + BaseObject.CheckSumField + " INTEGER, "
+			+ Patient.AddressField + " TEXT, " + Patient.IsDoneField
+			+ " INTEGER NOT NULL DEFAULT 0 " + ");";
+
 	private static final String OPTIONS_TABLE_CREATE = "CREATE TABLE "
-			+ OPTIONS + "(" 
-			+ ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ NAME + " TEXT, "
-			+ CHECKSUM + " INTEGER, "
-			+ WORKER_ID + " INTEGER, "
-			+ TOUR_ID + " INTEGER, "
-			+ EMPLOYMENT_ID + " INTEGER, "
-			+ SERVER_IP + " TEXT, "
-			+ SERVER_PORT + " INTEGER "
-			+ ");";
-	
+			+ OptionManager.TableName + "(" + BaseObject.IDField
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + BaseObject.NameField
+			+ " TEXT, " + BaseObject.CheckSumField + " INTEGER, "
+			+ Option.WorkerIDField + " INTEGER, " + Option.TourIDField
+			+ " INTEGER, " + Option.EmploymentIDField + " INTEGER, "
+			+ Option.ServerIPField + " TEXT, " + Option.ServerPortField
+			+ " INTEGER " + ");";
+
 	private static final String TASKS_TABLE_CREATE = "CREATE TABLE "
-			+ TASKS + "("
-			+ ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ NAME + " TEXT NOT NULL, "
-			+ CHECKSUM + " INTEGER, "
-			+ TASK_STATE + " INTEGER NOT NULL DEFAULT 0 "
-			+ ");";
+			+ TaskManager.TableName + "(" + BaseObject.IDField
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + BaseObject.NameField
+			+ " TEXT NOT NULL, " + BaseObject.CheckSumField + " INTEGER, "
+			+ Task.StateField + " INTEGER NOT NULL DEFAULT 0 " + ");";
 
 	public DataBaseWrapper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
+	private static DataBaseWrapper instance;
+
+	public static DataBaseWrapper Instance() {
+		if (instance != null)
+			return instance;
+		instance = new DataBaseWrapper(StaticResources.getBaseContext());
+		return instance;
+	}
+
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(WORKERS_TABLE_CREATE);
-		db.execSQL(TOURS_TABLE_CREATE);
-		db.execSQL(PATIENTS_TABLE_CREATE);
-		db.execSQL(OPTIONS_TABLE_CREATE);
-		db.execSQL(TASKS_TABLE_CREATE);
+		try {
+			db.execSQL(WORKERS_TABLE_CREATE);
+			db.execSQL(TOURS_TABLE_CREATE);
+			db.execSQL(PATIENTS_TABLE_CREATE);
+			db.execSQL(OPTIONS_TABLE_CREATE);
+			db.execSQL(TASKS_TABLE_CREATE);
+		} catch (Exception ex) {
+		} finally {
+		}
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// db.execSQL("DROP TABLE IF EXISTS " + WORKERS);
-		// db.execSQL("DROP TABLE IF EXISTS " + TOURS);
-		// onCreate(db);
+		WorkerManager.Instance().onUpgrade(db);
+		TourManager.Instance().onUpgrade(db);
 	}
-
 }

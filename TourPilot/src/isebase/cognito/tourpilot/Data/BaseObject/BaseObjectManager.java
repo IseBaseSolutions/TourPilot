@@ -2,11 +2,11 @@ package isebase.cognito.tourpilot.Data.BaseObject;
 
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.DataBase.MapField;
-import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
 import java.lang.reflect.Method;
 import java.sql.Blob;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -17,13 +17,10 @@ import android.database.sqlite.SQLiteDatabase;
 public abstract class BaseObjectManager<T> {
 
 	private Class<T> entityClass;
-	protected DataBaseWrapper dbHelper;
 	protected String[] TABLE_COLUMNS;
-	protected SQLiteDatabase database;
 
 	public BaseObjectManager(Class<T> entityClass) {
 		this.entityClass = entityClass;
-		dbHelper = new DataBaseWrapper(StaticResources.getBaseContext());
 	}
 
 	public Class<T> getRecType() {
@@ -33,81 +30,161 @@ public abstract class BaseObjectManager<T> {
 	public abstract String getRecTableName();
 
 	public void open() throws SQLException {
-		database = dbHelper.getWritableDatabase();
 		getTableColumns();
 	}
 
 	public void close() {
-		dbHelper.close();
+		if (DataBaseWrapper.Instance().getReadableDatabase() != null)
+			DataBaseWrapper.Instance().getReadableDatabase().close();
+		DataBaseWrapper.Instance().close();
 	}
 
-	public T add(T object) {
-
-		int objectID = (int) database.insert(getRecTableName(), null,
-				getValues(object));
-		return load(objectID);
-	}
-
-	public void delete(Class<T> object) {
+	public void delete(int id) {
 		try {
-			int id = (Integer) object.getMethod("getId").invoke(object);
-			System.out.println("Comment deleted with id: " + id);
-			database.delete(getRecTableName(), DataBaseWrapper.ID + " = " + id,
-					null);
+			DataBaseWrapper
+					.Instance()
+					.getReadableDatabase()
+					.delete(getRecTableName(), BaseObject.IDField + " = " + id,
+							null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+	}
 
+	public void delete(Class<T> item) {
+		try {
+			int id = (Integer) item.getMethod("getId").invoke(item);
+			delete(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void save(T object) {
+	public List<T> load(String whereField, String whereClouse) {
+		List<T> items = new ArrayList<T>();
+		Cursor cursor = null;
 		try {
-			int id = (Integer) object.getClass().getMethod("getId")
-					.invoke(object);
-			database.update(getRecTableName(), getValues(object),
-					DataBaseWrapper.ID + " = " + id, null);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public List<T> load() {
-		List<T> objects = new ArrayList<T>();
-		try {
-			Cursor cursor = database.query(getRecTableName(), TABLE_COLUMNS,
-					null, null, null, null, null);
+			cursor = DataBaseWrapper
+					.Instance()
+					.getReadableDatabase()
+					.query(getRecTableName(), TABLE_COLUMNS,
+							whereField + " = " + whereClouse, null, null, null,
+							null);
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
 				T object = parseObject(cursor);
-				objects.add(object);
+				items.add(object);
 				cursor.moveToNext();
 			}
-			cursor.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (cursor != null)
+				cursor.close();
+			close();
 		}
-		return objects;
+		return items;
+	}
+
+	public void save(List<T> items) {
+		for (T item : items)
+			save(item);
+	}
+
+	public void save(T item) {
+		try {
+			int id = (Integer) item.getClass().getMethod("getId").invoke(item);
+			if (id == BaseObject.EMPTY_ID || load(id) == null) {
+				int itemID = (int) DataBaseWrapper.Instance()
+						.getReadableDatabase()
+						.insert(getRecTableName(), null, getValues(item));
+				item.getClass().getMethod("setId", int.class)
+						.invoke(item, (int) itemID);
+			} else {
+				DataBaseWrapper
+						.Instance()
+						.getReadableDatabase()
+						.update(getRecTableName(), getValues(item),
+								BaseObject.IDField + " = " + id, null);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+	}
+
+	public List<T> loadAll() {
+		List<T> items = load();
+		afterLoad(items);
+		return items;
+	}
+
+	public T loadAll(int id) {
+		T item = load(id);
+		afterLoad(item);
+		return item;
+	}
+
+	public void afterLoad(List<T> items) {
+	}
+
+	public void afterLoad(T item) {
+	}
+
+	public List<T> load() {
+		List<T> items = new ArrayList<T>();
+		Cursor cursor = null;
+		try {
+			cursor = DataBaseWrapper
+					.Instance()
+					.getReadableDatabase()
+					.query(getRecTableName(), TABLE_COLUMNS, null, null, null,
+							null, null);
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				T object = parseObject(cursor);
+				items.add(object);
+				cursor.moveToNext();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (cursor != null)
+				cursor.close();
+			close();
+		}
+		return items;
 	}
 
 	public T load(int id) {
-		Cursor cursor = database.query(getRecTableName(), TABLE_COLUMNS,
-				DataBaseWrapper.ID + " = " + id, null, null, null, null);
-
-		cursor.moveToFirst();
-		T newComment = null;
+		Cursor cursor = null;
+		T item = null;
 		try {
-			newComment = parseObject(cursor);
-			cursor.close();
+			cursor = DataBaseWrapper
+					.Instance()
+					.getReadableDatabase()
+					.query(getRecTableName(), TABLE_COLUMNS,
+							BaseObject.IDField + " = " + id, null, null, null,
+							null);
+			cursor.moveToFirst();
+			item = parseObject(cursor);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (cursor != null)
+				cursor.close();
+			close();
 		}
-		return newComment;
+		return item;
 	}
 
 	private T parseObject(Cursor cursor) throws InstantiationException,
 			IllegalAccessException {
-		T object = getRecType().newInstance();
-		Method[] methods = object.getClass().getMethods();
+		T item = getRecType().newInstance();
+		Method[] methods = item.getClass().getMethods();
 		for (Method method : methods) {
 			if (!method.getReturnType().equals(Void.TYPE))
 				continue;
@@ -115,36 +192,42 @@ public abstract class BaseObjectManager<T> {
 			if (annos != null) {
 				try {
 					if (method.getParameterTypes()[0].equals(int.class))
-						method.invoke(object, cursor.getInt(cursor
+						method.invoke(item, cursor.getInt(cursor
 								.getColumnIndex(annos.DatabaseField())));
 					else if (method.getParameterTypes()[0] == String.class)
-						method.invoke(object, cursor.getString(cursor
+						method.invoke(item, cursor.getString(cursor
 								.getColumnIndex(annos.DatabaseField())));
 					else if (method.getParameterTypes()[0].equals(Blob.class))
-						method.invoke(object, cursor.getBlob(cursor
+						method.invoke(item, cursor.getBlob(cursor
 								.getColumnIndex(annos.DatabaseField())));
 					else if (method.getParameterTypes()[0].equals(double.class))
-						method.invoke(object, cursor.getDouble(cursor
+						method.invoke(item, cursor.getDouble(cursor
 								.getColumnIndex(annos.DatabaseField())));
 					else if (method.getParameterTypes()[0].equals(float.class))
-						method.invoke(object, cursor.getFloat(cursor
+						method.invoke(item, cursor.getFloat(cursor
 								.getColumnIndex(annos.DatabaseField())));
 					else if (method.getParameterTypes()[0].equals(long.class))
-						method.invoke(object, cursor.getLong(cursor
+						method.invoke(item, cursor.getLong(cursor
 								.getColumnIndex(annos.DatabaseField())));
 					else if (method.getParameterTypes()[0].equals(short.class))
-						method.invoke(object, cursor.getShort(cursor
+						method.invoke(item, cursor.getShort(cursor
 								.getColumnIndex(annos.DatabaseField())));
 					else if (method.getParameterTypes()[0]
 							.equals(boolean.class))
-						method.invoke(object, cursor.getInt(cursor
+						method.invoke(item, cursor.getInt(cursor
 								.getColumnIndex(annos.DatabaseField())) == 1);
+					else if (method.getParameterTypes()[0].equals(Date.class))
+						method.invoke(
+								item,
+								new Date(cursor.getInt(cursor
+										.getColumnIndex(annos.DatabaseField()))));
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		return object;
+		return item;
 	}
 
 	private void getTableColumns() {
@@ -159,38 +242,41 @@ public abstract class BaseObjectManager<T> {
 		TABLE_COLUMNS = list.toArray(new String[list.size()]);
 	}
 
-	private ContentValues getValues(T object) {
+	private ContentValues getValues(T item) {
 		ContentValues values = new ContentValues();
 		try {
-			for (Method method : object.getClass().getMethods()) {
+			for (Method method : item.getClass().getMethods()) {
 				if (method.getReturnType().equals(Void.TYPE))
 					continue;
 				MapField annos = method.getAnnotation(MapField.class);
 				if (annos != null) {
 					if (method.getReturnType().equals(int.class))
 						values.put(annos.DatabaseField(), Integer
-								.parseInt(method.invoke(object).toString()));
+								.parseInt(method.invoke(item).toString()));
 					else if (method.getReturnType().equals(String.class))
 						values.put(annos.DatabaseField(),
-								(String) method.invoke(object));
+								(String) method.invoke(item));
 					else if (method.getReturnType().equals(boolean.class))
 						values.put(annos.DatabaseField(), Boolean
-								.parseBoolean(method.invoke(object).toString()));
+								.parseBoolean(method.invoke(item).toString()));
 					else if (method.getReturnType().equals(double.class))
 						values.put(annos.DatabaseField(), Double
-								.parseDouble(method.invoke(object).toString()));
+								.parseDouble(method.invoke(item).toString()));
 					else if (method.getReturnType().equals(float.class))
 						values.put(annos.DatabaseField(), Float
-								.parseFloat(method.invoke(object).toString()));
+								.parseFloat(method.invoke(item).toString()));
 					else if (method.getReturnType().equals(long.class))
-						values.put(annos.DatabaseField(), Long.parseLong(method
-								.invoke(object).toString()));
+						values.put(annos.DatabaseField(),
+								Long.parseLong(method.invoke(item).toString()));
 					else if (method.getReturnType().equals(short.class))
 						values.put(annos.DatabaseField(), Short
-								.parseShort(method.invoke(object).toString()));
+								.parseShort(method.invoke(item).toString()));
 					else if (method.getReturnType().equals(byte.class))
-						values.put(annos.DatabaseField(), Byte.parseByte(method
-								.invoke(object).toString()));
+						values.put(annos.DatabaseField(),
+								Byte.parseByte(method.invoke(item).toString()));
+					else if (method.getReturnType().equals(Date.class))
+						values.put(annos.DatabaseField(),
+								((Date) method.invoke(item)).getDate());
 				}
 			}
 		} catch (Exception e) {
@@ -199,4 +285,35 @@ public abstract class BaseObjectManager<T> {
 		return values;
 	}
 
+	public abstract void onUpgrade(SQLiteDatabase db);
+
+	protected void addColumn(SQLiteDatabase db, String colName, String colType) {
+		Cursor tableInfo = null;
+		try {
+			tableInfo = db
+					.rawQuery(String.format("PRAGMA table_info(%1$s)",
+							getRecTableName()), null);
+			tableInfo.moveToFirst();
+			boolean isColumnExists = false;
+			while (!tableInfo.isAfterLast()) {
+				String currColName = tableInfo.getString(1);
+				System.out.println(currColName);
+				if (currColName.equals(colName)) {
+					isColumnExists = true;
+					break;
+				}
+				tableInfo.moveToNext();
+			}
+			if (!isColumnExists) {
+				db.execSQL(String.format("ALTER TABLE %1$s ADD %2$s %3$s",
+						getRecTableName(), colName, colType));
+			}
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+			ex.printStackTrace();
+		} finally {
+			if (tableInfo != null)
+				tableInfo.close();
+		}
+	}
 }

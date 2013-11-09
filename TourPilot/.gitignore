@@ -1,1 +1,10 @@
-/bin
+bin/
+gen/
+libs/
+.settings/
+
+*.class
+*.apk
+*.jar
+*.classpath
+*.project

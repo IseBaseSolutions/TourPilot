@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="isebase.cognito.tourpilot"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1033" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -26,54 +26,43 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="isebase.cognito.tourpilot.Activity.ToursActivity" >
-        </activity>
-        <activity android:name="isebase.cognito.tourpilot.Activity.WorkersActivity" >
-        </activity>
-        <activity android:name="isebase.cognito.tourpilot.Activity.BaseActivity" >
-        </activity>
-        <activity android:name="isebase.cognito.tourpilot.Activity.PatientsActivity" >
-        </activity>
         <activity
             android:name="isebase.cognito.tourpilot.Activity.TasksActivity"
-            android:label="@string/title_activity_tasks" >
-        </activity>
+            android:label="@string/title_activity_tasks" />
         <activity
             android:name="isebase.cognito.tourpilot.Activity.AddTasks.AddTasksCategoryActivity"
-            android:label="@string/title_activity_add_tasks_category" >
-        </activity>
+            android:label="@string/title_activity_add_tasks_category" />
         <activity
             android:name="isebase.cognito.tourpilot.Activity.AddTasks.AddTasksActivity"
-            android:label="@string/title_activity_add_tasks" >
-        </activity>
+            android:label="@string/title_activity_add_tasks" />
         <activity
             android:name="isebase.cognito.tourpilot.Activity.NotesActivity"
-            android:label="@string/title_activity_notes" >
-        </activity>
+            android:label="@string/title_activity_notes"/>
         <activity
             android:name="isebase.cognito.tourpilot.Activity.InfoActivity"
-            android:label="@string/title_activity_info" >
-        </activity>
+            android:label="@string/title_activity_info" />
         <activity
             android:name="isebase.cognito.tourpilot.Activity.ManualInputActivity"
-            android:label="@string/title_activity_manual_input" >
-        </activity>
+            android:label="@string/title_activity_manual_input" />
         <activity
             android:name="isebase.cognito.tourpilot.Activity.AddressActivity"
-            android:label="@string/title_activity_address" >
-        </activity>
+            android:label="@string/title_activity_address" />
         <activity
             android:name="isebase.cognito.tourpilot.Activity.DoctorsActivity"
-            android:label="@string/title_activity_doctors" >
-        </activity>
+            android:label="@string/title_activity_doctors" />
         <activity
             android:name="isebase.cognito.tourpilot.Activity.RelativesActivity"
-            android:label="@string/title_activity_relatives" >
-        </activity>
+            android:label="@string/title_activity_relatives" />
         <activity
             android:name="isebase.cognito.tourpilot.Activity.CommentsActivity"
-            android:label="@string/title_activity_comments" >
-        </activity>
+            android:label="@string/title_activity_comments"/>
+        <activity android:name="isebase.cognito.tourpilot.Activity.SynchronizationActivity" />  
+        <activity android:name="isebase.cognito.tourpilot.Activity.ToursActivity" />
+        <activity android:name="isebase.cognito.tourpilot.Activity.WorkersActivity" />
+        <activity android:name="isebase.cognito.tourpilot.Activity.BaseActivity" />
+        <activity android:name="isebase.cognito.tourpilot.Activity.PatientsActivity" />
+        <activity android:name="isebase.cognito.tourpilot.Activity.TasksActivity" />    
+
     </application>
 
 </manifest>

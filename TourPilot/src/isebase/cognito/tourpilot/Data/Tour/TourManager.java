@@ -1,8 +1,12 @@
 package isebase.cognito.tourpilot.Data.Tour;
 
+import android.database.sqlite.SQLiteDatabase;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
+import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 
 public class TourManager extends BaseObjectManager<Tour> {
+
+	public static final String TableName = "Tours";
 
 	private static TourManager instance;
 
@@ -17,10 +21,15 @@ public class TourManager extends BaseObjectManager<Tour> {
 	public TourManager() {
 		super(Tour.class);
 	}
-
+	
 	@Override
 	public String getRecTableName() {
-		return dbHelper.TOURS;
+		return TableName;
+	}
+
+	@Override
+	public void onUpgrade(SQLiteDatabase db) {
+		addColumn(db, Tour.IsCommonTourField, DataBaseWrapper.TYPE_INTEGER);
 	}
 
 }
