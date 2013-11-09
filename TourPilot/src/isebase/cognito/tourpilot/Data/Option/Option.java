@@ -14,8 +14,8 @@ public class Option extends BaseObject {
 	public static final String TourIDField = "tour_id";
 	public static final String EmploymentIDField = "employment_id";
 	public static final String ServerIPField = "server_ip";
-	public static final String ServerPortField = "server_port";	
-	
+	public static final String ServerPortField = "server_port";
+
 	private int workerID;
 	private int tourID;
 	private int employmentID;
@@ -30,30 +30,17 @@ public class Option extends BaseObject {
 	private TelephonyManager tMgr;
 
 	private static Option instance;
-
-	public static Option Instance() {
-		if (instance != null)
-			return instance;
-		instance = OptionManager.Instance().loadOption();
-		if (instance != null)
-			return instance;
-		return instance = new Option();
-	}
-
-	public Option() {
-
-	}
 	
 	@MapField(DatabaseField = WorkerIDField)
 	public int getWorkerID() {
 		return workerID;
 	}
-	
+
 	@MapField(DatabaseField = WorkerIDField)
 	public void setWorkerID(int workerID) {
 		this.workerID = workerID;
 	}
-	
+
 	@MapField(DatabaseField = TourIDField)
 	public int getTourID() {
 		return tourID;
@@ -73,12 +60,12 @@ public class Option extends BaseObject {
 	public void setEmploymentID(int employmentID) {
 		this.employmentID = employmentID;
 	}
-	
+
 	@MapField(DatabaseField = ServerIPField)
 	public String getServerIP() {
 		return serverIP;
 	}
-	
+
 	@MapField(DatabaseField = ServerIPField)
 	public void setServerIP(String serverIP) {
 		this.serverIP = serverIP;
@@ -94,6 +81,19 @@ public class Option extends BaseObject {
 		this.serverPort = serverPort;
 	}
 
+	public static Option Instance() {
+		if (instance != null)
+			return instance;
+		instance = OptionManager.Instance().loadOption();
+		if (instance != null)
+			return instance;
+		return instance = new Option();
+	}
+
+	public Option() {
+
+	}
+
 	public Worker getWorker() {
 		if (worker != null && worker.getId() == getWorkerID())
 			return worker;
@@ -106,8 +106,8 @@ public class Option extends BaseObject {
 		super.clear();
 		workerID = EMPTY_ID;
 		tourID = EMPTY_ID;
-		employmentID = EMPTY_ID;	
-		serverPort = 4448;		
+		employmentID = EMPTY_ID;
+		serverPort = 4448;
 		serverIP = "192.168.1.8";
 	}
 

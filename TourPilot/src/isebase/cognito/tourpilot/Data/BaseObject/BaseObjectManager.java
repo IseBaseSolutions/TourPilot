@@ -235,9 +235,8 @@ public abstract class BaseObjectManager<T> {
 		Method[] methods = getRecType().getMethods();
 		for (Method method : methods) {
 			MapField annos = method.getAnnotation(MapField.class);
-			if (annos != null) {
+			if (annos != null)
 				list.add(annos.DatabaseField());
-			}
 		}
 		TABLE_COLUMNS = list.toArray(new String[list.size()]);
 	}
