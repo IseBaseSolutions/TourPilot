@@ -30,10 +30,10 @@
             android:name="isebase.cognito.tourpilot.Activity.TasksActivity"
             android:label="@string/title_activity_tasks" />
         <activity
-            android:name="isebase.cognito.tourpilot.Activity.AddTasks.AddTasksCategoryActivity"
+            android:name="isebase.cognito.tourpilot.Activity.AdditionalTasks.CatalogsActivity"
             android:label="@string/title_activity_add_tasks_category" />
         <activity
-            android:name="isebase.cognito.tourpilot.Activity.AddTasks.AddTasksActivity"
+            android:name="isebase.cognito.tourpilot.Activity.AdditionalTasks.AdditionalTasksActivity"
             android:label="@string/title_activity_add_tasks" />
         <activity
             android:name="isebase.cognito.tourpilot.Activity.NotesActivity"

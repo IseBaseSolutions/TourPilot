@@ -1,7 +1,7 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Activity.AddTasks.AddTasksCategoryActivity;
+import isebase.cognito.tourpilot.Activity.AdditionalTasks.CatalogsActivity;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
@@ -86,7 +86,7 @@ public class TasksActivity extends BaseActivity {
 	    // Handle item selection
 	    switch (item.getItemId()) {
 	        case R.id.add_task_category:
-	        	Intent addTasksCategoryActivity = new Intent(getApplicationContext(),AddTasksCategoryActivity.class);
+	        	Intent addTasksCategoryActivity = new Intent(getApplicationContext(),CatalogsActivity.class);
 	        	startActivity(addTasksCategoryActivity);
 	            return true;
 	        case R.id.cancelAllTasks:

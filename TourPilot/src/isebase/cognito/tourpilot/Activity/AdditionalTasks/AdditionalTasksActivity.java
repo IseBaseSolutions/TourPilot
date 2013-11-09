@@ -1,44 +1,28 @@
-package isebase.cognito.tourpilot.Activity.AddTasks;
+package isebase.cognito.tourpilot.Activity.AdditionalTasks;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivity;
-import isebase.cognito.tourpilot.Data.AddTasks.AddTasks;
-import isebase.cognito.tourpilot.Data.AddTasks.AddTasksManager;
-import isebase.cognito.tourpilot.Data.Task.Task;
+import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
+import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Templates.AddTaskAdapter;
-import isebase.cognito.tourpilot.Templates.TaskAdapter;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import android.app.Activity;
-import android.app.ListActivity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class AddTasksActivity extends BaseActivity  {
+public class AdditionalTasksActivity extends BaseActivity  {
 
-//	List<AddTasks> listAddTasks = new ArrayList<AddTasks>();
-//	List<String> listAddTasksTotal = new ArrayList<String>();
-//	List<String> listAddTasksFilter = new ArrayList<String>();
-//	List<String> listAddTasksShow = new ArrayList<String>();
-	
-	
-
-	List<AddTasks> listAddTasksTotal;
-	List<AddTasks> listAddTasksFilter;
-	List<AddTasks> listAddTasksShow;
-	
-	List<AddTasks> listAddTasksSelected;
+	List<AdditionalTask> listAddTasksTotal;
+	List<AdditionalTask> listAddTasksFilter;
+	List<AdditionalTask> listAddTasksShow;	
+	List<AdditionalTask> listAddTasksSelected;
 	
 	ListView lvAddTasks;
 
@@ -48,7 +32,7 @@ public class AddTasksActivity extends BaseActivity  {
 		setContentView(R.layout.activity_add_tasks);
 		
 		
-		listAddTasksFilter = new ArrayList<AddTasks>();
+		listAddTasksFilter = new ArrayList<AdditionalTask>();
 		lvAddTasks = (ListView) findViewById(R.id.lvAddTasks);
 		
 		
@@ -96,7 +80,9 @@ public class AddTasksActivity extends BaseActivity  {
 			return;
 		listAddTasksTotal.clear();
 		for (int i = 0; i < 20; i++){
-			listAddTasksTotal.add(new AddTasks("Add task #" + i));
+			AdditionalTask additionaTask = new AdditionalTask();
+			additionaTask.setName("Add task #" + i);
+			listAddTasksTotal.add(additionaTask);
 //			AddTasksManager.Instance().add(new AddTasks("Add Task #" + i));
 		}
 		listAddTasksShow = listAddTasksTotal;
@@ -110,7 +96,7 @@ public class AddTasksActivity extends BaseActivity  {
 	}
 	private void InitFilter(String sFilter){
 		listAddTasksFilter.clear();
-		for(AddTasks tempAddTask : listAddTasksTotal){
+		for(AdditionalTask tempAddTask : listAddTasksTotal){
 			if(tempAddTask.getName().contains(sFilter)){
 				listAddTasksFilter.add(tempAddTask);
 			}
@@ -122,25 +108,25 @@ public class AddTasksActivity extends BaseActivity  {
 	}
 	
 	private void reloadData() {
-		listAddTasksTotal = AddTasksManager.Instance().load();
+		listAddTasksTotal = AdditionalTaskManager.Instance().load();
 	}
 	public void onSaveAddTasks(View view)
 	{
-		listAddTasksSelected = new ArrayList<AddTasks>();
-		for(AddTasks tempTask : listAddTasksShow){
-			if(tempTask.getCheck())
+		listAddTasksSelected = new ArrayList<AdditionalTask>();
+		for(AdditionalTask tempTask : listAddTasksShow){
+			if(tempTask.getIsChecked())
 				listAddTasksSelected.add(tempTask);
 		}
 		String s = "";
-		for(AddTasks tempTask : listAddTasksSelected){
-			s += tempTask.getName() + " - " + Boolean.toString(tempTask.getCheck()) + "\n";
+		for(AdditionalTask tempTask : listAddTasksSelected){
+			s += tempTask.getName() + " - " + Boolean.toString(tempTask.getIsChecked()) + "\n";
 		}
 		Toast.makeText(getApplicationContext(),s, Toast.LENGTH_SHORT).show();
 	//	finish();
 	}
 	public void onSelectAddTask(View view)
 	{
-		AddTasks addTask = (AddTasks) view.getTag();
-		addTask.setCheck(((CheckBox)view).isChecked()); 
+		AdditionalTask addTask = (AdditionalTask) view.getTag();
+		addTask.setIsChecked(((CheckBox)view).isChecked()); 
 	}
 }

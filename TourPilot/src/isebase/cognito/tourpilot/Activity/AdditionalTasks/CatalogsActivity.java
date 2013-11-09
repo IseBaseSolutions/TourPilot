@@ -1,12 +1,13 @@
-package isebase.cognito.tourpilot.Activity.AddTasks;
+package isebase.cognito.tourpilot.Activity.AdditionalTasks;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivity;
-import isebase.cognito.tourpilot.Data.AddTasksCategory.AddTasksCategory;
-import isebase.cognito.tourpilot.Data.AddTasksCategory.AddTasksCategoryManager;
+import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
+import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
+import isebase.cognito.tourpilot.Data.AdditionalTask.Catalog;
+import isebase.cognito.tourpilot.Data.AdditionalTask.Catalog.eCatalogType;
 import android.os.Bundle;
 import android.content.Intent;
 import android.view.Menu;
@@ -15,9 +16,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class AddTasksCategoryActivity extends BaseActivity {
+public class CatalogsActivity extends BaseActivity {
 
-	private List<AddTasksCategory>  listAddTasksCategories = new ArrayList<AddTasksCategory>();
+	private List<Catalog>  listCatalogs = new ArrayList<Catalog>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +31,7 @@ public class AddTasksCategoryActivity extends BaseActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
+// 		Inflate the menu; this adds items to the action bar if it is present.
 //		getMenuInflater().inflate(R.menu.add_tasks_category, menu);
 		return true;
 	}
@@ -38,8 +39,11 @@ public class AddTasksCategoryActivity extends BaseActivity {
 	{
 		if (tableSize > 0)
 			return;
-		for (int i = 0; i < 10; i++)
-			AddTasksCategoryManager.Instance().save(new AddTasksCategory("Tour " + i));
+		for (int i = 0; i < 10; i++){
+			AdditionalTask item = new AdditionalTask();
+			item.setName("Addtitional task" + i);
+			AdditionalTaskManager.Instance().save(item);
+		}
 		reloadData();
 	}
 	
@@ -61,13 +65,16 @@ public class AddTasksCategoryActivity extends BaseActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
-				Intent addTasksActivity = new Intent(getApplicationContext(),AddTasksActivity.class);
+				Intent addTasksActivity = new Intent(getApplicationContext(),AdditionalTasksActivity.class);
 				startActivity(addTasksActivity);
 			}
 
 		});
 	}
 	public void reloadData() {
-		listAddTasksCategories = AddTasksCategoryManager.Instance().load();
+		listCatalogs.add(new Catalog(eCatalogType.btyp_kk));
+		listCatalogs.add(new Catalog(eCatalogType.btyp_pk));
+		listCatalogs.add(new Catalog(eCatalogType.btyp_pr));
+		listCatalogs.add(new Catalog(eCatalogType.btyp_sa));		
 	}
 }
