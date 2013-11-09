@@ -11,16 +11,16 @@ public class DateUtils {
 	private static long timeDiff = 0L;
 	
 	public static Date GetServerDateTime() {
-		return LocalDate(LocalTime(new Date()) + timeDiff);
+		return getLocalDate(getLocalTime(new Date()) + timeDiff);
 	}
 	
-    public static Date LocalDate(long milliseconds)
+    public static Date getLocalDate(long milliseconds)
     {
     	return new Date(milliseconds -(Calendar.getInstance().get(Calendar.ZONE_OFFSET)
 									 + Calendar.getInstance().get(Calendar.DST_OFFSET)));
     }
     
-    public static long LocalTime(Date value)
+    public static long getLocalTime(Date value)
     {
         return value.getTime() + (Calendar.getInstance().get(Calendar.ZONE_OFFSET)
         						+ Calendar.getInstance().get(Calendar.DST_OFFSET));

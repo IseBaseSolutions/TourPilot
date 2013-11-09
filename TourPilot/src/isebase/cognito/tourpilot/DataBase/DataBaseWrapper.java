@@ -20,66 +20,56 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	public static final String TYPE_INTEGER = "INTEGER";
 	public static final String TYPE_DATE = TYPE_INTEGER;
 	public static final String TYPE_ENUM = TYPE_INTEGER;
-	
+
 	public static final String TYPE_TEXT = "TEXT";
-	
+
 	public static final String TYPE_REAL = "REAL";
 	public static final String TYPE_FLOAT = TYPE_REAL;
 	public static final String TYPE_DOUBLE = TYPE_REAL;
-	
+
 	public static final String TYPE_BLOB = "BLOB";
-	
-	public static final String TYPE_NULL = "NULL";	
-	
+
+	public static final String TYPE_NULL = "NULL";
+
 	private static final String DATABASE_NAME = "TourPilot.db";
 
-	public static final int DATABASE_VERSION = 7;
+	public static final int DATABASE_VERSION = 8;
 
 	private static final String WORKERS_TABLE_CREATE = "CREATE TABLE "
-			+ WorkerManager.TableName + "(" 
-			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ BaseObject.NameField + " TEXT NOT NULL, "
-			+ BaseObject.CheckSumField + " INTEGER, "
-			+ Worker.IsUseGPSField + " INTEGER, "
-			+ Worker.ActualDateField + " INTEGER "
-			+ ");";
+			+ WorkerManager.TableName + "(" + BaseObject.IDField
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + BaseObject.NameField
+			+ " TEXT NOT NULL, " + BaseObject.CheckSumField + " INTEGER, "
+			+ Worker.IsUseGPSField + " INTEGER, " + Worker.ActualDateField
+			+ " INTEGER " + ");";
 
-	private static final String TOURS_TABLE_CREATE = "CREATE TABLE " 
-			+ TourManager.TableName + "(" 
-			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
-			+ BaseObject.NameField + " TEXT NOT NULL, "
-			+ BaseObject.CheckSumField + " INTEGER "
+	private static final String TOURS_TABLE_CREATE = "CREATE TABLE "
+			+ TourManager.TableName + "(" + BaseObject.IDField
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + BaseObject.NameField
+			+ " TEXT NOT NULL, " + BaseObject.CheckSumField + " INTEGER "
 			+ ");";
 
 	private static final String PATIENTS_TABLE_CREATE = "CREATE TABLE "
-			+ PatientManager.TableName + "(" 
-			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ BaseObject.NameField + " TEXT NOT NULL, "
-			+ BaseObject.CheckSumField + " INTEGER, "
-			+ Patient.AddressField + " TEXT, "
-			+ Patient.IsDoneField + " INTEGER NOT NULL DEFAULT 0 "
-			+ ");";
-	
+			+ PatientManager.TableName + "(" + BaseObject.IDField
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + BaseObject.NameField
+			+ " TEXT NOT NULL, " + BaseObject.CheckSumField + " INTEGER, "
+			+ Patient.AddressField + " TEXT, " + Patient.IsDoneField
+			+ " INTEGER NOT NULL DEFAULT 0 " + ");";
+
 	private static final String OPTIONS_TABLE_CREATE = "CREATE TABLE "
-			+ OptionManager.TableName + "(" 
-			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ BaseObject.NameField + " TEXT, "
-			+ BaseObject.CheckSumField + " INTEGER, "
-			+ Option.WorkerIDField + " INTEGER, "
-			+ Option.TourIDField  + " INTEGER, "
-			+ Option.EmploymentIDField + " INTEGER, "
-			+ Option.ServerIPField + " TEXT, "
-			+ Option.ServerPortField + " INTEGER "
-			+ ");";
-	
+			+ OptionManager.TableName + "(" + BaseObject.IDField
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + BaseObject.NameField
+			+ " TEXT, " + BaseObject.CheckSumField + " INTEGER, "
+			+ Option.WorkerIDField + " INTEGER, " + Option.TourIDField
+			+ " INTEGER, " + Option.EmploymentIDField + " INTEGER, "
+			+ Option.ServerIPField + " TEXT, " + Option.ServerPortField
+			+ " INTEGER " + ");";
+
 	private static final String TASKS_TABLE_CREATE = "CREATE TABLE "
-			+ TaskManager.TableName + "("
-			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ BaseObject.NameField + " TEXT NOT NULL, "
-			+ BaseObject.CheckSumField + " INTEGER, "
-			+ Task.StateField + " INTEGER NOT NULL DEFAULT 0 "
-			+ ");";
-	
+			+ TaskManager.TableName + "(" + BaseObject.IDField
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + BaseObject.NameField
+			+ " TEXT NOT NULL, " + BaseObject.CheckSumField + " INTEGER, "
+			+ Task.StateField + " INTEGER NOT NULL DEFAULT 0 " + ");";
+
 	public DataBaseWrapper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
@@ -91,21 +81,18 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			return instance;
 		instance = new DataBaseWrapper(StaticResources.getBaseContext());
 		return instance;
-	}	
-		
+	}
+
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		try{
+		try {
 			db.execSQL(WORKERS_TABLE_CREATE);
 			db.execSQL(TOURS_TABLE_CREATE);
 			db.execSQL(PATIENTS_TABLE_CREATE);
 			db.execSQL(OPTIONS_TABLE_CREATE);
-			db.execSQL(TASKS_TABLE_CREATE);			
-		}
-		catch(Exception ex){
-			
-		}
-		finally{
+			db.execSQL(TASKS_TABLE_CREATE);
+		} catch (Exception ex) {
+		} finally {
 		}
 	}
 

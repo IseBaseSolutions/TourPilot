@@ -37,7 +37,7 @@ public class WorkerManager extends BaseObjectManager<Worker> {
 		
 	@Override
 	public void afterLoad(Worker worker){
-		worker.tours = TourManager.Instance().load(Tour.WorkerIDField, worker.getId()+"");
+		worker.tours = TourManager.Instance().load();
 	}
 	
 }

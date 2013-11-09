@@ -26,16 +26,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="isebase.cognito.tourpilot.Activity.ToursActivity" >
-        </activity>
-        <activity android:name="isebase.cognito.tourpilot.Activity.WorkersActivity" >
-        </activity>
-        <activity android:name="isebase.cognito.tourpilot.Activity.BaseActivity" >
-        </activity>
-        <activity android:name="isebase.cognito.tourpilot.Activity.PatientsActivity" >
-        </activity>
-        <activity android:name="isebase.cognito.tourpilot.Activity.TasksActivity" >            
-        </activity>
+        <activity android:name="isebase.cognito.tourpilot.Activity.SynchronizationActivity" />  
+        <activity android:name="isebase.cognito.tourpilot.Activity.ToursActivity" />
+        <activity android:name="isebase.cognito.tourpilot.Activity.WorkersActivity" />
+        <activity android:name="isebase.cognito.tourpilot.Activity.BaseActivity" />
+        <activity android:name="isebase.cognito.tourpilot.Activity.PatientsActivity" />
+        <activity android:name="isebase.cognito.tourpilot.Activity.TasksActivity" />    
+
     </application>
 
 </manifest>

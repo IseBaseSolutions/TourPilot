@@ -1,10 +1,6 @@
 package isebase.cognito.tourpilot.Activity;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Connection.ConnectionAsyncTask;
 import isebase.cognito.tourpilot.Connection.ConnectionInfo;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Option.OptionManager;
@@ -72,18 +68,17 @@ public class OptionsActivity extends BaseActivity {
 					"dialogNoIPEntered");
 			return;
 		}
-		if (ConnectionInfo.Instance().getNetWorkInfo() == null
-				|| !ConnectionInfo.Instance().getNetWorkInfo().isConnected()) {
+		if (ConnectionInfo.Instance().getNetworkInfo() == null
+				|| !ConnectionInfo.Instance().getNetworkInfo().isConnected()) {
 			dialogNoConnection.show(getSupportFragmentManager(),
 					"dialogNoConnection");
 			return;
 		}
-		ConnectionAsyncTask m = new ConnectionAsyncTask();
-		m.execute();
 		saveOptions();
-		Intent workersActivity = new Intent(getApplicationContext(),
-				WorkersActivity.class);
-		startActivity(workersActivity);
+		Intent synchActivity = new Intent(getApplicationContext(),
+				SynchronizationActivity.class);
+		startActivity(synchActivity);
+
 	}
 
 	private void initOptions() {
