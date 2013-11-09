@@ -3,7 +3,6 @@ package isebase.cognito.tourpilot.Connection;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Option.OptionManager;
-import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
 import java.io.IOException;
