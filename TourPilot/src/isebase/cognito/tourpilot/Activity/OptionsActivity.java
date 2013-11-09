@@ -3,7 +3,6 @@ package isebase.cognito.tourpilot.Activity;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Connection.ConnectionInfo;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.Data.Option.OptionManager;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.DialogInfoBase;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
@@ -31,7 +30,6 @@ public class OptionsActivity extends BaseActivity {
 		setContentView(R.layout.activity_options);
 		StaticResources.setBaseContext(getBaseContext());
 		initControls();
-		initOptions();
 		initDialogs();
 	}
 
@@ -60,6 +58,7 @@ public class OptionsActivity extends BaseActivity {
 		etServerIP = (EditText) findViewById(R.id.etServerIP);
 		etServerPort = (EditText) findViewById(R.id.etServerPort);
 		etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
+		initOptions();
 	}
 
 	public void startSync(View view) {
@@ -89,9 +88,8 @@ public class OptionsActivity extends BaseActivity {
 
 	private void saveOptions() {
 		Option.Instance().setServerIP(etServerIP.getText().toString());
-		Option.Instance().setServerPort(
-				Integer.parseInt(etServerPort.getText().toString()));
-		OptionManager.Instance().save(Option.Instance());
+		Option.Instance().setServerPort(Integer.parseInt(etServerPort.getText().toString()));
+		Option.Instance().save();
 	}
 
 	private void initDialogs() {

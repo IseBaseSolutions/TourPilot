@@ -14,7 +14,17 @@ public class AdditionalTask extends BaseObject {
     private int btyp;
     private int quality;
     
-    public String IdentID() { 
+    public boolean isChecked;
+            
+    public boolean getIsChecked() {
+		return isChecked;
+	}
+
+	public void setIsChecked(boolean isChecked) {
+		this.isChecked = isChecked;
+	}
+
+	public String IdentID() { 
     	return btyp + ";" + getId(); 
 	}
     
@@ -36,6 +46,10 @@ public class AdditionalTask extends BaseObject {
     @MapField(DatabaseField = QualityField)
     public void setQuality(int quality) {
     	this.quality = quality;
+    }
+    
+    public AdditionalTask(){
+    	clear();
     }
     
 	public AdditionalTask(String initString) {

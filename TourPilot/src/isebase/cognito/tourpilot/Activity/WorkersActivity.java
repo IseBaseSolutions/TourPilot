@@ -2,7 +2,6 @@ package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.Data.Option.OptionManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.Dialogs.DialogPin;
@@ -127,7 +126,7 @@ public class WorkersActivity extends FragmentActivity implements
 		if (!checkWorkerPIN(name, pinStr))
 			return;
 		Option.Instance().setWorkerID(selectedWorker.getId());
-		OptionManager.Instance().save(Option.Instance());
+		Option.Instance().save();
 		switchToTours();
 	}
 
