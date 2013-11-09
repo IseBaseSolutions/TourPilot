@@ -5,6 +5,8 @@ import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 
 public class DiagnoseManager extends BaseObjectManager<Diagnose>{
 	
+	public static final String TableName = "Diagnoses";
+	
 	private static DiagnoseManager instance;
 
 	public static DiagnoseManager Instance() {
@@ -21,7 +23,7 @@ public class DiagnoseManager extends BaseObjectManager<Diagnose>{
 
 	@Override
 	public String getRecTableName() {
-		return "Diagnoses";
+		return TableName;
 	}
 
 	@Override
