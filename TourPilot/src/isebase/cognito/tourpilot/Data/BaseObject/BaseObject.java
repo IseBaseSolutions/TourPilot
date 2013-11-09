@@ -7,6 +7,8 @@ public abstract class BaseObject {
 	public static final String IDField = "_id";
 	public static final String NameField = "name";
 	public static final String CheckSumField = "checksum";
+	public static final String WasSentField = "was_sent";
+	public static final String IsServerTimeField = "is_server_time";
 	
 	public static final int EMPTY_ID = -1;
 
@@ -57,6 +59,30 @@ public abstract class BaseObject {
 	@MapField(DatabaseField = CheckSumField)
 	public void setCheckSum(long checkSum) {
 		this.checkSum = checkSum;
+	}
+	
+	private boolean wasSent;
+	
+	@MapField(DatabaseField = WasSentField)
+	public boolean getWasSent() {
+		return wasSent;
+	}
+	
+	@MapField(DatabaseField = WasSentField)
+	public void setWasSent(boolean wasSent) {
+		this.wasSent = wasSent;
+	}
+	
+	public boolean isServerTime;
+	
+	@MapField(DatabaseField = IsServerTimeField)
+	public boolean getIsServerTime() {
+		return isServerTime;
+	}
+	
+	@MapField(DatabaseField = IsServerTimeField)
+	public void setIsServerTime(boolean isServerTime) {
+		this.isServerTime = isServerTime;
 	}
 
 	protected void clear() {

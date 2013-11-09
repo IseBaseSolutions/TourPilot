@@ -235,11 +235,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 
 	private String getStrHello() {
 		String strMsg = new String("U;");
-		int workerID = Option.Instance().getWorkerID();
-		if (workerID != 0)
-			strMsg += workerID;
-		else
-			strMsg += "-1"; // userID
+		strMsg += Option.Instance().getWorkerID();
 		strMsg += ";";
 		strMsg += "-1"; // beforeUser.ID()
 		strMsg += ";:";

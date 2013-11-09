@@ -5,6 +5,8 @@ import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 
 public class RelativeManager extends BaseObjectManager<Relative>{
 
+	public static final String TableName = "Relatives";
+	
 	private static RelativeManager instance;
 
 	public static RelativeManager Instance() {
@@ -21,7 +23,7 @@ public class RelativeManager extends BaseObjectManager<Relative>{
 
 	@Override
 	public String getRecTableName() {
-		return "Relatives";
+		return TableName;
 	}
 
 	@Override

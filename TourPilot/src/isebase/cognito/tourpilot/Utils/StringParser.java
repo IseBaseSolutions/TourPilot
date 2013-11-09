@@ -25,4 +25,5 @@ final public class StringParser {
     {
         return fldInitString.substring(pos1);
     }
+
 }
