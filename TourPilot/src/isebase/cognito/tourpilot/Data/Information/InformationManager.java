@@ -5,6 +5,8 @@ import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 
 public class InformationManager extends BaseObjectManager<Information>{
 	
+	public static final String TableName = "Informations";
+	
 	private static InformationManager instance;
 
 	public static InformationManager Instance() {
@@ -21,7 +23,7 @@ public class InformationManager extends BaseObjectManager<Information>{
 
 	@Override
 	public String getRecTableName() {
-		return "Informations";
+		return TableName;
 	}
 
 	@Override
