@@ -33,7 +33,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	
 	private static final String DATABASE_NAME = "TourPilot.db";
 
-	private static final int DATABASE_VERSION = 8;
+	public static final int DATABASE_VERSION = 7;
 
 	private static final String WORKERS_TABLE_CREATE = "CREATE TABLE "
 			+ WorkerManager.TableName + "(" 
@@ -102,8 +102,11 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			db.execSQL(OPTIONS_TABLE_CREATE);
 			db.execSQL(TASKS_TABLE_CREATE);			
 		}
-		catch(Exception ex){ }
-		finally{ }
+		catch(Exception ex){
+			
+		}
+		finally{
+		}
 	}
 
 	@Override

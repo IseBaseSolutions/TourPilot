@@ -72,15 +72,18 @@ public class OptionsActivity extends BaseActivity {
 					"dialogNoIPEntered");
 			return;
 		}
-		if (ConnectionInfo.Instance().getNetworkInfo() == null
-				|| !ConnectionInfo.Instance().getNetworkInfo().isConnected()) {
+		if (ConnectionInfo.Instance().getNetWorkInfo() == null
+				|| !ConnectionInfo.Instance().getNetWorkInfo().isConnected()) {
 			dialogNoConnection.show(getSupportFragmentManager(),
 					"dialogNoConnection");
 			return;
 		}
+		ConnectionAsyncTask m = new ConnectionAsyncTask();
+		m.execute();
 		saveOptions();
-		Intent synchActivity= new Intent(getApplicationContext(), SynchronizationActivity.class);
-		startActivity(synchActivity);
+		Intent workersActivity = new Intent(getApplicationContext(),
+				WorkersActivity.class);
+		startActivity(workersActivity);
 	}
 
 	private void initOptions() {

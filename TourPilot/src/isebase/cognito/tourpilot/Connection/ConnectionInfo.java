@@ -18,7 +18,7 @@ public class ConnectionInfo {
 		return instance;
 	}
 
-	public NetworkInfo getNetworkInfo() {
+	public NetworkInfo getNetWorkInfo() {
 		return connMgr.getActiveNetworkInfo();
 	}
 

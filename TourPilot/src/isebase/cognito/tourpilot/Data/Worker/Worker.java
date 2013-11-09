@@ -69,7 +69,12 @@ public class Worker extends BaseObject {
     @Override
     public String toString()
     {
-        return getName();
+        String strValue = new String(ServerCommandParser.WORKER + ";");
+        strValue += getId() + ";";
+        strValue += getName() + ";";
+        strValue += (getIsUseGPS() ? 1 : 0) + "~";
+        strValue += getCheckSum();
+        return strValue;
     }
 
     public String forServer()
