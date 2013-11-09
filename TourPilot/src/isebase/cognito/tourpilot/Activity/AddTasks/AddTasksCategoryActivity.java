@@ -4,16 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.R.layout;
-import isebase.cognito.tourpilot.R.menu;
 import isebase.cognito.tourpilot.Activity.BaseActivity;
-import isebase.cognito.tourpilot.Activity.TasksActivity;
 import isebase.cognito.tourpilot.Data.AddTasksCategory.AddTasksCategory;
 import isebase.cognito.tourpilot.Data.AddTasksCategory.AddTasksCategoryManager;
-import isebase.cognito.tourpilot.Data.Tour.Tour;
-import isebase.cognito.tourpilot.Data.Tour.TourManager;
 import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
@@ -45,7 +39,7 @@ public class AddTasksCategoryActivity extends BaseActivity {
 		if (tableSize > 0)
 			return;
 		for (int i = 0; i < 10; i++)
-			AddTasksCategoryManager.Instance().add(new AddTasksCategory("Tour " + i));
+			AddTasksCategoryManager.Instance().save(new AddTasksCategory("Tour " + i));
 		reloadData();
 	}
 	
