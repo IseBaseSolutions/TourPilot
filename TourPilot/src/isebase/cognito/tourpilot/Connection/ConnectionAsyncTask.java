@@ -73,7 +73,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 					
 				}
 			});
-			String[] strMsgArr = strMsg.split(";");
+			String[] strMsgArr = strMsg.split("\0");
 			for (String strMsgLine : strMsgArr)
 				serverCommandParser.parseElement(strMsgLine, false);
 			writeToStream(os, "OK" + "\0");
@@ -87,11 +87,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 
 	private String getStrHello() {
 		String strMsg = new String("U;");
-		int workerID = Option.Instance().getId();
-		if (workerID != 0)
-			strMsg += workerID;
-		else
-			strMsg += "-1"; // userID
+		strMsg += Option.Instance().getWorkerID();
 		strMsg += ";";
 		strMsg += "-1"; // beforeUser.ID()
 		strMsg += ";:";

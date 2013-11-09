@@ -1,11 +1,11 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 
-public class BaseActivity extends Activity {
+public class BaseActivity extends FragmentActivity{
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -19,5 +19,5 @@ public class BaseActivity extends Activity {
 		getMenuInflater().inflate(R.menu.base, menu);
 		return true;
 	}
-
+    
 }
