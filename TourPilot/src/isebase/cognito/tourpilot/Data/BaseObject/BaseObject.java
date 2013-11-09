@@ -23,6 +23,7 @@ public abstract class BaseObject {
 
 	private int id;
 
+	@MapField(DatabaseField = IDField)
 	public int getId() {
 		return id;
 	}

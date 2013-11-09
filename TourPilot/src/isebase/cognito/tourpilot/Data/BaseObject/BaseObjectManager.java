@@ -212,15 +212,12 @@ public abstract class BaseObjectManager<T> {
 					else if (method.getParameterTypes()[0].equals(short.class))
 						method.invoke(item, cursor.getShort(cursor
 								.getColumnIndex(annos.DatabaseField())));
-					else if (method.getParameterTypes()[0]
-							.equals(boolean.class))
+					else if (method.getParameterTypes()[0].equals(boolean.class))
 						method.invoke(item, cursor.getInt(cursor
 								.getColumnIndex(annos.DatabaseField())) == 1);
 					else if (method.getParameterTypes()[0].equals(Date.class))
-						method.invoke(
-								item,
-								new Date(cursor.getInt(cursor
-										.getColumnIndex(annos.DatabaseField()))));
+						method.invoke(item, new Date(cursor.getInt(cursor
+								.getColumnIndex(annos.DatabaseField()))));
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -235,7 +232,7 @@ public abstract class BaseObjectManager<T> {
 		Method[] methods = getRecType().getMethods();
 		for (Method method : methods) {
 			MapField annos = method.getAnnotation(MapField.class);
-			if (annos != null) {
+			if (annos != null && method.getReturnType().equals(Void.TYPE)) {
 				list.add(annos.DatabaseField());
 			}
 		}
@@ -249,35 +246,35 @@ public abstract class BaseObjectManager<T> {
 				if (method.getReturnType().equals(Void.TYPE))
 					continue;
 				MapField annos = method.getAnnotation(MapField.class);
-				if (annos != null) {
-					if (method.getReturnType().equals(int.class))
-						values.put(annos.DatabaseField(), Integer
-								.parseInt(method.invoke(item).toString()));
-					else if (method.getReturnType().equals(String.class))
-						values.put(annos.DatabaseField(),
-								(String) method.invoke(item));
-					else if (method.getReturnType().equals(boolean.class))
-						values.put(annos.DatabaseField(), Boolean
-								.parseBoolean(method.invoke(item).toString()));
-					else if (method.getReturnType().equals(double.class))
-						values.put(annos.DatabaseField(), Double
-								.parseDouble(method.invoke(item).toString()));
-					else if (method.getReturnType().equals(float.class))
-						values.put(annos.DatabaseField(), Float
-								.parseFloat(method.invoke(item).toString()));
-					else if (method.getReturnType().equals(long.class))
-						values.put(annos.DatabaseField(),
-								Long.parseLong(method.invoke(item).toString()));
-					else if (method.getReturnType().equals(short.class))
-						values.put(annos.DatabaseField(), Short
-								.parseShort(method.invoke(item).toString()));
-					else if (method.getReturnType().equals(byte.class))
-						values.put(annos.DatabaseField(),
-								Byte.parseByte(method.invoke(item).toString()));
-					else if (method.getReturnType().equals(Date.class))
-						values.put(annos.DatabaseField(),
-								((Date) method.invoke(item)).getDate());
-				}
+				if (annos == null)
+					continue;
+				if (method.getReturnType().equals(int.class) && annos.DatabaseField() != BaseObject.IDField)
+					values.put(annos.DatabaseField(), Integer
+							.parseInt(method.invoke(item).toString()));
+				else if (method.getReturnType().equals(String.class))
+					values.put(annos.DatabaseField(),
+							(String) method.invoke(item));
+				else if (method.getReturnType().equals(boolean.class))
+					values.put(annos.DatabaseField(), Boolean
+							.parseBoolean(method.invoke(item).toString()));
+				else if (method.getReturnType().equals(double.class))
+					values.put(annos.DatabaseField(), Double
+							.parseDouble(method.invoke(item).toString()));
+				else if (method.getReturnType().equals(float.class))
+					values.put(annos.DatabaseField(), Float
+							.parseFloat(method.invoke(item).toString()));
+				else if (method.getReturnType().equals(long.class))
+					values.put(annos.DatabaseField(),
+							Long.parseLong(method.invoke(item).toString()));
+				else if (method.getReturnType().equals(short.class))
+					values.put(annos.DatabaseField(), Short
+							.parseShort(method.invoke(item).toString()));
+				else if (method.getReturnType().equals(byte.class))
+					values.put(annos.DatabaseField(),
+							Byte.parseByte(method.invoke(item).toString()));
+				else if (method.getReturnType().equals(Date.class))
+					values.put(annos.DatabaseField(),
+							((Date) method.invoke(item)).getDate());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
