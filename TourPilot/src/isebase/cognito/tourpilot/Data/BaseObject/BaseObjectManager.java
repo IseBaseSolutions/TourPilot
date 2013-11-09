@@ -6,6 +6,7 @@ import isebase.cognito.tourpilot.DataBase.MapField;
 import java.lang.reflect.Method;
 import java.sql.Blob;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -33,22 +34,25 @@ public abstract class BaseObjectManager<T> {
 	}
 
 	public void close() {
-		if(DataBaseWrapper.Instance().getReadableDatabase() != null)
+		if (DataBaseWrapper.Instance().getReadableDatabase() != null)
 			DataBaseWrapper.Instance().getReadableDatabase().close();
 		DataBaseWrapper.Instance().close();
 	}
 
-	public void delete(int id){
+	public void delete(int id) {
 		try {
-			DataBaseWrapper.Instance().getReadableDatabase().delete(getRecTableName(), BaseObject.IDField + " = " + id, null);
+			DataBaseWrapper
+					.Instance()
+					.getReadableDatabase()
+					.delete(getRecTableName(), BaseObject.IDField + " = " + id,
+							null);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		finally{
+		} finally {
 			close();
 		}
 	}
-	
+
 	public void delete(Class<T> item) {
 		try {
 			int id = (Integer) item.getMethod("getId").invoke(item);
@@ -58,87 +62,97 @@ public abstract class BaseObjectManager<T> {
 		}
 	}
 
-	public List<T> load(String whereField, String whereClouse){
+	public List<T> load(String whereField, String whereClouse) {
 		List<T> items = new ArrayList<T>();
 		Cursor cursor = null;
 		try {
-			cursor = DataBaseWrapper.Instance().getReadableDatabase().query(getRecTableName()
-					, TABLE_COLUMNS, whereField + " = " + whereClouse, null, null, null, null);
+			cursor = DataBaseWrapper
+					.Instance()
+					.getReadableDatabase()
+					.query(getRecTableName(), TABLE_COLUMNS,
+							whereField + " = " + whereClouse, null, null, null,
+							null);
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
 				T object = parseObject(cursor);
 				items.add(object);
 				cursor.moveToNext();
 			}
-		} 
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		finally {
-			if(cursor != null)
+		} finally {
+			if (cursor != null)
 				cursor.close();
 			close();
 		}
 		return items;
 	}
-	
-	public void save(List<T> items){
-		for(T item: items)
+
+	public void save(List<T> items) {
+		for (T item : items)
 			save(item);
 	}
-	
+
 	public void save(T item) {
 		try {
 			int id = (Integer) item.getClass().getMethod("getId").invoke(item);
-			if(id == BaseObject.EMPTY_ID || load(id) == null ){
-				int itemID = (int) DataBaseWrapper.Instance().getReadableDatabase().insert(getRecTableName(), null, getValues(item));
-				item.getClass().getMethod("setId", int.class).invoke(item, (int)itemID);
-			}
-			else{
-				DataBaseWrapper.Instance().getReadableDatabase().update(getRecTableName()
-						, getValues(item), BaseObject.IDField + " = " + id, null);
+			if (id == BaseObject.EMPTY_ID || load(id) == null) {
+				int itemID = (int) DataBaseWrapper.Instance()
+						.getReadableDatabase()
+						.insert(getRecTableName(), null, getValues(item));
+				item.getClass().getMethod("setId", int.class)
+						.invoke(item, (int) itemID);
+			} else {
+				DataBaseWrapper
+						.Instance()
+						.getReadableDatabase()
+						.update(getRecTableName(), getValues(item),
+								BaseObject.IDField + " = " + id, null);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		finally{
+		} finally {
 			close();
 		}
 	}
 
-	public List<T> loadAll(){
+	public List<T> loadAll() {
 		List<T> items = load();
 		afterLoad(items);
 		return items;
 	}
-	
-	public T loadAll(int id){
+
+	public T loadAll(int id) {
 		T item = load(id);
 		afterLoad(item);
 		return item;
 	}
-	
-	public void afterLoad(List<T> items){}
-	public void afterLoad(T item){}
-	
+
+	public void afterLoad(List<T> items) {
+	}
+
+	public void afterLoad(T item) {
+	}
+
 	public List<T> load() {
 		List<T> items = new ArrayList<T>();
 		Cursor cursor = null;
 		try {
-			cursor = DataBaseWrapper.Instance().getReadableDatabase().query(getRecTableName(), TABLE_COLUMNS,
-					null, null, null, null, null);
+			cursor = DataBaseWrapper
+					.Instance()
+					.getReadableDatabase()
+					.query(getRecTableName(), TABLE_COLUMNS, null, null, null,
+							null, null);
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
 				T object = parseObject(cursor);
 				items.add(object);
 				cursor.moveToNext();
 			}
-		} 
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		finally {
-			if(cursor != null)
+		} finally {
+			if (cursor != null)
 				cursor.close();
 			close();
 		}
@@ -149,16 +163,18 @@ public abstract class BaseObjectManager<T> {
 		Cursor cursor = null;
 		T item = null;
 		try {
-			cursor = DataBaseWrapper.Instance().getReadableDatabase().query(getRecTableName()
-					, TABLE_COLUMNS, BaseObject.IDField + " = " + id, null, null, null, null);
+			cursor = DataBaseWrapper
+					.Instance()
+					.getReadableDatabase()
+					.query(getRecTableName(), TABLE_COLUMNS,
+							BaseObject.IDField + " = " + id, null, null, null,
+							null);
 			cursor.moveToFirst();
-			item = parseObject(cursor);			
-		} 
-		catch (Exception e) {
+			item = parseObject(cursor);
+		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		finally {
-			if(cursor != null)
+		} finally {
+			if (cursor != null)
 				cursor.close();
 			close();
 		}
@@ -200,6 +216,12 @@ public abstract class BaseObjectManager<T> {
 							.equals(boolean.class))
 						method.invoke(item, cursor.getInt(cursor
 								.getColumnIndex(annos.DatabaseField())) == 1);
+					else if (method.getParameterTypes()[0].equals(Date.class))
+						method.invoke(
+								item,
+								new Date(cursor.getInt(cursor
+										.getColumnIndex(annos.DatabaseField()))));
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -244,14 +266,17 @@ public abstract class BaseObjectManager<T> {
 						values.put(annos.DatabaseField(), Float
 								.parseFloat(method.invoke(item).toString()));
 					else if (method.getReturnType().equals(long.class))
-						values.put(annos.DatabaseField(), Long.parseLong(method
-								.invoke(item).toString()));
+						values.put(annos.DatabaseField(),
+								Long.parseLong(method.invoke(item).toString()));
 					else if (method.getReturnType().equals(short.class))
 						values.put(annos.DatabaseField(), Short
 								.parseShort(method.invoke(item).toString()));
 					else if (method.getReturnType().equals(byte.class))
-						values.put(annos.DatabaseField(), Byte.parseByte(method
-								.invoke(item).toString()));
+						values.put(annos.DatabaseField(),
+								Byte.parseByte(method.invoke(item).toString()));
+					else if (method.getReturnType().equals(Date.class))
+						values.put(annos.DatabaseField(),
+								((Date) method.invoke(item)).getDate());
 				}
 			}
 		} catch (Exception e) {
@@ -261,36 +286,34 @@ public abstract class BaseObjectManager<T> {
 	}
 
 	public abstract void onUpgrade(SQLiteDatabase db);
-	
-	protected void addColumn(SQLiteDatabase db, String colName, String colType){
+
+	protected void addColumn(SQLiteDatabase db, String colName, String colType) {
 		Cursor tableInfo = null;
-		try{
-			tableInfo = db.rawQuery(String.format("PRAGMA table_info(%1$s)", getRecTableName()), null);
+		try {
+			tableInfo = db
+					.rawQuery(String.format("PRAGMA table_info(%1$s)",
+							getRecTableName()), null);
 			tableInfo.moveToFirst();
 			boolean isColumnExists = false;
-			while(!tableInfo.isAfterLast()){
+			while (!tableInfo.isAfterLast()) {
 				String currColName = tableInfo.getString(1);
 				System.out.println(currColName);
-			    if(currColName.equals(colName)){
-			    	isColumnExists = true;
-			    	break;
-			    }
+				if (currColName.equals(colName)) {
+					isColumnExists = true;
+					break;
+				}
 				tableInfo.moveToNext();
-			}		     
-			if(!isColumnExists){
-				db.execSQL(String.format("ALTER TABLE %1$s ADD %2$s %3$s" 
-							, getRecTableName()
-							, colName
-							, colType));
 			}
-		}
-		catch(Exception ex){
+			if (!isColumnExists) {
+				db.execSQL(String.format("ALTER TABLE %1$s ADD %2$s %3$s",
+						getRecTableName(), colName, colType));
+			}
+		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 			ex.printStackTrace();
-		}
-		finally{
-			if(tableInfo != null)
+		} finally {
+			if (tableInfo != null)
 				tableInfo.close();
-		}		
-	}	
+		}
+	}
 }

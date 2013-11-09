@@ -28,8 +28,7 @@ public class OptionManager extends BaseObjectManager<Option> {
 
 	@Override
 	public void save(Option object) {
-		if (load().size() <= 0)
-			super.save(object);
+		super.save(object);
 	}
 
 	public Option loadOption() {
