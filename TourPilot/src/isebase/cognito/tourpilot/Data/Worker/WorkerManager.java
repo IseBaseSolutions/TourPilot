@@ -2,7 +2,6 @@ package isebase.cognito.tourpilot.Data.Worker;
 
 import android.database.sqlite.SQLiteDatabase;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
-import isebase.cognito.tourpilot.Data.Tour.Tour;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 
@@ -37,7 +36,7 @@ public class WorkerManager extends BaseObjectManager<Worker> {
 		
 	@Override
 	public void afterLoad(Worker worker){
-		worker.tours = TourManager.Instance().load(Tour.WorkerIDField, worker.getId()+"");
+		worker.tours = TourManager.Instance().load();
 	}
 	
 }

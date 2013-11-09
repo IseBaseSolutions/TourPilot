@@ -1,9 +1,9 @@
 package isebase.cognito.tourpilot.Connection;
 
+import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Option.OptionManager;
-import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
-
+import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,9 +15,25 @@ import java.util.zip.GZIPOutputStream;
 import android.os.AsyncTask;
 
 public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
-
+	
+	private ConnectionStatus conStatus;
+	
+	public ConnectionAsyncTask(ConnectionStatus cs){
+		conStatus = cs;
+	}
+		
 	@Override
 	protected void onPostExecute(Void result) {
+		if(!conStatus.lastExecuteOK || conStatus.isFinished){
+			conStatus.UISynchHandler.onSynchronizedFinished(
+					conStatus.isFinished,
+					conStatus.getMessage());
+			if(!conStatus.lastExecuteOK)
+				closeConnection();
+			return;
+		}
+		conStatus.UISynchHandler.onItemSynchronized(conStatus.getMessage());
+		conStatus.nextState();
 	}
 
 	@Override
@@ -25,69 +41,201 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 	}
 
 	@Override
-	protected Void doInBackground(Void... params) {
-		try {
-			Socket socket = new Socket(OptionManager.Instance().loadOption()
-					.getServerIP(), OptionManager.Instance().loadOption()
-					.getServerPort());
-
-			OutputStream os = socket.getOutputStream();
-			InputStream is = socket.getInputStream();
-			mainSync(os, is);
-
-		} catch (Exception e) {
-			e.printStackTrace();
+	protected Void doInBackground(Void... params) {		
+		switch(conStatus.CurrentState){
+			case ConnectionStatus.InitState:
+				conStatus.setMessage(String.format("%1$s %2$s : %3$s ..."
+						, StaticResources.getBaseContext().getString(R.string.connection_try)
+						, OptionManager.Instance().loadOption().getServerIP()
+						, OptionManager.Instance().loadOption().getServerPort()));
+				break;		
+			case ConnectionStatus.ConnectionState:
+				conStatus.lastExecuteOK = initializeConnection();
+				break;
+			case ConnectionStatus.Invitation:
+				conStatus.lastExecuteOK = recievingInvitation();
+				break;
+			case ConnectionStatus.Sycnhronizing:
+				conStatus.lastExecuteOK = sendSycnhronizationRequest();
+				break;
+			case ConnectionStatus.SendHelloRequest:
+				conStatus.lastExecuteOK = sendHelloRequest();
+				break;
+			case ConnectionStatus.CompareCkeckSums:
+				conStatus.lastExecuteOK = compareCkeckSums();
+				break;
+			case ConnectionStatus.ParseRecievedData:
+				conStatus.lastExecuteOK = parseRecievedData();
+				break;
+			case ConnectionStatus.CloseConnection:
+				conStatus.lastExecuteOK = closeConnection();
+				break;
+			default:
+				conStatus.isFinished = true;
+				break;
 		}
+		
 		return null;
 	}
-
-	private boolean mainSync(OutputStream os, InputStream is) {
+		
+	private boolean initializeConnection(){
 		try {
-			String strInvitation = readFromStream(is);
-			if (strInvitation.substring(0, 2).compareTo("OK") != 0)
-				return false;
-			writeToStream(os, "GETTIME");
-			os.flush();
-			String strMsg = readFromStream(is);
-			writePack(os, getStrHello() + "\0.\0");
-			strMsg = readFromStream(is);
-			if (strMsg.startsWith("OVER")) {
+			conStatus.socket = new Socket(
+					OptionManager.Instance().loadOption().getServerIP(),
+					OptionManager.Instance().loadOption().getServerPort());
+
+			conStatus.OS = conStatus.socket.getOutputStream();
+			conStatus.IS = conStatus.socket.getInputStream();	
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			conStatus.setMessage(String.format("%1$s ...", ex.getMessage()));
+			return false;
+		}	
+		conStatus.setMessage(
+				StaticResources.getBaseContext().getString(R.string.connection_ok));
+		return true;
+	}
+
+	private boolean recievingInvitation(){
+		String strInvitation = "";
+		boolean retVal = true;
+		try {
+			strInvitation = readFromStream(conStatus.IS);
+			if (strInvitation.length() > 2 
+					&& strInvitation.substring(0, 2).compareTo("OK") != 0)
+				retVal = false;
+		}catch (Exception ex) {
+			ex.printStackTrace();
+			retVal = false;
+		}finally{		
+			if(retVal)
+				conStatus.setMessage(
+						StaticResources.getBaseContext().getString(R.string.invitation_ok));
+			else
+				conStatus.setMessage(
+						StaticResources.getBaseContext().getString(R.string.invitation_fail));
+		}
+		return retVal;
+	}
+	
+	private boolean sendSycnhronizationRequest(){
+		boolean retVal = true;
+		
+		try{
+			writeToStream(conStatus.OS, "GETTIME");
+			conStatus.OS.flush();
+			String recievedDate = readFromStream(conStatus.IS);	
+			conStatus.serverCommandParser.parseElement(recievedDate, true);
+		}catch(Exception ex){
+			ex.printStackTrace();
+			retVal = false;
+		}finally{			
+			if(retVal)
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.sycnhronizing_ok));
+			else
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.sycnhronizing_fail));
+		}
+			
+		return retVal;
+	}
+	
+	private boolean sendHelloRequest(){
+		boolean retVal = true;
+		try{
+			writePack(conStatus.OS, getStrHello() + "\0.\0");
+			String recievedStatus = readFromStream(conStatus.IS);
+			if (recievedStatus.startsWith("OVER")) {
 				// License is over
+				retVal = false;
 			}
-			writePack(os, getStrChecksums());
-			strMsg = readFromStream(is);
-			String strCheckItems = strMsg;
-			writePack(os, get_SRV_msgStoredData(strCheckItems));
-			strMsg = readPack(is);
-			ServerCommandParser serverCommandParser = new ServerCommandParser(new SynchronizationHandler() {
-				
-				@Override
-				public void onSynchronizedFinished(boolean isOK) {
-					// TODO Auto-generated method stub
-					
-				}
-				
-				@Override
-				public void onItemSynchronized(String text) {
-					// TODO Auto-generated method stub
-					
-				}
-			});
-			String[] strMsgArr = strMsg.split(";");
-			for (String strMsgLine : strMsgArr)
-				serverCommandParser.parseElement(strMsgLine, false);
-			writeToStream(os, "OK" + "\0");
-			is.close();
-			os.close();
+		}
+		catch(Exception ex){
+			ex.printStackTrace();
+			retVal = false;
+		}
+		finally{
+			if(retVal)
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.hello_request_ok));
+			else
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.hello_request_fail));
+		}
+		return retVal;
+	}
+	
+	private boolean compareCkeckSums(){
+		boolean retVal = true;
+		try{
+			writePack(conStatus.OS, getStrChecksums());
+			String strChecksumRecieve = readFromStream(conStatus.IS);
+			String strCheckItems = strChecksumRecieve;
+			
+			writePack(conStatus.OS, get_SRV_msgStoredData(strCheckItems));			
+			String dataFromServer = readPack(conStatus.IS);
+			conStatus.dataFromServer = dataFromServer.split("\0");			
+		}catch(Exception ex){
+			ex.printStackTrace();
+			retVal = false;
+		}finally{			
+			if(retVal)
+				conStatus.setMessage(String.format("%1$s \n %2$s: %3$s", 
+					StaticResources.getBaseContext().getString(R.string.checksum_ok),
+					StaticResources.getBaseContext().getString(R.string.data_to_download),
+					conStatus.dataFromServer.length));
+			else
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.checksum_fail));
+		}
+		return retVal;
+	}
+	
+	private boolean parseRecievedData(){
+		boolean retVal = true;
+		try{
+			for (String data : conStatus.dataFromServer)
+				conStatus.serverCommandParser.parseElement(data, false);
+			writeToStream(conStatus.OS, "OK" + "\0");			
+		}catch(Exception ex){
+			ex.printStackTrace();
+			retVal = false;
+		}		
+		finally{		
+			if(retVal)
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.processing_data_ok));
+			else
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.processing_data_fail));
+		}
+		return retVal;
+	}
+	
+	private boolean closeConnection() {
+		boolean retVal = true;
+		try {	
+			conStatus.closeConnection();
 		} catch (Exception e) {
 			e.printStackTrace();
+			retVal = false;
+		}
+		finally{
+			if(retVal)
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.connection_close_ok));
+			else
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.connection_close_fail));
 		}
 		return true;
 	}
 
 	private String getStrHello() {
 		String strMsg = new String("U;");
-		int workerID = Option.Instance().getId();
+		int workerID = Option.Instance().getWorkerID();
 		if (workerID != 0)
 			strMsg += workerID;
 		else
@@ -230,8 +378,8 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 		return strMsg;
 	}
 
-	private String readFromStream(InputStream is) throws InterruptedException,
-			IOException {
+	private String readFromStream(InputStream is) 
+			throws InterruptedException, IOException {
 		String retVal = "";
 		int timeoutCount = 120000;
 		long startTime = new Date().getTime();

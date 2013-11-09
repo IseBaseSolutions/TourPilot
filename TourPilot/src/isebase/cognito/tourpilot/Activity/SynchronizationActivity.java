@@ -1,43 +1,56 @@
 package isebase.cognito.tourpilot.Activity;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Connection.ServerCommandParser;
+import isebase.cognito.tourpilot.Connection.ConnectionAsyncTask;
+import isebase.cognito.tourpilot.Connection.ConnectionStatus;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class SynchronizationActivity extends BaseActivity{
 	
-	private Context context;
-	private ListView lvText;
+	private ListView lvConnectionLog;
 	private SynchronizationHandler syncHandler;
-	private ServerCommandParser serverCommandParser;
+	private ArrayAdapter<String> adapter;
+	private ConnectionStatus connectionStatus;
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm"); 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		context = this;
 		setContentView(R.layout.activity_synchronization);
-		lvText = (ListView) findViewById(R.id.lvSyncText);
+		lvConnectionLog = (ListView) findViewById(R.id.lvSyncText);
+		adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, new ArrayList<String>());
+		lvConnectionLog.setAdapter(adapter);
+		adapter.add("Waiting open sockets to automatically close...");
 		syncHandler = new SynchronizationHandler() {
 			
 			@Override
-			public void onSynchronizedFinished(boolean isOK) {
-				
+			public void onSynchronizedFinished(boolean isOK, String text) {
+				if(!text.equals(""))
+					adapter.add(dateFormat.format(new Date()) + " " + text);	
+				if(isOK){
+					Intent workersActivity= new Intent(getApplicationContext()
+							, WorkersActivity.class);
+					startActivity(workersActivity);	
+				}
 			}
 			
 			@Override
 			public void onItemSynchronized(String text) {
-				TextView tv = new TextView(context);
-				tv.setText(new Date().toLocaleString() + " " + text);
-				lvText.addView(tv);			
+				adapter.add(dateFormat.format(new Date()) + " " + text);	
+				new ConnectionAsyncTask(connectionStatus).execute(); 
 			}
+				
 		};
-		serverCommandParser = new ServerCommandParser(syncHandler);
-		
+	
+		connectionStatus = new ConnectionStatus(syncHandler);
+		new ConnectionAsyncTask(connectionStatus).execute();
 	}	
 }

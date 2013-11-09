@@ -1,6 +1,7 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Connection.ConnectionAsyncTask;
 import isebase.cognito.tourpilot.Connection.ConnectionInfo;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Option.OptionManager;
@@ -86,17 +87,14 @@ public class OptionsActivity extends BaseActivity {
 			showDialog(0);
 			return;
 		}
-		if (ConnectionInfo.Instance().getNetWorkInfo() == null
-				|| !ConnectionInfo.Instance().getNetWorkInfo().isConnected()) {
+		if (ConnectionInfo.Instance().getNetworkInfo() == null
+				|| !ConnectionInfo.Instance().getNetworkInfo().isConnected()) {
 			showDialog(1);
 			return;
 		}
-//		ConnectionAsyncTask m = new ConnectionAsyncTask();
-//		m.execute();
 		saveOptions();
-		Intent workersActivity = new Intent(getApplicationContext(),
-				WorkersActivity.class);
-		startActivity(workersActivity);
+		Intent synchActivity= new Intent(getApplicationContext(), SynchronizationActivity.class);
+		startActivity(synchActivity);
 	}
 
 	private void initOptions() {

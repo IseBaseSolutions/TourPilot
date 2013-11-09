@@ -36,5 +36,30 @@
     <string name="empty_text"></string>
     <string name="version">Version</string>
     <string name="title_activity_tasks">TasksActivity</string>
+    
+    <string name="connection_try">Trying to connect</string>
+    <string name="connection_ok">Connection OK. Recieving invintation...</string>
+    
+    <string name="invitation_ok">Invitation OK. Sycnhronizing...</string>
+    <string name="invitation_fail">Invitation FAIL</string>
+    
+    <string name="sycnhronizing_ok">Sycnhronizing OK. Sending hello msg...</string>
+    <string name="sycnhronizing_fail">Sycnhronizing FAIL</string>
+    
+    <string name="hello_request_ok">Hello request OK. Calculating checksum...</string>
+    <string name="hello_request_fail">Hello request FAIL</string>
+    
+    <string name="checksum_ok">Checksum OK. Processing data...</string>
+    <string name="checksum_fail">Checksum FAIL</string>
+    
+    <string name="processing_data_ok">Processing data OK</string>
+    <string name="processing_data_fail">Processing data FAIL</string>
+        
+    <string name="data_to_download">Data to download</string>
+    
+        
+    <string name="connection_close_ok">Connection closing OK</string>
+    <string name="connection_close_fail">Connection closing FAIL</string>
+    
 
 </resources>
