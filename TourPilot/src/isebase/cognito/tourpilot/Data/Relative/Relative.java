@@ -14,8 +14,8 @@ public class Relative extends BaseObject {
 	private String ship;
 
 	public Relative(String initString) {
-		initString = initString.substring(0, 2);
 		StringParser parsingString = new StringParser(initString);
+		parsingString.next(";");
 		setId(Integer.parseInt(parsingString.next(";")));
 		setSurname(parsingString.next(";"));
 		setName(parsingString.next(";"));
