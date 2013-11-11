@@ -25,8 +25,10 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 	@Override
 	protected void onPostExecute(Void result) {
 		if (!conStatus.lastExecuteOK || conStatus.isFinished) {
-			if (!conStatus.lastExecuteOK)
+			if (!conStatus.lastExecuteOK){
+				conStatus.UISynchHandler.onSynchronizedFinished(false,conStatus.getMessage());
 				closeConnection();
+			}
 			conStatus.UISynchHandler.onSynchronizedFinished(
 					conStatus.isFinished, conStatus.getMessage());
 			return;
@@ -197,8 +199,8 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 	private boolean parseRecievedData() {
 		boolean retVal = true;
 		try {
-		//	for (String data : conStatus.dataFromServer)
-		//		conStatus.serverCommandParser.parseElement(data, false);
+			for (String data : conStatus.dataFromServer)
+				conStatus.serverCommandParser.parseElement(data, false);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			retVal = false;
@@ -212,7 +214,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 		}
 		return retVal;
 	}
-
+	
 	private boolean closeConnection() {
 		boolean retVal = true;
 		try {
@@ -371,43 +373,43 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 	private String get_SRV_msgStoredData(String strNeedSend) {
 		String strMsg = "";
 		if (strNeedSend.length() > 18 && strNeedSend.charAt(18) == '1')
-			strMsg += /* CAutoQuestionSettings.Instance().forServer() */".\0";
+			strMsg += /* CAutoQuestionSettings.Instance().forServer() */"."+'\0';
 		if (strNeedSend.length() > 17 && strNeedSend.charAt(17) == '1')
-			strMsg += /* CFreeQuestionSettings.Instance().forServer() */".\0";
+			strMsg += /* CFreeQuestionSettings.Instance().forServer() */"."+'\0';
 		if (strNeedSend.length() > 16 && strNeedSend.charAt(16) == '1')
-			strMsg += /* CFreeTopics.Instance().forServer() */".\0";
+			strMsg += /* CFreeTopics.Instance().forServer() */"."+'\0';
 		if (strNeedSend.length() > 15 && strNeedSend.charAt(15) == '1')
-			strMsg += /* CFreeQuestions.Instance().forServer() */".\0";
+			strMsg += /* CFreeQuestions.Instance().forServer() */"."+'\0';
 		if (strNeedSend.length() > 14 && strNeedSend.charAt(14) == '1')
-			strMsg += /* CQuestionSettings.Instance().forServer() */".\0";
+			strMsg += /* CQuestionSettings.Instance().forServer() */"."+'\0';
 		if (strNeedSend.length() > 13 && strNeedSend.charAt(13) == '1')
-			strMsg += /* CLinks.Instance().forServer() */".\0";
+			strMsg += /* CLinks.Instance().forServer() */"."+'\0';
 		if (strNeedSend.length() > 12 && strNeedSend.charAt(12) == '1')
-			strMsg += /* CTopics.Instance().forServer() */".\0";
+			strMsg += /* CTopics.Instance().forServer() */"."+'\0';
 		if (strNeedSend.length() > 11 && strNeedSend.charAt(11) == '1')
-			strMsg += /* CQuestions.Instance().forServer() */".\0";
+			strMsg += /* CQuestions.Instance().forServer() */"."+'\0';
 		if (strNeedSend.length() > 10 && strNeedSend.charAt(10) == '1')
-			strMsg += /* CTasks.Instance().forServer() */".\0";
+			strMsg += /* CTasks.Instance().forServer() */"."+'\0';
 		if (strNeedSend.length() > 9 && strNeedSend.charAt(9) == '1')
-			strMsg += /* CAddWorks.Instance().forServer() */".\0";
+			strMsg += /* CAddWorks.Instance().forServer() */"."+'\0';
 		if (strNeedSend.length() > 8 && strNeedSend.charAt(8) == '1')
-			strMsg += /* CTours.Instance().forServer() */".\0";
+			strMsg += /* CTours.Instance().forServer() */"."+'\0';
 		if (strNeedSend.length() > 7 && strNeedSend.charAt(7) == '1') // Informations
-			strMsg += /* CInformations.Instance().forServer() */".\0";
+			strMsg += /* CInformations.Instance().forServer() */"."+'\0';
 		if (strNeedSend.length() > 6 && strNeedSend.charAt(6) == '1') // patient remarks
-			strMsg += /* CPatientRemarks.Instance().forServer() */".\0";
+			strMsg += /* CPatientRemarks.Instance().forServer() */"."+'\0';
 		if (strNeedSend.length() > 5 && strNeedSend.charAt(5) == '1') // patients
-			strMsg += /* CPatients.Instance().forServer() */".\0";
+			strMsg += /* CPatients.Instance().forServer() */"."+'\0';
 		if (strNeedSend.length() > 4 && strNeedSend.charAt(4) == '1') // doctors
-			strMsg += /* CDoctors.Instance().forServer() */".\0";
+			strMsg += /* CDoctors.Instance().forServer() */"."+'\0';
 		if (strNeedSend.length() > 3 && strNeedSend.charAt(3) == '1') // relatives
-			strMsg += /* CRelatives.Instance().forServer() */".\0";
+			strMsg += /* CRelatives.Instance().forServer() */"."+'\0';
 		if (strNeedSend.length() > 2 && strNeedSend.charAt(2) == '1') // diagnoses
-			strMsg += /* CDiagnoses.Instance().forServer() */".\0";
+			strMsg += /* CDiagnoses.Instance().forServer() */"."+'\0';
 		if (strNeedSend.length() > 1 && strNeedSend.charAt(1) == '1') // users
-			strMsg += /* CUsers.Instance().forServer() */".\0";
+			strMsg += /* CUsers.Instance().forServer() */"."+'\0';
 		if (strNeedSend.length() > 0 && strNeedSend.charAt(0) == '1') // add tasks
-			strMsg += /* CAddTasks.Instance().forServer() */".\0";
+			strMsg += /* CAddTasks.Instance().forServer() */"."+'\0';
 		if (strNeedSend.indexOf("1") == -1)
 			strMsg += ".";
 		return strMsg;
@@ -434,11 +436,12 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 				ex.printStackTrace();
 		  	}
 		GZIPInputStream zis = new GZIPInputStream(is);
-		byte[] buffer = new byte[1024];
+		byte[] buffer = new byte[2048];
 		while((zis.read(buffer)) != -1) {
 			retVal += new String(buffer, "cp1252");
+			int x = 0;
 		}
-		return retVal;
+		return retVal.trim();
 	}
 
 }

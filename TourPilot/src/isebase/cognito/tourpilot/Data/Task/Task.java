@@ -85,7 +85,7 @@ public class Task extends BaseObject {
 	}
 
 	@MapField(DatabaseField = TourCodeField)
-	public long setTourCode() {
+	public long getTourCode() {
 		return tourId;
 	}
 
