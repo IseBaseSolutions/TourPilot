@@ -7,8 +7,8 @@ import isebase.cognito.tourpilot.Utils.StringParser;
 public class AdditionalWork extends BaseObject{
 
 	public AdditionalWork(String initString) {
-		initString = initString.substring(0, 2);
-		StringParser parsingString = new StringParser(initString);		
+		StringParser parsingString = new StringParser(initString);	
+		parsingString.next(";");
         setId(Integer.parseInt(parsingString.next(";")));
         setName(parsingString.next("~"));
         setCheckSum(Long.parseLong(parsingString.next()));
