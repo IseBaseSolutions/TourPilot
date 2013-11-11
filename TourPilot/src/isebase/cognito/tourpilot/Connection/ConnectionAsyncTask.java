@@ -11,6 +11,7 @@ import java.net.Socket;
 import java.util.Date;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import java.util.zip.Inflater;
 
 import android.os.AsyncTask;
 
@@ -426,19 +427,19 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 
 	public String readPack(InputStream is) throws IOException,
 			InterruptedException {
-		String retVal = "";
 		while (is.available() == 0)
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException ex) {
 				ex.printStackTrace();
 			}
+
+		StringBuffer stringbuffer = new StringBuffer();
 		GZIPInputStream zis = new GZIPInputStream(is);
-		byte[] buffer = new byte[1024];
-		while ((zis.read(buffer)) != -1) {
-			retVal += new String(buffer, "cp1252");
-		}
-		return retVal;
+		
+		while (zis.available() != 0)
+			stringbuffer.append((char)zis.read());
+		return stringbuffer.toString();
 	}
 
 }
