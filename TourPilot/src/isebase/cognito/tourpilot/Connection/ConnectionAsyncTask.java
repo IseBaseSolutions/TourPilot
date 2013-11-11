@@ -49,14 +49,14 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 							, Option.Instance().getServerIP()
 							, Option.Instance().getServerPort()));
 			break;
-		case ConnectionStatus.ConnectionState:
+		case ConnectionStatus.Connection:
 			conStatus.lastExecuteOK = initializeConnection();
 			break;
 		case ConnectionStatus.Invitation:
 			conStatus.lastExecuteOK = recievingInvitation();
 			break;
-		case ConnectionStatus.Sycnhronizing:
-			conStatus.lastExecuteOK = sendSycnhronizationRequest();
+		case ConnectionStatus.DateSycnhronizing:
+			conStatus.lastExecuteOK = sendDateSycnhronizationRequest();
 			break;
 		case ConnectionStatus.SendHelloRequest:
 			conStatus.lastExecuteOK = sendHelloRequest();
@@ -121,7 +121,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 		return retVal;
 	}
 
-	private boolean sendSycnhronizationRequest() {
+	private boolean sendDateSycnhronizationRequest() {
 		boolean retVal = true;
 
 		try {
