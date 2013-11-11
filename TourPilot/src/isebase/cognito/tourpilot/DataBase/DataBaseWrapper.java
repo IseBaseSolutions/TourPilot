@@ -2,7 +2,9 @@ package isebase.cognito.tourpilot.DataBase;
 
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
+import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWorkManager;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.Diagnose.DiagnoseManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
@@ -94,6 +96,21 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ BaseObject.CheckSumField + " INTEGER, "
 			+ AdditionalTask.CatalogTypeField + " INTEGER, "
 			+ AdditionalTask.QualityField + " INTEGER "
+			+ ");";
+
+	
+	public static final String ADDITIONAL_WORKS_TABLE_CREATE = "CREATE TABLE"
+			+ AdditionalWorkManager.TableName + "("
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+			+ BaseObject.NameField + " TEXT NOT NULL, "
+			+ BaseObject.CheckSumField + " INTEGER, "
+			+ ");";
+
+	public static final String DIAGNOSES_TABLE_CREATE = "CREATE TABLE"
+			+ DiagnoseManager.TableName + "("
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+			+ BaseObject.NameField + " TEXT NOT NULL, "
+			+ BaseObject.CheckSumField + " INTEGER, "
 			+ ");";
 	
 	public DataBaseWrapper(Context context) {
