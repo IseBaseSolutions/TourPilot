@@ -65,4 +65,16 @@ public class Address {
 		this.phone = phone;
 	}
 		
+	public Address(){
+		clear();
+	}
+	
+	private void clear(){
+		setId(BaseObject.EMPTY_ID);
+		setStreet("");
+		setCity("");
+		setPhone("");
+		setZip("");
+	}
+	
 }

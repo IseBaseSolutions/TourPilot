@@ -77,8 +77,8 @@ public class Worker extends BaseObject {
     @Override
     protected void clear() {
     	super.clear();
-    	isUseGPS = false;
-    	actualDate = new Date();
+    	setIsUseGPS(false);
+    	setActualDate(new Date());
     }
     
 }

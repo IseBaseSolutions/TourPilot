@@ -3,6 +3,7 @@ package isebase.cognito.tourpilot.Data.Task;
 import isebase.cognito.tourpilot.Connection.ServerCommandParser;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.DataBase.MapField;
+import isebase.cognito.tourpilot.Utils.DateUtils;
 import isebase.cognito.tourpilot.Utils.StringParser;
 
 import java.text.SimpleDateFormat;
@@ -114,7 +115,7 @@ public class Task extends BaseObject {
 	}
 
 	public Task() {
-
+		clear();
 	}
 
 	public Task(String initString) {
@@ -171,6 +172,11 @@ public class Task extends BaseObject {
 	protected void clear() {
 		super.clear();
 		setTaskState(eTaskState.Empty);
+		setPlanDate(DateUtils.EmptyDate);
+		setLeistungs("");
+		setTourCode(0);
+		setEmploymentId(EMPTY_ID);
+		setIsAdditionalTask(false);
 	}
 
 	public String forServer() {
