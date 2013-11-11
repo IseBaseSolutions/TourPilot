@@ -14,6 +14,7 @@ import android.widget.CheckBox;
 public class AddTaskAdapter extends ArrayAdapter<AdditionalTask>  {
 
 	private List<AdditionalTask> addTasks;
+	private List<AdditionalTask> selectedAddTasks;
 	private int layoutResourceId;
 	private Context context;
 	
@@ -24,6 +25,7 @@ public class AddTaskAdapter extends ArrayAdapter<AdditionalTask>  {
 		this.context = context;
 		this.addTasks = tasks;
 	}
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View row = convertView;
@@ -36,10 +38,11 @@ public class AddTaskAdapter extends ArrayAdapter<AdditionalTask>  {
 		additionalTaskHolder.chbAdditionalTaskText.setTag(additionalTaskHolder.additionalTask);
 		additionalTaskHolder.chbAdditionalTaskText.setText(additionalTaskHolder.additionalTask.getName());
 		
-		additionalTaskHolder.chbAdditionalTaskText.setChecked(additionalTaskHolder.additionalTask.getIsChecked());
-			
+		for (AdditionalTask addTask : addTasks)
+			additionalTaskHolder.chbAdditionalTaskText.setChecked(selectedAddTasks.contains(addTask));			
 		return row;
 	}
+	
 	public class AdditionalTasktHolder {
 		AdditionalTask additionalTask;
 		CheckBox chbAdditionalTaskText;
