@@ -161,11 +161,16 @@ public class ServerCommandParser {
 			// 5, isAutomaticSync);
 			if (commandLine.startsWith("" + ADDITIONAL_TASK_Z))
 				commandLine = ADDITIONAL_TASK_L + commandLine.substring(1);
-			if (commandActionType == NEED_TO_ADD) {
-				AdditionalTask addTask = new AdditionalTask(commandLine);
-				AdditionalTaskManager.Instance().save(addTask);
-			} else {
-				AdditionalTaskManager.Instance().delete(getIDFromStr(commandLine));
+			try{
+				if (commandActionType == NEED_TO_ADD) {
+					AdditionalTask addTask = new AdditionalTask(commandLine);
+					AdditionalTaskManager.Instance().save(addTask);
+				} else {
+					AdditionalTaskManager.Instance().delete(getIDFromStr(commandLine));
+				}
+			}catch (Exception e) {
+				e.printStackTrace();
+				e.getMessage();
 			}
 			break;
 		case DOCTOR:
