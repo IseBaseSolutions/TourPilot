@@ -11,21 +11,21 @@ public class AdditionalTask extends BaseObject {
 	public static final String CatalogTypeField = "catalog_type";
 	public static final String QualityField = "quality"; 
 	
-    private int btyp;
+    private int catalogType;
     private int quality;
 
 	public String IdentID() { 
-    	return btyp + ";" + getId(); 
+    	return catalogType + ";" + getId(); 
 	}
     
     @MapField(DatabaseField = CatalogTypeField)
     public int getCatalogType() {
-    	return btyp;
+    	return catalogType;
     }
     
     @MapField(DatabaseField = CatalogTypeField)
-    public void setCatalogType(int fld_btyp) {
-    	this.btyp = fld_btyp;  
+    public void setCatalogType(int catalogType) {
+    	this.catalogType = catalogType;  
     }
     
     @MapField(DatabaseField = QualityField)
@@ -59,6 +59,13 @@ public class AdditionalTask extends BaseObject {
         strValue += IdentID() + ";";
         strValue += nCryptor.LToNcode(getCheckSum());
         return strValue;
+    }
+    
+    @Override
+    protected void clear() {
+    	super.clear();
+    	setCatalogType(EMPTY_ID);
+    	setQuality(EMPTY_ID);
     }
 	
 }

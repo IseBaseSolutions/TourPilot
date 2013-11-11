@@ -7,6 +7,10 @@ import isebase.cognito.tourpilot.Utils.StringParser;
 
 public class AdditionalWork extends BaseObject{
 
+	public AdditionalWork(){
+		clear();
+	}
+	
 	public AdditionalWork(String initString) {
 		StringParser parsingString = new StringParser(initString);		
 		parsingString.next(";");

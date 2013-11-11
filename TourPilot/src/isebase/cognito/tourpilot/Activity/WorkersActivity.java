@@ -34,7 +34,6 @@ public class WorkersActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_workers);
 		reloadData();
 		initDialogs();
-		initTable(workers.size());
 		initListWorkers();
 	}
 
@@ -62,17 +61,6 @@ public class WorkersActivity extends FragmentActivity implements
 				showDialogPin();
 			}
 		});
-	}
-
-	private void initTable(int tableSize) {
-		if (tableSize > 0)
-			return;
-		for (int i = 0; i < 10; i++) {
-			Worker w = new Worker();
-			w.setName("Worker " + i);
-			WorkerManager.Instance().save(w);
-		}
-		reloadData();
 	}
 
 	public void switchToOptions(View view) {

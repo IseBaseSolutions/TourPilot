@@ -7,6 +7,10 @@ import isebase.cognito.tourpilot.Utils.StringParser;
 
 public class PatientRemark extends BaseObject {
 
+	public PatientRemark(){
+		clear();
+	}
+	
 	public PatientRemark(String initString) {
 		StringParser parsingString = new StringParser(initString);
 		parsingString.next(";");

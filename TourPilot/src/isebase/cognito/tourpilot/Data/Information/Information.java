@@ -3,6 +3,7 @@ package isebase.cognito.tourpilot.Data.Information;
 import isebase.cognito.tourpilot.Connection.ServerCommandParser;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.DataBase.MapField;
+import isebase.cognito.tourpilot.Utils.DateUtils;
 import isebase.cognito.tourpilot.Utils.StringParser;
 
 import java.text.SimpleDateFormat;
@@ -72,6 +73,10 @@ public class Information extends BaseObject {
 		this.isFromServer = isFromServer;
 	}
 
+	public Information(){
+		clear();
+	}
+	
 	public Information(String initString) {
 		setIsFromServer(true);
 		initString = initString.substring(0, 2);
@@ -96,4 +101,15 @@ public class Information extends BaseObject {
 		return strValue;
 	}
 
+	@Override
+	protected void clear() {
+		super.clear();
+		setEmploymentCode(EMPTY_ID);
+		setFromDate(DateUtils.EmptyDate);
+		setTillDate(DateUtils.EmptyDate);
+		setReadTime(DateUtils.EmptyDate);
+		setIsFromServer(false);
+		
+	}
+	
 }

@@ -90,5 +90,7 @@ public abstract class BaseObject {
 		id = EMPTY_ID;
 		name = "";
 		checkSum = 0;
+		wasSent = false;
+		isServerTime = false;
 	}
 }

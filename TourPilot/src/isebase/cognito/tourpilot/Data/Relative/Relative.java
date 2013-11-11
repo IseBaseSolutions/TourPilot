@@ -49,6 +49,10 @@ public class Relative extends BaseObject {
 		this.ship = ship;
 	}
 	
+	public Relative(){
+		clear();
+	}
+	
 	public Relative(String initString) {
 		address = new Address();
 		StringParser parsingString = new StringParser(initString);
@@ -75,4 +79,14 @@ public class Relative extends BaseObject {
 		strValue += ncryptor.LToNcode(getCheckSum());
 		return strValue;
 	}
+	
+	@Override
+	protected void clear() {
+		super.clear();
+		address = new Address();
+		setSurname("");
+		setShip("");
+		setAddressID(EMPTY_ID);
+	}
+	
 }
