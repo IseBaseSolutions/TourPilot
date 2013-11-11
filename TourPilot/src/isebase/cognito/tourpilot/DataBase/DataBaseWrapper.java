@@ -46,7 +46,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	
 	private static final String DATABASE_NAME = "TourPilot.db";
 
-	public static final int DATABASE_VERSION = 9;
+	public static final int DATABASE_VERSION = 10;
 
 	private static final String WORKERS_TABLE_CREATE = "CREATE TABLE "
 			+ WorkerManager.TableName + "(" 
@@ -76,9 +76,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ BaseObject.CheckSumField + " INTEGER, "
 			+ BaseObject.WasSentField + " INTEGER, "
 			+ BaseObject.IsServerTimeField + " INTEGER, "
-			+ Patient.AddressField + " TEXT, "
 			+ Patient.IsDoneField + " INTEGER NOT NULL DEFAULT 0, "
-			+ Patient.AddressField + " INTEGER "
+			+ Patient.AddressIDField + " INTEGER "
 			+ ");";
 
 	private static final String OPTIONS_TABLE_CREATE = "CREATE TABLE " 
@@ -214,7 +213,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			db.execSQL(RELATIVES_TABLE_CREATE);
 		}
 		catch(Exception ex){
-			
+			ex.printStackTrace();
 		}
 		finally{
 		}
