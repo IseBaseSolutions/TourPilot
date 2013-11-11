@@ -67,7 +67,7 @@ public class AdditionalTask extends BaseObject {
     	NCryptor nCryptor = new NCryptor();
         String strValue = new String(ServerCommandParser.ADDITIONAL_TASK_Z + ";");
         strValue += IdentID() + ";";
-        strValue += nCryptor.LToNcode(getCheckSum()); //use ncriptor
+        strValue += nCryptor.LToNcode(getCheckSum());
         return strValue;
     }
 	

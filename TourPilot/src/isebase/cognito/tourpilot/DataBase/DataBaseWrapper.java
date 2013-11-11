@@ -84,8 +84,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ BaseObject.NameField + " TEXT NOT NULL, "
 			+ BaseObject.CheckSumField + " INTEGER, "
-			+ AdditionalTask.CatalogTypeField+ " INTEGER, "
-			+ AdditionalTask.QualityField+ " INTEGER "
+			+ AdditionalTask.CatalogTypeField + " INTEGER, "
+			+ AdditionalTask.QualityField + " INTEGER "
 			+ ");";
 	
 	public DataBaseWrapper(Context context) {
@@ -108,7 +108,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			db.execSQL(TOURS_TABLE_CREATE);
 			db.execSQL(PATIENTS_TABLE_CREATE);
 			db.execSQL(OPTIONS_TABLE_CREATE);
-			db.execSQL(TASKS_TABLE_CREATE);			
+			db.execSQL(TASKS_TABLE_CREATE);
+			db.execSQL(ADDITIONAL_TASKS_TABLE_CREATE);	
 		}
 		catch(Exception ex){
 			
