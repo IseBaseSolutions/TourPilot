@@ -9,7 +9,6 @@ import isebase.cognito.tourpilot.Utils.StringParser;
 
 public class Patient extends BaseObject {
 
-	public static final String AddressField = "address";
 	public static final String IsDoneField = "is_done";
 	public static final String IsAdditionalField = "is_additional";
 	public static final String SurnameField = "surname";
