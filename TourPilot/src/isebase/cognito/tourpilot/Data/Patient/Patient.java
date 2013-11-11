@@ -1,6 +1,7 @@
 package isebase.cognito.tourpilot.Data.Patient;
 
 import isebase.cognito.tourpilot.Connection.ServerCommandParser;
+import isebase.cognito.tourpilot.Data.Address.Address;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.NCryptor;
@@ -12,25 +13,18 @@ public class Patient extends BaseObject {
 	public static final String IsDoneField = "is_done";
 	public static final String IsAdditionalField = "is_additional";
 	public static final String SurnameField = "surname";
-	public static final String StreetField = "street";
-	public static final String ZipField = "zip";
-	public static final String CityField = "city";
-	public static final String PhoneField = "phone";
+		
 	public static final String SexField = "sex";
 	public static final String DoctorIDsField = "doctor_ids";
 	public static final String RelativeIDsField = "relative_ids";
+	
 	public static final String CatalogKKTypeField = "catalog_kk_type";
 	public static final String CatalogPKTypeField = "catalog_pk_type";
 	public static final String CatalogSATypeField = "catalog_sa_type";
 	public static final String CatalogPRTypeField = "catalog_pr_type";
 
-	private String address;
-	private String street;
-	private String city;
 	private String surname;
 	private String sex;
-	private String zip;
-	private String phone;
 	private String strDoctorIDs;
 	private String strRelativeIDs;
 
@@ -67,16 +61,6 @@ public class Patient extends BaseObject {
 		this.surname = surname;
 	}
 
-	@MapField(DatabaseField = AddressField)
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	@MapField(DatabaseField = AddressField)
-	public String getAddress() {
-		return this.address;
-	}
-
 	@MapField(DatabaseField = IsAdditionalField)
 	public boolean getIsAdditional() {
 		return isAdditional;
@@ -85,46 +69,6 @@ public class Patient extends BaseObject {
 	@MapField(DatabaseField = IsAdditionalField)
 	public void setIsAdditional(boolean isAdditional) {
 		this.isAdditional = isAdditional;
-	}
-
-	@MapField(DatabaseField = StreetField)
-	public String getStreet() {
-		return street;
-	}
-
-	@MapField(DatabaseField = StreetField)
-	public void setStreet(String street) {
-		this.street = street;
-	}
-
-	@MapField(DatabaseField = CityField)
-	public String getCity() {
-		return city;
-	}
-
-	@MapField(DatabaseField = CityField)
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	@MapField(DatabaseField = ZipField)
-	public String getZip() {
-		return zip;
-	}
-
-	@MapField(DatabaseField = ZipField)
-	public void setZip(String zip) {
-		this.zip = zip;
-	}
-
-	@MapField(DatabaseField = PhoneField)
-	public String getPhone() {
-		return phone;
-	}
-
-	@MapField(DatabaseField = PhoneField)
-	public void setPhone(String phone) {
-		this.phone = phone;
 	}
 
 	@MapField(DatabaseField = SexField)
@@ -197,11 +141,14 @@ public class Patient extends BaseObject {
 		this.btyp_pr = btyp_pr;
 	}
 
+	public Address address;
+	
 	public Patient() {
-
+		clear();
 	}
 
 	public Patient(String initString) {
+		address = new Address();
 		NCryptor ncryptor = new NCryptor();
 		setIsAdditional(initString.contains("^"));
 		initString = initString.replace("^", "");
@@ -210,28 +157,18 @@ public class Patient extends BaseObject {
 		setId(Integer.parseInt(parsingString.next(";")));
 		setSurname(parsingString.next(";"));
 		setName(parsingString.next(";"));
-		String str = parsingString.next(";");
-		setSex(str.substring(1, str.length()));
-		setAddress(parsingString.next(";"));
-		setZip(parsingString.next(";"));
-		setCity(parsingString.next(";"));
-		setPhone(parsingString.next(";"));
-		String x = parsingString.next("+");
-		if (x.length() == 0)
-			x = "0";
-		setKK(Integer.parseInt(x));
-		x = parsingString.next("+");
-		if (x.length() == 0)
-			x = "0";
-		setPK(Integer.parseInt(x));
-		x = parsingString.next("+");
-		if (x.length() == 0)
-			x = "0";
-		setSA(Integer.parseInt(x));
-		x = parsingString.next(";");
-		if (x.length() == 0)
-			x = "0";
-		setPR(Integer.parseInt(x));
+		String sexStr = parsingString.next(";");
+		setSex(sexStr.substring(1, sexStr.length()));
+		address.setStreet(parsingString.next(";"));
+		address.setZip(parsingString.next(";"));
+		address.setCity(parsingString.next(";"));
+		address.setPhone(parsingString.next(";"));
+		
+		setKK(parseInt(parsingString.next("+")));
+		setPK(parseInt(parsingString.next("+")));
+		setSA(parseInt(parsingString.next("+")));
+		setPR(parseInt(parsingString.next("+")));
+				
 		setStrDoctorsIDs(parsingString.next(";"));
 		setStrRelativeIDs(parsingString.next("~"));
 		setCheckSum(ncryptor.NcodeToL(parsingString.next()));
@@ -251,4 +188,9 @@ public class Patient extends BaseObject {
 		return strValue;
 	}
 
+	private int parseInt(String strVal){
+		if (strVal.length() == 0)
+			return EMPTY_ID;
+		return Integer.parseInt(strVal);	
+	}
 }
