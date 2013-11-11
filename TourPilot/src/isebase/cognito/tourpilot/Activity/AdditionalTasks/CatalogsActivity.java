@@ -25,7 +25,7 @@ public class CatalogsActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_tasks_category);
 //		reloadData();
-		initListCategories();
+//		initListCategories();
 //		initTable(listAddTasksCategories.size());
 	}
 
@@ -35,29 +35,14 @@ public class CatalogsActivity extends BaseActivity {
 //		getMenuInflater().inflate(R.menu.add_tasks_category, menu);
 		return true;
 	}
-	private void initTable(int tableSize)
-	{
-		if (tableSize > 0)
-			return;
-		for (int i = 0; i < 10; i++){
-			AdditionalTask item = new AdditionalTask();
-			item.setName("Addtitional task" + i);
-			AdditionalTaskManager.Instance().save(item);
-		}
-		reloadData();
-	}
 	
 	private void initListCategories(){
 		ListView lvAddTasksCategories = (ListView)findViewById(R.id.lvAddTasksCategory);
-//		ArrayAdapter<AddTasksCategory> adapter = new ArrayAdapter<AddTasksCategory>(this,android.R.layout.simple_list_item_1, listAddTasksCategories);
 		
 		
-		List<String> testListAddTasksCategory = new ArrayList<String>();
-		for(int i = 0;i < 30;i++)
-		{
-			testListAddTasksCategory.add("Aditionaly tasks Categoriy #" + i);
-		}
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,testListAddTasksCategory);
+		for(int i = 0; i < 4; i++)
+			listCatalogs.add(new Catalog(Catalog.eCatalogType.values()[i]));
+		ArrayAdapter<Catalog> adapter = new ArrayAdapter<Catalog>(this, android.R.layout.simple_list_item_1, listCatalogs);
 		lvAddTasksCategories.setAdapter(adapter);
 		
 		lvAddTasksCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -65,16 +50,10 @@ public class CatalogsActivity extends BaseActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
-				Intent addTasksActivity = new Intent(getApplicationContext(),AdditionalTasksActivity.class);
+				Intent addTasksActivity = new Intent(getApplicationContext(), AdditionalTasksActivity.class);
 				startActivity(addTasksActivity);
 			}
 
 		});
-	}
-	public void reloadData() {
-		listCatalogs.add(new Catalog(eCatalogType.btyp_kk));
-		listCatalogs.add(new Catalog(eCatalogType.btyp_pk));
-		listCatalogs.add(new Catalog(eCatalogType.btyp_pr));
-		listCatalogs.add(new Catalog(eCatalogType.btyp_sa));		
 	}
 }

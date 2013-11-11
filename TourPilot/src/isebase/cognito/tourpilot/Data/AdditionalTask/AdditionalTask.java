@@ -13,16 +13,6 @@ public class AdditionalTask extends BaseObject {
 	
     private int btyp;
     private int quality;
-    
-    public boolean isChecked;
-            
-    public boolean getIsChecked() {
-		return isChecked;
-	}
-
-	public void setIsChecked(boolean isChecked) {
-		this.isChecked = isChecked;
-	}
 
 	public String IdentID() { 
     	return btyp + ";" + getId(); 
