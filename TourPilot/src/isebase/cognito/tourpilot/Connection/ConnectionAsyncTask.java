@@ -25,8 +25,10 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 	@Override
 	protected void onPostExecute(Void result) {
 		if (!conStatus.lastExecuteOK || conStatus.isFinished) {
-			if (!conStatus.lastExecuteOK)
+			if (!conStatus.lastExecuteOK) {
+				conStatus.UISynchHandler.onItemSynchronized(conStatus.getMessage());
 				closeConnection();
+			}
 			conStatus.UISynchHandler.onSynchronizedFinished(
 					conStatus.isFinished, conStatus.getMessage());
 			return;
@@ -43,11 +45,11 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 	protected Void doInBackground(Void... params) {
 		switch (conStatus.CurrentState) {
 		case ConnectionStatus.InitState:
-			conStatus.setMessage(String.format("%1$s %2$s : %3$s ...",
+			conStatus.setMessage(String.format(
+					"%1$s %2$s : %3$s ...",
 					StaticResources.getBaseContext().getString(
-							R.string.connection_try)
-							, Option.Instance().getServerIP()
-							, Option.Instance().getServerPort()));
+							R.string.connection_try), Option.Instance()
+							.getServerIP(), Option.Instance().getServerPort()));
 			break;
 		case ConnectionStatus.Connection:
 			conStatus.lastExecuteOK = initializeConnection();
@@ -82,8 +84,8 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 	private boolean initializeConnection() {
 		try {
 
-			conStatus.socket = new Socket(Option.Instance().getServerIP()
-					, Option.Instance().getServerPort());
+			conStatus.socket = new Socket(Option.Instance().getServerIP(),
+					Option.Instance().getServerPort());
 
 			conStatus.OS = conStatus.socket.getOutputStream();
 			conStatus.IS = conStatus.socket.getInputStream();
@@ -184,8 +186,10 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 			if (retVal)
 				conStatus.setMessage(String.format(
 						"%1$s \n %2$s: %3$s",
-						StaticResources.getBaseContext().getString(R.string.checksum_ok),
-						StaticResources.getBaseContext().getString(R.string.data_to_download),
+						StaticResources.getBaseContext().getString(
+								R.string.checksum_ok),
+						StaticResources.getBaseContext().getString(
+								R.string.data_to_download),
 						conStatus.dataFromServer.length));
 			else
 				conStatus.setMessage(StaticResources.getBaseContext()
@@ -197,8 +201,8 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 	private boolean parseRecievedData() {
 		boolean retVal = true;
 		try {
-		//	for (String data : conStatus.dataFromServer)
-		//		conStatus.serverCommandParser.parseElement(data, false);
+			for (String data : conStatus.dataFromServer)
+				conStatus.serverCommandParser.parseElement(data, false);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			retVal = false;
@@ -260,15 +264,11 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 	}
 
 	private void writeToStream(OutputStream os, String text) {
-		int timeoutCount = 1200;
-		for (int i = 0; i < timeoutCount; i++) {
-			try {
-				os.write(text.getBytes());
-				os.flush();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return;
+		try {
+			os.write(text.getBytes());
+			os.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -425,17 +425,17 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 	}
 
 	public String readPack(InputStream is) throws IOException,
-		InterruptedException {
+			InterruptedException {
 		String retVal = "";
 		while (is.available() == 0)
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException ex) {
 				ex.printStackTrace();
-		  	}
+			}
 		GZIPInputStream zis = new GZIPInputStream(is);
 		byte[] buffer = new byte[1024];
-		while((zis.read(buffer)) != -1) {
+		while ((zis.read(buffer)) != -1) {
 			retVal += new String(buffer, "cp1252");
 		}
 		return retVal;
