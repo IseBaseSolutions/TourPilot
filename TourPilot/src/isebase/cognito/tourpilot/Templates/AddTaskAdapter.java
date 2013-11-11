@@ -13,17 +13,19 @@ import android.widget.CheckBox;
 
 public class AddTaskAdapter extends ArrayAdapter<AdditionalTask>  {
 
-	private List<AdditionalTask> addTasks;
+	private List<AdditionalTask> allAddTasks;
 	private List<AdditionalTask> selectedAddTasks;
 	private int layoutResourceId;
 	private Context context;
+	
+	public boolean isVisible = false;
 	
 	public AddTaskAdapter(Context context, int layoutResourceId, List<AdditionalTask> tasks) {
 		super(context, layoutResourceId, tasks);
 		
 		this.layoutResourceId = layoutResourceId;
 		this.context = context;
-		this.addTasks = tasks;
+		this.allAddTasks = tasks;
 	}
 	
 	@Override
@@ -33,19 +35,25 @@ public class AddTaskAdapter extends ArrayAdapter<AdditionalTask>  {
 		LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 		row = inflater.inflate(layoutResourceId, parent, false);
 		
-		additionalTaskHolder.additionalTask = addTasks.get(position);
-		additionalTaskHolder.chbAdditionalTaskText = (CheckBox) row.findViewById(R.id.chbAddTask);
-		additionalTaskHolder.chbAdditionalTaskText.setTag(additionalTaskHolder.additionalTask);
-		additionalTaskHolder.chbAdditionalTaskText.setText(additionalTaskHolder.additionalTask.getName());
-		
-		for (AdditionalTask addTask : addTasks)
-			additionalTaskHolder.chbAdditionalTaskText.setChecked(selectedAddTasks.contains(addTask));			
+		additionalTaskHolder.additionalTask = allAddTasks.get(position);
+		additionalTaskHolder.chbAdditionalTask = (CheckBox) row.findViewById(R.id.chbAddTask);
+		additionalTaskHolder.chbAdditionalTask.setTag(additionalTaskHolder.additionalTask);
+		additionalTaskHolder.chbAdditionalTask.setText(additionalTaskHolder.additionalTask.getName());		
+		additionalTaskHolder.chbAdditionalTask.setChecked(selectedAddTasks.contains(additionalTaskHolder.additionalTask));		
+		row.setVisibility(View.INVISIBLE);
 		return row;
 	}
 	
 	public class AdditionalTasktHolder {
 		AdditionalTask additionalTask;
-		CheckBox chbAdditionalTaskText;
+		CheckBox chbAdditionalTask;
+	}
+	
+	public void toSelectedAddTasks(AdditionalTask addTask) {
+		if (!selectedAddTasks.contains(addTask))
+			selectedAddTasks.add(addTask);
+		else
+			selectedAddTasks.remove(addTask);
 	}
 
 }
