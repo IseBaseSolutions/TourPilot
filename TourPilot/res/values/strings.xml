@@ -34,7 +34,19 @@
     <string name="str_ok">OK</string>
     <string name="empty_text"></string>
     <string name="version">Version</string>
+    
     <string name="title_activity_tasks">TasksActivity</string>
+    <string name="title_activity_add_tasks_category">AddTasksCategoryActivity</string>
+    <string name="add_tasks_category">Additionaly categories</string>
+    <string name="title_activity_add_tasks">AddTasksActivity</string>
+    <string name="sFilterText">FILTER</string>
+    <string name="title_activity_notes">NotesActivity</string>
+    <string name="title_activity_info">InfoActivity</string>
+    <string name="title_activity_manual_input">ManualInputActivity</string>
+    <string name="title_activity_address">AddressActivity</string>
+    <string name="title_activity_doctors">DoctorsActivity</string>
+    <string name="title_activity_relatives">RelativesActivity</string>
+    <string name="title_activity_comments">CommentsActivity</string>    
     <string name="program_version">Program version:</string>
     <string name="data_base_version">Database version:</string>
     <string name="yes">Yes</string>

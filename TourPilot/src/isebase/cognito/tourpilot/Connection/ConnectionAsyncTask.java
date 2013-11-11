@@ -2,7 +2,6 @@ package isebase.cognito.tourpilot.Connection;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.Data.Option.OptionManager;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
 import java.io.IOException;
@@ -26,10 +25,10 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 	@Override
 	protected void onPostExecute(Void result) {
 		if (!conStatus.lastExecuteOK || conStatus.isFinished) {
-			conStatus.UISynchHandler.onSynchronizedFinished(
-					conStatus.isFinished, conStatus.getMessage());
 			if (!conStatus.lastExecuteOK)
 				closeConnection();
+			conStatus.UISynchHandler.onSynchronizedFinished(
+					conStatus.isFinished, conStatus.getMessage());
 			return;
 		}
 		conStatus.UISynchHandler.onItemSynchronized(conStatus.getMessage());
@@ -44,12 +43,11 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 	protected Void doInBackground(Void... params) {
 		switch (conStatus.CurrentState) {
 		case ConnectionStatus.InitState:
-			conStatus.setMessage(String.format(
-					"%1$s %2$s : %3$s ...",
+			conStatus.setMessage(String.format("%1$s %2$s : %3$s ...",
 					StaticResources.getBaseContext().getString(
-							R.string.connection_try), OptionManager.Instance()
-							.loadOption().getServerIP(), OptionManager
-							.Instance().loadOption().getServerPort()));
+							R.string.connection_try)
+							, Option.Instance().getServerIP()
+							, Option.Instance().getServerPort()));
 			break;
 		case ConnectionStatus.ConnectionState:
 			conStatus.lastExecuteOK = initializeConnection();
@@ -84,9 +82,8 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 	private boolean initializeConnection() {
 		try {
 
-			conStatus.socket = new Socket(OptionManager.Instance().loadOption()
-					.getServerIP(), OptionManager.Instance().loadOption()
-					.getServerPort());
+			conStatus.socket = new Socket(Option.Instance().getServerIP()
+					, Option.Instance().getServerPort());
 
 			conStatus.OS = conStatus.socket.getOutputStream();
 			conStatus.IS = conStatus.socket.getInputStream();
@@ -187,10 +184,8 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 			if (retVal)
 				conStatus.setMessage(String.format(
 						"%1$s \n %2$s: %3$s",
-						StaticResources.getBaseContext().getString(
-								R.string.checksum_ok),
-						StaticResources.getBaseContext().getString(
-								R.string.data_to_download),
+						StaticResources.getBaseContext().getString(R.string.checksum_ok),
+						StaticResources.getBaseContext().getString(R.string.data_to_download),
 						conStatus.dataFromServer.length));
 			else
 				conStatus.setMessage(StaticResources.getBaseContext()
@@ -202,8 +197,8 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 	private boolean parseRecievedData() {
 		boolean retVal = true;
 		try {
-			for (String data : conStatus.dataFromServer)
-				conStatus.serverCommandParser.parseElement(data, false);
+		//	for (String data : conStatus.dataFromServer)
+		//		conStatus.serverCommandParser.parseElement(data, false);
 			writeToStream(conStatus.OS, "OK" + "\0");
 		} catch (Exception ex) {
 			ex.printStackTrace();

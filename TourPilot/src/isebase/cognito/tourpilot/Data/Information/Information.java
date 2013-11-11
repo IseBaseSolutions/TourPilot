@@ -1,6 +1,8 @@
 package isebase.cognito.tourpilot.Data.Information;
 
+import isebase.cognito.tourpilot.Connection.ServerCommandParser;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.StringParser;
 
 import java.text.SimpleDateFormat;
@@ -8,11 +10,67 @@ import java.util.Date;
 
 public class Information extends BaseObject {
 
+	public static final String EmploymentCodeField = "employment_code";
+	public static final String FromDateField = "from_date";
+	public static final String TilldateField = "till_date";
+	public static final String ReadTimeField = "read_time";
+	public static final String IsFromServerField = "is_from_server";
+
 	private long employmentCode;
 	private Date fromDate;
 	private Date tillDate;
 	private Date readTime;
 	private boolean isFromServer;
+
+	@MapField(DatabaseField = EmploymentCodeField)
+	public long getEmploymentCode() {
+		return employmentCode;
+	}
+
+	@MapField(DatabaseField = EmploymentCodeField)
+	public void setEmploymentCode(long employmentCode) {
+		this.employmentCode = employmentCode;
+	}
+
+	@MapField(DatabaseField = FromDateField)
+	public Date getFromDate() {
+		return fromDate;
+	}
+
+	@MapField(DatabaseField = FromDateField)
+	public void setFromDate(Date fromDate) {
+		this.fromDate = fromDate;
+	}
+
+	@MapField(DatabaseField = TilldateField)
+	public Date getTillDate() {
+		return tillDate;
+	}
+
+	@MapField(DatabaseField = TilldateField)
+	public void setTillDate(Date tillDate) {
+		this.tillDate = tillDate;
+	}
+
+	@MapField(DatabaseField = ReadTimeField)
+	public Date getReadTime() {
+		return readTime;
+	}
+
+	@MapField(DatabaseField = ReadTimeField)
+	public void setReadTime(Date readTime) {
+		this.readTime = readTime;
+	}
+
+	@MapField(DatabaseField = IsFromServerField)
+	public boolean getIsFromServer() {
+		return isFromServer;
+	}
+
+	@MapField(DatabaseField = IsFromServerField)
+	public void setIsFromServer(boolean isFromServer) {
+		this.isFromServer = isFromServer;
+	}
 
 	public Information(String initString) {
 		setIsFromServer(true);
@@ -31,51 +89,11 @@ public class Information extends BaseObject {
 		setCheckSum(Long.parseLong(parsingString.next()));
 	}
 
-	public long getEmploymentCode() {
-		return employmentCode;
+	public String forServer() {
+		String strValue = new String(ServerCommandParser.INFORMATION + ";");
+		strValue += String.format("%d;%d", getId(), getEmploymentCode()) + ";";
+		strValue += getCheckSum();
+		return strValue;
 	}
-
-	public void setEmploymentCode(long employmentCode) {
-		this.employmentCode = employmentCode;
-	}
-
-	public Date getFromDate() {
-		return fromDate;
-	}
-
-	public void setFromDate(Date fromDate) {
-		this.fromDate = fromDate;
-	}
-
-	public Date getTillDate() {
-		return tillDate;
-	}
-
-	public void setTillDate(Date tillDate) {
-		this.tillDate = tillDate;
-	}
-
-	public Date getReadTime() {
-		return readTime;
-	}
-
-	public void setReadTime(Date readTime) {
-		this.readTime = readTime;
-	}
-	
-	public boolean getIsFromServer() {
-		return isFromServer;
-	}
-	
-	public void setIsFromServer(boolean isFromServer) {
-		this.isFromServer = isFromServer;
-	}
-	
-    public String forServer() {
-        String strValue = new String("I;");
-        strValue += String.format("%d;%d", getId(), getEmploymentCode()) + ";";
-        strValue += getCheckSum();
-        return strValue;
-    }
 
 }

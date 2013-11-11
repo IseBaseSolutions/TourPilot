@@ -4,7 +4,6 @@ import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.Data.Option.OptionManager;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.Task.Task;
@@ -35,21 +34,21 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	
 	private static final String DATABASE_NAME = "TourPilot.db";
 
-	public static final int DATABASE_VERSION = 7;
+	public static final int DATABASE_VERSION = 9;
 
 	private static final String WORKERS_TABLE_CREATE = "CREATE TABLE "
 			+ WorkerManager.TableName + "(" 
-			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ BaseObject.NameField + " TEXT NOT NULL, "
-			+ BaseObject.CheckSumField + " INTEGER, "
-			+ Worker.IsUseGPSField + " INTEGER, "
-			+ Worker.ActualDateField + " INTEGER "
-			+ ");";
-
-	private static final String TOURS_TABLE_CREATE = "CREATE TABLE " 
-			+ TourManager.TableName + "(" 
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
 			+ BaseObject.NameField + " TEXT NOT NULL, "
+			+ BaseObject.CheckSumField + " INTEGER, "
+			+ Worker.IsUseGPSField + " INTEGER, " 
+			+ Worker.ActualDateField + " INTEGER " 
+			+ ");";
+
+	private static final String TOURS_TABLE_CREATE = "CREATE TABLE "
+			+ TourManager.TableName + "(" 
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+			+ BaseObject.NameField + " TEXT NOT NULL, " 
 			+ BaseObject.CheckSumField + " INTEGER "
 			+ ");";
 
@@ -61,20 +60,18 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Patient.AddressField + " TEXT, "
 			+ Patient.IsDoneField + " INTEGER NOT NULL DEFAULT 0 "
 			+ ");";
-	
-	private static final String OPTIONS_TABLE_CREATE = "CREATE TABLE "
-			+ OptionManager.TableName + "(" 
+
+	private static final String OPTIONS_TABLE_CREATE = "CREATE TABLE Options (" 
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ BaseObject.NameField + " TEXT, "
-			+ BaseObject.CheckSumField + " INTEGER, "
-			+ Option.WorkerIDField + " INTEGER, "
-			+ Option.TourIDField  + " INTEGER, "
+			+ Option.WorkerIDField + " INTEGER, " 
+			+ Option.TourIDField + " INTEGER, "
 			+ Option.EmploymentIDField + " INTEGER, "
 			+ Option.ServerIPField + " TEXT, "
-			+ Option.ServerPortField + " INTEGER "
+			+ Option.ServerPortField + " INTEGER " 
 			+ ");";
-	
+
 	private static final String TASKS_TABLE_CREATE = "CREATE TABLE "
+
 			+ TaskManager.TableName + "("
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ BaseObject.NameField + " TEXT NOT NULL, "

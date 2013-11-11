@@ -5,55 +5,39 @@ import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
-import android.content.Context;
 import android.telephony.TelephonyManager;
 
-public class Option extends BaseObject {
-
+public class Option {
+			
 	public static final String WorkerIDField = "worker_id";
 	public static final String TourIDField = "tour_id";
 	public static final String EmploymentIDField = "employment_id";
 	public static final String ServerIPField = "server_ip";
-	public static final String ServerPortField = "server_port";	
-	
+	public static final String ServerPortField = "server_port";
+
+	private String serverIP;
+	public static boolean testMode = false;
+	private Worker worker;
+	private TelephonyManager phoneManager = StaticResources.phoneManager;;
+	private OptionManager optionManager;	
+	private static Option instance;
+		
 	private int workerID;
 	private int tourID;
 	private int employmentID;
 	private int serverPort;
-
-	private String serverIP;
-
-	public static boolean testMode = false;
-
-	private Worker worker;
-
-	private TelephonyManager tMgr;
-
-	private static Option instance;
-
-	public static Option Instance() {
-		if (instance != null)
-			return instance;
-		instance = OptionManager.Instance().loadOption();
-		if (instance != null)
-			return instance;
-		return instance = new Option();
-	}
-
-	public Option() {
-
-	}
+	private int id;
 	
 	@MapField(DatabaseField = WorkerIDField)
 	public int getWorkerID() {
 		return workerID;
 	}
-	
+
 	@MapField(DatabaseField = WorkerIDField)
 	public void setWorkerID(int workerID) {
 		this.workerID = workerID;
 	}
-	
+
 	@MapField(DatabaseField = TourIDField)
 	public int getTourID() {
 		return tourID;
@@ -73,12 +57,12 @@ public class Option extends BaseObject {
 	public void setEmploymentID(int employmentID) {
 		this.employmentID = employmentID;
 	}
-	
+
 	@MapField(DatabaseField = ServerIPField)
 	public String getServerIP() {
 		return serverIP;
 	}
-	
+
 	@MapField(DatabaseField = ServerIPField)
 	public void setServerIP(String serverIP) {
 		this.serverIP = serverIP;
@@ -94,6 +78,15 @@ public class Option extends BaseObject {
 		this.serverPort = serverPort;
 	}
 
+	@MapField(DatabaseField = BaseObject.IDField)
+	public int getId() {
+		return id;}
+		
+	@MapField(DatabaseField = BaseObject.IDField)
+	public void setId(int id) {
+		this.id = id;
+	}
+		
 	public Worker getWorker() {
 		if (worker != null && worker.getId() == getWorkerID())
 			return worker;
@@ -101,12 +94,11 @@ public class Option extends BaseObject {
 		return worker;
 	}
 
-	@Override
 	protected void clear() {
-		super.clear();
-		workerID = EMPTY_ID;
-		tourID = EMPTY_ID;
-		employmentID = EMPTY_ID;	
+		id = BaseObject.EMPTY_ID;
+		workerID = BaseObject.EMPTY_ID;
+		tourID = BaseObject.EMPTY_ID;
+		employmentID = BaseObject.EMPTY_ID;	
 		serverPort = 4448;		
 		serverIP = "192.168.1.8";
 	}
@@ -126,20 +118,29 @@ public class Option extends BaseObject {
 	}
 
 	public String getPhoneNumber() {
-		initPhoneManager();
-		return (String) (tMgr.getLine1Number() == null ? "" : tMgr
-				.getLine1Number());
+		return phoneManager.getLine1Number() == null ? "" : phoneManager.getLine1Number().toString();
 	}
 
 	public String getDeviceID() {
-		initPhoneManager();
-		return (String) (tMgr.getDeviceId() == null ? "" : tMgr.getDeviceId());
+		return phoneManager.getDeviceId() == null ? "" : phoneManager.getDeviceId().toString();
+	}
+	
+	public static Option Instance() {
+		if (instance == null){
+			OptionManager optionManager = new OptionManager();
+			optionManager.open();
+			instance = optionManager.loadOption();
+			instance.optionManager = optionManager;
+		}			
+		return instance;
 	}
 
-	private void initPhoneManager() {
-		if (tMgr == null)
-			tMgr = (TelephonyManager) StaticResources.getBaseContext()
-					.getSystemService(Context.TELEPHONY_SERVICE);
+	public Option() {
+		clear();
+	}
+
+	public void save(){
+		optionManager.save(Option.Instance());
 	}
 
 }
