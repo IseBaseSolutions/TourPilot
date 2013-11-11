@@ -60,5 +60,12 @@ public class AdditionalTask extends BaseObject {
         strValue += nCryptor.LToNcode(getCheckSum());
         return strValue;
     }
+    
+    @Override
+    protected void clear() {
+    	super.clear();
+    	setCatalogType(EMPTY_ID);
+    	setQuality(EMPTY_ID);
+    }
 	
 }

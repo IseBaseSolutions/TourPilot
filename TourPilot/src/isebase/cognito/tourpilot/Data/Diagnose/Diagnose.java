@@ -7,6 +7,10 @@ import isebase.cognito.tourpilot.Utils.StringParser;
 
 public class Diagnose extends BaseObject{
 
+	public Diagnose(){
+		clear();
+	}
+	
     public Diagnose(String initString) {
 		StringParser parsingString = new StringParser(initString);
 		parsingString.next(";");

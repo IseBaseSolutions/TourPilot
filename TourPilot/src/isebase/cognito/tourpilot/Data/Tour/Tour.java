@@ -44,4 +44,10 @@ public class Tour extends BaseObject {
 		strValue += ncryptor.LToNcode(getCheckSum());
 		return strValue;
 	}
+	
+	@Override
+	protected void clear() {
+		super.clear();
+		setIsCommonTour(false);
+	}
 }

@@ -37,6 +37,10 @@ public class Doctor extends BaseObject {
 		this.surname = surname;
 	}
 
+	public Doctor(){
+		clear();
+	}
+	
 	public Doctor(String initString) {
 		address = new Address();
 		StringParser parsingString = new StringParser(initString);
@@ -67,4 +71,13 @@ public class Doctor extends BaseObject {
 		strValue += ncryptor.LToNcode(getCheckSum());
 		return strValue;
 	}
+	
+	@Override
+	protected void clear() {
+		super.clear();
+		address = new Address();
+		setAddressID(EMPTY_ID);
+		setSurname("");
+	}
+	
 }

@@ -204,4 +204,22 @@ public class Patient extends BaseObject {
 			return EMPTY_ID;
 		return Integer.parseInt(strVal);	
 	}
+
+	@Override
+	protected void clear() {
+		super.clear();
+		address = new Address();
+		setIsAdditional(false);
+		setIsDone(false);
+		setSurname("");
+		setAddressID(EMPTY_ID);
+		setSex("");
+		setStrDoctorsIDs("");
+		setStrRelativeIDs("");
+		setKK(EMPTY_ID);
+		setPK(EMPTY_ID);
+		setSA(EMPTY_ID);
+		setPR(EMPTY_ID);
+		
+	}
 }
