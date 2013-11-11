@@ -217,11 +217,11 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 		boolean retVal = true;
 		try {
 			writeToStream(conStatus.OS, "OK" + "\0");
-			conStatus.closeConnection();
 		} catch (Exception e) {
 			e.printStackTrace();
 			retVal = false;
 		} finally {
+			conStatus.closeConnection();
 			if (retVal)
 				conStatus.setMessage(StaticResources.getBaseContext()
 						.getString(R.string.connection_close_ok));
