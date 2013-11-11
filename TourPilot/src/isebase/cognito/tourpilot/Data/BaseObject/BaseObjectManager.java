@@ -273,7 +273,7 @@ public abstract class BaseObjectManager<T> {
 							Byte.parseByte(method.invoke(item).toString()));
 				else if (method.getReturnType().equals(Date.class))
 					values.put(annos.DatabaseField(),
-							((Date) method.invoke(item)).getDate());
+							((Date) method.invoke(item)).getTime());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
