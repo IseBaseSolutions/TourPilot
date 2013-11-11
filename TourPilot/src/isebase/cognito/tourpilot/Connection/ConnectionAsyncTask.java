@@ -199,7 +199,6 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 		try {
 		//	for (String data : conStatus.dataFromServer)
 		//		conStatus.serverCommandParser.parseElement(data, false);
-			writeToStream(conStatus.OS, "OK" + "\0");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			retVal = false;
@@ -217,6 +216,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 	private boolean closeConnection() {
 		boolean retVal = true;
 		try {
+			writeToStream(conStatus.OS, "OK" + "\0");
 			conStatus.closeConnection();
 		} catch (Exception e) {
 			e.printStackTrace();
