@@ -1,21 +1,18 @@
 package isebase.cognito.tourpilot.Data.Option;
 
 import java.util.List;
-
 import android.database.sqlite.SQLiteDatabase;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 
 class OptionManager extends BaseObjectManager<Option> {
-
-	public static final String TableName = "Options";
 	
-	public OptionManager() {
+	protected OptionManager() {
 		super(Option.class);
 	}
 
 	@Override
 	public String getRecTableName() {
-		return TableName;
+		return Option.TableName;
 	}
 	
 	public Option loadOption() {

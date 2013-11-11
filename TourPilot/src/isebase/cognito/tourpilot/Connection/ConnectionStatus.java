@@ -10,9 +10,9 @@ import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
 public class ConnectionStatus {
 	
 	public static final int InitState = -1;
-	public static final int ConnectionState = 0;
+	public static final int Connection = 0;
 	public static final int Invitation = 1;
-	public static final int Sycnhronizing = 2;
+	public static final int DateSycnhronizing = 2;
 	public static final int SendHelloRequest = 3;
 	public static final int CompareCkeckSums = 4;
 	public static final int ParseRecievedData = 5;
