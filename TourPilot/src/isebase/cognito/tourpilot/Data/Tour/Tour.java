@@ -31,7 +31,8 @@ public class Tour extends BaseObject {
 		InitString.next(";");
 		setId(Integer.parseInt(InitString.next(";")));
 		setName(InitString.next(";"));
-		setIsCommonTour(Integer.parseInt(InitString.next("~")) == 1 ? true
+		setIsCommonTour(Integer.parseInt(InitString.next("~")) == 1 
+				? true
 				: false);
 		setCheckSum(Long.parseLong(InitString.next()));
 	}
