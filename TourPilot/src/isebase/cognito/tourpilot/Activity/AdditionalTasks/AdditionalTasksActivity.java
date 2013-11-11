@@ -19,10 +19,13 @@ import android.widget.ListView;
 
 public class AdditionalTasksActivity extends BaseActivity {
 
-	List<AdditionalTask> listAddTasksTotal;
-	List<AdditionalTask> listAddTasksFilter;
-	List<AdditionalTask> listAddTasksShow;
-	List<AdditionalTask> listAddTasksSelected;
+	List<AdditionalTask> listAddTasks;
+	AddTaskAdapter adapter;
+			
+
+//	List<AdditionalTask> listAddTasksFilter;
+//	List<AdditionalTask> listAddTasksShow;
+//	List<AdditionalTask> listAddTasksSelected;
 
 	ListView lvAddTasks;
 
@@ -32,7 +35,7 @@ public class AdditionalTasksActivity extends BaseActivity {
 		setContentView(R.layout.activity_add_tasks);
 		initComponents();
 		reloadData();
-		InitTable(listAddTasksTotal.size());
+		InitTable(listAddTasks.size());
 		initAddTasksTotalList();
 	}
 
@@ -46,42 +49,40 @@ public class AdditionalTasksActivity extends BaseActivity {
 	private void InitTable(int tableSize) {
 		if (tableSize > 0)
 			return;
-		listAddTasksTotal.clear();
+		listAddTasks.clear();
 		for (int i = 0; i < 20; i++) {
 			AdditionalTask additionaTask = new AdditionalTask();
 			additionaTask.setName("Add task #" + i);
-			listAddTasksTotal.add(additionaTask);
+			listAddTasks.add(additionaTask);
 			// AddTasksManager.Instance().add(new AddTasks("Add Task #" + i));
 		}
-		listAddTasksShow = listAddTasksTotal;
+//		listAddTasksShow = listAddTasksTotal;
 		// reloadData();
 	}
 
 	private void initAddTasksTotalList() {
-		listAddTasksShow = listAddTasksTotal;
-		AddTaskAdapter adapter = new AddTaskAdapter(this,
-				R.layout.row_add_task_template, listAddTasksShow);
+//		listAddTasksShow = listAddTasksTotal;
 		lvAddTasks.setAdapter(adapter);
 	}
 
-	private void InitFilter(String sFilter) {
-		listAddTasksFilter.clear();
-		for (AdditionalTask tempAddTask : listAddTasksTotal)
-			if (tempAddTask.getName().contains(sFilter))
-				listAddTasksFilter.add(tempAddTask);
-		listAddTasksShow = listAddTasksFilter;
-		AddTaskAdapter adapter = new AddTaskAdapter(this,
-				R.layout.row_add_task_template, listAddTasksShow);
-
-		lvAddTasks.setAdapter(adapter);
+	private void FilterAdditionalTasks(String sFilter) {
+//		listAddTasksFilter.clear();
+		for (AdditionalTask tempAddTask : listAddTasks){
+			if (tempAddTask.getName().contains(sFilter)){
+				//	listAddTasksFilter.add(tempAddTask);
+			}
+		}
+//		AddTaskAdapter adapter = new AddTaskAdapter(this,
+//				R.layout.row_add_task_template, listAddTasksShow);
+//		lvAddTasks.setAdapter(adapter);
 	}
 
 	private void reloadData() {
-		listAddTasksTotal = AdditionalTaskManager.Instance().load();
+		listAddTasks = AdditionalTaskManager.Instance().load();
 	}
 
 	public void onSaveAddTasks(View view) {
-		listAddTasksSelected = new ArrayList<AdditionalTask>();
+//		listAddTasksSelected = new ArrayList<AdditionalTask>();
 		// for (AdditionalTask tempTask : listAddTasksShow) {
 		// if (tempTask.getIsChecked())
 		// listAddTasksSelected.add(tempTask);
@@ -91,11 +92,14 @@ public class AdditionalTasksActivity extends BaseActivity {
 
 	public void onSelectAddTask(View view) {
 		AdditionalTask addTask = (AdditionalTask) view.getTag();
+		((AddTaskAdapter)lvAddTasks.getAdapter()).toSelectedAddTasks(addTask);
 		// addTask.setIsChecked(((CheckBox) view).isChecked());
 	}
 
 	private void initComponents() {
-		listAddTasksFilter = new ArrayList<AdditionalTask>();
+//		listAddTasksFilter = new ArrayList<AdditionalTask>();
+		adapter = new AddTaskAdapter(this,R.layout.row_add_task_template, listAddTasks);
+				
 		lvAddTasks = (ListView) findViewById(R.id.lvAddTasks);
 		EditText etFilter = (EditText) findViewById(R.id.etAddTasksFilter);
 		etFilter.addTextChangedListener(new TextWatcher() {
@@ -106,7 +110,7 @@ public class AdditionalTasksActivity extends BaseActivity {
 				if (text.length() == 0)
 					initAddTasksTotalList();
 				else
-					InitFilter(text.toString());
+					FilterAdditionalTasks(text.toString());
 			}
 
 			@Override
