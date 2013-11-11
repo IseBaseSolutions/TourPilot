@@ -3,7 +3,7 @@ package isebase.cognito.tourpilot.Data.Address;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.DataBase.MapField;
 
-public class Address extends BaseObject{
+public class Address {
 
 	public static final String StreetField = "street";
 	public static final String ZipField = "zip";
@@ -14,7 +14,16 @@ public class Address extends BaseObject{
 	private String zip;
 	private String city;
 	private String phone;
+	private int id;
 
+	@MapField(DatabaseField = BaseObject.IDField)
+	public int getId() {
+		return id;}
+		
+	@MapField(DatabaseField = BaseObject.IDField)
+	public void setId(int id) {
+		this.id = id;
+	}
 	
 	@MapField(DatabaseField = StreetField)
 	public String getStreet() {
