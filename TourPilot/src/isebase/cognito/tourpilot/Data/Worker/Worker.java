@@ -74,4 +74,11 @@ public class Worker extends BaseObject {
         return strValue;
     }
 
+    @Override
+    protected void clear() {
+    	super.clear();
+    	isUseGPS = false;
+    	actualDate = new Date();
+    }
+    
 }
