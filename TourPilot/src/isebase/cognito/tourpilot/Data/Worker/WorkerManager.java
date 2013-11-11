@@ -30,8 +30,6 @@ public class WorkerManager extends BaseObjectManager<Worker> {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db) {
-		addColumn(db, Worker.IsUseGPSField, DataBaseWrapper.TYPE_INTEGER);
-		addColumn(db, Worker.ActualDateField, DataBaseWrapper.TYPE_INTEGER);
 	}
 
 	@Override

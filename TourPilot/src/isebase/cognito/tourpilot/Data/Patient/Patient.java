@@ -203,10 +203,10 @@ public class Patient extends BaseObject {
 
 	public Patient(String initString) {
 		NCryptor ncryptor = new NCryptor();
-		initString = initString.substring(0, 2);
 		setIsAdditional(initString.contains("^"));
 		initString = initString.replace("^", "");
 		StringParser parsingString = new StringParser(initString);
+		parsingString.next(";");
 		setId(Integer.parseInt(parsingString.next(";")));
 		setSurname(parsingString.next(";"));
 		setName(parsingString.next(";"));

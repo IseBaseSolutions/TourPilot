@@ -2,7 +2,6 @@ package isebase.cognito.tourpilot.Data.Tour;
 
 import android.database.sqlite.SQLiteDatabase;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
-import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 
 public class TourManager extends BaseObjectManager<Tour> {
 
@@ -29,7 +28,6 @@ public class TourManager extends BaseObjectManager<Tour> {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db) {
-		addColumn(db, Tour.IsCommonTourField, DataBaseWrapper.TYPE_INTEGER);
 	}
 
 }

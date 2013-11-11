@@ -8,7 +8,9 @@ import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import android.telephony.TelephonyManager;
 
 public class Option {
-			
+
+	public static final String TableName = "Options";
+	
 	public static final String WorkerIDField = "worker_id";
 	public static final String TourIDField = "tour_id";
 	public static final String EmploymentIDField = "employment_id";
