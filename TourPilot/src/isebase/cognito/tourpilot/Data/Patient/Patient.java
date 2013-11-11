@@ -13,6 +13,7 @@ public class Patient extends BaseObject {
 	public static final String IsDoneField = "is_done";
 	public static final String IsAdditionalField = "is_additional";
 	public static final String SurnameField = "surname";
+	public static final String AddressIDField = "address_id";
 		
 	public static final String SexField = "sex";
 	public static final String DoctorIDsField = "doctor_ids";
@@ -23,6 +24,9 @@ public class Patient extends BaseObject {
 	public static final String CatalogSATypeField = "catalog_sa_type";
 	public static final String CatalogPRTypeField = "catalog_pr_type";
 
+	public Address address;
+	private int addressID;
+	
 	private String surname;
 	private String sex;
 	private String strDoctorIDs;
@@ -36,9 +40,14 @@ public class Patient extends BaseObject {
 	private int btyp_sa;
 	private int btyp_pr;
 
-	public Patient(String name, boolean isDone) {
-		super(name);
-		this.isDone = isDone;
+	@MapField(DatabaseField = AddressIDField)
+	public int getAddressID() {
+		return addressID;
+	}
+
+	@MapField(DatabaseField = AddressIDField)
+	public void setAddressID(int addressID) {
+		this.addressID = addressID;
 	}
 
 	@MapField(DatabaseField = IsDoneField)
@@ -140,13 +149,16 @@ public class Patient extends BaseObject {
 	public void setPR(int btyp_pr) {
 		this.btyp_pr = btyp_pr;
 	}
-
-	public Address address;
 	
 	public Patient() {
 		clear();
 	}
 
+	public Patient(String name, boolean isDone) {
+		super(name);
+		this.isDone = isDone;
+	}
+	
 	public Patient(String initString) {
 		address = new Address();
 		NCryptor ncryptor = new NCryptor();

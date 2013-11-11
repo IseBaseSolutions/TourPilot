@@ -11,27 +11,24 @@ public class Relative extends BaseObject {
 
 	public static final String SurnameField = "surname";
 	public static final String ShipField = "ship";
+	public static final String AddressIDField = "address_id";
+	
+	public Address address;
+	private int addressID;
 	
 	private String surname;
 	private String ship;
 
-	public Address address;
-	
-	public Relative(String initString) {
-		address = new Address();
-		StringParser parsingString = new StringParser(initString);
-		parsingString.next(";");
-		setId(Integer.parseInt(parsingString.next(";")));
-		setSurname(parsingString.next(";"));
-		setName(parsingString.next(";"));
-		address.setStreet(parsingString.next(";"));
-		address.setZip(parsingString.next(";"));
-		address.setCity(parsingString.next(";"));
-		address.setPhone(parsingString.next(";"));
-		setShip(parsingString.next("~"));
-		setCheckSum(Long.parseLong(parsingString.next()));
+	@MapField(DatabaseField = AddressIDField)
+	public int getAddressID() {
+		return addressID;
 	}
 
+	@MapField(DatabaseField = AddressIDField)
+	public void setAddressID(int addressID) {
+		this.addressID = addressID;
+	}
+	
 	@MapField(DatabaseField = SurnameField)
 	public String getSurname() {
 		return surname;
@@ -50,6 +47,21 @@ public class Relative extends BaseObject {
 	@MapField(DatabaseField = ShipField)
 	public void setShip(String ship) {
 		this.ship = ship;
+	}
+	
+	public Relative(String initString) {
+		address = new Address();
+		StringParser parsingString = new StringParser(initString);
+		parsingString.next(";");
+		setId(Integer.parseInt(parsingString.next(";")));
+		setSurname(parsingString.next(";"));
+		setName(parsingString.next(";"));
+		address.setStreet(parsingString.next(";"));
+		address.setZip(parsingString.next(";"));
+		address.setCity(parsingString.next(";"));
+		address.setPhone(parsingString.next(";"));
+		setShip(parsingString.next("~"));
+		setCheckSum(Long.parseLong(parsingString.next()));
 	}
 
 	public String getFullName() {

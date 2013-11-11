@@ -65,12 +65,6 @@ public class Worker extends BaseObject {
         setActualDate(_actualDate);
     }
     
-    @Override
-    public String toString()
-    {
-        return getName();
-    }
-
     public String forServer()
     {
         NCryptor nCryptor = new NCryptor();

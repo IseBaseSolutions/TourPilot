@@ -37,11 +37,6 @@ public class Tour extends BaseObject {
 		setCheckSum(Long.parseLong(InitString.next()));
 	}
 
-	@Override
-	public String toString() {
-		return getName();
-	}
-
 	public String forServer() {
 		NCryptor ncryptor = new NCryptor();
 		String strValue = new String(ServerCommandParser.TOUR + ";");

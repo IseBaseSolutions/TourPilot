@@ -10,7 +10,21 @@ import isebase.cognito.tourpilot.Utils.StringParser;
 public class Doctor extends BaseObject {
 
 	public static final String SurnameField = "surname";
+	public static final String AddressIDField = "address_id";
 	
+	public Address address;
+	private int addressID;
+
+	@MapField(DatabaseField = AddressIDField)
+	public int getAddressID() {
+		return addressID;
+	}
+
+	@MapField(DatabaseField = AddressIDField)
+	public void setAddressID(int addressID) {
+		this.addressID = addressID;
+	}
+
 	private String surname;
 	
 	@MapField(DatabaseField = SurnameField)
@@ -22,8 +36,6 @@ public class Doctor extends BaseObject {
 	public void setSurname(String surname) {
 		this.surname = surname;
 	}
-		
-	public Address address;
 
 	public Doctor(String initString) {
 		address = new Address();

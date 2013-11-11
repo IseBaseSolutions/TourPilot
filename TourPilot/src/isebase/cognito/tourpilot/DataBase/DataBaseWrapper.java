@@ -3,11 +3,20 @@ package isebase.cognito.tourpilot.DataBase;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWorkManager;
+import isebase.cognito.tourpilot.Data.Address.Address;
+import isebase.cognito.tourpilot.Data.Address.AddressManager;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Diagnose.DiagnoseManager;
+import isebase.cognito.tourpilot.Data.Doctor.Doctor;
+import isebase.cognito.tourpilot.Data.Doctor.DoctorManager;
+import isebase.cognito.tourpilot.Data.Information.Information;
+import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
+import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemarkManager;
+import isebase.cognito.tourpilot.Data.Relative.Relative;
+import isebase.cognito.tourpilot.Data.Relative.RelativeManager;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
@@ -68,7 +77,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ BaseObject.WasSentField + " INTEGER, "
 			+ BaseObject.IsServerTimeField + " INTEGER, "
 			+ Patient.AddressField + " TEXT, "
-			+ Patient.IsDoneField + " INTEGER NOT NULL DEFAULT 0 "
+			+ Patient.IsDoneField + " INTEGER NOT NULL DEFAULT 0, "
+			+ Patient.AddressField + " INTEGER "
 			+ ");";
 
 	private static final String OPTIONS_TABLE_CREATE = "CREATE TABLE " 
@@ -84,7 +94,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	private static final String TASKS_TABLE_CREATE = "CREATE TABLE "
 			+ TaskManager.TableName + "("
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ BaseObject.NameField + " TEXT NOT NULL, "
+			+ BaseObject.NameField + " TEXT, "
 			+ BaseObject.CheckSumField + " INTEGER, "
 			+ Task.StateField + " INTEGER NOT NULL DEFAULT 0 "
 			+ ");";
@@ -92,25 +102,85 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	private static final String ADDITIONAL_TASKS_TABLE_CREATE = "CREATE TABLE "
 			+ AdditionalTaskManager.TableName + "("
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ BaseObject.NameField + " TEXT NOT NULL, "
+			+ BaseObject.NameField + " TEXT, "
+			+ BaseObject.WasSentField + " INTEGER, "
+			+ BaseObject.IsServerTimeField + " INTEGER, "
 			+ BaseObject.CheckSumField + " INTEGER, "
 			+ AdditionalTask.CatalogTypeField + " INTEGER, "
 			+ AdditionalTask.QualityField + " INTEGER "
 			+ ");";
-
 	
-	public static final String ADDITIONAL_WORKS_TABLE_CREATE = "CREATE TABLE"
+	public static final String ADDITIONAL_WORKS_TABLE_CREATE = "CREATE TABLE "
 			+ AdditionalWorkManager.TableName + "("
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ BaseObject.NameField + " TEXT NOT NULL, "
-			+ BaseObject.CheckSumField + " INTEGER, "
+			+ BaseObject.WasSentField + " INTEGER, "
+			+ BaseObject.IsServerTimeField + " INTEGER, "
+			+ BaseObject.NameField + " TEXT, "
+			+ BaseObject.CheckSumField + " INTEGER "
 			+ ");";
 
-	public static final String DIAGNOSES_TABLE_CREATE = "CREATE TABLE"
+	public static final String DIAGNOSES_TABLE_CREATE = "CREATE TABLE "
 			+ DiagnoseManager.TableName + "("
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+			+ BaseObject.WasSentField + " INTEGER, "
+			+ BaseObject.IsServerTimeField + " INTEGER, "
+			+ BaseObject.NameField + " TEXT, "
+			+ BaseObject.CheckSumField + " INTEGER "
+			+ ");";
+	
+	public static final String ADDRESS_TABLE_CREATE = "CREATE TABLE "
+			+ AddressManager.TableName + "("
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+			+ Address.StreetField + " TEXT, "
+			+ Address.ZipField + " TEXT, "
+			+ Address.CityField + " TEXT, "
+			+ Address.PhoneField + " TEXT "
+			+ ");";
+	
+	private static final String DOCTORS_TABLE_CREATE = "CREATE TABLE "
+			+ DoctorManager.TableName + "(" 
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
 			+ BaseObject.NameField + " TEXT NOT NULL, "
 			+ BaseObject.CheckSumField + " INTEGER, "
+			+ BaseObject.WasSentField + " INTEGER, "
+			+ BaseObject.IsServerTimeField + " INTEGER, "
+			+ Doctor.SurnameField + " TEXT, "  
+			+ Doctor.AddressIDField + " INTEGER "
+			+ ");";
+
+	private static final String INFORMATIONS_TABLE_CREATE = "CREATE TABLE "
+			+ InformationManager.TableName + "(" 
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
+			+ BaseObject.NameField + " TEXT NOT NULL, "
+			+ BaseObject.CheckSumField + " INTEGER, "
+			+ BaseObject.WasSentField + " INTEGER, "
+			+ BaseObject.IsServerTimeField + " INTEGER, "
+			+ Information.EmploymentCodeField + " INTEGER, "  
+			+ Information.FromDateField + " INTEGER, "  
+			+ Information.TilldateField + " INTEGER, "  
+			+ Information.ReadTimeField + " INTEGER, "  
+			+ Information.IsFromServerField + " INTEGER "  
+			+ ");";
+	
+	private static final String PATIENTS_REMARK_TABLE_CREATE = "CREATE TABLE "
+			+ PatientRemarkManager.TableName + "(" 
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
+			+ BaseObject.NameField + " TEXT NOT NULL, "
+			+ BaseObject.CheckSumField + " INTEGER, "
+			+ BaseObject.WasSentField + " INTEGER, "
+			+ BaseObject.IsServerTimeField + " INTEGER "
+			+ ");";
+	
+	private static final String RELATIVES_TABLE_CREATE = "CREATE TABLE "
+			+ RelativeManager.TableName + "(" 
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
+			+ BaseObject.NameField + " TEXT NOT NULL, "
+			+ BaseObject.CheckSumField + " INTEGER, "
+			+ BaseObject.WasSentField + " INTEGER, "
+			+ BaseObject.IsServerTimeField + " INTEGER, "
+			+ Relative.SurnameField + " TEXT, "
+			+ Relative.ShipField + " TEXT, "
+			+ Relative.AddressIDField + " INTEGER "
 			+ ");";
 	
 	public DataBaseWrapper(Context context) {
@@ -135,7 +205,13 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			db.execSQL(OPTIONS_TABLE_CREATE);
 			db.execSQL(TASKS_TABLE_CREATE);
 			db.execSQL(ADDITIONAL_TASKS_TABLE_CREATE);	
-
+			db.execSQL(ADDITIONAL_WORKS_TABLE_CREATE);
+			db.execSQL(DIAGNOSES_TABLE_CREATE);
+			db.execSQL(ADDRESS_TABLE_CREATE);
+			db.execSQL(DOCTORS_TABLE_CREATE);
+			db.execSQL(INFORMATIONS_TABLE_CREATE);
+			db.execSQL(PATIENTS_REMARK_TABLE_CREATE);
+			db.execSQL(RELATIVES_TABLE_CREATE);
 		}
 		catch(Exception ex){
 			

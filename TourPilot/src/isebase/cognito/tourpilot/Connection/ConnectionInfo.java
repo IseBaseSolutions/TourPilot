@@ -7,7 +7,7 @@ import android.net.NetworkInfo;
 
 public class ConnectionInfo {
 
-	ConnectivityManager connMgr;
+	private ConnectivityManager connMgr;
 	
 	private static ConnectionInfo instance;
 	

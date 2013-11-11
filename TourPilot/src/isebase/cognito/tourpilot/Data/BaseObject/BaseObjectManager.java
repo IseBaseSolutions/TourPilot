@@ -2,6 +2,7 @@ package isebase.cognito.tourpilot.Data.BaseObject;
 
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.DataBase.MapField;
+import isebase.cognito.tourpilot.Utils.Utilizer;
 
 import java.lang.reflect.Method;
 import java.sql.Blob;
@@ -62,6 +63,41 @@ public abstract class BaseObjectManager<T> {
 		}
 	}
 
+	public List<T> loadByIDs(int[] ids){
+		return loadByIDs(Utilizer.getIDsString(ids));
+	}
+	
+	public List<T> loadByIDs(String ids){
+		List<T> items = new ArrayList<T>();
+		if(ids == "")
+			return items;
+		Cursor cursor = null;
+		try {
+			cursor = DataBaseWrapper
+					.Instance()
+					.getReadableDatabase()
+					.query(getRecTableName(), TABLE_COLUMNS
+							, BaseObject.IDField + " IN(" + ids +") "
+							, null
+							, null
+							, null
+							, null);
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				T object = parseObject(cursor);
+				items.add(object);
+				cursor.moveToNext();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (cursor != null)
+				cursor.close();
+			close();
+		}
+		return items;
+	}
+	
 	public List<T> load(String whereField, String whereClouse) {
 		List<T> items = new ArrayList<T>();
 		Cursor cursor = null;
@@ -88,6 +124,8 @@ public abstract class BaseObjectManager<T> {
 		return items;
 	}
 
+	public void afterSave(T item){}
+	
 	public void save(List<T> items) {
 		for (T item : items)
 			save(item);
@@ -109,13 +147,14 @@ public abstract class BaseObjectManager<T> {
 						.update(getRecTableName(), getValues(item),
 								BaseObject.IDField + " = " + id, null);
 			}
+			afterSave(item);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			close();
 		}
 	}
-
+	
 	public List<T> loadAll() {
 		List<T> items = load();
 		afterLoad(items);

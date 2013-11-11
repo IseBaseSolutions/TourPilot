@@ -7,6 +7,17 @@ public class AddressManager extends BaseObjectManager<Address>{
 
 	public static final String TableName = "Address";
 	
+	private static AddressManager instance;
+
+	public static AddressManager Instance() {
+		if (instance != null)
+			return instance;
+		instance = new AddressManager();
+		instance.open();
+		return instance;
+	}
+	
+	
 	public AddressManager() {
 		super(Address.class);
 	}
