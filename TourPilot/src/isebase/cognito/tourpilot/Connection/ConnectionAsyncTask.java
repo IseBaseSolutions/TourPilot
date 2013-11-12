@@ -11,7 +11,6 @@ import java.net.Socket;
 import java.util.Date;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import java.util.zip.Inflater;
 
 import android.os.AsyncTask;
 
@@ -27,7 +26,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 	protected void onPostExecute(Void result) {
 		if (!conStatus.lastExecuteOK || conStatus.isFinished) {
 			if (!conStatus.lastExecuteOK) {
-				conStatus.UISynchHandler.onItemSynchronized(conStatus.getMessage());
+				conStatus.UISynchHandler.onSynchronizedFinished(false,conStatus.getMessage());
 				closeConnection();
 			}
 			conStatus.UISynchHandler.onSynchronizedFinished(
