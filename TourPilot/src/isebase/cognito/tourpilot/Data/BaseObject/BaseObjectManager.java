@@ -137,7 +137,10 @@ public abstract class BaseObjectManager<T> {
 			if (id == BaseObject.EMPTY_ID || load(id) == null) {
 				int itemID = (int) DataBaseWrapper.Instance()
 						.getReadableDatabase()
-						.insert(getRecTableName(), null, getValues(item));
+						.insert(getRecTableName(), null
+								, id == BaseObject.EMPTY_ID 
+									? getValues(item)
+									: getValuesWithID(item));
 				item.getClass().getMethod("setId", int.class)
 						.invoke(item, (int) itemID);
 			} else {
@@ -279,7 +282,15 @@ public abstract class BaseObjectManager<T> {
 		TABLE_COLUMNS = list.toArray(new String[list.size()]);
 	}
 
+	private ContentValues getValuesWithID(T item){
+		return getValues(item, true);		
+	}
+	
 	private ContentValues getValues(T item) {
+		return getValues(item, false);
+	}
+	
+	private ContentValues getValues(T item, boolean withID){
 		ContentValues values = new ContentValues();
 		for (Method method : item.getClass().getMethods()) {
 			try {
@@ -287,10 +298,16 @@ public abstract class BaseObjectManager<T> {
 				continue;
 			MapField annos = method.getAnnotation(MapField.class);
 			if (annos == null)
-				continue;
-			if (method.getReturnType().equals(int.class) && annos.DatabaseField() != BaseObject.IDField)
-				values.put(annos.DatabaseField(), Integer
-						.parseInt(method.invoke(item).toString()));
+				continue;			
+			if (method.getReturnType().equals(int.class)) {
+				if(annos.DatabaseField() == BaseObject.IDField
+						&& !withID){
+					
+				}else{
+					values.put(annos.DatabaseField(), Integer
+							.parseInt(method.invoke(item).toString()));	
+				}			
+			}
 			else if (method.getReturnType().equals(String.class))
 				values.put(annos.DatabaseField(),
 						(String) method.invoke(item));
@@ -322,7 +339,7 @@ public abstract class BaseObjectManager<T> {
 		}
 		return values;
 	}
-
+	
 	public abstract void onUpgrade(SQLiteDatabase db);
 
 	protected void addColumn(SQLiteDatabase db, String colName, String colType) {
