@@ -209,6 +209,8 @@ public abstract class BaseObjectManager<T> {
 							BaseObject.IDField + " = " + id, null, null, null,
 							null);
 			cursor.moveToFirst();
+			if(cursor.getCount() == 0)
+				return null;
 			item = parseObject(cursor);
 		} catch (Exception e) {
 			e.printStackTrace();

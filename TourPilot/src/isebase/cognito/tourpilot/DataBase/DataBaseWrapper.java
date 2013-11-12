@@ -198,19 +198,23 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		try{
-			db.execSQL(WORKERS_TABLE_CREATE);
-			db.execSQL(TOURS_TABLE_CREATE);
-			db.execSQL(PATIENTS_TABLE_CREATE);
-			db.execSQL(OPTIONS_TABLE_CREATE);
-			db.execSQL(TASKS_TABLE_CREATE);
-			db.execSQL(ADDITIONAL_TASKS_TABLE_CREATE);	
-			db.execSQL(ADDITIONAL_WORKS_TABLE_CREATE);
-			db.execSQL(DIAGNOSES_TABLE_CREATE);
-			db.execSQL(ADDRESS_TABLE_CREATE);
-			db.execSQL(DOCTORS_TABLE_CREATE);
-			db.execSQL(INFORMATIONS_TABLE_CREATE);
-			db.execSQL(PATIENTS_REMARK_TABLE_CREATE);
-			db.execSQL(RELATIVES_TABLE_CREATE);
+			try {
+				db.execSQL(WORKERS_TABLE_CREATE);
+				db.execSQL(TOURS_TABLE_CREATE);
+				db.execSQL(PATIENTS_TABLE_CREATE);
+				db.execSQL(OPTIONS_TABLE_CREATE);
+				db.execSQL(TASKS_TABLE_CREATE);
+				db.execSQL(ADDITIONAL_TASKS_TABLE_CREATE);	
+				db.execSQL(ADDITIONAL_WORKS_TABLE_CREATE);
+				db.execSQL(DIAGNOSES_TABLE_CREATE);
+				db.execSQL(ADDRESS_TABLE_CREATE);
+				db.execSQL(DOCTORS_TABLE_CREATE);
+				db.execSQL(INFORMATIONS_TABLE_CREATE);
+				db.execSQL(PATIENTS_REMARK_TABLE_CREATE);
+				db.execSQL(RELATIVES_TABLE_CREATE);
+			} catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 		catch(Exception ex){
 			ex.printStackTrace();
