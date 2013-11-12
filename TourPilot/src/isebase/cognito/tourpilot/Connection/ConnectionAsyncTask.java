@@ -1,7 +1,18 @@
 package isebase.cognito.tourpilot.Connection;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
+import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWorkManager;
+import isebase.cognito.tourpilot.Data.Diagnose.DiagnoseManager;
+import isebase.cognito.tourpilot.Data.Doctor.DoctorManager;
+import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Data.Patient.PatientManager;
+import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemarkManager;
+import isebase.cognito.tourpilot.Data.Relative.RelativeManager;
+import isebase.cognito.tourpilot.Data.Task.TaskManager;
+import isebase.cognito.tourpilot.Data.Tour.TourManager;
+import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
 import java.io.IOException;
@@ -26,7 +37,8 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 	protected void onPostExecute(Void result) {
 		if (!conStatus.lastExecuteOK || conStatus.isFinished) {
 			if (!conStatus.lastExecuteOK) {
-				conStatus.UISynchHandler.onSynchronizedFinished(false,conStatus.getMessage());
+				conStatus.UISynchHandler.onSynchronizedFinished(false,
+						conStatus.getMessage());
 				closeConnection();
 			}
 			conStatus.UISynchHandler.onSynchronizedFinished(
@@ -216,7 +228,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 		}
 		return retVal;
 	}
-	
+
 	private boolean closeConnection() {
 		boolean retVal = true;
 		try {
@@ -319,95 +331,69 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 
 	private String getStrChecksums() {
 		String strMsg = "";
-		strMsg += "z" + /* CAddTasks.Instance().Checksum() */0 + "\0.\0";
-		strMsg += "a" + /* CUsers.Instance().Checksum() */0 + "\0.\0";
-		boolean userPresent = Option.Instance().getWorkerID() != -1;
-		strMsg += "d"
-				+ (userPresent ? /* CDiagnoses.Instance().Checksum() */0 : 0)
-				+ "\0.\0";
-		strMsg += "b"
-				+ (userPresent ? /* CPatientRemarks.Instance().Checksum() */0
-						: 0) + "\0.\0";
-		strMsg += "v"
-				+ (userPresent ? /* CRelatives.Instance().Checksum() */0 : 0)
-				+ "\0.\0";
-		strMsg += "m"
-				+ (userPresent ? /* CDoctors.Instance().Checksum() */0 : 0)
-				+ "\0.\0";
-		strMsg += "p"
-				+ (userPresent ? /* CPatients.Instance().Checksum() */0 : 0)
-				+ "\0.\0";
-		strMsg += "i"
-				+ (userPresent ? /* CInformations.Instance().Checksum() */0 : 0)
-				+ "\0.\0";
-		strMsg += "r"
-				+ (userPresent ? /* CTours.Instance().Checksum() */0 : 0)
-				+ "\0.\0";
-		strMsg += "t"
-				+ (userPresent ? /* CEmployments.Instance().Checksum() */0 : 0)
-				+ "\0.\0";
-		strMsg += "u" + /* CAddWorks.Instance().Checksum() */0 + "\0.\0";
-		strMsg += "q" + /* CQuestions.Instance().Checksum() */0 + "\0.\0";
-		strMsg += "y" + /* CTopics.Instance().Checksum() */0 + "\0.\0";
-		strMsg += "j" + /* CLinks.Instance().Checksum() */0 + "\0.\0";
-		strMsg += "x" + (userPresent ? /*
-										 * CQuestionSettings.Instance().Checksum(
-										 * )
-										 */0 : 0) + "\0.\0";
-
-		strMsg += ">" + /* CFreeQuestions.Instance().Checksum() */0 + "\0.\0";
-		strMsg += "<" + /* CFreeTopics.Instance().Checksum() */0 + "\0.\0";
-		strMsg += "*" + (userPresent ? /*
-										 * CFreeQuestionSettings.Instance()
-										 * .Checksum()
-										 */0 : 0) + "\0.\0";
-		strMsg += "^" + (userPresent ? /*
-										 * CAutoQuestionSettings.Instance()
-										 * .Checksum()
-										 */0 : 0) + "\0.\0";
+		strMsg += "z" + AdditionalTaskManager.Instance().getCheckSums() + "\0.\0";
+		strMsg += "a" + WorkerManager.Instance().getCheckSums() + "\0.\0";
+		strMsg += "u" + AdditionalWorkManager.Instance().getCheckSums() + "\0.\0";
+//		strMsg += "q" + CQuestions.Instance().getCheckSums() + "\0.\0";
+//		strMsg += "y" + CTopics.Instance().getCheckSums() + "\0.\0";
+//		strMsg += "j" + CLinks.Instance().getCheckSums() + "\0.\0";
+//		strMsg += ">" + CFreeQuestions.Instance().getCheckSums() + "\0.\0";
+//		strMsg += "<" + CFreeTopics.Instance().getCheckSums() + "\0.\0";
+		boolean userIsPresent = Option.Instance().getWorkerID() != -1;
+		strMsg += "d" + (userIsPresent ? DiagnoseManager.Instance().getCheckSums() : 0) + "\0.\0";
+		strMsg += "b" + (userIsPresent ? PatientRemarkManager.Instance().getCheckSums() : 0) + "\0.\0";
+		strMsg += "v" + (userIsPresent ? RelativeManager.Instance().getCheckSums() : 0) + "\0.\0";
+		strMsg += "m" + (userIsPresent ? DoctorManager.Instance().getCheckSums() : 0) + "\0.\0";
+		strMsg += "p" + (userIsPresent ? PatientManager.Instance().getCheckSums() : 0) + "\0.\0";
+		strMsg += "i" + (userIsPresent ? InformationManager.Instance().getCheckSums() : 0) + "\0.\0";
+		strMsg += "r" + (userIsPresent ? TourManager.Instance().getCheckSums() : 0) + "\0.\0";
+		strMsg += "t" + (userIsPresent ? PatientManager.Instance().getCheckSums() : 0) + "\0.\0";
+//		strMsg += "x" + (userIsPresent ? CQuestionSettings.Instance().getCheckSums() : 0) + "\0.\0";
+//		strMsg += "*" + (userIsPresent ? CFreeQuestionSettings.Instance().getCheckSums() : 0) + "\0.\0";
+//		strMsg += "^" + (userIsPresent ? CAutoQuestionSettings.Instance().getCheckSums() : 0) + "\0.\0";
 		return strMsg;
 	}
 
 	private String get_SRV_msgStoredData(String strNeedSend) {
 		String strMsg = "";
-		if (strNeedSend.length() > 18 && strNeedSend.charAt(18) == '1')
-			strMsg += /* CAutoQuestionSettings.Instance().forServer() */"."+'\0';
-		if (strNeedSend.length() > 17 && strNeedSend.charAt(17) == '1')
-			strMsg += /* CFreeQuestionSettings.Instance().forServer() */"."+'\0';
-		if (strNeedSend.length() > 16 && strNeedSend.charAt(16) == '1')
-			strMsg += /* CFreeTopics.Instance().forServer() */"."+'\0';
-		if (strNeedSend.length() > 15 && strNeedSend.charAt(15) == '1')
-			strMsg += /* CFreeQuestions.Instance().forServer() */"."+'\0';
-		if (strNeedSend.length() > 14 && strNeedSend.charAt(14) == '1')
-			strMsg += /* CQuestionSettings.Instance().forServer() */"."+'\0';
-		if (strNeedSend.length() > 13 && strNeedSend.charAt(13) == '1')
-			strMsg += /* CLinks.Instance().forServer() */"."+'\0';
-		if (strNeedSend.length() > 12 && strNeedSend.charAt(12) == '1')
-			strMsg += /* CTopics.Instance().forServer() */"."+'\0';
-		if (strNeedSend.length() > 11 && strNeedSend.charAt(11) == '1')
-			strMsg += /* CQuestions.Instance().forServer() */"."+'\0';
+//		if (strNeedSend.length() > 18 && strNeedSend.charAt(18) == '1')
+//			strMsg += CAutoQuestionSettings.Instance().forServer();
+//		if (strNeedSend.length() > 17 && strNeedSend.charAt(17) == '1')
+//			strMsg += CFreeQuestionSettings.Instance().forServer();
+//		if (strNeedSend.length() > 16 && strNeedSend.charAt(16) == '1')
+//			strMsg += CFreeTopics.Instance().forServer();
+//		if (strNeedSend.length() > 15 && strNeedSend.charAt(15) == '1')
+//			strMsg += CFreeQuestions.Instance().forServer();
+//		if (strNeedSend.length() > 14 && strNeedSend.charAt(14) == '1')
+//			strMsg += CQuestionSettings.Instance().forServer();
+//		if (strNeedSend.length() > 13 && strNeedSend.charAt(13) == '1')
+//			strMsg += CLinks.Instance().forServer();
+//		if (strNeedSend.length() > 12 && strNeedSend.charAt(12) == '1')
+//			strMsg += CTopics.Instance().forServer();
+//		if (strNeedSend.length() > 11 && strNeedSend.charAt(11) == '1')
+//			strMsg += CQuestions.Instance().forServer();
 		if (strNeedSend.length() > 10 && strNeedSend.charAt(10) == '1')
-			strMsg += /* CTasks.Instance().forServer() */"."+'\0';
+			strMsg += TaskManager.Instance().forServer();
 		if (strNeedSend.length() > 9 && strNeedSend.charAt(9) == '1')
-			strMsg += /* CAddWorks.Instance().forServer() */"."+'\0';
+			strMsg += AdditionalWorkManager.Instance().forServer();
 		if (strNeedSend.length() > 8 && strNeedSend.charAt(8) == '1')
-			strMsg += /* CTours.Instance().forServer() */"."+'\0';
-		if (strNeedSend.length() > 7 && strNeedSend.charAt(7) == '1') // Informations
-			strMsg += /* CInformations.Instance().forServer() */"."+'\0';
-		if (strNeedSend.length() > 6 && strNeedSend.charAt(6) == '1') // patient remarks
-			strMsg += /* CPatientRemarks.Instance().forServer() */"."+'\0';
-		if (strNeedSend.length() > 5 && strNeedSend.charAt(5) == '1') // patients
-			strMsg += /* CPatients.Instance().forServer() */"."+'\0';
-		if (strNeedSend.length() > 4 && strNeedSend.charAt(4) == '1') // doctors
-			strMsg += /* CDoctors.Instance().forServer() */"."+'\0';
-		if (strNeedSend.length() > 3 && strNeedSend.charAt(3) == '1') // relatives
-			strMsg += /* CRelatives.Instance().forServer() */"."+'\0';
-		if (strNeedSend.length() > 2 && strNeedSend.charAt(2) == '1') // diagnoses
-			strMsg += /* CDiagnoses.Instance().forServer() */"."+'\0';
-		if (strNeedSend.length() > 1 && strNeedSend.charAt(1) == '1') // users
-			strMsg += /* CUsers.Instance().forServer() */"."+'\0';
-		if (strNeedSend.length() > 0 && strNeedSend.charAt(0) == '1') // add tasks
-			strMsg += /* CAddTasks.Instance().forServer() */"."+'\0';
+			strMsg += TourManager.Instance().forServer();
+		if (strNeedSend.length() > 7 && strNeedSend.charAt(7) == '1')
+			strMsg += InformationManager.Instance().forServer();
+		if (strNeedSend.length() > 6 && strNeedSend.charAt(6) == '1')
+			strMsg += PatientRemarkManager.Instance().forServer();
+		if (strNeedSend.length() > 5 && strNeedSend.charAt(5) == '1')
+			strMsg += PatientManager.Instance().forServer();
+		if (strNeedSend.length() > 4 && strNeedSend.charAt(4) == '1')
+			strMsg += DoctorManager.Instance().forServer();
+		if (strNeedSend.length() > 3 && strNeedSend.charAt(3) == '1')
+			strMsg += RelativeManager.Instance().forServer();
+		if (strNeedSend.length() > 2 && strNeedSend.charAt(2) == '1')
+			strMsg += DiagnoseManager.Instance().forServer();
+		if (strNeedSend.length() > 1 && strNeedSend.charAt(1) == '1')
+			strMsg += WorkerManager.Instance().forServer();
+		if (strNeedSend.length() > 0 && strNeedSend.charAt(0) == '1')
+			strMsg += AdditionalTaskManager.Instance().forServer();
 		if (strNeedSend.indexOf("1") == -1)
 			strMsg += ".";
 		return strMsg;
@@ -435,9 +421,9 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 
 		StringBuffer stringBuffer = new StringBuffer();
 		GZIPInputStream zis = new GZIPInputStream(is);
-		
+
 		while (zis.available() != 0)
-			stringBuffer.append((char)zis.read());
+			stringBuffer.append((char) zis.read());
 		return stringBuffer.toString();
 	}
 

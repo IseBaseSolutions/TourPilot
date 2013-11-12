@@ -179,6 +179,7 @@ public class Task extends BaseObject {
 		setIsAdditionalTask(false);
 	}
 
+	@Override
 	public String forServer() {
 		if (getWasSent())
 			return new String();

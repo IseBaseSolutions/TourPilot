@@ -1,5 +1,6 @@
 package isebase.cognito.tourpilot.Data.BaseObject;
 
+import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.Utilizer;
@@ -354,4 +355,29 @@ public abstract class BaseObjectManager<T> {
 				tableInfo.close();
 		}
 	}
+	
+    public long getCheckSums()
+    {
+        long lngChecksum = 0;
+        List<T> elements = load();
+        for (T element : elements)
+            if (!(element instanceof Patient && ((Patient) element).getIsAdditional()))
+                lngChecksum += ((BaseObject)element).getCheckSum();
+        return lngChecksum;
+    }
+    
+    public String forServer()
+    {
+        String strResult = new String();
+        List<T> elements = load();
+        for (T element : elements)
+        {
+            String forServer = ((BaseObject)element).forServer();
+            if (forServer.length() > 0)
+                strResult += forServer + "\0";
+        }
+        strResult += ".\0";
+        return strResult;
+    } 
+	
 }

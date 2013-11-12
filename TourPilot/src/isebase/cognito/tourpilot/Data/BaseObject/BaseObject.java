@@ -93,4 +93,7 @@ public abstract class BaseObject {
 		wasSent = false;
 		isServerTime = false;
 	}
+	
+	public abstract String forServer();
+	
 }

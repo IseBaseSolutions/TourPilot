@@ -189,6 +189,7 @@ public class Patient extends BaseObject {
 		return String.format("%s %s", getSurname(), getName());
 	}
 
+	@Override
 	public String forServer() {
 		if (getIsAdditional())
 			return "";

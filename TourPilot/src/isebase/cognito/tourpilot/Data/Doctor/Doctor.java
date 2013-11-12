@@ -64,6 +64,7 @@ public class Doctor extends BaseObject {
 		return getFullName();
 	}
 
+	@Override
 	public String forServer() {
 		NCryptor ncryptor = new NCryptor();
 		String strValue = new String(ServerCommandParser.DOCTOR + ";");
