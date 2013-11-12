@@ -53,11 +53,12 @@ public class WorkersActivity extends FragmentActivity implements
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
+				selectedWorker = (Worker) listView.getItemAtPosition(position);
 				if (Option.testMode) {
-					switchToTours();
+					saveWorker();
+					startWorkerSync();
 					return;
 				}
-				selectedWorker = (Worker) listView.getItemAtPosition(position);
 				showDialogPin();
 			}
 		});
@@ -69,10 +70,10 @@ public class WorkersActivity extends FragmentActivity implements
 		startActivity(optionsActivity);
 	}
 
-	public void switchToTours() {
-		Intent toursActivity = new Intent(getApplicationContext(),
-				ToursActivity.class);
-		startActivity(toursActivity);
+	public void startWorkerSync() {
+		Intent synchActivity = new Intent(getApplicationContext(),
+				SynchronizationActivity.class);
+		startActivity(synchActivity);
 	}
 
 	public void reloadData() {
@@ -113,14 +114,18 @@ public class WorkersActivity extends FragmentActivity implements
 		String pinStr = dialogPin.etPin.getText().toString();
 		if (!checkWorkerPIN(name, pinStr))
 			return;
-		Option.Instance().setWorkerID(selectedWorker.getId());
-		Option.Instance().save();
-		switchToTours();
+		saveWorker();
+		startWorkerSync();
 	}
 
 	@Override
 	public void onDialogNegativeClick(DialogFragment dialog) {
 		return;
+	}
+	
+	private void saveWorker() {
+		Option.Instance().setWorkerID(selectedWorker.getId());
+		Option.Instance().save();
 	}
 
 }

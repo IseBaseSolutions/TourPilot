@@ -77,7 +77,6 @@ public class OptionsActivity extends BaseActivity {
 		Intent synchActivity = new Intent(getApplicationContext(),
 				SynchronizationActivity.class);
 		startActivity(synchActivity);
-
 	}
 
 	private void initOptions() {

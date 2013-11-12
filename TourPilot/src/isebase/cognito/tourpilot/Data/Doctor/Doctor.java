@@ -52,7 +52,7 @@ public class Doctor extends BaseObject {
 		address.setZip(parsingString.next(";"));
 		address.setCity(parsingString.next(";"));
 		address.setPhone(parsingString.next("~"));
-		setCheckSum(Long.parseLong(parsingString.next(";")));
+		setCheckSum(Long.parseLong(parsingString.next()));
 	}
 	
 	public String getFullName() {

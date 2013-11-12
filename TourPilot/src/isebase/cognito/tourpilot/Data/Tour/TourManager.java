@@ -2,6 +2,9 @@ package isebase.cognito.tourpilot.Data.Tour;
 
 import android.database.sqlite.SQLiteDatabase;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
+import isebase.cognito.tourpilot.Data.Patient.Patient;
+import isebase.cognito.tourpilot.Data.Patient.PatientManager;
+import isebase.cognito.tourpilot.Data.Worker.Worker;
 
 public class TourManager extends BaseObjectManager<Tour> {
 
@@ -28,6 +31,11 @@ public class TourManager extends BaseObjectManager<Tour> {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db) {
+	}
+	
+	@Override
+	public void afterLoad(Tour tour) {
+		//tour.patients = PatientManager.Instance().load();
 	}
 
 }

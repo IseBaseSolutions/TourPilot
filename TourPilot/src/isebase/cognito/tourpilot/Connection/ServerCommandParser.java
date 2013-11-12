@@ -23,7 +23,6 @@ import isebase.cognito.tourpilot.Data.Tour.TourManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
-import isebase.cognito.tourpilot.Utils.StringParser;
 
 public class ServerCommandParser {
 
@@ -72,7 +71,7 @@ public class ServerCommandParser {
 		char commandActionType = END_OF_COMMAND;
 		char commandType = commandLine.charAt(0);
 
-		boolean blnRes = true; // Andrew
+		boolean blnRes = true;
 		if (commandLine.length() > 1)
 			commandActionType = commandLine.charAt(1);
 		if (commandLine.equals(END)) // pos_start = strData.length();
@@ -206,6 +205,7 @@ public class ServerCommandParser {
 			} else {
 				TaskManager.Instance().delete(getIDFromStr(commandLine));
 			}
+			break;
 			// if
 			// (GetSyncStatus().indexOf(context.getString(org.microemu.android.R.string.task))
 			// == -1)
