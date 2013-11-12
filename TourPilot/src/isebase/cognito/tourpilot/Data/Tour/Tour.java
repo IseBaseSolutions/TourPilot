@@ -1,7 +1,11 @@
 package isebase.cognito.tourpilot.Data.Tour;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import isebase.cognito.tourpilot.Connection.ServerCommandParser;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.NCryptor;
 import isebase.cognito.tourpilot.Utils.StringParser;
@@ -21,6 +25,8 @@ public class Tour extends BaseObject {
 	public void setIsCommonTour(boolean isCommonTour) {
 		this.isCommonTour = isCommonTour;
 	}
+	
+	public List<Patient> patients = new ArrayList<Patient>();
 
 	public Tour() {
 		clear();

@@ -48,6 +48,7 @@ public class ToursActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
+				saveSelectedTour(tours.get(position).getId());
 				Intent patientsActivity = new Intent(getApplicationContext(),
 						PatientsActivity.class);
 				startActivity(patientsActivity);
@@ -57,6 +58,7 @@ public class ToursActivity extends Activity {
 	}
 
 	public void logOut(View view) {
+		clearPersonalOptions();
 		Intent workersActivity = new Intent(getApplicationContext(),
 				WorkersActivity.class);
 		startActivity(workersActivity);
@@ -68,4 +70,16 @@ public class ToursActivity extends Activity {
 		((TextView) findViewById(R.id.tvCurrentInfo)).setText(String.format(
 				"%s - %s", dayOfTheWeek, Option.Instance().getWorker().getName()));
 	}
+	
+	private void saveSelectedTour(int tourID) {
+		Option.Instance().setTourID(tourID);
+		Option.Instance().save();
+	}
+	
+	private void clearPersonalOptions() {
+		Option.Instance().setWorkerID(-1);
+		Option.Instance().setTourID(-1);
+		Option.Instance().save();
+	}
+	
 }

@@ -12,11 +12,12 @@ import java.util.Date;
 public class Task extends BaseObject {
 
 	public static final String StateField = "task_state";
+	public static final String WorkerIDField = "worker_id";
 	public static final String PlanDateField = "plan_date";
 	public static final String LeistungsField = "leistungs";
 	public static final String MinutePriceField = "minute_price";
 	public static final String TourCodeField = "tour_code";
-	public static final String EmploymentIdField = "employment_id";
+	public static final String EmploymentIDField = "employment_id";
 	public static final String IsAdditionalTaskField = "additional_task";
 
 	public enum eTaskState {
@@ -29,29 +30,40 @@ public class Task extends BaseObject {
 
 	private String leistungs;
 
+	private int workerID;
 	private int minutePrice;
 
 	private long tourId;
 	private long employmentId;
 
 	private boolean isAdditionaltask;
+	
+	@MapField(DatabaseField = WorkerIDField)
+	public int getWorkerID() {
+		return workerID;
+	}
 
-	@MapField(DatabaseField = StateField)
-	public void setTaskState(int taskStateIndex) {
-		this.taskState = eTaskState.values()[taskStateIndex];
+	@MapField(DatabaseField = WorkerIDField)
+	public void setWorkerID(int workerID) {
+		this.workerID = workerID;
 	}
 
 	@MapField(DatabaseField = StateField)
 	public int getTaskStateIndex() {
 		return taskState.ordinal();
 	}
+	
+	@MapField(DatabaseField = StateField)
+	public void setTaskState(int taskStateIndex) {
+		this.taskState = eTaskState.values()[taskStateIndex];
+	}
+	
+	public eTaskState getTaskState() {
+		return taskState;
+	}
 
 	public void setTaskState(eTaskState taskState) {
 		this.taskState = taskState;
-	}
-
-	public eTaskState getTaskState() {
-		return taskState;
 	}
 
 	@MapField(DatabaseField = PlanDateField)
@@ -94,12 +106,12 @@ public class Task extends BaseObject {
 		this.tourId = tourId;
 	}
 
-	@MapField(DatabaseField = EmploymentIdField)
+	@MapField(DatabaseField = EmploymentIDField)
 	public long getEmploymentId() {
 		return employmentId;
 	}
 
-	@MapField(DatabaseField = EmploymentIdField)
+	@MapField(DatabaseField = EmploymentIDField)
 	public void setEmploymentId(long employmentId) {
 		this.employmentId = employmentId;
 	}
@@ -120,8 +132,8 @@ public class Task extends BaseObject {
 
 	public Task(String initString) {
 		StringParser parsingString = new StringParser(initString);
-		setId(Integer.parseInt(parsingString.next(";")));
 		parsingString.next(";");
+		setWorkerID(Integer.parseInt(parsingString.next(";")));
 		String strDate = parsingString.next(";");
 		String strTime = parsingString.next(";");
 		SimpleDateFormat format = new SimpleDateFormat("ddMMyyyyHHmm");
@@ -134,7 +146,7 @@ public class Task extends BaseObject {
 		setLeistungs(parsingString.next(";"));
 		String str = parsingString.next(";");
 		if (str.contains("@")) {
-			setMinutePrice(Integer.parseInt(parsingString.next(";")
+			setMinutePrice(Integer.parseInt(str
 					.substring(1)));
 			str = parsingString.next(";");
 		} else

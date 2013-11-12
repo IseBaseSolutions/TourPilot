@@ -1,12 +1,15 @@
  package isebase.cognito.tourpilot.Activity;
  
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Connection.ConnectionAsyncTask;
 import isebase.cognito.tourpilot.Connection.ConnectionStatus;
+import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -35,10 +38,11 @@ import android.widget.ListView;
 			public void onSynchronizedFinished(boolean isOK, String text) {
 				if(!text.equals(""))
 					adapter.add(dateFormat.format(new Date()) + " " + text);	
-				if(isOK){
-					Intent workersActivity= new Intent(getApplicationContext()
-							, WorkersActivity.class);
-					startActivity(workersActivity);	
+				if(isOK){			
+					Intent nextActivity = (Option.Instance().getWorkerID() == -1) ? new Intent(getApplicationContext()
+							, WorkersActivity.class) : new Intent(getApplicationContext()
+									, ToursActivity.class);
+					startActivity(nextActivity);					
 				}
  			}
  			
@@ -52,5 +56,5 @@ import android.widget.ListView;
 	
 		connectionStatus = new ConnectionStatus(syncHandler);
 		new ConnectionAsyncTask(connectionStatus).execute();
- 	}	
- }
+	}
+}
