@@ -18,6 +18,7 @@ import android.widget.ListView;
  	private SynchronizationHandler syncHandler;
 	private ArrayAdapter<String> adapter;
 	private ConnectionStatus connectionStatus;
+	private ConnectionAsyncTask connectionTask;
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm"); 
  	
  	@Override
@@ -45,12 +46,22 @@ import android.widget.ListView;
  			@Override
  			public void onItemSynchronized(String text) {
 				adapter.add(dateFormat.format(new Date()) + " " + text);	
-				new ConnectionAsyncTask(connectionStatus).execute(); 
+				connectionTask = new ConnectionAsyncTask(connectionStatus);
+				connectionTask.execute(); 
  			}
 				
  		};	
 	
 		connectionStatus = new ConnectionStatus(syncHandler);
-		new ConnectionAsyncTask(connectionStatus).execute();
+		connectionTask = new ConnectionAsyncTask(connectionStatus);
+		connectionTask.execute();
  	}	
+ 	
+ 	@Override
+ 	public void onBackPressed() {
+		connectionTask.terminate();
+		Intent optionActivity= new Intent(getApplicationContext()
+				, OptionsActivity.class);
+		startActivity(optionActivity);	
+ 	}
  }

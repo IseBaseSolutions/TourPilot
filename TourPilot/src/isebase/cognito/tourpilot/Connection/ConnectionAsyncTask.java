@@ -33,6 +33,13 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 		conStatus = cs;
 	}
 
+	public void terminate(){
+		conStatus.isFinished = false;
+		conStatus.lastExecuteOK = false;
+		closeConnection();		
+		cancel(true);
+	}
+	
 	@Override
 	protected void onPostExecute(Void result) {
 		if (!conStatus.lastExecuteOK || conStatus.isFinished) {
