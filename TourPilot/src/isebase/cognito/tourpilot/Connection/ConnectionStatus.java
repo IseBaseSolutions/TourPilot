@@ -72,12 +72,12 @@ public class ConnectionStatus {
 	
 	public void closeConnection(){
 		try {
-			if(socket != null && !socket.isClosed()){
-				socket.close();
+			if(OS != null)
 				OS.close();
+			if(IS != null)
 				IS.close();	
-			}
-				
+			if(socket != null )
+				socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}		
