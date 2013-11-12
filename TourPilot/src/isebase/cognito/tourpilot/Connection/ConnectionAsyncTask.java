@@ -28,22 +28,24 @@ import android.os.AsyncTask;
 public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 
 	private ConnectionStatus conStatus;
+	
+	private boolean isTerminated = false;
 
 	public ConnectionAsyncTask(ConnectionStatus cs) {
 		conStatus = cs;
 	}
 
 	public void terminate(){
-		conStatus.isFinished = false;
-		conStatus.lastExecuteOK = false;
-		closeConnection();		
-		cancel(true);
+		isTerminated = true;
 	}
 	
 	@Override
 	protected void onPostExecute(Void result) {
-		if (!conStatus.lastExecuteOK || conStatus.isFinished) {
-			if (!conStatus.lastExecuteOK) {
+		if (!conStatus.lastExecuteOK 
+				|| conStatus.isFinished
+				|| isTerminated) {
+			if (!conStatus.lastExecuteOK
+					|| isTerminated) {
 				conStatus.UISynchHandler.onSynchronizedFinished(false,
 						conStatus.getMessage());
 				closeConnection();
@@ -102,7 +104,6 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 
 	private boolean initializeConnection() {
 		try {
-
 			conStatus.socket = new Socket(Option.Instance().getServerIP(),
 					Option.Instance().getServerPort());
 
@@ -126,7 +127,9 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 
 			strInvitation = readFromStream(conStatus.IS);
 			if (strInvitation.length() > 2
-					&& strInvitation.substring(0, 2).compareTo("OK") != 0)
+					&& strInvitation.substring(0, 2).compareTo("OK") == 0)
+				retVal = true;
+			else
 				retVal = false;
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -170,10 +173,12 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 		try {
 			writePack(conStatus.OS, getStrHello() + "\0.\0");
 			String recievedStatus = readFromStream(conStatus.IS);
-			if (recievedStatus.startsWith("OVER")) {
+			if (recievedStatus.startsWith("OVER") 
+					|| recievedStatus.equals("")) {
 				// License is over
 				retVal = false;
 			}
+						
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			retVal = false;
@@ -197,7 +202,10 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 
 			writePack(conStatus.OS, get_SRV_msgStoredData(strCheckItems));
 			String dataFromServer = readPack(conStatus.IS);
-			conStatus.dataFromServer = dataFromServer.split("\0");
+			if(dataFromServer == "")
+				retVal = false;
+			else
+				conStatus.dataFromServer = dataFromServer.split("\0");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			retVal = false;
@@ -262,6 +270,8 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 		long startTime = new Date().getTime();
 		long currentTime = startTime;
 		while (currentTime - startTime < timeoutCount) {
+			if(isTerminated)
+				return "";
 			int av = 0;
 			try {
 				av = is.available();
@@ -421,6 +431,8 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 			InterruptedException {
 		while (is.available() == 0)
 			try {
+				if(isTerminated)
+					return "";
 				Thread.sleep(1000);
 			} catch (InterruptedException ex) {
 				ex.printStackTrace();

@@ -40,9 +40,9 @@ import android.widget.ListView;
 				if(!text.equals(""))
 					adapter.add(dateFormat.format(new Date()) + " " + text);	
 				if(isOK){			
-					Intent nextActivity = (Option.Instance().getWorkerID() == -1) ? new Intent(getApplicationContext()
-							, WorkersActivity.class) : new Intent(getApplicationContext()
-									, ToursActivity.class);
+					Intent nextActivity = (Option.Instance().getWorkerID() == -1) 
+							? new Intent(getApplicationContext(), WorkersActivity.class) 
+							: new Intent(getApplicationContext(), ToursActivity.class);
 					startActivity(nextActivity);					
 				}
  			}
