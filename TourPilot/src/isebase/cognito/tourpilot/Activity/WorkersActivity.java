@@ -42,6 +42,11 @@ public class WorkersActivity extends FragmentActivity implements
 		getMenuInflater().inflate(R.menu.options_menu, menu);
 		return true;
 	}
+	
+	@Override
+	public void onBackPressed() {
+		startOptionsActivity();
+	}
 
 	public void initListWorkers() {
 		final ListView listView = (ListView) findViewById(R.id.lvWorkers);
@@ -64,9 +69,13 @@ public class WorkersActivity extends FragmentActivity implements
 		});
 	}
 
-	public void switchToOptions(View view) {
-		Intent optionsActivity = new Intent(getApplicationContext(),
-				OptionsActivity.class);
+	public void btOptionsClick(View view) {
+		startOptionsActivity();
+	}
+	
+	private void startOptionsActivity() {
+		Intent optionsActivity = new Intent(getApplicationContext(), OptionsActivity.class);
+		optionsActivity.putExtra("activity", "workers");
 		startActivity(optionsActivity);
 	}
 

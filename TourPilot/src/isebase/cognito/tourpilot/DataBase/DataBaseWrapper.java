@@ -94,7 +94,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ Option.WorkerIDField + " INTEGER, " 
 			+ Option.TourIDField + " INTEGER, "
-			+ Option.EmploymentIDField + " INTEGER, "
+			+ Option.PatientIDField + " INTEGER, "
 			+ Option.ServerIPField + " TEXT, "
 			+ Option.ServerPortField + " INTEGER " 
 			+ ");";

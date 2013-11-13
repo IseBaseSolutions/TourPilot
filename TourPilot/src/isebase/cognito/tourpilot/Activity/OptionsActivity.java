@@ -3,6 +3,7 @@ package isebase.cognito.tourpilot.Activity;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Connection.ConnectionInfo;
 import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.DialogInfoBase;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
@@ -29,6 +30,7 @@ public class OptionsActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_options);
 		StaticResources.setBaseContext(getBaseContext());
+		switchToLastActivity();
 		initControls();
 		initDialogs();
 	}
@@ -53,15 +55,8 @@ public class OptionsActivity extends BaseActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
-	public void initControls() {
-		etServerIP = (EditText) findViewById(R.id.etServerIP);
-		etServerPort = (EditText) findViewById(R.id.etServerPort);
-		etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
-		initOptions();
-	}
-
-	public void startSync(View view) {
+	
+	public void btStartSyncClick(View view) {
 		if (etServerIP.getText().toString().equals("")) {
 			dialogNoIPEntered.show(getSupportFragmentManager(),
 					"dialogNoIPEntered");
@@ -74,12 +69,38 @@ public class OptionsActivity extends BaseActivity {
 			return;
 		}
 		saveOptions();
-		Intent synchActivity = new Intent(getApplicationContext(),
-				SynchronizationActivity.class);
+		startSyncActivity();
+	}
+	
+	private void startSyncActivity() {
+		Intent synchActivity = new Intent(getApplicationContext(), SynchronizationActivity.class);
 		startActivity(synchActivity);
 	}
+	
+	private void startWorkersActivity() {
+		Intent workersActivity = new Intent(getApplicationContext(), WorkersActivity.class);
+		startActivity(workersActivity);
+	}
+	
+	private void startToursActivity() {
+		Intent toursActivity = new Intent(getApplicationContext(), ToursActivity.class);
+		startActivity(toursActivity);
+	}
+	
+	private void startPatientsActivity() {
+		Intent patientsActivity = new Intent(getApplicationContext(), PatientsActivity.class);
+		startActivity(patientsActivity);
+	}
+	
+	private void startTasksActivity() {
+		Intent tasksActivity = new Intent(getApplicationContext(), TasksActivity.class);
+		startActivity(tasksActivity);
+	}
 
-	private void initOptions() {
+	public void initControls() {
+		etServerIP = (EditText) findViewById(R.id.etServerIP);
+		etServerPort = (EditText) findViewById(R.id.etServerPort);
+		etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
 		etPhoneNumber.setText(Option.Instance().getPhoneNumber());
 		etServerIP.setText(Option.Instance().getServerIP());
 		etServerPort.setText(String.valueOf(Option.Instance().getServerPort()));
@@ -104,5 +125,18 @@ public class OptionsActivity extends BaseActivity {
 		dialogNoConnection = new DialogInfoBase(
 				getString(R.string.connection_problems),
 				getString(R.string.no_connection));
+	}
+	
+	private void switchToLastActivity() {
+		Intent intent = getIntent();
+        String activity = intent.getStringExtra("activity");
+		if ((activity == null || activity.compareTo("workers") == 0) && Option.Instance().getWorkerID() == -1)
+			return;
+		else if (Option.Instance().getTourID() == -1)
+			startToursActivity();
+		else if (Option.Instance().getPatientID() == -1)
+			startPatientsActivity();
+		else
+			startTasksActivity();
 	}
 }
