@@ -159,6 +159,12 @@ public abstract class BaseObjectManager<T> {
 		}
 	}
 	
+	public List<T> loadAll(String groupBy, String having, String orderBy){
+		List<T> items = load(groupBy, having, orderBy);
+		afterLoad(items);
+		return items;
+	}
+	
 	public List<T> loadAll() {
 		List<T> items = load();
 		afterLoad(items);
@@ -176,16 +182,19 @@ public abstract class BaseObjectManager<T> {
 
 	public void afterLoad(T item) {
 	}
-
+	
 	public List<T> load() {
+		return load(null, null, null);
+	}
+	
+	public List<T> load(String groupBy, String having, String orderBy){
 		List<T> items = new ArrayList<T>();
 		Cursor cursor = null;
 		try {
 			cursor = DataBaseWrapper
 					.Instance()
 					.getReadableDatabase()
-					.query(getRecTableName(), TABLE_COLUMNS, null, null, null,
-							null, null);
+					.query(getRecTableName(), TABLE_COLUMNS, null, null, groupBy, having, orderBy);
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
 				T object = parseObject(cursor);
@@ -200,7 +209,7 @@ public abstract class BaseObjectManager<T> {
 			close();
 		}
 		return items;
-	}
+	} 
 
 	public T load(int id) {
 		Cursor cursor = null;

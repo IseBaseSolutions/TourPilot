@@ -4,6 +4,8 @@ import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWork;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWorkManager;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 import isebase.cognito.tourpilot.Data.Diagnose.Diagnose;
 import isebase.cognito.tourpilot.Data.Diagnose.DiagnoseManager;
 import isebase.cognito.tourpilot.Data.Doctor.Doctor;
@@ -81,6 +83,7 @@ public class ServerCommandParser {
 
 		switch (commandType) {
 		case END:
+			syncHandler.onProgressUpdate("Done");
 			break;
 		case TIME:
 			if (commandLine.indexOf(SERVER_CURRENT_VERSION) == 0)
@@ -95,176 +98,101 @@ public class ServerCommandParser {
 				break;
 		case WORKER:
 			if (commandActionType == NEED_TO_ADD) {
-				// TODO Show message
-				// if
-				// (GetSyncStatus().indexOf(context.getString(org.microemu.android.R.string.employee))
-				// == -1)
-				// setSyncStatus(context.getString(org.microemu.android.R.string.employee),5,
-				// isAutomaticSync);
-				syncHandler.onItemSynchronized("Worker synchronization done");
-				// TODO Use constructor with viewDate
-				Worker worker = new Worker(commandLine);
-				WorkerManager.Instance().save(worker);
-			} else {
-				WorkerManager.Instance().delete(getIDFromStr(commandLine));
-			}
+				Worker item = new Worker(commandLine);
+				WorkerManager.Instance().save(item);
+				syncHandler.onProgressUpdate(item.getName() + " OK");
+			} else 
+				removeByID(commandLine, WorkerManager.Instance());
 			break;
 		case PATIENT_REMARK:
 			if (commandActionType == NEED_TO_ADD) {
-				// if
-				// (GetSyncStatus().indexOf(context.getString(org.microemu.android.R.string.comments))
-				// == -1)
-				// setSyncStatus(context.getString(org.microemu.android.R.string.comments),
-				// 5, isAutomaticSync);
-				PatientRemark patRem = new PatientRemark(commandLine);
-				PatientRemarkManager.Instance().save(patRem);
-			} else {
-				PatientRemarkManager.Instance().delete(getIDFromStr(commandLine));
-			}
+				PatientRemark item = new PatientRemark(commandLine);
+				PatientRemarkManager.Instance().save(item);
+				syncHandler.onProgressUpdate(item.getName() + " OK");
+			} else 
+				removeByID(commandLine, PatientRemarkManager.Instance());
 			break;
 		case DIAGNOSE:
 			if (commandActionType == NEED_TO_ADD) {
-				// if
-				// (GetSyncStatus().indexOf(context.getString(org.microemu.android.R.string.diagnoses))
-				// == -1)
-				// setSyncStatus(context.getString(org.microemu.android.R.string.diagnoses),
-				// 5, isAutomaticSync);
-				Diagnose diag = new Diagnose(commandLine);
-				DiagnoseManager.Instance().save(diag);
-			} else {
-				DiagnoseManager.Instance().delete(getIDFromStr(commandLine));
-			}
+				Diagnose item = new Diagnose(commandLine);
+				DiagnoseManager.Instance().save(item);
+				syncHandler.onProgressUpdate(item.getName() + " OK");
+			} else 
+				removeByID(commandLine, DiagnoseManager.Instance());
 			break;
 		case INFORMATION:
 			if (commandActionType == NEED_TO_ADD) {
-				// if
-				// (GetSyncStatus().indexOf(context.getString(org.microemu.android.R.string.information))
-				// == -1)
-				// setSyncStatus(
-				// context.getString(org.microemu.android.R.string.information),
-				// 5, isAutomaticSync);
-				Information info = new Information(commandLine);
-				InformationManager.Instance().save(info);
-			} else {
-				InformationManager.Instance().delete(getIDFromStr(commandLine));
-			}
+				Information item = new Information(commandLine);
+				InformationManager.Instance().save(item);
+				syncHandler.onProgressUpdate(item.getName() + " OK");
+			} else 
+				removeByID(commandLine, InformationManager.Instance());
 			break;
 		case 'F':
 			break;
 		case ADDITIONAL_TASK_L:
 		case ADDITIONAL_TASK_Z:
-			// if
-			// (GetSyncStatus().indexOf(context.getString(org.microemu.android.R.string.individual_performance))
-			// == -1)
-			// setSyncStatus(context.getString(org.microemu.android.R.string.individual_performance),
-			// 5, isAutomaticSync);
 			if (commandLine.startsWith("" + ADDITIONAL_TASK_Z))
 				commandLine = ADDITIONAL_TASK_L + commandLine.substring(1);
 			try{
 				if (commandActionType == NEED_TO_ADD) {
-					AdditionalTask addTask = new AdditionalTask(commandLine);
-					AdditionalTaskManager.Instance().save(addTask);
-				} else {
-					AdditionalTaskManager.Instance().delete(getIDFromStr(commandLine));
-				}
+					AdditionalTask item = new AdditionalTask(commandLine);
+					AdditionalTaskManager.Instance().save(item);
+					syncHandler.onProgressUpdate(item.getName() + " OK");
+				} else 
+					removeByID(commandLine, AdditionalTaskManager.Instance());
 			}catch (Exception e) {
 				e.printStackTrace();
 				e.getMessage();
 			}
 			break;
 		case DOCTOR:
-			// if
-			// (GetSyncStatus().indexOf(context.getString(org.microemu.android.R.string.physicians))
-			// == -1)
-			// setSyncStatus(context.getString(org.microemu.android.R.string.physicians),
-			// 5, isAutomaticSync);
 			if (commandActionType == NEED_TO_ADD) {
-				Doctor doc = new Doctor(commandLine);
-				DoctorManager.Instance().save(doc);
-			} else {
-				DoctorManager.Instance().delete(getIDFromStr(commandLine));
-			}
+				Doctor item = new Doctor(commandLine);
+				DoctorManager.Instance().save(item);
+				syncHandler.onProgressUpdate(item.getFullName() + " OK");
+			} else 
+				removeByID(commandLine, DoctorManager.Instance());
 			break;
 		case PATIENT:
-			// if
-			// (GetSyncStatus().indexOf(context.getString(org.microemu.android.R.string.patients))
-			// == -1)
-			// setSyncStatus(context.getString(org.microemu.android.R.string.patients),
-			// 5, isAutomaticSync);
 			if (commandActionType == NEED_TO_ADD) {
-				Patient pat = new Patient(commandLine);
-				PatientManager.Instance().save(pat);
-			} else {
-				PatientManager.Instance().delete(getIDFromStr(commandLine));
-			}
+				Patient item = new Patient(commandLine);
+				PatientManager.Instance().save(item);
+				syncHandler.onProgressUpdate(item.getFullName() + " OK");
+			} else 
+				removeByID(commandLine, PatientManager.Instance());
 			break;
 		case TASK:
 			if (commandActionType == NEED_TO_ADD) {
-				Task task = new Task(commandLine);
-				TaskManager.Instance().save(task);
-			} else {
-				TaskManager.Instance().delete(getIDFromStr(commandLine));
-			}
+				Task item = new Task(commandLine);
+				TaskManager.Instance().save(item);
+				syncHandler.onProgressUpdate(item.getName() + " OK");
+			} else
+				removeByID(commandLine, TaskManager.Instance());
 			break;
-			// if
-			// (GetSyncStatus().indexOf(context.getString(org.microemu.android.R.string.task))
-			// == -1)
-			// setSyncStatus(
-			// context.getString(org.microemu.android.R.string.task), 5,
-			// isAutomaticSync);
-			/*
-			 * if (commandActionType == NEED_TO_ADD) { CTask tsk = new
-			 * CTask(commandLine); CTasks.Instance().removeElement(tsk); if
-			 * (User == null || tsk.UserID() != User.ID()) break;
-			 * CTasks.Instance().addElement(tsk); if (tsk.UserTask() == null) {
-			 * CUserTask newTsk = new CUserTask(tsk);
-			 * CUserTasks.Instance().addElement(newTsk);
-			 * CEmployments.Instance().AddTask(newTsk); } } else { CTask tsk =
-			 * (CTask) CTasks.Instance().GetByRemoveStr(commandLine); if (tsk ==
-			 * null) break; CUserTask updTask = tsk.UserTask(); if (updTask !=
-			 * null && !updTask.Result().equals(new String()) &&
-			 * !updTask.WasSent()) break; CTasks.Instance().removeElement(tsk);
-			 * CUserTasks.Instance().removeElement(tsk);
-			 * CEmployments.Instance().RemoveTask(tsk); } break;
-			 */
 		case ADDITIONAL_WORK:
-			// if
-			// (GetSyncStatus().indexOf(context.getString(org.microemu.android.R.string.additional_inserts))
-			// == -1)
-			// setSyncStatus(context.getString(org.microemu.android.R.string.additional_inserts),
-			// 5, isAutomaticSync);
 			if (commandActionType == NEED_TO_ADD) {
-				AdditionalWork addWork = new AdditionalWork(commandLine);
-				AdditionalWorkManager.Instance().save(addWork);
-			} else {
-				AdditionalWorkManager.Instance().delete(getIDFromStr(commandLine));
-			}
+				AdditionalWork item = new AdditionalWork(commandLine);
+				AdditionalWorkManager.Instance().save(item);
+				syncHandler.onProgressUpdate(item.getName() + " OK");
+			} else 
+				removeByID(commandLine, AdditionalWorkManager.Instance());
 			break;
 		case TOUR:
-			// if
-			// (GetSyncStatus().indexOf(context.getString(org.microemu.android.R.string.tour))
-			// == -1)
-			// setSyncStatus(context.getString(org.microemu.android.R.string.tour),
-			// 5, isAutomaticSync);
 			if (commandActionType == NEED_TO_ADD) {
-				Tour tour = new Tour(commandLine);
-				TourManager.Instance().save(tour);
-			} else {
-				TourManager.Instance().delete(getIDFromStr(commandLine));
-			}
+				Tour item = new Tour(commandLine);
+				TourManager.Instance().save(item);
+				syncHandler.onProgressUpdate(item.getName() + " OK");
+			} else
+				removeByID(commandLine, TourManager.Instance());
 			break;
 		case RELATIVE:
-			// if
-			// (GetSyncStatus().indexOf(context.getString(org.microemu.android.R.string.member))
-			// == -1)
-			// setSyncStatus(context.getString(org.microemu.android.R.string.member),
-			// 5, isAutomaticSync);
 			if (commandActionType == NEED_TO_ADD) {
-				Relative relative = new Relative(commandLine);
-				RelativeManager.Instance().save(relative);
-			} else {
-				RelativeManager.Instance().delete(getIDFromStr(commandLine));
-			}
+				Relative item = new Relative(commandLine);
+				RelativeManager.Instance().save(item);
+				syncHandler.onProgressUpdate(item.getFullName() + " OK");
+			} else 
+				removeByID(commandLine, RelativeManager.Instance());
 			break;
 		/*
 		 * case QUESTION: // ANDREW if
@@ -360,10 +288,24 @@ public class ServerCommandParser {
 		return blnRes;
 	}
 	
+	private void removeByID(String commandLine, BaseObjectManager<? extends BaseObject> manager){
+		int idToDelete = getIDFromStr(commandLine);
+		if(idToDelete != BaseObject.EMPTY_ID)
+			manager.delete(idToDelete);
+		syncHandler.onProgressUpdate(idToDelete + " Deleted");
+	}
+	
 	private int getIDFromStr(String str) {
-		str.substring(0,1);
-		String strArr = str.split(";")[0];
-		return strArr.length() > 0 ? Integer.parseInt(str.split(";")[0]) : -1;
+		int retVal = BaseObject.EMPTY_ID;
+		try{
+			str = str.substring(1,str.length()-1);
+			String firstNumber = str.split(";")[0];
+			retVal = Integer.parseInt(firstNumber);
+		}
+		catch(Exception e){
+			retVal = BaseObject.EMPTY_ID;
+		}
+		return retVal;
 	}
 	
 }
