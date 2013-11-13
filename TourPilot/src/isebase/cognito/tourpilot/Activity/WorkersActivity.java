@@ -1,6 +1,7 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
@@ -19,13 +20,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class WorkersActivity extends FragmentActivity implements
-		DialogPin.DialogPinListener {
+public class WorkersActivity extends FragmentActivity implements DialogPin.DialogPinListener {
 
-	List<Worker> workers = new ArrayList<Worker>();
-
-	Worker selectedWorker;
-
+	private List<Worker> workers = new ArrayList<Worker>();
+	private Worker selectedWorker;
 	private DialogPin dialogPin;
 
 	@Override
@@ -42,6 +40,11 @@ public class WorkersActivity extends FragmentActivity implements
 		getMenuInflater().inflate(R.menu.options_menu, menu);
 		return true;
 	}
+	
+	@Override
+	public void onBackPressed() {
+		startOptionsActivity();
+	}
 
 	public void initListWorkers() {
 		final ListView listView = (ListView) findViewById(R.id.lvWorkers);
@@ -54,20 +57,18 @@ public class WorkersActivity extends FragmentActivity implements
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
 				selectedWorker = (Worker) listView.getItemAtPosition(position);
-				if (Option.testMode) {
-					saveWorker();
-					startWorkerSync();
-					return;
-				}
 				showDialogPin();
 			}
 		});
 	}
 
-	public void switchToOptions(View view) {
-		Intent optionsActivity = new Intent(getApplicationContext(),
-				OptionsActivity.class);
-		startActivity(optionsActivity);
+	public void btOptionsClick(View view) {
+		startOptionsActivity();
+	}
+	
+	private void startOptionsActivity() {
+		Intent optionsActivity = new Intent(getApplicationContext(), OptionsActivity.class);
+		optionsActivity.putExtra("activity", "workers");
 	}
 
 	public void startWorkerSync() {
@@ -77,7 +78,7 @@ public class WorkersActivity extends FragmentActivity implements
 	}
 
 	public void reloadData() {
-		workers = WorkerManager.Instance().load();
+		workers = WorkerManager.Instance().load(null, null, BaseObject.NameField);
 	}
 
 	public boolean checkWorkerPIN(String workerName, String strPin) {

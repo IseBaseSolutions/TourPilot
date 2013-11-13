@@ -25,13 +25,14 @@ import java.util.zip.GZIPOutputStream;
 
 import android.os.AsyncTask;
 
-public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
+public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 
 	private ConnectionStatus conStatus;
 	
-	private boolean isTerminated = false;
+	private boolean isTerminated;
 
 	public ConnectionAsyncTask(ConnectionStatus cs) {
+		isTerminated = false;
 		conStatus = cs;
 	}
 
@@ -40,22 +41,33 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 	}
 	
 	@Override
+	protected void onProgressUpdate(Boolean... values) {
+		super.onProgressUpdate(values);
+		if(values.length > 0 && values[0]){
+			conStatus.UISynchHandler.onProgressUpdate("Start");
+		}
+		else
+			conStatus.UISynchHandler.onProgressUpdate(
+				conStatus.getProgressMessage(), conStatus.getCurrentProgress());
+	}
+	
+	@Override
 	protected void onPostExecute(Void result) {
 		if (!conStatus.lastExecuteOK 
 				|| conStatus.isFinished
 				|| isTerminated) {
-			if (!conStatus.lastExecuteOK
-					|| isTerminated) {
+			if (!conStatus.lastExecuteOK || isTerminated) {
 				conStatus.UISynchHandler.onSynchronizedFinished(false,
 						conStatus.getMessage());
 				closeConnection();
 			}
-			conStatus.UISynchHandler.onSynchronizedFinished(
-					conStatus.isFinished, conStatus.getMessage());
+			if (conStatus.isFinished){
+				conStatus.UISynchHandler.onSynchronizedFinished(
+						conStatus.isFinished, conStatus.getMessage());	
+			}				
 			return;
 		}
 		conStatus.UISynchHandler.onItemSynchronized(conStatus.getMessage());
-		conStatus.nextState();
 	}
 
 	@Override
@@ -69,8 +81,9 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 			conStatus.setMessage(String.format(
 					"%1$s %2$s : %3$s ...",
 					StaticResources.getBaseContext().getString(
-							R.string.connection_try), Option.Instance()
-							.getServerIP(), Option.Instance().getServerPort()));
+							R.string.connection_try), 
+							Option.Instance().getServerIP(),
+							Option.Instance().getServerPort()));
 			break;
 		case ConnectionStatus.Connection:
 			conStatus.lastExecuteOK = initializeConnection();
@@ -91,6 +104,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 			conStatus.lastExecuteOK = parseRecievedData();
 			break;
 		case ConnectionStatus.CloseConnection:
+			conStatus.isFinished = true;
 			conStatus.lastExecuteOK = closeConnection();
 			break;
 		default:
@@ -205,7 +219,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 			if(dataFromServer == "")
 				retVal = false;
 			else
-				conStatus.dataFromServer = dataFromServer.split("\0");
+				conStatus.setDataFromServer(dataFromServer.split("\0"));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			retVal = false;
@@ -217,7 +231,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 								R.string.checksum_ok),
 						StaticResources.getBaseContext().getString(
 								R.string.data_to_download),
-						conStatus.dataFromServer.length));
+						conStatus.getTotalProgress()));
 			else
 				conStatus.setMessage(StaticResources.getBaseContext()
 						.getString(R.string.checksum_fail));
@@ -228,8 +242,11 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 	private boolean parseRecievedData() {
 		boolean retVal = true;
 		try {
-			for (String data : conStatus.dataFromServer)
+			publishProgress(true);
+			for (String data : conStatus.getDataFromServer()){
 				conStatus.serverCommandParser.parseElement(data, false);
+				publishProgress();
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			retVal = false;

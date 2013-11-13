@@ -33,7 +33,27 @@ public class ConnectionStatus {
 	public SynchronizationHandler UISynchHandler;
 		
 	private String currMessage = "" ;	
+	private String currProgressMessage = "" ;	
+	private int currProgress;	
+	
+	public String getProgressMessage(){
+		return currProgressMessage;
+	}
+	
+	public int getCurrentProgress(){
+		return currProgress;
+	}
+	
+	private int totalProgress = 1;
 
+	public int getTotalProgress(){
+		return totalProgress;
+	}
+	
+	public void setTotalProgress(int val){
+		totalProgress = val;
+	}
+	
 	public String getMessage() {
 		return currMessage;
 	}
@@ -44,9 +64,19 @@ public class ConnectionStatus {
 
 	public boolean lastExecuteOK = true;
 	
-	public String[] dataFromServer;
+	private String[] dataFromServer;
+	
+	public void setDataFromServer(String[] data){
+		dataFromServer = data;
+		totalProgress = data.length;
+	}
+	
+	public String[] getDataFromServer(){
+		return dataFromServer;
+	}
 		
 	public ConnectionStatus(SynchronizationHandler synchHandler){
+		currProgress = 0;
 		CurrentState = InitState;
 		isFinished = false;
 		dataFromServer = new String[0];
@@ -59,8 +89,21 @@ public class ConnectionStatus {
 			
 			@Override
 			public void onItemSynchronized(String text) {	
-				currMessage = text;
+				
 			}
+
+			@Override
+			public void onProgressUpdate(String text, int progress) {
+				currProgressMessage = text;		
+				currProgress = progress;
+			}
+
+			@Override
+			public void onProgressUpdate(String text) {
+				currProgressMessage = text;		
+				currProgress++;
+			}
+			
 		};
 		serverCommandParser = new ServerCommandParser(localSynchHandler);
 	}
