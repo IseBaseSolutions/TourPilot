@@ -1,10 +1,7 @@
 package isebase.cognito.tourpilot.Data.Tour;
 
-import android.database.sqlite.SQLiteDatabase;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
-import isebase.cognito.tourpilot.Data.Patient.Patient;
-import isebase.cognito.tourpilot.Data.Patient.PatientManager;
-import isebase.cognito.tourpilot.Data.Worker.Worker;
+import android.database.sqlite.SQLiteDatabase;
 
 public class TourManager extends BaseObjectManager<Tour> {
 

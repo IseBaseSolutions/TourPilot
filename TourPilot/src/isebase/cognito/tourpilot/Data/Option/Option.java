@@ -30,6 +30,8 @@ public class Option {
 	private int serverPort;
 	private int id;
 	
+	public int count;
+	
 	@MapField(DatabaseField = WorkerIDField)
 	public int getWorkerID() {
 		return workerID;

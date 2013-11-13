@@ -19,6 +19,7 @@ public class Task extends BaseObject {
 	public static final String TourCodeField = "tour_code";
 	public static final String EmploymentIDField = "employment_id";
 	public static final String IsAdditionalTaskField = "additional_task";
+	public static final String TaskIDField = "task_id";
 
 	public enum eTaskState {
 		Empty, Done, UnDone
@@ -30,6 +31,7 @@ public class Task extends BaseObject {
 
 	private String leistungs;
 
+	private int taskID;
 	private int workerID;
 	private int minutePrice;
 
@@ -38,6 +40,16 @@ public class Task extends BaseObject {
 
 	private boolean isAdditionaltask;
 	
+	@MapField(DatabaseField = TaskIDField)
+	public int getTaskID() {
+		return taskID;
+	}
+
+	@MapField(DatabaseField = TaskIDField)
+	public void setTaskID(int taskID) {
+		this.taskID = taskID;
+	}	
+
 	@MapField(DatabaseField = WorkerIDField)
 	public int getWorkerID() {
 		return workerID;
@@ -52,12 +64,12 @@ public class Task extends BaseObject {
 	public int getTaskStateIndex() {
 		return taskState.ordinal();
 	}
-	
+
 	@MapField(DatabaseField = StateField)
 	public void setTaskState(int taskStateIndex) {
 		this.taskState = eTaskState.values()[taskStateIndex];
 	}
-	
+
 	public eTaskState getTaskState() {
 		return taskState;
 	}
@@ -142,12 +154,11 @@ public class Task extends BaseObject {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		setId(Integer.parseInt(parsingString.next(";")));
+		setTaskID(Integer.parseInt(parsingString.next(";")));
 		setLeistungs(parsingString.next(";"));
 		String str = parsingString.next(";");
 		if (str.contains("@")) {
-			setMinutePrice(Integer.parseInt(str
-					.substring(1)));
+			setMinutePrice(Integer.parseInt(str.substring(1)));
 			str = parsingString.next(";");
 		} else
 			setMinutePrice(-1);
@@ -200,4 +211,5 @@ public class Task extends BaseObject {
 		strValue += getCheckSum();
 		return strValue;
 	}
+
 }

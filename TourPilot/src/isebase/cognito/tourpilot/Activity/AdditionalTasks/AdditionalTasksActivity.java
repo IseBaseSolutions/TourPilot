@@ -98,7 +98,7 @@ public class AdditionalTasksActivity extends BaseActivity {
 
 	private void initComponents() {
 //		listAddTasksFilter = new ArrayList<AdditionalTask>();
-		adapter = new AddTaskAdapter(this,R.layout.row_add_task_template, listAddTasks);
+		adapter = new AddTaskAdapter(this,R.layout.row_additional_task_template, listAddTasks);
 				
 		lvAddTasks = (ListView) findViewById(R.id.lvAddTasks);
 		EditText etFilter = (EditText) findViewById(R.id.etAddTasksFilter);

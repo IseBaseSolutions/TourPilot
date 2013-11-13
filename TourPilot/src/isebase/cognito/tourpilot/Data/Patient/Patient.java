@@ -185,6 +185,11 @@ public class Patient extends BaseObject {
 		setCheckSum(ncryptor.NcodeToL(parsingString.next()));
 	}
 
+	@Override
+	public String toString() {
+		return getFullName();
+	}
+	
 	public String getFullName() {
 		return String.format("%s %s", getSurname(), getName());
 	}
