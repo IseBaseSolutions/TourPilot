@@ -2,6 +2,7 @@ package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Connection.ConnectionInfo;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
@@ -107,6 +108,7 @@ public class OptionsActivity extends BaseActivity {
 	}
 
 	private void saveOptions() {
+		Option.Instance().setWorkerID(BaseObject.EMPTY_ID);
 		Option.Instance().setServerIP(etServerIP.getText().toString());
 		Option.Instance().setServerPort(Integer.parseInt(etServerPort.getText().toString()));
 		Option.Instance().save();
