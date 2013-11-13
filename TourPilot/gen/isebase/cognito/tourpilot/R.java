@@ -25,6 +25,7 @@ public final class R {
     public static final class drawable {
         public static final int ic_action_screen_locked_to_landscape=0x7f020000;
         public static final int ic_launcher=0x7f020001;
+        public static final int ic_medic=0x7f020002;
     }
     public static final class id {
         public static final int action_clear_database=0x7f080025;
@@ -92,7 +93,7 @@ public final class R {
         public static final int activity_tasks=0x7f03000d;
         public static final int activity_tours=0x7f03000e;
         public static final int activity_workers=0x7f03000f;
-        public static final int row_add_task_template=0x7f030010;
+        public static final int row_additional_task_template=0x7f030010;
         public static final int row_task_template=0x7f030011;
         public static final int row_worker_template=0x7f030012;
     }

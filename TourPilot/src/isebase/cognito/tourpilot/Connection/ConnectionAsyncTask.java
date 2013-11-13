@@ -347,7 +347,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 		strMsg += "p" + (userIsPresent ? PatientManager.Instance().getCheckSums() : 0) + "\0.\0";
 		strMsg += "i" + (userIsPresent ? InformationManager.Instance().getCheckSums() : 0) + "\0.\0";
 		strMsg += "r" + (userIsPresent ? TourManager.Instance().getCheckSums() : 0) + "\0.\0";
-		strMsg += "t" + (userIsPresent ? PatientManager.Instance().getCheckSums() : 0) + "\0.\0";
+		strMsg += "t" + (userIsPresent ? TaskManager.Instance().getCheckSums() : 0) + "\0.\0";
 //		strMsg += "x" + (userIsPresent ? CQuestionSettings.Instance().getCheckSums() : 0) + "\0.\0";
 //		strMsg += "*" + (userIsPresent ? CFreeQuestionSettings.Instance().getCheckSums() : 0) + "\0.\0";
 //		strMsg += "^" + (userIsPresent ? CAutoQuestionSettings.Instance().getCheckSums() : 0) + "\0.\0";

@@ -1,6 +1,7 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Connection.ConnectionInfo;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
 
@@ -62,6 +63,12 @@ public class ToursActivity extends Activity {
 		Intent workersActivity = new Intent(getApplicationContext(),
 				WorkersActivity.class);
 		startActivity(workersActivity);
+	}
+	
+	public void startSync(View view) {
+		Intent synchActivity = new Intent(getApplicationContext(),
+				SynchronizationActivity.class);
+		startActivity(synchActivity);
 	}
 
 	private void initComnponents() {

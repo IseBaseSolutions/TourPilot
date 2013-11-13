@@ -113,7 +113,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Task.LeistungsField + " TEXT, "
 			+ Task.MinutePriceField + " INTEGER, "
 			+ Task.TourCodeField + " INTEGER, "
-			+ Task.IsAdditionalTaskField + " INTEGER "
+			+ Task.IsAdditionalTaskField + " INTEGER, "
+			+ Task.TaskIDField + " INTEGER "
 			+ ");";
 	
 	private static final String ADDITIONAL_TASKS_TABLE_CREATE = "CREATE TABLE "

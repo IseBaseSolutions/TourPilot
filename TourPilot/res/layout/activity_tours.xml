@@ -34,7 +34,8 @@
         android:layout_above="@+id/btLogOut"
         android:layout_alignLeft="@+id/btLogOut"
         android:textAppearance="?android:attr/textAppearanceLarge" 
-        android:text="@string/synchronization" />
+        android:text="@string/synchronization"
+        android:onClick="startSync"/>
 
     <Button
         android:id="@+id/btLogOut"

@@ -64,6 +64,11 @@ public class Worker extends BaseObject {
         setCheckSum(Long.parseLong(initString.next()));
         setActualDate(_actualDate);
     }
+
+    @Override
+    public String toString() {
+    	return getName();
+    }
     
     @Override
     public String forServer()
