@@ -44,7 +44,7 @@
    	    android:layout_alignParentLeft="true"
    	    android:text="@string/synchronization"
    	    android:textAppearance="?android:attr/textAppearanceLarge" 
-   	    android:onClick="startSync" />
+   	    android:onClick="btStartSyncClick" />
 
    	<EditText
    	    android:id="@+id/etServerIP"
@@ -105,4 +105,14 @@
    	    android:layout_alignBottom="@+id/etPinCode"
    	    android:layout_alignParentRight="true"
    	    android:text="@string/save_pin_code" />
+
+   	<ProgressBar
+   	    android:id="@+id/pbClearDB"
+   	    style="?android:attr/progressBarStyleLarge"
+   	    android:layout_width="wrap_content"
+   	    android:layout_height="wrap_content"
+   	    android:layout_alignTop="@+id/tvPhoneNumber"
+   	    android:visibility="invisible"
+   	    android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

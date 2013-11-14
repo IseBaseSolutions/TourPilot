@@ -4,17 +4,19 @@ import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Connection.ConnectionInfo;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.DialogInfoBase;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 public class OptionsActivity extends BaseActivity {
 
@@ -24,6 +26,9 @@ public class OptionsActivity extends BaseActivity {
 	private EditText etServerIP;
 	private EditText etServerPort;
 	private EditText etPhoneNumber;
+	
+	private ProgressBar pbClearDB;
+	private Button syncButton;	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +55,22 @@ public class OptionsActivity extends BaseActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_clear_database:
-			// clear database
+			pbClearDB.setVisibility(View.VISIBLE);
+			syncButton.setEnabled(false);
+			new AsyncTask<Void, Void, Void>() {
+
+				@Override
+				protected Void doInBackground(Void... params) {
+					DataBaseWrapper.Instance().clearAllData();
+					return null;
+				}
+								
+				@Override
+				protected void onPostExecute(Void result) {
+					pbClearDB.setVisibility(View.INVISIBLE);
+					syncButton.setEnabled(true);
+				}
+			}.execute();
 			return true;
 		case R.id.action_show_program_info:
 			dialogVersionFragment.show(getSupportFragmentManager(), "dialogVersion");
@@ -80,11 +100,6 @@ public class OptionsActivity extends BaseActivity {
 		startActivity(synchActivity);
 	}
 	
-	private void startWorkersActivity() {
-		Intent workersActivity = new Intent(getApplicationContext(), WorkersActivity.class);
-		startActivity(workersActivity);
-	}
-	
 	private void startToursActivity() {
 		Intent toursActivity = new Intent(getApplicationContext(), ToursActivity.class);
 		startActivity(toursActivity);
@@ -101,6 +116,8 @@ public class OptionsActivity extends BaseActivity {
 	}
 
 	public void initControls() {
+		syncButton = (Button)findViewById(R.id.btSynchronization);
+		pbClearDB = (ProgressBar) findViewById(R.id.pbClearDB);
 		etServerIP = (EditText) findViewById(R.id.etServerIP);
 		etServerPort = (EditText) findViewById(R.id.etServerPort);
 		etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);

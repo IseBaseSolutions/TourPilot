@@ -5,15 +5,13 @@ import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
+import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.DialogPin;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -61,7 +59,7 @@ public class WorkersActivity extends BaseActivity implements DialogPin.DialogPin
 	
 	private void startOptionsActivity() {
 		Intent optionsActivity = new Intent(getApplicationContext(), OptionsActivity.class);
-		optionsActivity.putExtra("activity", "workers");
+		startActivity(optionsActivity);
 	}
 
 	public void startWorkerSync() {
@@ -108,6 +106,7 @@ public class WorkersActivity extends BaseActivity implements DialogPin.DialogPin
 		String pinStr = dialogPin.etPin.getText().toString();
 		if (!checkWorkerPIN(name, pinStr))
 			return;
+		DataBaseWrapper.Instance().clearAllData();
 		saveWorker();
 		startWorkerSync();
 	}
