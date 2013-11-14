@@ -271,7 +271,7 @@ public abstract class BaseObjectManager<T> {
 				method.invoke(item, cursor.getInt(cursor
 						.getColumnIndex(annos.DatabaseField())) == 1);
 			else if (method.getParameterTypes()[0].equals(Date.class))
-				method.invoke(item, new Date(cursor.getInt(cursor
+				method.invoke(item, new Date(cursor.getLong(cursor
 						.getColumnIndex(annos.DatabaseField()))));
 
 			} catch (Exception e) {

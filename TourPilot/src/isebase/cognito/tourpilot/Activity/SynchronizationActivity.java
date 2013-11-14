@@ -45,8 +45,12 @@ import android.widget.TextView;
  			
  			@Override
 			public void onSynchronizedFinished(boolean isOK, String text) {
-				if(!text.equals(""))
-					adapter.add(dateFormat.format(new Date()) + " " + text);	
+				if(!text.equals("")){
+					adapter.insert(dateFormat.format(new Date()) + " " + text, 0);	
+					if(!isOK){
+						progressText.setText(text);
+					}
+				}
 				if(isOK && !isNextActivityOpened){		
 					isNextActivityOpened = true;
 					Intent nextActivity = (Option.Instance().getWorkerID() == -1) 
@@ -58,7 +62,7 @@ import android.widget.TextView;
  			
  			@Override
  			public void onItemSynchronized(String text) {
-				adapter.add(dateFormat.format(new Date()) + " " + text);	
+				adapter.insert(dateFormat.format(new Date()) + " " + text, 0);	
 				connectionStatus.nextState();
 				connectionTask = new ConnectionAsyncTask(connectionStatus);
 				connectionTask.execute(); 

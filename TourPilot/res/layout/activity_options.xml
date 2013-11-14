@@ -7,24 +7,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".OptionsActivity" >
-
-    <TextView
-        android:id="@+id/tvOptions"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/options" 
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/tvPinCode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tvOptions"
-        android:layout_below="@+id/tvOptions"
-        android:layout_marginTop="18dp"
-        android:text="@string/pin_code"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
+    
     <EditText
         android:id="@+id/etPinCode"
         android:layout_width="match_parent"
@@ -36,74 +19,22 @@
         android:inputType="number"
         android:password="true" />
 
-    <CheckBox
-        android:id="@+id/cb_SavePin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/etPinCode"
-        android:layout_alignBottom="@+id/etPinCode"
-        android:layout_alignParentRight="true"
-        android:text="@string/save_pin_code" />
-    
-    <TextView
-        android:id="@+id/tvServer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/etPinCode"
-        android:layout_below="@+id/etPinCode"
-        android:layout_marginTop="30dp"
-        android:text="@string/server_ip"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-    
-	<EditText
-        android:id="@+id/etServerIP"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tvServer"
-        android:layout_below="@+id/tvServer"
-        android:ems="10"
-        android:hint="@string/input_server_ip"
-        android:inputType="text" >
+   	<TextView
+   	    android:id="@+id/tvPinCode"
+   	    android:layout_width="match_parent"
+   	    android:layout_height="wrap_content"
+   	    android:layout_alignParentTop="true"
+   	    android:text="@string/pin_code"
+   	    android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <requestFocus />
-    </EditText>
-    
-    <TextView
-        android:id="@+id/tvPort"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/etServerIP"
-        android:layout_below="@+id/etServerIP"
-        android:text="@string/server_port"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-    
    	<EditText
-        android:id="@+id/etServerPort"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tvPort"
-        android:layout_below="@+id/tvPort"
-        android:text="@string/standart_port"
-        android:ems="10"
-        android:inputType="number" />
-   	
-    <TextView
-        android:id="@+id/tvPhoneNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/etServerPort"
-        android:layout_below="@+id/etServerPort"
-        android:text="@string/phone_number"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-    
-   	<EditText
-        android:id="@+id/etPhoneNumber"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tvPhoneNumber"
-        android:layout_below="@+id/tvPhoneNumber"
-        android:ems="10"
-        android:inputType="phone" />
+   	    android:id="@+id/etPhoneNumber"
+   	    android:layout_width="match_parent"
+   	    android:layout_height="wrap_content"
+   	    android:layout_alignLeft="@+id/tvPhoneNumber"
+   	    android:layout_below="@+id/tvPhoneNumber"
+   	    android:ems="10"
+   	    android:inputType="phone" />
 
    	<Button
    	    android:id="@+id/btSynchronization"
@@ -114,5 +45,65 @@
    	    android:text="@string/synchronization"
    	    android:textAppearance="?android:attr/textAppearanceLarge" 
    	    android:onClick="startSync" />
-    
+
+   	<EditText
+   	    android:id="@+id/etServerIP"
+   	    android:layout_width="match_parent"
+   	    android:layout_height="wrap_content"
+   	    android:layout_alignRight="@+id/cb_SavePin"
+   	    android:layout_alignTop="@+id/tvServer"
+   	    android:layout_toRightOf="@+id/tvServer"
+   	    android:ems="10"
+   	    android:hint="@string/input_server_ip"
+   	    android:inputType="text" />
+
+   	<EditText
+   	    android:id="@+id/etServerPort"
+   	    android:layout_width="match_parent"
+   	    android:layout_height="wrap_content"
+   	    android:layout_alignLeft="@+id/etServerIP"
+   	    android:layout_alignParentRight="true"
+   	    android:layout_alignTop="@+id/tvPort"
+   	    android:ems="10"
+   	    android:inputType="number"
+   	    android:text="@string/standart_port" />
+
+   	<TextView
+   	    android:id="@+id/tvPhoneNumber"
+   	    android:layout_width="wrap_content"
+   	    android:layout_height="wrap_content"
+   	    android:layout_alignLeft="@+id/tvPort"
+   	    android:layout_below="@+id/etServerPort"
+   	    android:text="@string/phone_number"
+   	    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+   	<TextView
+   	    android:id="@+id/tvServer"
+   	    android:layout_width="wrap_content"
+   	    android:layout_height="wrap_content"
+   	    android:layout_alignLeft="@+id/etPinCode"
+   	    android:layout_below="@+id/etPinCode"
+   	    android:layout_marginTop="14dp"
+   	    android:text="@string/server_ip"
+   	    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+   	<TextView
+   	    android:id="@+id/tvPort"
+   	    android:layout_width="wrap_content"
+   	    android:layout_height="wrap_content"
+   	    android:layout_alignLeft="@+id/tvServer"
+   	    android:layout_below="@+id/etServerIP"
+   	    android:layout_marginTop="14dp"
+   	    android:text="@string/server_port"
+   	    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+   	<CheckBox
+   	    android:id="@+id/cb_SavePin"
+   	    android:layout_width="wrap_content"
+   	    android:layout_height="wrap_content"
+   	    android:layout_alignBaseline="@+id/etPinCode"
+   	    android:layout_alignBottom="@+id/etPinCode"
+   	    android:layout_alignParentRight="true"
+   	    android:text="@string/save_pin_code" />
+
 </RelativeLayout>

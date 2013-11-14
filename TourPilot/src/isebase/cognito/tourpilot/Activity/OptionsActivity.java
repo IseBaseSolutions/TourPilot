@@ -19,7 +19,6 @@ public class OptionsActivity extends BaseActivity {
 
 	private DialogFragment dialogNoConnection;
 	private DialogFragment dialogNoIPEntered;
-	private DialogFragment dialogVersionFragment;
 
 	private EditText etServerIP;
 	private EditText etServerPort;
@@ -28,12 +27,17 @@ public class OptionsActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		StaticResources.setBaseContext(this);
 		setContentView(R.layout.activity_options);
-		StaticResources.setBaseContext(getBaseContext());
 		initControls();
 		initDialogs();
 	}
 
+	@Override
+	protected boolean isMainActivity() {
+		return true;
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.options_menu, menu);
@@ -47,8 +51,7 @@ public class OptionsActivity extends BaseActivity {
 			// clear database
 			return true;
 		case R.id.action_show_program_info:
-			dialogVersionFragment.show(getSupportFragmentManager(),
-					"dialogVersion");
+			dialogVersionFragment.show(getSupportFragmentManager(), "dialogVersion");
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -70,8 +73,7 @@ public class OptionsActivity extends BaseActivity {
 		}
 		if (ConnectionInfo.Instance().getNetworkInfo() == null
 				|| !ConnectionInfo.Instance().getNetworkInfo().isConnected()) {
-			dialogNoConnection.show(getSupportFragmentManager(),
-					"dialogNoConnection");
+			dialogNoConnection.show(getSupportFragmentManager(), "dialogNoConnection");
 			return;
 		}
 		saveOptions();
@@ -93,13 +95,15 @@ public class OptionsActivity extends BaseActivity {
 		Option.Instance().save();
 	}
 
-	private void initDialogs() {
+	private void initDialogs() {			
 		dialogVersionFragment = new DialogInfoBase(
-				getString(R.string.program_info), String.format("%s %s\n%s %s",
-						getString(R.string.program_version), Option.Instance()
-								.getVersion(),
-						getString(R.string.data_base_version),
-						DataBaseWrapper.DATABASE_VERSION));
+			getString(R.string.program_info), 
+			String.format("%s %s\n%s %s"
+					, getString(R.string.program_version)
+					, Option.Instance().getVersion()
+					, getString(R.string.data_base_version)
+					, DataBaseWrapper.DATABASE_VERSION)
+			);
 		dialogNoIPEntered = new DialogInfoBase(
 				getString(R.string.connection_problems),
 				getString(R.string.no_ip_entered));
