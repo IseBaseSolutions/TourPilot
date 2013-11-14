@@ -1,14 +1,1 @@
-bin/
-gen/
-libs/
-.settings/
-
-*.class
-*.apk
-*.jar
-*.classpath
-*.projectC
-
-TourPilot/bin/TourPilot.apk
-TourPilot/bin/classes.dex
-TourPilot/bin/resources.ap_
+ 
