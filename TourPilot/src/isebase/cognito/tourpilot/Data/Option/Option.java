@@ -30,6 +30,22 @@ public class Option {
 	private int serverPort;
 	private int id;
 	
+	private int temporaryWorkerID;
+	private int temporaryTourID;
+	private int temporaryPatientID;
+	
+	public void setTemporaryWorkerID(int temporaryWorkerID) {
+		this.temporaryWorkerID = temporaryWorkerID;
+	}
+
+	public void setTemporaryTourID(int temporaryTourID) {
+		this.temporaryTourID = temporaryTourID;
+	}
+
+	public void setTemporaryPatientID(int temporaryPatientID) {
+		this.temporaryPatientID = temporaryPatientID;
+	}
+	
 	public int count;
 	
 	@MapField(DatabaseField = WorkerIDField)
@@ -94,7 +110,7 @@ public class Option {
 	public Worker getWorker() {
 		if (worker != null && worker.getId() == getWorkerID())
 			return worker;
-		worker = WorkerManager.Instance().loadAll(workerID);
+		worker = WorkerManager.Instance().load(workerID);
 		return worker;
 	}
 

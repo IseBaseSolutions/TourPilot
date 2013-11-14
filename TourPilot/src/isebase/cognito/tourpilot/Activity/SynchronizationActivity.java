@@ -25,7 +25,6 @@ import android.widget.TextView;
 	private ConnectionStatus connectionStatus;
 	private ConnectionAsyncTask connectionTask;
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm"); 
-	private boolean isNextActivityOpened = false;
 	private ProgressBar progressBar;
 	private TextView progressText;
  	
@@ -39,7 +38,6 @@ import android.widget.TextView;
 		adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, new ArrayList<String>());
 		lvConnectionLog.setAdapter(adapter);
-		isNextActivityOpened = false;
 		adapter.add("Waiting open sockets to automatically close...");
  		syncHandler = new SynchronizationHandler() {
  			
@@ -51,8 +49,7 @@ import android.widget.TextView;
 						progressText.setText(text);
 					}
 				}
-				if(isOK && !isNextActivityOpened){		
-					isNextActivityOpened = true;
+				if(isOK){		
 					Intent nextActivity = (Option.Instance().getWorkerID() == -1) 
 							? new Intent(getApplicationContext(), WorkersActivity.class) 
 							: new Intent(getApplicationContext(), ToursActivity.class);
@@ -89,8 +86,9 @@ import android.widget.TextView;
  	@Override
  	public void onBackPressed() {
 		connectionTask.terminate();
-		Intent optionActivity= new Intent(getApplicationContext()
+		super.onBackPressed();
+	/*	Intent optionActivity= new Intent(getApplicationContext()
 				, OptionsActivity.class);
-		startActivity(optionActivity);	
+		startActivity(optionActivity);	*/
  	}
 }

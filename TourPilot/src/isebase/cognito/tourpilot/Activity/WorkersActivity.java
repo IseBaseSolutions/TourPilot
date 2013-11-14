@@ -12,6 +12,7 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,8 +21,8 @@ import android.widget.ListView;
 public class WorkersActivity extends BaseActivity implements DialogPin.DialogPinListener {
 
 	private List<Worker> workers = new ArrayList<Worker>();
-	private Worker selectedWorker;
 	private DialogPin dialogPin;
+	private Worker selectedWorker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,12 @@ public class WorkersActivity extends BaseActivity implements DialogPin.DialogPin
 		reloadData();
 		initDialogs();
 		initListWorkers();
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.options_menu, menu);
+		return true;
 	}
 	
 	@Override
@@ -63,8 +70,7 @@ public class WorkersActivity extends BaseActivity implements DialogPin.DialogPin
 	}
 
 	public void startWorkerSync() {
-		Intent synchActivity = new Intent(getApplicationContext(),
-				SynchronizationActivity.class);
+		Intent synchActivity = new Intent(getApplicationContext(), SynchronizationActivity.class);
 		startActivity(synchActivity);
 	}
 
@@ -106,8 +112,9 @@ public class WorkersActivity extends BaseActivity implements DialogPin.DialogPin
 		String pinStr = dialogPin.etPin.getText().toString();
 		if (!checkWorkerPIN(name, pinStr))
 			return;
-		DataBaseWrapper.Instance().clearAllData();
-		saveWorker();
+
+		DataBaseWrapper.Instance().clearWorkerData();
+		saveSelectedWorkerID();
 		startWorkerSync();
 	}
 
@@ -116,7 +123,7 @@ public class WorkersActivity extends BaseActivity implements DialogPin.DialogPin
 		return;
 	}
 	
-	private void saveWorker() {
+	private void saveSelectedWorkerID() {
 		Option.Instance().setWorkerID(selectedWorker.getId());
 		Option.Instance().save();
 	}

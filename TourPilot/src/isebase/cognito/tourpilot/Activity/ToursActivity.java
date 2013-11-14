@@ -3,6 +3,7 @@ package isebase.cognito.tourpilot.Activity;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
+import isebase.cognito.tourpilot.Data.Tour.TourManager;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,9 +28,9 @@ public class ToursActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tours);
-		tours = Option.Instance().getWorker().tours;
-		initListTours();
+		reloadData();		
 		initComnponents();
+		initListTours();
 	}
 
 	@Override
@@ -53,7 +54,7 @@ public class ToursActivity extends BaseActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
-				saveSelectedTour(tours.get(position).getId());
+				saveSelectedTourID(tours.get(position).getId());
 				startPatientsActivity();
 			}
 
@@ -95,11 +96,14 @@ public class ToursActivity extends BaseActivity {
 		SimpleDateFormat simpleDateformat = new SimpleDateFormat("EE MM.dd");
 		String dayOfTheWeek = simpleDateformat.format(new Date());
 		((TextView) findViewById(R.id.tvCurrentInfo)).setText(String.format(
-				"%s - %s", dayOfTheWeek, Option.Instance().getWorker()
-						.getName()));
+				"%s - %s", dayOfTheWeek, Option.Instance().getWorker().getName()));
 	}
 
-	private void saveSelectedTour(int tourID) {
+	private void reloadData(){
+		tours = TourManager.Instance().load();
+	}
+	
+	private void saveSelectedTourID(int tourID) {
 		Option.Instance().setTourID(tourID);
 		Option.Instance().save();
 	}

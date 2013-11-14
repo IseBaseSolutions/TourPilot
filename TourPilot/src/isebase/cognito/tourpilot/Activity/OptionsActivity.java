@@ -41,6 +41,11 @@ public class OptionsActivity extends BaseActivity {
 	}
 
 	@Override
+	public void onBackPressed() {
+		finish();
+	}
+	
+	@Override
 	protected boolean isMainActivity() {
 		return true;
 	}
@@ -151,9 +156,7 @@ public class OptionsActivity extends BaseActivity {
 	}
 	
 	private void switchToLastActivity() {
-		Intent intent = getIntent();
-        String activity = intent.getStringExtra("activity");
-		if ((activity == null || activity.compareTo("workers") == 0) && Option.Instance().getWorkerID() == -1)
+		if (Option.Instance().getWorkerID() == -1)
 			return;
 		else if (Option.Instance().getTourID() == -1)
 			startToursActivity();

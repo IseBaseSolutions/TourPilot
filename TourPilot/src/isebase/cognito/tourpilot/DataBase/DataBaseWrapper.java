@@ -77,7 +77,6 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ BaseObject.WasSentField + " INTEGER, "
 			+ BaseObject.IsServerTimeField + " INTEGER, "
 			+ Patient.SurnameField + " TEXT, "
-			+ Patient.IsDoneField + " INTEGER NOT NULL DEFAULT 0, "
 			+ Patient.IsAdditionalField + " INTEGER, "
 			+ Patient.AddressIDField + " INTEGER, "
 			+ Patient.SexField + " TEXT, "
@@ -107,14 +106,15 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ BaseObject.WasSentField + " INTEGER, "
 			+ BaseObject.IsServerTimeField + " INTEGER, "
 			+ Task.WorkerIDField + " INTEGER, "
-			+ Task.EmploymentIDField + " INTEGER, "
+			+ Task.PatientIDField + " INTEGER, "
 			+ Task.StateField + " INTEGER NOT NULL DEFAULT 0, "
 			+ Task.PlanDateField + " INTEGER, "
 			+ Task.LeistungsField + " TEXT, "
 			+ Task.MinutePriceField + " INTEGER, "
-			+ Task.TourCodeField + " INTEGER, "
+			+ Task.TourIDField + " INTEGER, "
 			+ Task.IsAdditionalTaskField + " INTEGER, "
-			+ Task.TaskIDField + " INTEGER "
+			+ Task.AdditionalTaskIDField + " INTEGER, "
+			+ Task.EmploymentIDField + " INTEGER "
 			+ ");";
 	
 	private static final String ADDITIONAL_TASKS_TABLE_CREATE = 
@@ -264,8 +264,6 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			db.execSQL(OPTIONS_TABLE_CREATE);
 			for(String createTable : createDataTables)
 				db.execSQL(createTable);
-			for(String createTable : createDataTables)
-				db.execSQL(createTable);
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -275,8 +273,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 
 	public boolean clearAllData(){
 		boolean retVal = true;	
-		
-		for(String deleteTable : deleteDataTables){
+				for(String deleteTable : deleteDataTables){
 			try{
 				Instance().getReadableDatabase().execSQL(deleteTable);
 			}catch(Exception ex){
@@ -284,8 +281,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 				ex.printStackTrace();
 				continue;
 			}
-		}
-		
+		}		
 		for(String createTable : createDataTables){
 			try{
 				Instance().getReadableDatabase().execSQL(createTable);
@@ -294,8 +290,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 				ex.printStackTrace();
 				continue;
 			}
-		}
-		
+		}		
 		try{
 			if (DataBaseWrapper.Instance().getReadableDatabase() != null)
 				DataBaseWrapper.Instance().getReadableDatabase().close();

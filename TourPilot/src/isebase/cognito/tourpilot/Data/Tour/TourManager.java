@@ -29,10 +29,5 @@ public class TourManager extends BaseObjectManager<Tour> {
 	@Override
 	public void onUpgrade(SQLiteDatabase db) {
 	}
-	
-	@Override
-	public void afterLoad(Tour tour) {
-		//tour.patients = PatientManager.Instance().load();
-	}
 
 }

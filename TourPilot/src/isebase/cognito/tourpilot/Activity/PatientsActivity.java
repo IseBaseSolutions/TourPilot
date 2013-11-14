@@ -4,6 +4,7 @@ import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
+import isebase.cognito.tourpilot.Data.Task.Task;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,9 +20,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SlidingDrawer;
-import android.widget.TextView;
 import android.widget.SlidingDrawer.OnDrawerCloseListener;
 import android.widget.SlidingDrawer.OnDrawerOpenListener;
+import android.widget.TextView;
 
 public class PatientsActivity extends BaseActivity {
 
@@ -41,9 +42,22 @@ public class PatientsActivity extends BaseActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.patients, menu);
 		return true;
+	}
+	
+	@Override
+	public void onBackPressed() {
+		startToursActivity();
+	}
+	
+	private void startToursActivity() {
+		Intent toursActivity = new Intent(getApplicationContext(), ToursActivity.class);
+		startActivity(toursActivity);
+	}
+	
+	private void startTasksActivity() {
+		Intent tasksActivity = new Intent(getApplicationContext(), TasksActivity.class);
+		startActivity(tasksActivity);
 	}
 
 	public void initListUndonePatients() {
@@ -58,13 +72,14 @@ public class PatientsActivity extends BaseActivity {
 					@Override
 					public void onItemClick(AdapterView<?> arg0, View arg1,
 							int position, long arg3) {
-						Intent tasksActivity = new Intent(
-								getApplicationContext(), TasksActivity.class);
-						startActivity(tasksActivity);
+						saveSelectedPatientID(((Patient)patients.get(position)).getId());
+						startTasksActivity();
 					}
 				});
 
 	}
+	
+
 
 	public void initListDonePatients() {
 		final ArrayAdapter<Patient> adapter = new ArrayAdapter<Patient>(this,
@@ -96,12 +111,10 @@ public class PatientsActivity extends BaseActivity {
 	}
 
 	public void reloadData() {
-		patients = PatientManager.Instance().load();
+		patients = PatientManager.Instance().loadBytourID(Option.Instance().getTourID());
 		for (Patient patient : patients) {
-			if (patient.getIsDone())
-				donePatients.add(patient);
-			else
-				unDonePatients.add(patient);
+			donePatients.add(patient);
+			unDonePatients.add(patient);
 		}
 	}
 	
@@ -110,6 +123,11 @@ public class PatientsActivity extends BaseActivity {
 		String dayOfTheWeek = simpleDateformat.format(new Date());
 		((TextView) findViewById(R.id.tvCurrentInfo)).setText(String.format(
 				"%s - %s", dayOfTheWeek, Option.Instance().getWorker().getName()));
+	}
+	
+	private void saveSelectedPatientID(int patientID) {
+		Option.Instance().setPatientID(patientID);
+		Option.Instance().save();
 	}
 	
 }

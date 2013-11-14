@@ -133,18 +133,13 @@ public class ServerCommandParser {
 		case ADDITIONAL_TASK_L:
 		case ADDITIONAL_TASK_Z:
 			if (commandLine.startsWith("" + ADDITIONAL_TASK_Z))
-				commandLine = ADDITIONAL_TASK_L + commandLine.substring(1);
-			try{
-				if (commandActionType == NEED_TO_ADD) {
-					AdditionalTask item = new AdditionalTask(commandLine);
-					AdditionalTaskManager.Instance().save(item);
-					syncHandler.onProgressUpdate(item.getName() + " OK");
-				} else 
-					removeByID(commandLine, AdditionalTaskManager.Instance());
-			}catch (Exception e) {
-				e.printStackTrace();
-				e.getMessage();
-			}
+			commandLine = ADDITIONAL_TASK_L + commandLine.substring(1);
+			if (commandActionType == NEED_TO_ADD) {
+				AdditionalTask item = new AdditionalTask(commandLine);
+				AdditionalTaskManager.Instance().save(item);
+				syncHandler.onProgressUpdate(item.getName() + " OK");
+			} else 
+				removeByID(commandLine, AdditionalTaskManager.Instance());
 			break;
 		case DOCTOR:
 			if (commandActionType == NEED_TO_ADD) {
