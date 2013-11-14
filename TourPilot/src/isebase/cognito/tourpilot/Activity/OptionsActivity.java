@@ -52,7 +52,6 @@ public class OptionsActivity extends BaseActivity {
 			return true;
 		case R.id.action_show_program_info:
 			dialogVersionFragment.show(getSupportFragmentManager(), "dialogVersion");
-			
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
