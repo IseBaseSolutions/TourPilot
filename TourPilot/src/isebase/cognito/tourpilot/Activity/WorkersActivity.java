@@ -12,6 +12,7 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -112,7 +113,7 @@ public class WorkersActivity extends BaseActivity implements DialogPin.DialogPin
 		if (!checkWorkerPIN(name, pinStr))
 			return;
 
-		DataBaseWrapper.Instance().clearAllData();
+		DataBaseWrapper.Instance().clearWorkerData();
 		saveSelectedWorkerID();
 		startWorkerSync();
 	}

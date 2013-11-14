@@ -264,8 +264,6 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			db.execSQL(OPTIONS_TABLE_CREATE);
 			for(String createTable : createDataTables)
 				db.execSQL(createTable);
-			for(String createTable : createDataTables)
-				db.execSQL(createTable);
 		} catch(Exception e){
 			e.printStackTrace();
 		}
