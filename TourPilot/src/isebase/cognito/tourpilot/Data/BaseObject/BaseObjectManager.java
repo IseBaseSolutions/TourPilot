@@ -268,8 +268,8 @@ public abstract class BaseObjectManager<T> {
 				if (!method.getReturnType().equals(Void.TYPE))
 					continue;
 				MapField annos = method.getAnnotation(MapField.class);
-				if (annos == null)
-					continue;
+				if (annos == null) 
+					continue;			
 				if (method.getParameterTypes()[0].equals(int.class))
 					method.invoke(item, cursor.getInt(cursor
 							.getColumnIndex(annos.DatabaseField())));
@@ -295,10 +295,8 @@ public abstract class BaseObjectManager<T> {
 					method.invoke(item, cursor.getInt(cursor
 							.getColumnIndex(annos.DatabaseField())) == 1);
 				else if (method.getParameterTypes()[0].equals(Date.class))
-					method.invoke(
-							item,
-							new Date(cursor.getInt(cursor.getColumnIndex(annos
-									.DatabaseField()))));
+					method.invoke(item, new Date(cursor.getLong(cursor
+							.getColumnIndex(annos.DatabaseField()))));
 
 			} catch (Exception e) {
 				e.printStackTrace();

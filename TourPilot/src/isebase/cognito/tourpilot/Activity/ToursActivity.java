@@ -20,7 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class ToursActivity extends Activity {
+public class ToursActivity extends BaseActivity {
 
 	List<Tour> tours = new ArrayList<Tour>();
 

@@ -14,7 +14,6 @@ import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -22,7 +21,6 @@ import java.net.Socket;
 import java.util.Date;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-
 import android.os.AsyncTask;
 
 public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
@@ -244,6 +242,11 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		try {
 			publishProgress(true);
 			for (String data : conStatus.getDataFromServer()){
+				if(isTerminated)
+				{
+					conStatus.isFinished = true;
+					break;
+				}
 				conStatus.serverCommandParser.parseElement(data, false);
 				publishProgress();
 			}
@@ -446,11 +449,15 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 
 	public String readPack(InputStream is) throws IOException,
 			InterruptedException {
+		
+		int counter = 0;
+		int timeoutSeconds = 120;
 		while (is.available() == 0)
 			try {
-				if(isTerminated)
+				if(isTerminated || counter >= timeoutSeconds)
 					return "";
 				Thread.sleep(1000);
+				counter++;
 			} catch (InterruptedException ex) {
 				ex.printStackTrace();
 			}
@@ -458,8 +465,11 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		StringBuffer stringBuffer = new StringBuffer();
 		GZIPInputStream zis = new GZIPInputStream(is);
 
-		while (zis.available() != 0)
+		while (zis.available() != 0){
+			if(isTerminated)
+				return "";
 			stringBuffer.append((char) zis.read());
+		}
 		return stringBuffer.toString();
 	}
 

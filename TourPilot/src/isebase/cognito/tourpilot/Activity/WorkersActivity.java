@@ -5,22 +5,19 @@ import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
+import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.DialogPin;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class WorkersActivity extends FragmentActivity implements DialogPin.DialogPinListener {
+public class WorkersActivity extends BaseActivity implements DialogPin.DialogPinListener {
 
 	private List<Worker> workers = new ArrayList<Worker>();
 	private DialogPin dialogPin;
@@ -34,7 +31,7 @@ public class WorkersActivity extends FragmentActivity implements DialogPin.Dialo
 		initDialogs();
 		initListWorkers();
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.options_menu, menu);
@@ -114,6 +111,8 @@ public class WorkersActivity extends FragmentActivity implements DialogPin.Dialo
 		String pinStr = dialogPin.etPin.getText().toString();
 		if (!checkWorkerPIN(name, pinStr))
 			return;
+
+		DataBaseWrapper.Instance().clearAllData();
 		saveSelectedWorkerID();
 		startWorkerSync();
 	}

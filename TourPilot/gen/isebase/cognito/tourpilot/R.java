@@ -40,17 +40,17 @@ public final class R {
         public static final int btLogOut=0x7f08001e;
         public static final int btOptions=0x7f08001f;
         public static final int btSaveAddTask=0x7f080005;
-        public static final int btSynchronization=0x7f080013;
+        public static final int btSynchronization=0x7f08000e;
         public static final int cancelAllTasks=0x7f080029;
-        public static final int cb_SavePin=0x7f08000c;
+        public static final int cb_SavePin=0x7f08000b;
         public static final int chbAddTask=0x7f080021;
         public static final int comments=0x7f080030;
         public static final int doctors=0x7f08002e;
         public static final int etAddTasksFilter=0x7f080003;
-        public static final int etPhoneNumber=0x7f080012;
-        public static final int etPinCode=0x7f08000b;
-        public static final int etServerIP=0x7f08000e;
-        public static final int etServerPort=0x7f080010;
+        public static final int etPhoneNumber=0x7f08000c;
+        public static final int etPinCode=0x7f080009;
+        public static final int etServerIP=0x7f08000f;
+        public static final int etServerPort=0x7f080011;
         public static final int info=0x7f08002b;
         public static final int llFilter=0x7f080001;
         public static final int lvAddTasks=0x7f080004;
@@ -63,6 +63,7 @@ public final class R {
         public static final int lvWorkers=0x7f080020;
         public static final int manualInput=0x7f08002c;
         public static final int notes=0x7f08002a;
+        public static final int pbClearDB=0x7f080013;
         public static final int pbSync=0x7f080019;
         public static final int relatives=0x7f08002f;
         public static final int sdDonePatients=0x7f080016;
@@ -70,12 +71,11 @@ public final class R {
         public static final int tvAddTasksCategories=0x7f080006;
         public static final int tvCurrentInfo=0x7f080014;
         public static final int tvFilter=0x7f080002;
-        public static final int tvOptions=0x7f080009;
-        public static final int tvPhoneNumber=0x7f080011;
+        public static final int tvPhoneNumber=0x7f08000d;
         public static final int tvPinCode=0x7f08000a;
-        public static final int tvPort=0x7f08000f;
+        public static final int tvPort=0x7f080012;
         public static final int tvProgress=0x7f08001a;
-        public static final int tvServer=0x7f08000d;
+        public static final int tvServer=0x7f080010;
         public static final int tvTaskName=0x7f080023;
         public static final int tvWorkerName=0x7f080024;
     }
@@ -114,6 +114,7 @@ public final class R {
         public static final int patients=0x7f07000a;
         public static final int relatives=0x7f07000b;
         public static final int tasks=0x7f07000c;
+        public static final int version_menu=0x7f07000d;
     }
     public static final class string {
         public static final int action_settings=0x7f050001;
