@@ -41,6 +41,11 @@ public class OptionsActivity extends BaseActivity {
 	}
 
 	@Override
+	public void onBackPressed() {
+		finish();
+	}
+	
+	@Override
 	protected boolean isMainActivity() {
 		return true;
 	}

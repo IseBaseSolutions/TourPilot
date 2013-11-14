@@ -264,8 +264,6 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			db.execSQL(OPTIONS_TABLE_CREATE);
 			for(String createTable : createDataTables)
 				db.execSQL(createTable);
-			for(String createTable : createDataTables)
-				db.execSQL(createTable);
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -275,8 +273,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 
 	public boolean clearAllData(){
 		boolean retVal = true;	
-		
-		for(String deleteTable : deleteDataTables){
+				for(String deleteTable : deleteDataTables){
 			try{
 				Instance().getReadableDatabase().execSQL(deleteTable);
 			}catch(Exception ex){
@@ -284,8 +281,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 				ex.printStackTrace();
 				continue;
 			}
-		}
-		
+		}		
 		for(String createTable : createDataTables){
 			try{
 				Instance().getReadableDatabase().execSQL(createTable);
@@ -294,8 +290,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 				ex.printStackTrace();
 				continue;
 			}
-		}
-		
+		}		
 		try{
 			if (DataBaseWrapper.Instance().getReadableDatabase() != null)
 				DataBaseWrapper.Instance().getReadableDatabase().close();
