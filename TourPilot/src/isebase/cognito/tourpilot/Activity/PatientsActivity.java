@@ -1,10 +1,13 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Intent;
@@ -16,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SlidingDrawer;
+import android.widget.TextView;
 import android.widget.SlidingDrawer.OnDrawerCloseListener;
 import android.widget.SlidingDrawer.OnDrawerOpenListener;
 
@@ -30,7 +34,7 @@ public class PatientsActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_patients);
 		reloadData();
-		initPatients(patients.size());
+		initComnponents();
 		initListUndonePatients();
 		initListDonePatients();
 	}
@@ -91,17 +95,6 @@ public class PatientsActivity extends BaseActivity {
 				});
 	}
 
-	private void initPatients(int tableSize) {
-		if (tableSize > 0)
-			return;
-		boolean bb = false;
-		for (int i = 0; i < 20; i++) {
-			bb = !bb;
-			PatientManager.Instance().save(new Patient("Patient " + i, bb));
-		}
-		reloadData();
-	}
-
 	public void reloadData() {
 		patients = PatientManager.Instance().load();
 		for (Patient patient : patients) {
@@ -111,4 +104,12 @@ public class PatientsActivity extends BaseActivity {
 				unDonePatients.add(patient);
 		}
 	}
+	
+	private void initComnponents() {
+		SimpleDateFormat simpleDateformat = new SimpleDateFormat("EE MM.dd");
+		String dayOfTheWeek = simpleDateformat.format(new Date());
+		((TextView) findViewById(R.id.tvCurrentInfo)).setText(String.format(
+				"%s - %s", dayOfTheWeek, Option.Instance().getWorker().getName()));
+	}
+	
 }

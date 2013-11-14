@@ -1,7 +1,6 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Connection.ConnectionInfo;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
 
@@ -39,6 +38,11 @@ public class ToursActivity extends BaseActivity {
 		return true;
 	}
 
+	@Override
+	public void onBackPressed() {
+		logOut();
+	}
+
 	public void initListTours() {
 		ListView listView = (ListView) findViewById(R.id.lvTours);
 		ArrayAdapter<Tour> adapter = new ArrayAdapter<Tour>(this,
@@ -50,22 +54,38 @@ public class ToursActivity extends BaseActivity {
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
 				saveSelectedTour(tours.get(position).getId());
-				Intent patientsActivity = new Intent(getApplicationContext(),
-						PatientsActivity.class);
-				startActivity(patientsActivity);
+				startPatientsActivity();
 			}
 
 		});
 	}
 
-	public void logOut(View view) {
+	public void btlogOutClick(View view) {
+		logOut();
+	}
+
+	public void btStartSyncClick(View view) {
+		startSyncActivity();
+	}
+
+	private void logOut() {
 		clearPersonalOptions();
+		startWorkersActivity();
+	}
+
+	private void startWorkersActivity() {
 		Intent workersActivity = new Intent(getApplicationContext(),
 				WorkersActivity.class);
 		startActivity(workersActivity);
 	}
-	
-	public void startSync(View view) {
+
+	private void startPatientsActivity() {
+		Intent patientsActivity = new Intent(getApplicationContext(),
+				PatientsActivity.class);
+		startActivity(patientsActivity);
+	}
+
+	private void startSyncActivity() {
 		Intent synchActivity = new Intent(getApplicationContext(),
 				SynchronizationActivity.class);
 		startActivity(synchActivity);
@@ -75,18 +95,19 @@ public class ToursActivity extends BaseActivity {
 		SimpleDateFormat simpleDateformat = new SimpleDateFormat("EE MM.dd");
 		String dayOfTheWeek = simpleDateformat.format(new Date());
 		((TextView) findViewById(R.id.tvCurrentInfo)).setText(String.format(
-				"%s - %s", dayOfTheWeek, Option.Instance().getWorker().getName()));
+				"%s - %s", dayOfTheWeek, Option.Instance().getWorker()
+						.getName()));
 	}
-	
+
 	private void saveSelectedTour(int tourID) {
 		Option.Instance().setTourID(tourID);
 		Option.Instance().save();
 	}
-	
+
 	private void clearPersonalOptions() {
 		Option.Instance().setWorkerID(-1);
 		Option.Instance().setTourID(-1);
 		Option.Instance().save();
 	}
-	
+
 }

@@ -13,7 +13,7 @@ public class Option {
 	
 	public static final String WorkerIDField = "worker_id";
 	public static final String TourIDField = "tour_id";
-	public static final String EmploymentIDField = "employment_id";
+	public static final String PatientIDField = "patient_id";
 	public static final String ServerIPField = "server_ip";
 	public static final String ServerPortField = "server_port";
 
@@ -26,7 +26,7 @@ public class Option {
 		
 	private int workerID;
 	private int tourID;
-	private int employmentID;
+	private int patientID;
 	private int serverPort;
 	private int id;
 	
@@ -52,14 +52,14 @@ public class Option {
 		this.tourID = tourID;
 	}
 
-	@MapField(DatabaseField = EmploymentIDField)
-	public int getEmploymentID() {
-		return employmentID;
+	@MapField(DatabaseField = PatientIDField)
+	public int getPatientID() {
+		return patientID;
 	}
 
-	@MapField(DatabaseField = EmploymentIDField)
-	public void setEmploymentID(int employmentID) {
-		this.employmentID = employmentID;
+	@MapField(DatabaseField = PatientIDField)
+	public void setPatientID(int patientID) {
+		this.patientID = patientID;
 	}
 
 	@MapField(DatabaseField = ServerIPField)
@@ -102,7 +102,7 @@ public class Option {
 		id = BaseObject.EMPTY_ID;
 		workerID = BaseObject.EMPTY_ID;
 		tourID = BaseObject.EMPTY_ID;
-		employmentID = BaseObject.EMPTY_ID;	
+		patientID = BaseObject.EMPTY_ID;	
 		serverPort = 4448;		
 		serverIP = "192.168.1.8";
 	}

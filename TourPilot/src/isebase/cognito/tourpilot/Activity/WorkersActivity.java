@@ -33,6 +33,11 @@ public class WorkersActivity extends BaseActivity implements DialogPin.DialogPin
 		initDialogs();
 		initListWorkers();
 	}
+	
+	@Override
+	public void onBackPressed() {
+		startOptionsActivity();
+	}
 
 	public void initListWorkers() {
 		final ListView listView = (ListView) findViewById(R.id.lvWorkers);
@@ -50,9 +55,13 @@ public class WorkersActivity extends BaseActivity implements DialogPin.DialogPin
 		});
 	}
 
-	public void switchToOptions(View view) {
+	public void btOptionsClick(View view) {
+		startOptionsActivity();
+	}
+	
+	private void startOptionsActivity() {
 		Intent optionsActivity = new Intent(getApplicationContext(), OptionsActivity.class);
-		startActivity(optionsActivity);
+		optionsActivity.putExtra("activity", "workers");
 	}
 
 	public void startWorkerSync() {
@@ -106,12 +115,6 @@ public class WorkersActivity extends BaseActivity implements DialogPin.DialogPin
 	@Override
 	public void onDialogNegativeClick(DialogFragment dialog) {
 		return;
-	}
-	
-	@Override
-	public void onBackPressed() {
-		switchToOptions(null);
-		super.onBackPressed();
 	}
 	
 	private void saveWorker() {
