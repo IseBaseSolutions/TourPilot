@@ -1,6 +1,7 @@
 package isebase.cognito.tourpilot.Data.Task;
 
 import isebase.cognito.tourpilot.Connection.ServerCommandParser;
+import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.DateUtils;
@@ -16,10 +17,11 @@ public class Task extends BaseObject {
 	public static final String PlanDateField = "plan_date";
 	public static final String LeistungsField = "leistungs";
 	public static final String MinutePriceField = "minute_price";
-	public static final String TourCodeField = "tour_code";
-	public static final String EmploymentIDField = "employment_id";
+	public static final String TourIDField = "tour_id";
+	public static final String PatientIDField = "patient_id";
 	public static final String IsAdditionalTaskField = "additional_task";
-	public static final String TaskIDField = "task_id";
+	public static final String AdditionalTaskIDField = "additional_task_id";
+	public static final String EmploymentIDField = "employment_id";
 
 	public enum eTaskState {
 		Empty, Done, UnDone
@@ -31,23 +33,35 @@ public class Task extends BaseObject {
 
 	private String leistungs;
 
-	private int taskID;
+	
 	private int workerID;
 	private int minutePrice;
+	private int additionalTaskID;
 
-	private long tourId;
-	private long employmentId;
+	private long employmentID;
+	private long tourID;
+	private long patientID;
 
 	private boolean isAdditionaltask;
 	
-	@MapField(DatabaseField = TaskIDField)
-	public int getTaskID() {
-		return taskID;
+	@MapField(DatabaseField = AdditionalTaskIDField)
+	public int getAditionalTaskID () {
+		return additionalTaskID;
 	}
 
-	@MapField(DatabaseField = TaskIDField)
-	public void setTaskID(int taskID) {
-		this.taskID = taskID;
+	@MapField(DatabaseField = AdditionalTaskIDField)
+	public void setAditionalTaskID(int additionalTaskID) {
+		this.additionalTaskID = additionalTaskID;
+	}		
+	
+	@MapField(DatabaseField = EmploymentIDField)
+	public long getEmploymentID() {
+		return employmentID;
+	}
+
+	@MapField(DatabaseField = EmploymentIDField)
+	public void setEmploymentID(long employmentID) {
+		this.employmentID = employmentID;
 	}	
 
 	@MapField(DatabaseField = WorkerIDField)
@@ -108,24 +122,24 @@ public class Task extends BaseObject {
 		this.minutePrice = minutePrice;
 	}
 
-	@MapField(DatabaseField = TourCodeField)
-	public long getTourCode() {
-		return tourId;
+	@MapField(DatabaseField = TourIDField)
+	public long getTourID() {
+		return tourID;
 	}
 
-	@MapField(DatabaseField = TourCodeField)
-	public void setTourCode(long tourId) {
-		this.tourId = tourId;
+	@MapField(DatabaseField = TourIDField)
+	public void setTourID(long tourID) {
+		this.tourID = tourID;
 	}
 
-	@MapField(DatabaseField = EmploymentIDField)
-	public long getEmploymentId() {
-		return employmentId;
+	@MapField(DatabaseField = PatientIDField)
+	public long getPatientID() {
+		return patientID;
 	}
 
-	@MapField(DatabaseField = EmploymentIDField)
-	public void setEmploymentId(long employmentId) {
-		this.employmentId = employmentId;
+	@MapField(DatabaseField = PatientIDField)
+	public void setPatientID(long patientID) {
+		this.patientID = patientID;
 	}
 
 	@MapField(DatabaseField = IsAdditionalTaskField)
@@ -154,7 +168,7 @@ public class Task extends BaseObject {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		setTaskID(Integer.parseInt(parsingString.next(";")));
+		setPatientID(Integer.parseInt(parsingString.next(";")));
 		setLeistungs(parsingString.next(";"));
 		String str = parsingString.next(";");
 		if (str.contains("@")) {
@@ -169,25 +183,24 @@ public class Task extends BaseObject {
 				if (getLeistungs().contains("Ende"))
 					str = "[Einsatzende " + str.substring(1);
 			}
-			setName(parsingString.next(";"));
+			setName(str);
+			parsingString.next(";");
 			setTaskState(eTaskState.Empty);
 		} else {
 			setName(str);
 			setTaskState(eTaskState.Empty);
-			// setTaskState(eTaskState.Empty);
-			// if (getLeistungs().contains("+"))
-			// fld_addTaskIdentID = GetAddTaskIDFromLeist(getLeistungs());
-			// else {
-			// int zIndex = getLeistungs().indexOf("Z");
-			// fld_addTaskIdentID = Integer.valueOf(fld_Leistungs.substring(
-			// zIndex + 1, zIndex + 3))
-			// + ";"
-			// + Integer.valueOf(getLeistungs().substring(zIndex + 3,
-			// zIndex + 6));
-			// }
+			setName(AdditionalTaskManager.Instance().load(GetAddTaskIDFromLeist(getLeistungs())).getName());
+//			else 
+//			{
+//				int zIndex = getLeistungs().indexOf("Z");
+//				String adsd = Integer.valueOf(getLeistungs().substring(zIndex + 1, zIndex + 3)) + ";"
+//				+ Integer.valueOf(getLeistungs().substring(zIndex + 3,
+//				zIndex + 6));
+//				int b = 3;
+//			}
 		}
-		setTourCode(Long.parseLong(parsingString.next(";")));
-		setEmploymentId(Long.parseLong(parsingString.next("~")));
+		setTourID(Long.parseLong(parsingString.next(";")));
+		setEmploymentID(Long.parseLong(parsingString.next("~")));
 		setCheckSum(Long.parseLong(parsingString.next()));
 	}
 
@@ -197,8 +210,8 @@ public class Task extends BaseObject {
 		setTaskState(eTaskState.Empty);
 		setPlanDate(DateUtils.EmptyDate);
 		setLeistungs("");
-		setTourCode(0);
-		setEmploymentId(EMPTY_ID);
+		setTourID(0);
+		setPatientID(EMPTY_ID);
 		setIsAdditionalTask(false);
 	}
 
@@ -211,5 +224,9 @@ public class Task extends BaseObject {
 		strValue += getCheckSum();
 		return strValue;
 	}
+	
+    private int GetAddTaskIDFromLeist(String leist) {
+        return Integer.valueOf(leist.split("\\+")[3]);
+    }
 
 }

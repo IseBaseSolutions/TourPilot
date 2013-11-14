@@ -78,11 +78,6 @@ public class OptionsActivity extends BaseActivity {
 		startActivity(synchActivity);
 	}
 	
-	private void startWorkersActivity() {
-		Intent workersActivity = new Intent(getApplicationContext(), WorkersActivity.class);
-		startActivity(workersActivity);
-	}
-	
 	private void startToursActivity() {
 		Intent toursActivity = new Intent(getApplicationContext(), ToursActivity.class);
 		startActivity(toursActivity);
@@ -130,9 +125,7 @@ public class OptionsActivity extends BaseActivity {
 	}
 	
 	private void switchToLastActivity() {
-		Intent intent = getIntent();
-        String activity = intent.getStringExtra("activity");
-		if ((activity == null || activity.compareTo("workers") == 0) && Option.Instance().getWorkerID() == -1)
+		if (Option.Instance().getWorkerID() == -1)
 			return;
 		else if (Option.Instance().getTourID() == -1)
 			startToursActivity();

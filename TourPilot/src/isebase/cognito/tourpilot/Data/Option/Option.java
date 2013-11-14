@@ -94,7 +94,7 @@ public class Option {
 	public Worker getWorker() {
 		if (worker != null && worker.getId() == getWorkerID())
 			return worker;
-		worker = WorkerManager.Instance().loadAll(workerID);
+		worker = WorkerManager.Instance().load(workerID);
 		return worker;
 	}
 

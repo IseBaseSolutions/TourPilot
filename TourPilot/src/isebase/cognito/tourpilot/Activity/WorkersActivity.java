@@ -23,8 +23,8 @@ import android.widget.ListView;
 public class WorkersActivity extends FragmentActivity implements DialogPin.DialogPinListener {
 
 	private List<Worker> workers = new ArrayList<Worker>();
-	private Worker selectedWorker;
 	private DialogPin dialogPin;
+	private Worker selectedWorker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +68,11 @@ public class WorkersActivity extends FragmentActivity implements DialogPin.Dialo
 	
 	private void startOptionsActivity() {
 		Intent optionsActivity = new Intent(getApplicationContext(), OptionsActivity.class);
-		optionsActivity.putExtra("activity", "workers");
+		startActivity(optionsActivity);
 	}
 
 	public void startWorkerSync() {
-		Intent synchActivity = new Intent(getApplicationContext(),
-				SynchronizationActivity.class);
+		Intent synchActivity = new Intent(getApplicationContext(), SynchronizationActivity.class);
 		startActivity(synchActivity);
 	}
 
@@ -115,7 +114,7 @@ public class WorkersActivity extends FragmentActivity implements DialogPin.Dialo
 		String pinStr = dialogPin.etPin.getText().toString();
 		if (!checkWorkerPIN(name, pinStr))
 			return;
-		saveWorker();
+		saveSelectedWorkerID();
 		startWorkerSync();
 	}
 
@@ -124,7 +123,7 @@ public class WorkersActivity extends FragmentActivity implements DialogPin.Dialo
 		return;
 	}
 	
-	private void saveWorker() {
+	private void saveSelectedWorkerID() {
 		Option.Instance().setWorkerID(selectedWorker.getId());
 		Option.Instance().save();
 	}

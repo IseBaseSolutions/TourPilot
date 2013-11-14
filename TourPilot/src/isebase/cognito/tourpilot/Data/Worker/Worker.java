@@ -44,8 +44,6 @@ public class Worker extends BaseObject {
 		return "[" + actualDate.toString().substring(4,10) + "] " + getName();
 	}
 	
-	public List<Tour> tours = new ArrayList<Tour>();
-	
 	public Worker() {
 		clear();
 	}
