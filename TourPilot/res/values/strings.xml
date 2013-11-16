@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="start_task">Einsatzbeginn</string>
+    <string name="end_task">Einsatzende</string>
+    <string name="undone_all_tasks">undone tasks</string>
+    
     <string name="app_name">TourPilot</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>

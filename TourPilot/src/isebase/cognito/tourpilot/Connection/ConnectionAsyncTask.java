@@ -136,7 +136,6 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		String strInvitation = "";
 		boolean retVal = true;
 		try {
-
 			strInvitation = readFromStream(conStatus.IS);
 			if (strInvitation.length() > 2
 					&& strInvitation.substring(0, 2).compareTo("OK") == 0)
@@ -183,6 +182,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 	private boolean sendHelloRequest() {
 		boolean retVal = true;
 		try {
+			Option.Instance().setIsAuto(false);
 			writePack(conStatus.OS, getStrHello() + "\0.\0");
 			String recievedStatus = readFromStream(conStatus.IS);
 			if (recievedStatus.startsWith("OVER") 
@@ -190,11 +190,17 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 				// License is over
 				retVal = false;
 			}
+			else if(recievedStatus.startsWith("OK")){
+				char lastSymbol = recievedStatus.charAt(
+						recievedStatus.length() - 2);
+				Option.Instance().setIsAuto(lastSymbol == '1');
+			}
 						
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			retVal = false;
 		} finally {
+			Option.Instance().save();
 			if (retVal)
 				conStatus.setMessage(StaticResources.getBaseContext()
 						.getString(R.string.hello_request_ok));

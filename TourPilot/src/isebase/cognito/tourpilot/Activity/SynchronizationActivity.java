@@ -51,8 +51,8 @@ import android.widget.TextView;
 				}
 				if(isOK){		
 					Intent nextActivity = (Option.Instance().getWorkerID() == -1) 
-							? new Intent(getApplicationContext(), WorkersActivity.class) 
-							: new Intent(getApplicationContext(), ToursActivity.class);
+							? new Intent(getApplicationContext(), WorkersActivity.class) // all workers
+							: new Intent(getApplicationContext(), ToursActivity.class); // show tours for worker
 					startActivity(nextActivity);					
 				}
  			}
@@ -74,8 +74,7 @@ import android.widget.TextView;
 			@Override
 			public void onProgressUpdate(String text) {
 				progressBar.setMax(connectionStatus.getTotalProgress());				
-			}
-				
+			}				
  		};	
 	
 		connectionStatus = new ConnectionStatus(syncHandler);
@@ -87,8 +86,5 @@ import android.widget.TextView;
  	public void onBackPressed() {
 		connectionTask.terminate();
 		super.onBackPressed();
-	/*	Intent optionActivity= new Intent(getApplicationContext()
-				, OptionsActivity.class);
-		startActivity(optionActivity);	*/
  	}
 }

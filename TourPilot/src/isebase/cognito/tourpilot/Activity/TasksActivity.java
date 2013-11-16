@@ -8,7 +8,11 @@ import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Templates.TaskAdapter;
+import isebase.cognito.tourpilot.Utils.DateUtils;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Intent;
@@ -19,22 +23,110 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class TasksActivity extends BaseActivity {
 
-	TaskAdapter adapter;
-	List<Task> tasks;
-
+	private TaskAdapter taskAdapter;
+	
+	private Task startTask;
+	private List<Task> tasks;
+	private Task endTask;
+	
+	private ListView lvTasks;
+	private TextView tvStartTask;
+	private TextView tvEndTask;
+	private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+	private Button btEndTask;
+	private Button btStartTask;
+	
+	private boolean isClickable(){
+		return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
+				&& endTask.getRealDate().equals(DateUtils.EmptyDate);
+	}
+		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_tasks);
-		reloadData();
-		initTaskList();
+		try{
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_tasks);
+			initControls();	
+			reloadData();	
+			fillUpTasks();
+			checkAllIsDone();
+		}catch(Exception ex){
+			ex.printStackTrace();
+			criticalClose();
+		}
 	}
+	
+	private void checkAllIsDone(){
+		if(!startTask.getRealDate().equals(DateUtils.EmptyDate) 
+			&& !endTask.getRealDate().equals(DateUtils.EmptyDate)){
+			btEndTask.setEnabled(false);
+			btStartTask.setEnabled(false);
+		}
+	}
+	
+	private void fillUpEndButtonEnabling(){
+		btEndTask.setEnabled(false);
+		for(int i=1; i < tasks.size() -1 ; i++){
+			Task task = tasks.get(i);
+			if(task.getTaskState() == eTaskState.Empty)
+				return;
+		}
+		btEndTask.setEnabled(true);
+	}
+	
+	private void fillUpStartTask(){
+		tvStartTask.setText(timeFormat.format(startTask.getRealDate()));
+	}
+	
+	private void fillUpEndTask(){
+		tvEndTask.setText(timeFormat.format(endTask.getRealDate()));
+	}
+	
+	private void fillUpTasks(){
+		List<Task> tasksWithoutFirstAndLast = new ArrayList<Task>(tasks);
+		tasksWithoutFirstAndLast.remove(0);
+		tasksWithoutFirstAndLast.remove(tasksWithoutFirstAndLast.size() - 1);
+		taskAdapter = new TaskAdapter(this
+				, R.layout.row_task_template
+				, tasksWithoutFirstAndLast);
+		lvTasks.setAdapter(taskAdapter);
+		fillUpEndButtonEnabling();
+		fillUpStartTask();
+		fillUpEndTask();
+	}	
 
+	public void reloadData() {
+		tasks = TaskManager.Instance().loadByPatientID(Option.Instance().getPatientID());
+		startTask = tasks.get(0);
+		endTask = tasks.get(tasks.size() - 1);
+	}
+	
+	public void btStartTaskTimerClick(View view) {
+		checkAllTasks(eTaskState.Empty);
+		startTask.setRealDate(new Date());
+		endTask.setRealDate(DateUtils.EmptyDate);
+		TaskManager.Instance().save(startTask);
+		TaskManager.Instance().save(endTask);
+		fillUpStartTask();
+		fillUpEndTask();
+		fillUpEndButtonEnabling();
+	}
+	
+	public void btEndTaskTimerClick(View view) {
+		endTask.setRealDate(new Date());
+		TaskManager.Instance().save(endTask);
+		fillUpEndTask();
+//TODO Show message
+		switchToPatientsActivity();
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.tasks, menu);
@@ -42,52 +134,59 @@ public class TasksActivity extends BaseActivity {
 	}
 
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.tasks, menu);
 	}
 
 	@Override
 	public void onBackPressed() {
-		switchToPatientsActivity();
-	}
-
-	private void switchToPatientsActivity() {
-		Intent patientsActivity = new Intent(getApplicationContext(),
-				PatientsActivity.class);
-		startActivity(patientsActivity);
+		if(!isClickable())
+			switchToPatientsActivity();
 	}
 
 	public void onChangeState(View view) {
+		if(!isClickable())
+			return;
 		Task task = (Task) view.getTag();
-		task.setTaskState((task.getTaskState() == eTaskState.Done) ? eTaskState.UnDone
+		task.setRealDate(new Date());
+		task.setTaskState((task.getTaskState() == eTaskState.Done) 
+				? eTaskState.UnDone
 				: eTaskState.Done);
 		try {
-			((ImageView) view)
-					.setImageDrawable(StaticResources
-							.getBaseContext()
-							.getResources()
-							.getDrawable(
-									(task.getTaskState() == eTaskState.UnDone) ? R.drawable.ic_action_cancel
-											: R.drawable.ic_action_accept));
+			((ImageView) view).setImageDrawable(StaticResources.getBaseContext()
+				.getResources().getDrawable((task.getTaskState() == eTaskState.UnDone) 
+						? R.drawable.ic_action_cancel
+						: R.drawable.ic_action_accept));
 			TaskManager.Instance().save(task);
+			fillUpEndButtonEnabling();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void initTaskList() {
-		adapter = new TaskAdapter(this, R.layout.row_task_template, tasks);
-		ListView tasksListView = (ListView) findViewById(R.id.lvTasksList);
-		tasksListView.setAdapter(adapter);
+	private void initControls() {
+		lvTasks = (ListView) findViewById(R.id.lvTasksList);
+		tvStartTask = (TextView) findViewById(R.id.tvStartTask);
+		tvEndTask = (TextView) findViewById(R.id.tvEndTask);
+		btEndTask = (Button) findViewById(R.id.btEndTask);
+		btStartTask = (Button) findViewById(R.id.btStartTask);
 	}
-
-	public void reloadData() {
-		tasks = TaskManager.Instance().loadByPatientID(
-				Option.Instance().getPatientID());
+	
+	private void checkAllTasks(Task.eTaskState state){
+		Date newDate = new Date();
+		for(Task t : tasks){
+			t.setTaskState(state);
+			t.setRealDate(newDate);
+		}
+		TaskManager.Instance().save(tasks);
+		fillUpTasks();
+	}
+	
+	private void switchToPatientsActivity() {
+		Intent patientsActivity = new Intent(getApplicationContext(), PatientsActivity.class);
+		startActivity(patientsActivity);
 	}
 
 	@Override
@@ -100,7 +199,7 @@ public class TasksActivity extends BaseActivity {
 			startActivity(addTasksCategoryActivity);
 			return true;
 		case R.id.cancelAllTasks:
-			CanceledTasks();
+			checkAllTasks(eTaskState.UnDone);
 			return true;
 		case R.id.notes:
 			Intent notesActivity = new Intent(getApplicationContext(),
@@ -142,17 +241,4 @@ public class TasksActivity extends BaseActivity {
 		}
 	}
 
-	private void CanceledTasks() {
-
-		for (Task tempTask : tasks) {
-			tempTask.setTaskState(eTaskState.UnDone);
-			try {
-				TaskManager.Instance().save(tempTask);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		ListView tasksListView = (ListView) findViewById(R.id.lvTasksList);
-		tasksListView.setAdapter(adapter);
-	}
 }

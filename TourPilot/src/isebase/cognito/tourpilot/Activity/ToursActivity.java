@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -26,11 +25,16 @@ public class ToursActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_tours);
-		reloadData();		
-		initComnponents();
-		initListTours();
+		try{
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_tours);
+			reloadData();		
+			initComnponents();
+			initListTours();
+		}catch(Exception ex){
+			ex.printStackTrace();
+			criticalClose();
+		}
 	}
 
 	@Override
