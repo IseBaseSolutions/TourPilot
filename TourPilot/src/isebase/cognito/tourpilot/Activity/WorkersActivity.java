@@ -122,6 +122,7 @@ public class WorkersActivity extends BaseActivity implements DialogPin.DialogPin
 	}
 	
 	private void saveSelectedWorkerID() {
+		Option.Instance().setPrevWorkerID(Option.Instance().getWorkerID());
 		Option.Instance().setWorkerID(selectedWorker.getId());
 		Option.Instance().save();
 	}

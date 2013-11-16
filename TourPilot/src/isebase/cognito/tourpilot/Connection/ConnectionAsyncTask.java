@@ -331,7 +331,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		String strMsg = new String("U;");
 		strMsg += Option.Instance().getWorkerID();
 		strMsg += ";";
-		strMsg += "-1"; // beforeUser.ID()
+		strMsg += Option.Instance().getPrevWorkerID();
 		strMsg += ";:";
 		strMsg += Option.Instance().getDeviceID() + ";";
 		strMsg += Option.Instance().getPhoneNumber() + "@";

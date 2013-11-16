@@ -12,19 +12,22 @@ public class Option {
 	public static final String TableName = "Options";
 
 	public static final String WorkerIDField = "worker_id";
+	public static final String PreviousWorkerIDField = "prev_worker_id";
 	public static final String TourIDField = "tour_id";
 	public static final String PatientIDField = "patient_id";
 	public static final String ServerIPField = "server_ip";
 	public static final String ServerPortField = "server_port";
 	public static final String IsAutoField = "is_auto";
 
-	private String serverIP;
 	public static boolean testMode = false;
 	private Worker worker;
 	private TelephonyManager phoneManager = StaticResources.phoneManager;;
 	private OptionManager optionManager;
 	private static Option instance;
 
+	private String serverIP;
+	
+	private int prevWorkerID;
 	private int workerID;
 	private int tourID;
 	private int patientID;
@@ -33,6 +36,16 @@ public class Option {
 
 	private boolean isAuto;
 
+	@MapField(DatabaseField = PreviousWorkerIDField)
+	public void setPrevWorkerID(int id){
+		this.prevWorkerID = id;
+	}
+
+	@MapField(DatabaseField = PreviousWorkerIDField)
+	public int getPrevWorkerID(){
+		return prevWorkerID;
+	}
+	
 	@MapField(DatabaseField = IsAutoField)
 	public void setIsAuto(boolean isAuto) {
 		this.isAuto = isAuto;
@@ -118,6 +131,7 @@ public class Option {
 	}
 
 	public void clearSelected() {
+		prevWorkerID = BaseObject.EMPTY_ID;
 		workerID = BaseObject.EMPTY_ID;
 		tourID = BaseObject.EMPTY_ID;
 		patientID = BaseObject.EMPTY_ID;
