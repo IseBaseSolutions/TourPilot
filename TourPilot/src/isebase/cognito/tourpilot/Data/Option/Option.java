@@ -21,7 +21,7 @@ public class Option {
 
 	public static boolean testMode = false;
 	private Worker worker;
-	private TelephonyManager phoneManager = StaticResources.phoneManager;;
+	private TelephonyManager phoneManager = StaticResources.phoneManager;
 	private OptionManager optionManager;
 	private static Option instance;
 
