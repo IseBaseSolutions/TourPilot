@@ -46,10 +46,10 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	
 	private static final String DATABASE_NAME = "TourPilot.db";
 
-	public static final int DATABASE_VERSION = 10;
+	public static final int DATABASE_VERSION = 11;
 
-	private static final String WORKERS_TABLE_CREATE = "CREATE TABLE "
-			+ WorkerManager.TableName + "(" 
+	private static final String WORKERS_TABLE_CREATE = 
+			"CREATE TABLE " + WorkerManager.TableName + "(" 
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
 			+ BaseObject.NameField + " TEXT NOT NULL, "
 			+ BaseObject.CheckSumField + " INTEGER, "
@@ -59,8 +59,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Worker.ActualDateField + " INTEGER " 
 			+ ");";
 
-	private static final String TOURS_TABLE_CREATE = "CREATE TABLE "
-			+ TourManager.TableName + "(" 
+	private static final String TOURS_TABLE_CREATE = 
+			"CREATE TABLE " + TourManager.TableName + "(" 
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ BaseObject.NameField + " TEXT NOT NULL, " 
 			+ BaseObject.CheckSumField + " INTEGER, "
@@ -69,37 +69,60 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Tour.IsCommonTourField + " INTEGER "
 			+ ");";
 
-	private static final String PATIENTS_TABLE_CREATE = "CREATE TABLE "
-			+ PatientManager.TableName + "(" 
+	private static final String PATIENTS_TABLE_CREATE = 
+			"CREATE TABLE " + PatientManager.TableName + "(" 
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ BaseObject.NameField + " TEXT NOT NULL, "
 			+ BaseObject.CheckSumField + " INTEGER, "
 			+ BaseObject.WasSentField + " INTEGER, "
 			+ BaseObject.IsServerTimeField + " INTEGER, "
-			+ Patient.IsDoneField + " INTEGER NOT NULL DEFAULT 0, "
-			+ Patient.AddressIDField + " INTEGER "
+			+ Patient.SurnameField + " TEXT, "
+			+ Patient.IsAdditionalField + " INTEGER, "
+			+ Patient.AddressIDField + " INTEGER, "
+			+ Patient.SexField + " TEXT, "
+			+ Patient.DoctorIDsField + " TEXT, "
+			+ Patient.RelativeIDsField + " TEXT, "
+			+ Patient.CatalogKKTypeField + " INTEGER, "
+			+ Patient.CatalogPKTypeField + " INTEGER, "
+			+ Patient.CatalogSATypeField + " INTEGER, "
+			+ Patient.CatalogPRTypeField + " INTEGER "
 			+ ");";
 
-	private static final String OPTIONS_TABLE_CREATE = "CREATE TABLE " 
-			+ Option.TableName + "("
+	private static final String OPTIONS_TABLE_CREATE = 
+			"CREATE TABLE " + Option.TableName + "("
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ Option.WorkerIDField + " INTEGER, " 
+			+ Option.PreviousWorkerIDField + " INTEGER, " 
 			+ Option.TourIDField + " INTEGER, "
-			+ Option.EmploymentIDField + " INTEGER, "
+			+ Option.PatientIDField + " INTEGER, "
 			+ Option.ServerIPField + " TEXT, "
-			+ Option.ServerPortField + " INTEGER " 
+			+ Option.ServerPortField + " INTEGER, " 
+			+ Option.IsAutoField + " INTEGER "
 			+ ");";
 
-	private static final String TASKS_TABLE_CREATE = "CREATE TABLE "
-			+ TaskManager.TableName + "("
+	private static final String TASKS_TABLE_CREATE = 
+			"CREATE TABLE " + TaskManager.TableName + "("
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ BaseObject.NameField + " TEXT, "
 			+ BaseObject.CheckSumField + " INTEGER, "
-			+ Task.StateField + " INTEGER NOT NULL DEFAULT 0 "
+			+ BaseObject.WasSentField + " INTEGER, "
+			+ BaseObject.IsServerTimeField + " INTEGER, "
+			+ Task.WorkerIDField + " INTEGER, "
+			+ Task.PatientIDField + " INTEGER, "
+			+ Task.StateField + " INTEGER NOT NULL DEFAULT 0, "
+			+ Task.PlanDateField + " INTEGER, "
+			+ Task.LeistungsField + " TEXT, "
+			+ Task.MinutePriceField + " INTEGER, "
+			+ Task.TourIDField + " INTEGER, "
+			+ Task.IsAdditionalTaskField + " INTEGER, "
+			+ Task.AdditionalTaskIDField + " INTEGER, "
+			+ Task.EmploymentIDField + " INTEGER, "
+			+ Task.RealDateField + " INTEGER, "
+			+ Task.ManualDateField + " INTEGER "
 			+ ");";
 	
-	private static final String ADDITIONAL_TASKS_TABLE_CREATE = "CREATE TABLE "
-			+ AdditionalTaskManager.TableName + "("
+	private static final String ADDITIONAL_TASKS_TABLE_CREATE = 
+			"CREATE TABLE " + AdditionalTaskManager.TableName + "("
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ BaseObject.NameField + " TEXT, "
 			+ BaseObject.WasSentField + " INTEGER, "
@@ -109,8 +132,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ AdditionalTask.QualityField + " INTEGER "
 			+ ");";
 	
-	public static final String ADDITIONAL_WORKS_TABLE_CREATE = "CREATE TABLE "
-			+ AdditionalWorkManager.TableName + "("
+	public static final String ADDITIONAL_WORKS_TABLE_CREATE = 
+			"CREATE TABLE " + AdditionalWorkManager.TableName + "("
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ BaseObject.WasSentField + " INTEGER, "
 			+ BaseObject.IsServerTimeField + " INTEGER, "
@@ -118,8 +141,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ BaseObject.CheckSumField + " INTEGER "
 			+ ");";
 
-	public static final String DIAGNOSES_TABLE_CREATE = "CREATE TABLE "
-			+ DiagnoseManager.TableName + "("
+	public static final String DIAGNOSES_TABLE_CREATE = 
+			"CREATE TABLE " + DiagnoseManager.TableName + "("
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ BaseObject.WasSentField + " INTEGER, "
 			+ BaseObject.IsServerTimeField + " INTEGER, "
@@ -127,8 +150,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ BaseObject.CheckSumField + " INTEGER "
 			+ ");";
 	
-	public static final String ADDRESS_TABLE_CREATE = "CREATE TABLE "
-			+ AddressManager.TableName + "("
+	public static final String ADDRESS_TABLE_CREATE = 
+			"CREATE TABLE " + AddressManager.TableName + "("
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ Address.StreetField + " TEXT, "
 			+ Address.ZipField + " TEXT, "
@@ -136,8 +159,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Address.PhoneField + " TEXT "
 			+ ");";
 	
-	private static final String DOCTORS_TABLE_CREATE = "CREATE TABLE "
-			+ DoctorManager.TableName + "(" 
+	private static final String DOCTORS_TABLE_CREATE = 
+			"CREATE TABLE " + DoctorManager.TableName + "(" 
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
 			+ BaseObject.NameField + " TEXT NOT NULL, "
 			+ BaseObject.CheckSumField + " INTEGER, "
@@ -147,8 +170,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Doctor.AddressIDField + " INTEGER "
 			+ ");";
 
-	private static final String INFORMATIONS_TABLE_CREATE = "CREATE TABLE "
-			+ InformationManager.TableName + "(" 
+	private static final String INFORMATIONS_TABLE_CREATE = 
+			"CREATE TABLE " + InformationManager.TableName + "(" 
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
 			+ BaseObject.NameField + " TEXT NOT NULL, "
 			+ BaseObject.CheckSumField + " INTEGER, "
@@ -161,8 +184,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Information.IsFromServerField + " INTEGER "  
 			+ ");";
 	
-	private static final String PATIENTS_REMARK_TABLE_CREATE = "CREATE TABLE "
-			+ PatientRemarkManager.TableName + "(" 
+	private static final String PATIENTS_REMARK_TABLE_CREATE = 
+			"CREATE TABLE " + PatientRemarkManager.TableName + "(" 
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
 			+ BaseObject.NameField + " TEXT NOT NULL, "
 			+ BaseObject.CheckSumField + " INTEGER, "
@@ -170,8 +193,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ BaseObject.IsServerTimeField + " INTEGER "
 			+ ");";
 	
-	private static final String RELATIVES_TABLE_CREATE = "CREATE TABLE "
-			+ RelativeManager.TableName + "(" 
+	private static final String RELATIVES_TABLE_CREATE = 	
+			"CREATE TABLE " + RelativeManager.TableName + "(" 
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
 			+ BaseObject.NameField + " TEXT NOT NULL, "
 			+ BaseObject.CheckSumField + " INTEGER, "
@@ -195,30 +218,112 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		return instance;
 	}	
 		
+	private static String[] createDataTables = new String[]{
+		TOURS_TABLE_CREATE,
+		PATIENTS_TABLE_CREATE,
+		TASKS_TABLE_CREATE,
+		DIAGNOSES_TABLE_CREATE,
+		ADDRESS_TABLE_CREATE,
+		DOCTORS_TABLE_CREATE,
+		INFORMATIONS_TABLE_CREATE,
+		PATIENTS_REMARK_TABLE_CREATE,
+		RELATIVES_TABLE_CREATE,		
+		
+		WORKERS_TABLE_CREATE,
+		ADDITIONAL_TASKS_TABLE_CREATE,
+		ADDITIONAL_WORKS_TABLE_CREATE		
+	};
+		
+	private static String[] deleteDataTables = new String[]{		
+		"DROP TABLE IF EXISTS " + TourManager.TableName,
+		"DROP TABLE IF EXISTS " + PatientManager.TableName,
+		"DROP TABLE IF EXISTS " + TaskManager.TableName,
+		"DROP TABLE IF EXISTS " + DiagnoseManager.TableName,
+		"DROP TABLE IF EXISTS " + AddressManager.TableName,
+		"DROP TABLE IF EXISTS " + DoctorManager.TableName,
+		"DROP TABLE IF EXISTS " + InformationManager.TableName,
+		"DROP TABLE IF EXISTS " + PatientRemarkManager.TableName,
+		"DROP TABLE IF EXISTS " + RelativeManager.TableName,
+		
+		"DROP TABLE IF EXISTS " + WorkerManager.TableName,
+		"DROP TABLE IF EXISTS " + AdditionalTaskManager.TableName,
+		"DROP TABLE IF EXISTS " + AdditionalWorkManager.TableName
+	};
+			
+	private static String[] clearWorkerDependedDataTables = new String[]{
+		"DELETE FROM " + TourManager.TableName,
+		"DELETE FROM " + PatientManager.TableName,
+		"DELETE FROM " + TaskManager.TableName,
+		"DELETE FROM " + DiagnoseManager.TableName,
+		"DELETE FROM " + AddressManager.TableName,
+		"DELETE FROM " + DoctorManager.TableName,
+		"DELETE FROM " + InformationManager.TableName,
+		"DELETE FROM " + PatientRemarkManager.TableName,
+		"DELETE FROM " + RelativeManager.TableName,	
+	};
+	
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		try{
-			db.execSQL(WORKERS_TABLE_CREATE);
-			db.execSQL(TOURS_TABLE_CREATE);
-			db.execSQL(PATIENTS_TABLE_CREATE);
+		try {
 			db.execSQL(OPTIONS_TABLE_CREATE);
-			db.execSQL(TASKS_TABLE_CREATE);
-			db.execSQL(ADDITIONAL_TASKS_TABLE_CREATE);	
-			db.execSQL(ADDITIONAL_WORKS_TABLE_CREATE);
-			db.execSQL(DIAGNOSES_TABLE_CREATE);
-			db.execSQL(ADDRESS_TABLE_CREATE);
-			db.execSQL(DOCTORS_TABLE_CREATE);
-			db.execSQL(INFORMATIONS_TABLE_CREATE);
-			db.execSQL(PATIENTS_REMARK_TABLE_CREATE);
-			db.execSQL(RELATIVES_TABLE_CREATE);
-		}
-		catch(Exception ex){
-			ex.printStackTrace();
+			for(String createTable : createDataTables)
+				db.execSQL(createTable);
+		} catch(Exception e){
+			e.printStackTrace();
 		}
 		finally{
 		}
 	}
 
+	public boolean clearAllData(){
+		boolean retVal = true;	
+				for(String deleteTable : deleteDataTables){
+			try{
+				Instance().getReadableDatabase().execSQL(deleteTable);
+			}catch(Exception ex){
+				retVal = false;
+				ex.printStackTrace();
+				continue;
+			}
+		}		
+		for(String createTable : createDataTables){
+			try{
+				Instance().getReadableDatabase().execSQL(createTable);
+			}catch(Exception ex){
+				retVal = false;
+				ex.printStackTrace();
+				continue;
+			}
+		}		
+		try{
+			if (DataBaseWrapper.Instance().getReadableDatabase() != null)
+				DataBaseWrapper.Instance().getReadableDatabase().close();
+			DataBaseWrapper.Instance().close();
+		}catch(Exception ex){
+			ex.printStackTrace();
+			retVal = false;
+		}
+		
+		return retVal;	
+	}
+	
+	public boolean clearWorkerData(){
+		boolean retVal = true;
+		try{			
+			for(String clearTable : clearWorkerDependedDataTables)
+				Instance().getReadableDatabase().execSQL(clearTable);						
+		}catch(Exception ex){
+			ex.printStackTrace();
+			retVal = false;
+		}
+		finally{
+			if (DataBaseWrapper.Instance().getReadableDatabase() != null)
+				DataBaseWrapper.Instance().getReadableDatabase().close();
+			DataBaseWrapper.Instance().close();
+		}
+		return retVal;
+	}
+	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 

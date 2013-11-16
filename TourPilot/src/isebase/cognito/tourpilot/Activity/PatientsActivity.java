@@ -1,10 +1,13 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Intent;
@@ -18,6 +21,7 @@ import android.widget.ListView;
 import android.widget.SlidingDrawer;
 import android.widget.SlidingDrawer.OnDrawerCloseListener;
 import android.widget.SlidingDrawer.OnDrawerOpenListener;
+import android.widget.TextView;
 
 public class PatientsActivity extends BaseActivity {
 
@@ -27,39 +31,52 @@ public class PatientsActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_patients);
-		reloadData();
-		initPatients(patients.size());
-		initListUndonePatients();
-		initListDonePatients();
+		try{
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_patients);
+			reloadData();
+			initComnponents();
+			initListUndonePatients();
+			initListDonePatients();
+		}catch(Exception ex){
+			ex.printStackTrace();
+			criticalClose();
+		}
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.patients, menu);
 		return true;
+	}
+	
+	@Override
+	public void onBackPressed() {
+		startToursActivity();
+	}
+	
+	private void startToursActivity() {
+		Intent toursActivity = new Intent(getApplicationContext(), ToursActivity.class);
+		startActivity(toursActivity);
+	}
+	
+	private void startTasksActivity() {
+		Intent tasksActivity = new Intent(getApplicationContext(), TasksActivity.class);
+		startActivity(tasksActivity);
 	}
 
 	public void initListUndonePatients() {
 		final ArrayAdapter<Patient> adapter = new ArrayAdapter<Patient>(this,
 				android.R.layout.simple_list_item_1, unDonePatients);
 		final ListView lvListUndoneTasks = (ListView) findViewById(R.id.lvUndonePatients);
-
 		lvListUndoneTasks.setAdapter(adapter);
-		lvListUndoneTasks
-				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-					@Override
-					public void onItemClick(AdapterView<?> arg0, View arg1,
-							int position, long arg3) {
-						Intent tasksActivity = new Intent(
-								getApplicationContext(), TasksActivity.class);
-						startActivity(tasksActivity);
-					}
-				});
-
+		lvListUndoneTasks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1,
+					int position, long arg3) {
+				saveSelectedPatientID(((Patient)patients.get(position)).getId());
+				startTasksActivity();
+			}
+		});
 	}
 
 	public void initListDonePatients() {
@@ -71,7 +88,6 @@ public class PatientsActivity extends BaseActivity {
 		final SlidingDrawer slidingDonePatients = (SlidingDrawer) findViewById(R.id.sdDonePatients);
 		final Button bOpened = (Button) findViewById(R.id.btHandle);
 		slidingDonePatients.setOnDrawerOpenListener(new OnDrawerOpenListener() {
-
 			@Override
 			public void onDrawerOpened() {
 				bOpened.setText(R.string.hide_done_patients);
@@ -80,35 +96,34 @@ public class PatientsActivity extends BaseActivity {
 			}
 
 		});
-		slidingDonePatients
-				.setOnDrawerCloseListener(new OnDrawerCloseListener() {
-					@Override
-					public void onDrawerClosed() {
-						bOpened.setText(R.string.show_done_patients);
-						bOpened.setCompoundDrawablesWithIntrinsicBounds(0, 0,
-								android.R.drawable.arrow_up_float, 0);
-					}
-				});
-	}
-
-	private void initPatients(int tableSize) {
-		if (tableSize > 0)
-			return;
-		boolean bb = false;
-		for (int i = 0; i < 20; i++) {
-			bb = !bb;
-			PatientManager.Instance().save(new Patient("Patient " + i, bb));
-		}
-		reloadData();
+		slidingDonePatients.setOnDrawerCloseListener(new OnDrawerCloseListener() {
+			@Override
+			public void onDrawerClosed() {
+				bOpened.setText(R.string.show_done_patients);
+				bOpened.setCompoundDrawablesWithIntrinsicBounds(0, 0,
+						android.R.drawable.arrow_up_float, 0);
+			}
+		});
 	}
 
 	public void reloadData() {
-		patients = PatientManager.Instance().load();
+		patients = PatientManager.Instance().loadBytourID(Option.Instance().getTourID());
 		for (Patient patient : patients) {
-			if (patient.getIsDone())
-				donePatients.add(patient);
-			else
-				unDonePatients.add(patient);
+			donePatients.add(patient);
+			unDonePatients.add(patient);
 		}
 	}
+	
+	private void initComnponents() {
+		SimpleDateFormat simpleDateformat = new SimpleDateFormat("EE MM.dd");
+		String dayOfTheWeek = simpleDateformat.format(new Date());
+		((TextView) findViewById(R.id.tvCurrentInfo)).setText(String.format(
+				"%s - %s", dayOfTheWeek, Option.Instance().getWorker().getName()));
+	}
+	
+	private void saveSelectedPatientID(int patientID) {
+		Option.Instance().setPatientID(patientID);
+		Option.Instance().save();
+	}
+	
 }

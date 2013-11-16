@@ -72,6 +72,7 @@ public class Relative extends BaseObject {
 		return String.format("%s %s", getSurname(), getName());
 	}
 
+	@Override
 	public String forServer() {
 		NCryptor ncryptor = new NCryptor();
 		String strValue = new String(ServerCommandParser.RELATIVE + ";");

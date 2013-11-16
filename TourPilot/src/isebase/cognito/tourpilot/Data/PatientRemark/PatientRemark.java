@@ -19,6 +19,7 @@ public class PatientRemark extends BaseObject {
 		setCheckSum(Long.parseLong(parsingString.next()));
 	}
 
+	@Override
 	public String forServer() {
 		NCryptor ncryptor = new NCryptor();
 		String strValue = new String(ServerCommandParser.PATIENT_REMARK + ";");

@@ -1,47 +1,45 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
+import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.DialogPin;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class WorkersActivity extends FragmentActivity implements
-		DialogPin.DialogPinListener {
+public class WorkersActivity extends BaseActivity implements DialogPin.DialogPinListener {
 
-	List<Worker> workers = new ArrayList<Worker>();
-
-	Worker selectedWorker;
-
+	private List<Worker> workers = new ArrayList<Worker>();
 	private DialogPin dialogPin;
+	private Worker selectedWorker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_workers);
-		reloadData();
-		initDialogs();
-		initTable(workers.size());
-		initListWorkers();
+		try{
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_workers);
+			reloadData();
+			initDialogs();
+			initListWorkers();
+		}catch(Exception ex){
+			ex.printStackTrace();
+			criticalClose();
+		}
 	}
-
+		
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.options_menu, menu);
-		return true;
+	public void onBackPressed() {
+		startOptionsActivity();
 	}
 
 	public void initListWorkers() {
@@ -54,41 +52,28 @@ public class WorkersActivity extends FragmentActivity implements
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
-				if (Option.testMode) {
-					switchToTours();
-					return;
-				}
 				selectedWorker = (Worker) listView.getItemAtPosition(position);
 				showDialogPin();
 			}
 		});
 	}
 
-	private void initTable(int tableSize) {
-		if (tableSize > 0)
-			return;
-		for (int i = 0; i < 10; i++) {
-			Worker w = new Worker();
-			w.setName("Worker " + i);
-			WorkerManager.Instance().save(w);
-		}
-		reloadData();
+	public void btOptionsClick(View view) {
+		startOptionsActivity();
 	}
-
-	public void switchToOptions(View view) {
-		Intent optionsActivity = new Intent(getApplicationContext(),
-				OptionsActivity.class);
+	
+	private void startOptionsActivity() {
+		Intent optionsActivity = new Intent(getApplicationContext(), OptionsActivity.class);
 		startActivity(optionsActivity);
 	}
 
-	public void switchToTours() {
-		Intent toursActivity = new Intent(getApplicationContext(),
-				ToursActivity.class);
-		startActivity(toursActivity);
+	public void startWorkerSync() {
+		Intent synchActivity = new Intent(getApplicationContext(), SynchronizationActivity.class);
+		startActivity(synchActivity);
 	}
 
 	public void reloadData() {
-		workers = WorkerManager.Instance().load();
+		workers = WorkerManager.Instance().load(null, null, BaseObject.NameField);
 	}
 
 	public boolean checkWorkerPIN(String workerName, String strPin) {
@@ -125,14 +110,21 @@ public class WorkersActivity extends FragmentActivity implements
 		String pinStr = dialogPin.etPin.getText().toString();
 		if (!checkWorkerPIN(name, pinStr))
 			return;
-		Option.Instance().setWorkerID(selectedWorker.getId());
-		Option.Instance().save();
-		switchToTours();
+
+		DataBaseWrapper.Instance().clearWorkerData();
+		saveSelectedWorkerID();
+		startWorkerSync();
 	}
 
 	@Override
 	public void onDialogNegativeClick(DialogFragment dialog) {
 		return;
+	}
+	
+	private void saveSelectedWorkerID() {
+		Option.Instance().setPrevWorkerID(Option.Instance().getWorkerID());
+		Option.Instance().setWorkerID(selectedWorker.getId());
+		Option.Instance().save();
 	}
 
 }
