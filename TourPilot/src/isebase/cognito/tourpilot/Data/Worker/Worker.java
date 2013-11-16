@@ -44,8 +44,6 @@ public class Worker extends BaseObject {
 		return "[" + actualDate.toString().substring(4,10) + "] " + getName();
 	}
 	
-	public List<Tour> tours = new ArrayList<Tour>();
-	
 	public Worker() {
 		clear();
 	}
@@ -64,7 +62,13 @@ public class Worker extends BaseObject {
         setCheckSum(Long.parseLong(initString.next()));
         setActualDate(_actualDate);
     }
+
+    @Override
+    public String toString() {
+    	return getName();
+    }
     
+    @Override
     public String forServer()
     {
         NCryptor nCryptor = new NCryptor();

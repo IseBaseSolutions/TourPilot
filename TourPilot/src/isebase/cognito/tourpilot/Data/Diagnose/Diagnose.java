@@ -18,7 +18,8 @@ public class Diagnose extends BaseObject{
         setName(parsingString.next("~"));
 		setCheckSum(Long.parseLong(parsingString.next()));
     }
-    
+ 
+    @Override
     public String forServer() {
         NCryptor ncryptor = new NCryptor();
         String strValue = new String(ServerCommandParser.DIAGNOSE + ";");

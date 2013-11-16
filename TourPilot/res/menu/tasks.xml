@@ -7,7 +7,7 @@
         android:title="@string/add_tasks_category" android:menuCategory="system"/>
     <item
          android:id="@+id/cancelAllTasks"
-         android:title="Canceled"
+         android:title="@string/undone_all_tasks"
          android:menuCategory="system"
          android:showAsAction="never"
          android:orderInCategory="101" />
