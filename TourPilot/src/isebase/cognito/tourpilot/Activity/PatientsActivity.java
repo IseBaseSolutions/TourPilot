@@ -1,6 +1,7 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Activity.AdditionalTasks.CatalogsActivity;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 
@@ -10,6 +11,7 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -38,8 +40,20 @@ public class PatientsActivity extends BaseActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.patients, menu);
+		getMenuInflater().inflate(R.menu.patients, menu);
 		return true;
+	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()){
+		case R.id.manual_input_works:
+			Intent addTasksCategoryActivity = new Intent(getApplicationContext(),ManualPatientsActivity.class);
+			startActivity(addTasksCategoryActivity);
+			return true;
+        default:
+            return super.onOptionsItemSelected(item);
+
+		}
 	}
 
 	public void initListUndonePatients() {
@@ -70,25 +84,25 @@ public class PatientsActivity extends BaseActivity {
 
 		final SlidingDrawer slidingDonePatients = (SlidingDrawer) findViewById(R.id.sdDonePatients);
 		final Button bOpened = (Button) findViewById(R.id.btHandle);
-		slidingDonePatients.setOnDrawerOpenListener(new OnDrawerOpenListener() {
-
-			@Override
-			public void onDrawerOpened() {
-				bOpened.setText(R.string.hide_done_patients);
-				bOpened.setCompoundDrawablesWithIntrinsicBounds(0, 0,
-						android.R.drawable.arrow_down_float, 0);
-			}
-
-		});
-		slidingDonePatients
-				.setOnDrawerCloseListener(new OnDrawerCloseListener() {
-					@Override
-					public void onDrawerClosed() {
-						bOpened.setText(R.string.show_done_patients);
-						bOpened.setCompoundDrawablesWithIntrinsicBounds(0, 0,
-								android.R.drawable.arrow_up_float, 0);
-					}
-				});
+//		slidingDonePatients.setOnDrawerOpenListener(new OnDrawerOpenListener() {
+//
+//			@Override
+//			public void onDrawerOpened() {
+//				bOpened.setText(R.string.hide_done_patients);
+//				bOpened.setCompoundDrawablesWithIntrinsicBounds(0, 0,
+//						android.R.drawable.arrow_down_float, 0);
+//			}
+//
+//		});
+//		slidingDonePatients
+//				.setOnDrawerCloseListener(new OnDrawerCloseListener() {
+//					@Override
+//					public void onDrawerClosed() {
+//						bOpened.setText(R.string.show_done_patients);
+//						bOpened.setCompoundDrawablesWithIntrinsicBounds(0, 0,
+//								android.R.drawable.arrow_up_float, 0);
+//					}
+//				});
 	}
 
 	private void initPatients(int tableSize) {
@@ -97,13 +111,17 @@ public class PatientsActivity extends BaseActivity {
 		boolean bb = false;
 		for (int i = 0; i < 20; i++) {
 			bb = !bb;
-			PatientManager.Instance().save(new Patient("Patient " + i, bb));
+			Patient patient = new Patient();
+			patient.setName("PATIENT #" + i);
+			patient.setIsDone(bb);
+			patients.add(patient);
+//			PatientManager.Instance().save(new Patient("Patient " + i, bb));
 		}
 		reloadData();
 	}
 
 	public void reloadData() {
-		patients = PatientManager.Instance().load();
+	//	patients = PatientManager.Instance().load();
 		for (Patient patient : patients) {
 			if (patient.getIsDone())
 				donePatients.add(patient);

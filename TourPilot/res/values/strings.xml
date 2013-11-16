@@ -34,7 +34,6 @@
     <string name="str_ok">OK</string>
     <string name="empty_text"></string>
     <string name="version">Version</string>
-    
     <string name="title_activity_tasks">TasksActivity</string>
     <string name="title_activity_add_tasks_category">AddTasksCategoryActivity</string>
     <string name="add_tasks_category">Additionaly categories</string>
@@ -46,7 +45,7 @@
     <string name="title_activity_address">AddressActivity</string>
     <string name="title_activity_doctors">DoctorsActivity</string>
     <string name="title_activity_relatives">RelativesActivity</string>
-    <string name="title_activity_comments">CommentsActivity</string>    
+    <string name="title_activity_comments">CommentsActivity</string>
     <string name="program_version">Program version:</string>
     <string name="data_base_version">Database version:</string>
     <string name="yes">Yes</string>
@@ -69,5 +68,14 @@
     <string name="data_to_download">Data to download</string>
     <string name="connection_close_ok">Connection closing OK</string>
     <string name="connection_close_fail">Connection closing FAIL</string>
-
+    <string name="button_back">BACK</string>
+    <string name="BUTTON_SERVISES">SERVICES</string>
+    <string name="enter_interval">ENTER INTEVAL</string>
+    <string name="manual_input">Manual input</string>
+    <string name="title_activity_manual_input_works">ManualInputWorksActivity</string>
+    <string name="title_activity_manual_patients_works">ManualPatientsWorksActivity</string>
+    <string name="value_input_sugar">SUGAR</string>
+    <string name="value_input_pulse">PULSE</string>
+    <string name="value_input_presser_top">PRESSER TOP</string>
+    <string name="value_input_presser_bottom">PRESSER BOTTOM</string>
 </resources>

@@ -25,7 +25,7 @@ public class CatalogsActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_tasks_category);
 //		reloadData();
-//		initListCategories();
+		initListCategories();
 //		initTable(listAddTasksCategories.size());
 	}
 

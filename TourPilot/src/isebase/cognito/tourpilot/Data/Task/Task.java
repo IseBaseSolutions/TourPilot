@@ -18,6 +18,10 @@ public class Task extends BaseObject {
 	public static final String TourCodeField = "tour_code";
 	public static final String EmploymentIdField = "employment_id";
 	public static final String IsAdditionalTaskField = "additional_task";
+	
+	
+	// for test
+	public int iType = 0;
 
 	public enum eTaskState {
 		Empty, Done, UnDone

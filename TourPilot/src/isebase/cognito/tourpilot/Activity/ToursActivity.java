@@ -27,7 +27,15 @@ public class ToursActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tours);
-		tours = Option.Instance().getWorker().tours;
+		
+		
+	//	tours = Option.Instance().getWorker().tours;
+		
+		for(int i = 0;i < 10;i++){
+			Tour tour = new Tour();
+			tour.setName("TOUR #" + i);
+			tours.add(tour);
+		}
 		initListTours();
 		initComnponents();
 	}

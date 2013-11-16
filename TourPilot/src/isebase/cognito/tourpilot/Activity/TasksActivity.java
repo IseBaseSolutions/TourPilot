@@ -1,16 +1,26 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.R.string;
 import isebase.cognito.tourpilot.Activity.AdditionalTasks.CatalogsActivity;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
+import isebase.cognito.tourpilot.Dialogs.DialogInputValue;
+import isebase.cognito.tourpilot.Dialogs.DialogManualInput;
 import isebase.cognito.tourpilot.Templates.TaskAdapter;
+import isebase.cognito.tourpilot.Templates.TaskFormatDataResultInput;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
+import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -19,17 +29,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
-public class TasksActivity extends BaseActivity {
+public class TasksActivity extends FragmentActivity implements DialogManualInput.DialogManualInputListener, DialogInputValue.DialoglInputValueListener {
 
 	TaskAdapter adapter;
+	
 	List<Task> tasks;
+	
+	View viewInputValues;
+	
+	List<TaskFormatDataResultInput> listDataInputs;
+	
+	private DialogManualInput dialogManualInput;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tasks);
-		reloadData();
+//		reloadData();
+		tasks = new ArrayList<Task>();
 		InitTable(tasks.size());
 		initTaskList();
 	}
@@ -51,17 +70,16 @@ public class TasksActivity extends BaseActivity {
 	}
 
 	public void onChangeState(View view) {
-		Task task = (Task) view.getTag();
-		task.setTaskState((task.getTaskState() == eTaskState.Done) ? eTaskState.UnDone
-				: eTaskState.Done);
-		try {
-			((Button) view)
-					.setBackgroundResource((task.getTaskState() == eTaskState.UnDone) ? android.R.drawable.ic_delete
-							: android.R.drawable.checkbox_on_background);
-			TaskManager.Instance().save(task);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
+		viewInputValues = view;
+		
+		Task task = (Task) viewInputValues.getTag();
+		
+		if(task.getTaskState() != eTaskState.Done)
+			ShowDialogInputedValue(task.iType);
+		else
+			ChangeState();
+		
 	}
 
 	private void initTaskList() {
@@ -77,9 +95,73 @@ public class TasksActivity extends BaseActivity {
 	private void InitTable(int tableSize) {
 		if (tableSize > 0)
 			return;
-		for (int i = 0; i < 10; i++)
-			TaskManager.Instance().save(new Task("Task " + i));
-		reloadData();
+		int iType = 0;// for test
+		for (int i = 0; i < 10; i++){
+			iType ++;
+			if(iType > 3) iType = 1;
+			Task task = new Task();
+			task.setName("TASK #" + i);
+			task.iType = iType;
+			tasks.add(task);
+			
+		}
+	}
+	private void ShowDialogInputedValue(int iTaskType)
+	{
+		
+		DialogInputValue dialogInputValues;
+		
+		listDataInputs = new ArrayList<TaskFormatDataResultInput>();
+		
+		TaskFormatDataResultInput DataInput;
+		int[] arrayInputTypes;
+		int iValueLength = 0;
+		
+		String titleText = "";
+		
+		switch(iTaskType){
+		case 1:
+			///BLOOD SUGAR
+			arrayInputTypes = new int[] { InputType.TYPE_CLASS_NUMBER, InputType.TYPE_NUMBER_FLAG_DECIMAL };
+			iValueLength = 4;
+			DataInput = new TaskFormatDataResultInput(R.string.value_input_sugar, iValueLength, arrayInputTypes);
+
+			listDataInputs.add(DataInput);
+			
+			titleText = "BLOOD SUGAR";
+			break;
+		case 2:
+			//BLOOD PRESSER
+			arrayInputTypes = new int[] { InputType.TYPE_CLASS_NUMBER};
+			iValueLength = 3;
+			DataInput = new TaskFormatDataResultInput(R.string.value_input_presser_bottom, iValueLength, arrayInputTypes);
+			listDataInputs.add(DataInput);
+
+			arrayInputTypes = new int[] { InputType.TYPE_CLASS_NUMBER};
+			iValueLength = 3;
+			DataInput = new TaskFormatDataResultInput(R.string.value_input_presser_top, iValueLength, arrayInputTypes);
+			listDataInputs.add(DataInput);
+
+			titleText = "BLOOD PRESSER";
+			break;
+		case 3:
+			///PULSE
+			arrayInputTypes = new int[] { InputType.TYPE_CLASS_NUMBER };
+			iValueLength = 3;
+			DataInput = new TaskFormatDataResultInput(R.string.value_input_pulse, iValueLength, arrayInputTypes);
+
+			listDataInputs.add(DataInput);
+			
+			titleText = "PULSE";
+			break;
+		default:
+			break;
+		}
+		
+		dialogInputValues = new DialogInputValue(listDataInputs);
+		dialogInputValues.show(getSupportFragmentManager(), "InputValues");
+		getSupportFragmentManager().executePendingTransactions();
+		dialogInputValues.getDialog().setTitle(titleText);
 	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -101,8 +183,9 @@ public class TasksActivity extends BaseActivity {
 	        	startActivity(infoActivity);
 	        	return true;
 	        case R.id.manualInput:
-	        	Intent manualInputActivity = new Intent(getApplicationContext(),ManualInputActivity.class);
-	        	startActivity(manualInputActivity);
+	        	showDialogManualInput();
+	       // 	Intent manualInputActivity = new Intent(getApplicationContext(),ManualInputActivity.class);
+	       // 	startActivity(manualInputActivity);
 	        	return true;
 	        case R.id.address:
 	        	Intent addressActivity = new Intent(getApplicationContext(),AddressActivity.class);
@@ -137,4 +220,55 @@ public class TasksActivity extends BaseActivity {
 		ListView tasksListView = (ListView) findViewById(R.id.lvTasksList);
 		tasksListView.setAdapter(adapter);
 	}
+	private void showDialogManualInput(){
+		dialogManualInput = new DialogManualInput();
+		dialogManualInput.show(getSupportFragmentManager(), "ManualInput");
+		getSupportFragmentManager().executePendingTransactions();
+		dialogManualInput.getDialog().setTitle("SET MANUAL INPUT WORK");
+	}
+
+	private void ChangeState()
+	{
+		Task task = (Task) viewInputValues.getTag();
+		
+		task.setTaskState((task.getTaskState() == eTaskState.Done) ? eTaskState.UnDone
+				: eTaskState.Done);
+		try {
+			((Button) viewInputValues)
+					.setBackgroundResource((task.getTaskState() == eTaskState.UnDone) ? android.R.drawable.ic_delete
+							: android.R.drawable.checkbox_on_background);
+			TaskManager.Instance().save(task);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	@Override
+	public void onDialogBackClick(DialogFragment dialog) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onDialogServisesClick(DialogFragment dialog) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onDialogOkInputValuesClick(DialogFragment dialog) {
+		// TODO Auto-generated method stub
+	//	ChangeState();
+		String result = "";
+		for(TaskFormatDataResultInput temp : listDataInputs){
+			result += temp.getstrLabelName() + " : " + temp.getstrInputValue() + "\n";
+		}
+		Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+	}
+
+	@Override
+	public void onDialogCanceInputValuelClick(DialogFragment dialog) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
