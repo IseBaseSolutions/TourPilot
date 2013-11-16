@@ -92,7 +92,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		case ConnectionStatus.DateSycnhronizing:
 			conStatus.lastExecuteOK = sendDateSycnhronizationRequest();
 			break;
-		case ConnectionStatus.SendHelloRequest:
+		case ConnectionStatus.SendData:
 			conStatus.lastExecuteOK = sendHelloRequest();
 			break;
 		case ConnectionStatus.CompareCkeckSums:
@@ -183,7 +183,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		boolean retVal = true;
 		try {
 			Option.Instance().setIsAuto(false);
-			writePack(conStatus.OS, getStrHello() + "\0.\0");
+			writePack(conStatus.OS, getDataToSend() + "\0.\0");
 			String recievedStatus = readFromStream(conStatus.IS);
 			if (recievedStatus.startsWith("OVER") 
 					|| recievedStatus.equals("")) {
@@ -327,7 +327,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		}
 	}
 
-	private String getStrHello() {
+	private String getDataToSend() {
 		String strMsg = new String("U;");
 		strMsg += Option.Instance().getWorkerID();
 		strMsg += ";";
