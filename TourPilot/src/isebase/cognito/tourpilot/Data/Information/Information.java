@@ -94,7 +94,6 @@ public class Information extends BaseObject {
 		setCheckSum(Long.parseLong(parsingString.next()));
 	}
 
-	@Override
 	public String forServer() {
 		String strValue = new String(ServerCommandParser.INFORMATION + ";");
 		strValue += String.format("%d;%d", getId(), getEmploymentCode()) + ";";

@@ -56,8 +56,7 @@ public class DoctorManager extends BaseObjectManager<Doctor>{
 	}
 	
 	@Override
-	public void beforeSave(Doctor item) {
+	public void afterSave(Doctor item) {
 		AddressManager.Instance().save(item.address);
-		item.setAddressID(item.address.getId());
 	}
 }

@@ -1,18 +1,17 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Activity.AdditionalTasks.CatalogsActivity;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,7 +20,6 @@ import android.widget.ListView;
 import android.widget.SlidingDrawer;
 import android.widget.SlidingDrawer.OnDrawerCloseListener;
 import android.widget.SlidingDrawer.OnDrawerOpenListener;
-import android.widget.TextView;
 
 public class PatientsActivity extends BaseActivity {
 
@@ -31,52 +29,51 @@ public class PatientsActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		try{
-			super.onCreate(savedInstanceState);
-			setContentView(R.layout.activity_patients);
-			reloadData();
-			initComnponents();
-			initListUndonePatients();
-			initListDonePatients();
-		}catch(Exception ex){
-			ex.printStackTrace();
-			criticalClose();
-		}
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_patients);
+		reloadData();
+		initPatients(patients.size());
+		initListUndonePatients();
+		initListDonePatients();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.patients, menu);
 		return true;
 	}
-	
 	@Override
-	public void onBackPressed() {
-		startToursActivity();
-	}
-	
-	private void startToursActivity() {
-		Intent toursActivity = new Intent(getApplicationContext(), ToursActivity.class);
-		startActivity(toursActivity);
-	}
-	
-	private void startTasksActivity() {
-		Intent tasksActivity = new Intent(getApplicationContext(), TasksActivity.class);
-		startActivity(tasksActivity);
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()){
+		case R.id.manual_input_works:
+			Intent addTasksCategoryActivity = new Intent(getApplicationContext(),ManualPatientsActivity.class);
+			startActivity(addTasksCategoryActivity);
+			return true;
+        default:
+            return super.onOptionsItemSelected(item);
+
+		}
 	}
 
 	public void initListUndonePatients() {
 		final ArrayAdapter<Patient> adapter = new ArrayAdapter<Patient>(this,
 				android.R.layout.simple_list_item_1, unDonePatients);
 		final ListView lvListUndoneTasks = (ListView) findViewById(R.id.lvUndonePatients);
+
 		lvListUndoneTasks.setAdapter(adapter);
-		lvListUndoneTasks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1,
-					int position, long arg3) {
-				saveSelectedPatientID(((Patient)patients.get(position)).getId());
-				startTasksActivity();
-			}
-		});
+		lvListUndoneTasks
+				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> arg0, View arg1,
+							int position, long arg3) {
+						Intent tasksActivity = new Intent(
+								getApplicationContext(), TasksActivity.class);
+						startActivity(tasksActivity);
+					}
+				});
+
 	}
 
 	public void initListDonePatients() {
@@ -87,43 +84,49 @@ public class PatientsActivity extends BaseActivity {
 
 		final SlidingDrawer slidingDonePatients = (SlidingDrawer) findViewById(R.id.sdDonePatients);
 		final Button bOpened = (Button) findViewById(R.id.btHandle);
-		slidingDonePatients.setOnDrawerOpenListener(new OnDrawerOpenListener() {
-			@Override
-			public void onDrawerOpened() {
-				bOpened.setText(R.string.hide_done_patients);
-				bOpened.setCompoundDrawablesWithIntrinsicBounds(0, 0,
-						android.R.drawable.arrow_down_float, 0);
-			}
+//		slidingDonePatients.setOnDrawerOpenListener(new OnDrawerOpenListener() {
+//
+//			@Override
+//			public void onDrawerOpened() {
+//				bOpened.setText(R.string.hide_done_patients);
+//				bOpened.setCompoundDrawablesWithIntrinsicBounds(0, 0,
+//						android.R.drawable.arrow_down_float, 0);
+//			}
+//
+//		});
+//		slidingDonePatients
+//				.setOnDrawerCloseListener(new OnDrawerCloseListener() {
+//					@Override
+//					public void onDrawerClosed() {
+//						bOpened.setText(R.string.show_done_patients);
+//						bOpened.setCompoundDrawablesWithIntrinsicBounds(0, 0,
+//								android.R.drawable.arrow_up_float, 0);
+//					}
+//				});
+	}
 
-		});
-		slidingDonePatients.setOnDrawerCloseListener(new OnDrawerCloseListener() {
-			@Override
-			public void onDrawerClosed() {
-				bOpened.setText(R.string.show_done_patients);
-				bOpened.setCompoundDrawablesWithIntrinsicBounds(0, 0,
-						android.R.drawable.arrow_up_float, 0);
-			}
-		});
+	private void initPatients(int tableSize) {
+		if (tableSize > 0)
+			return;
+		boolean bb = false;
+		for (int i = 0; i < 20; i++) {
+			bb = !bb;
+			Patient patient = new Patient();
+			patient.setName("PATIENT #" + i);
+			patient.setIsDone(bb);
+			patients.add(patient);
+//			PatientManager.Instance().save(new Patient("Patient " + i, bb));
+		}
+		reloadData();
 	}
 
 	public void reloadData() {
-		patients = PatientManager.Instance().loadBytourID(Option.Instance().getTourID());
+	//	patients = PatientManager.Instance().load();
 		for (Patient patient : patients) {
-			donePatients.add(patient);
-			unDonePatients.add(patient);
+			if (patient.getIsDone())
+				donePatients.add(patient);
+			else
+				unDonePatients.add(patient);
 		}
 	}
-	
-	private void initComnponents() {
-		SimpleDateFormat simpleDateformat = new SimpleDateFormat("EE MM.dd");
-		String dayOfTheWeek = simpleDateformat.format(new Date());
-		((TextView) findViewById(R.id.tvCurrentInfo)).setText(String.format(
-				"%s - %s", dayOfTheWeek, Option.Instance().getWorker().getName()));
-	}
-	
-	private void saveSelectedPatientID(int patientID) {
-		Option.Instance().setPatientID(patientID);
-		Option.Instance().save();
-	}
-	
 }

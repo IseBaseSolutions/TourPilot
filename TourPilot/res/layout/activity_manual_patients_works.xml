@@ -6,24 +6,25 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".WorkersActivity" >
-    
-    <Button
-        android:id="@+id/btOptions"
-        android:layout_width="fill_parent"
+    tools:context=".ManualPatientsWorksActivity" >
+
+    <TextView
+        android:id="@+id/tvPatientsManualWorksList"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:text="@string/options"
-        android:textAppearance="?android:attr/textAppearanceLarge" 
-        android:onClick="switchToOptions" />
+        android:layout_alignParentTop="true"
+        android:text="Manual works list"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="@dimen/text_size_big" />
 
     <ListView
-        android:id="@+id/lvWorkers"
+        android:id="@+id/lvPatientsManualWorksList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btOptions"
-        android:layout_alignLeft="@+id/btOptions" >
+        android:layout_alignLeft="@+id/tvPatientsManualWorksList"
+        android:layout_below="@+id/tvPatientsManualWorksList" >
+
     </ListView>
-    
+
 </RelativeLayout>

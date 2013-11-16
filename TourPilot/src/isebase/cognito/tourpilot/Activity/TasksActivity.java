@@ -1,22 +1,26 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.R.string;
 import isebase.cognito.tourpilot.Activity.AdditionalTasks.CatalogsActivity;
-import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
-import isebase.cognito.tourpilot.StaticResources.StaticResources;
+import isebase.cognito.tourpilot.Dialogs.DialogInputValue;
+import isebase.cognito.tourpilot.Dialogs.DialogManualInput;
 import isebase.cognito.tourpilot.Templates.TaskAdapter;
-import isebase.cognito.tourpilot.Utils.DateUtils;
+import isebase.cognito.tourpilot.Templates.TaskFormatDataResultInput;
 
-import java.text.SimpleDateFormat;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
+import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -24,221 +28,247 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Toast;
 
-public class TasksActivity extends BaseActivity {
+public class TasksActivity extends FragmentActivity implements DialogManualInput.DialogManualInputListener, DialogInputValue.DialoglInputValueListener {
 
-	private TaskAdapter taskAdapter;
+	TaskAdapter adapter;
 	
-	private Task startTask;
-	private List<Task> tasks;
-	private Task endTask;
+	List<Task> tasks;
 	
-	private ListView lvTasks;
-	private TextView tvStartTask;
-	private TextView tvEndTask;
-	private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-	private Button btEndTask;
-	private Button btStartTask;
+	View viewInputValues;
 	
-	private boolean isClickable(){
-		return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
-				&& endTask.getRealDate().equals(DateUtils.EmptyDate);
-	}
-		
+	List<TaskFormatDataResultInput> listDataInputs;
+	
+	private DialogManualInput dialogManualInput;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		try{
-			super.onCreate(savedInstanceState);
-			setContentView(R.layout.activity_tasks);
-			initControls();	
-			reloadData();	
-			fillUpTasks();
-			checkAllIsDone();
-		}catch(Exception ex){
-			ex.printStackTrace();
-			criticalClose();
-		}
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_tasks);
+//		reloadData();
+		tasks = new ArrayList<Task>();
+		InitTable(tasks.size());
+		initTaskList();
 	}
-	
-	private void checkAllIsDone(){
-		if(!startTask.getRealDate().equals(DateUtils.EmptyDate) 
-			&& !endTask.getRealDate().equals(DateUtils.EmptyDate)){
-			btEndTask.setEnabled(false);
-			btStartTask.setEnabled(false);
-		}
-	}
-	
-	private void fillUpEndButtonEnabling(){
-		btEndTask.setEnabled(false);
-		for(int i=1; i < tasks.size() -1 ; i++){
-			Task task = tasks.get(i);
-			if(task.getTaskState() == eTaskState.Empty)
-				return;
-		}
-		btEndTask.setEnabled(true);
-	}
-	
-	private void fillUpStartTask(){
-		tvStartTask.setText(timeFormat.format(startTask.getRealDate()));
-	}
-	
-	private void fillUpEndTask(){
-		tvEndTask.setText(timeFormat.format(endTask.getRealDate()));
-	}
-	
-	private void fillUpTasks(){
-		List<Task> tasksWithoutFirstAndLast = new ArrayList<Task>(tasks);
-		tasksWithoutFirstAndLast.remove(0);
-		tasksWithoutFirstAndLast.remove(tasksWithoutFirstAndLast.size() - 1);
-		taskAdapter = new TaskAdapter(this
-				, R.layout.row_task_template
-				, tasksWithoutFirstAndLast);
-		lvTasks.setAdapter(taskAdapter);
-		fillUpEndButtonEnabling();
-		fillUpStartTask();
-		fillUpEndTask();
-	}	
 
-	public void reloadData() {
-		tasks = TaskManager.Instance().loadByPatientID(Option.Instance().getPatientID());
-		startTask = tasks.get(0);
-		endTask = tasks.get(tasks.size() - 1);
-	}
-	
-	public void btStartTaskTimerClick(View view) {
-		checkAllTasks(eTaskState.Empty);
-		startTask.setRealDate(new Date());
-		endTask.setRealDate(DateUtils.EmptyDate);
-		TaskManager.Instance().save(startTask);
-		TaskManager.Instance().save(endTask);
-		fillUpStartTask();
-		fillUpEndTask();
-		fillUpEndButtonEnabling();
-	}
-	
-	public void btEndTaskTimerClick(View view) {
-		endTask.setRealDate(new Date());
-		TaskManager.Instance().save(endTask);
-		fillUpEndTask();
-//TODO Show message
-		switchToPatientsActivity();
-	}
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.tasks, menu);
 		return true;
 	}
 
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
+
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.tasks, menu);
 	}
 
-	@Override
-	public void onBackPressed() {
-		if(!isClickable())
-			switchToPatientsActivity();
+	public void onChangeState(View view) {
+		
+		viewInputValues = view;
+		
+		Task task = (Task) viewInputValues.getTag();
+		
+		if(task.getTaskState() != eTaskState.Done)
+			ShowDialogInputedValue(task.iType);
+		else
+			ChangeState();
+		
 	}
 
-	public void onChangeState(View view) {
-		if(!isClickable())
+	private void initTaskList() {
+		adapter = new TaskAdapter(this, R.layout.row_task_template, tasks);
+		ListView tasksListView = (ListView) findViewById(R.id.lvTasksList);
+		tasksListView.setAdapter(adapter);
+	}
+
+	public void reloadData() {
+		tasks = TaskManager.Instance().load();
+	}
+
+	private void InitTable(int tableSize) {
+		if (tableSize > 0)
 			return;
-		Task task = (Task) view.getTag();
-		task.setRealDate(new Date());
-		task.setTaskState((task.getTaskState() == eTaskState.Done) 
-				? eTaskState.UnDone
+		int iType = 0;// for test
+		for (int i = 0; i < 10; i++){
+			iType ++;
+			if(iType > 3) iType = 1;
+			Task task = new Task();
+			task.setName("TASK #" + i);
+			task.iType = iType;
+			tasks.add(task);
+			
+		}
+	}
+	private void ShowDialogInputedValue(int iTaskType)
+	{
+		
+		DialogInputValue dialogInputValues;
+		
+		listDataInputs = new ArrayList<TaskFormatDataResultInput>();
+		
+		TaskFormatDataResultInput DataInput;
+		int[] arrayInputTypes;
+		int iValueLength = 0;
+		
+		String titleText = "";
+		
+		switch(iTaskType){
+		case 1:
+			///BLOOD SUGAR
+			arrayInputTypes = new int[] { InputType.TYPE_CLASS_NUMBER, InputType.TYPE_NUMBER_FLAG_DECIMAL };
+			iValueLength = 4;
+			DataInput = new TaskFormatDataResultInput(R.string.value_input_sugar, iValueLength, arrayInputTypes);
+
+			listDataInputs.add(DataInput);
+			
+			titleText = "BLOOD SUGAR";
+			break;
+		case 2:
+			//BLOOD PRESSER
+			arrayInputTypes = new int[] { InputType.TYPE_CLASS_NUMBER};
+			iValueLength = 3;
+			DataInput = new TaskFormatDataResultInput(R.string.value_input_presser_bottom, iValueLength, arrayInputTypes);
+			listDataInputs.add(DataInput);
+
+			arrayInputTypes = new int[] { InputType.TYPE_CLASS_NUMBER};
+			iValueLength = 3;
+			DataInput = new TaskFormatDataResultInput(R.string.value_input_presser_top, iValueLength, arrayInputTypes);
+			listDataInputs.add(DataInput);
+
+			titleText = "BLOOD PRESSER";
+			break;
+		case 3:
+			///PULSE
+			arrayInputTypes = new int[] { InputType.TYPE_CLASS_NUMBER };
+			iValueLength = 3;
+			DataInput = new TaskFormatDataResultInput(R.string.value_input_pulse, iValueLength, arrayInputTypes);
+
+			listDataInputs.add(DataInput);
+			
+			titleText = "PULSE";
+			break;
+		default:
+			break;
+		}
+		
+		dialogInputValues = new DialogInputValue(listDataInputs);
+		dialogInputValues.show(getSupportFragmentManager(), "InputValues");
+		getSupportFragmentManager().executePendingTransactions();
+		dialogInputValues.getDialog().setTitle(titleText);
+	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	        case R.id.add_task_category:
+	        	Intent addTasksCategoryActivity = new Intent(getApplicationContext(),CatalogsActivity.class);
+	        	startActivity(addTasksCategoryActivity);
+	            return true;
+	        case R.id.cancelAllTasks:
+	        	CanceledTasks();
+	        	return true;
+	        case R.id.notes:
+	        	Intent notesActivity = new Intent(getApplicationContext(),NotesActivity.class);
+	        	startActivity(notesActivity);
+	        	return true;
+	        case R.id.info:
+	        	Intent infoActivity = new Intent(getApplicationContext(),InfoActivity.class);
+	        	startActivity(infoActivity);
+	        	return true;
+	        case R.id.manualInput:
+	        	showDialogManualInput();
+	       // 	Intent manualInputActivity = new Intent(getApplicationContext(),ManualInputActivity.class);
+	       // 	startActivity(manualInputActivity);
+	        	return true;
+	        case R.id.address:
+	        	Intent addressActivity = new Intent(getApplicationContext(),AddressActivity.class);
+	        	startActivity(addressActivity);
+	        	return true;
+	        case R.id.doctors:
+	        	Intent doctorsActivity = new Intent(getApplicationContext(),DoctorsActivity.class);
+	        	startActivity(doctorsActivity);
+	        	return true;
+	        case R.id.relatives:
+	        	Intent relativesActivity = new Intent(getApplicationContext(),RelativesActivity.class);
+	        	startActivity(relativesActivity);
+	        	return true;
+	        case R.id.comments:
+	        	Intent commentsActivity = new Intent(getApplicationContext(),CommentsActivity.class);
+	        	startActivity(commentsActivity);
+	        	return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
+	private void CanceledTasks(){
+		
+		for(Task tempTask : tasks){
+			tempTask.setTaskState(eTaskState.UnDone);
+			try {
+				TaskManager.Instance().save(tempTask);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		ListView tasksListView = (ListView) findViewById(R.id.lvTasksList);
+		tasksListView.setAdapter(adapter);
+	}
+	private void showDialogManualInput(){
+		dialogManualInput = new DialogManualInput();
+		dialogManualInput.show(getSupportFragmentManager(), "ManualInput");
+		getSupportFragmentManager().executePendingTransactions();
+		dialogManualInput.getDialog().setTitle("SET MANUAL INPUT WORK");
+	}
+
+	private void ChangeState()
+	{
+		Task task = (Task) viewInputValues.getTag();
+		
+		task.setTaskState((task.getTaskState() == eTaskState.Done) ? eTaskState.UnDone
 				: eTaskState.Done);
 		try {
-			((ImageView) view).setImageDrawable(StaticResources.getBaseContext()
-				.getResources().getDrawable((task.getTaskState() == eTaskState.UnDone) 
-						? R.drawable.ic_action_cancel
-						: R.drawable.ic_action_accept));
+			((Button) viewInputValues)
+					.setBackgroundResource((task.getTaskState() == eTaskState.UnDone) ? android.R.drawable.ic_delete
+							: android.R.drawable.checkbox_on_background);
 			TaskManager.Instance().save(task);
-			fillUpEndButtonEnabling();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
-	private void initControls() {
-		lvTasks = (ListView) findViewById(R.id.lvTasksList);
-		tvStartTask = (TextView) findViewById(R.id.tvStartTask);
-		tvEndTask = (TextView) findViewById(R.id.tvEndTask);
-		btEndTask = (Button) findViewById(R.id.btEndTask);
-		btStartTask = (Button) findViewById(R.id.btStartTask);
-	}
-	
-	private void checkAllTasks(Task.eTaskState state){
-		Date newDate = new Date();
-		for(Task t : tasks){
-			t.setTaskState(state);
-			t.setRealDate(newDate);
-		}
-		TaskManager.Instance().save(tasks);
-		fillUpTasks();
-	}
-	
-	private void switchToPatientsActivity() {
-		Intent patientsActivity = new Intent(getApplicationContext(), PatientsActivity.class);
-		startActivity(patientsActivity);
+	@Override
+	public void onDialogBackClick(DialogFragment dialog) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
-		switch (item.getItemId()) {
-		case R.id.add_task_category:
-			Intent addTasksCategoryActivity = new Intent(
-					getApplicationContext(), CatalogsActivity.class);
-			startActivity(addTasksCategoryActivity);
-			return true;
-		case R.id.cancelAllTasks:
-			checkAllTasks(eTaskState.UnDone);
-			return true;
-		case R.id.notes:
-			Intent notesActivity = new Intent(getApplicationContext(),
-					NotesActivity.class);
-			startActivity(notesActivity);
-			return true;
-		case R.id.info:
-			Intent infoActivity = new Intent(getApplicationContext(),
-					InfoActivity.class);
-			startActivity(infoActivity);
-			return true;
-		case R.id.manualInput:
-			Intent manualInputActivity = new Intent(getApplicationContext(),
-					ManualInputActivity.class);
-			startActivity(manualInputActivity);
-			return true;
-		case R.id.address:
-			Intent addressActivity = new Intent(getApplicationContext(),
-					AddressActivity.class);
-			startActivity(addressActivity);
-			return true;
-		case R.id.doctors:
-			Intent doctorsActivity = new Intent(getApplicationContext(),
-					DoctorsActivity.class);
-			startActivity(doctorsActivity);
-			return true;
-		case R.id.relatives:
-			Intent relativesActivity = new Intent(getApplicationContext(),
-					RelativesActivity.class);
-			startActivity(relativesActivity);
-			return true;
-		case R.id.comments:
-			Intent commentsActivity = new Intent(getApplicationContext(),
-					CommentsActivity.class);
-			startActivity(commentsActivity);
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+	public void onDialogServisesClick(DialogFragment dialog) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onDialogOkInputValuesClick(DialogFragment dialog) {
+		// TODO Auto-generated method stub
+	//	ChangeState();
+		String result = "";
+		for(TaskFormatDataResultInput temp : listDataInputs){
+			result += temp.getstrLabelName() + " : " + temp.getstrInputValue() + "\n";
 		}
+		Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+	}
+
+	@Override
+	public void onDialogCanceInputValuelClick(DialogFragment dialog) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

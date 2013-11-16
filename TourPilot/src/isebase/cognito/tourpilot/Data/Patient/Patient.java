@@ -9,6 +9,7 @@ import isebase.cognito.tourpilot.Utils.StringParser;
 
 public class Patient extends BaseObject {
 
+	public static final String IsDoneField = "is_done";
 	public static final String IsAdditionalField = "is_additional";
 	public static final String SurnameField = "surname";
 	public static final String AddressIDField = "address_id";
@@ -30,6 +31,7 @@ public class Patient extends BaseObject {
 	private String strDoctorIDs;
 	private String strRelativeIDs;
 
+	private boolean isDone;
 	private boolean isAdditional;
 
 	private int btyp_kk;
@@ -45,6 +47,16 @@ public class Patient extends BaseObject {
 	@MapField(DatabaseField = AddressIDField)
 	public void setAddressID(int addressID) {
 		this.addressID = addressID;
+	}
+
+	@MapField(DatabaseField = IsDoneField)
+	public void setIsDone(boolean isDone) {
+		this.isDone = isDone;
+	}
+
+	@MapField(DatabaseField = IsDoneField)
+	public boolean getIsDone() {
+		return isDone;
 	}
 
 	@MapField(DatabaseField = SurnameField)
@@ -140,6 +152,11 @@ public class Patient extends BaseObject {
 	public Patient() {
 		clear();
 	}
+
+	public Patient(String name, boolean isDone) {
+		super(name);
+		this.isDone = isDone;
+	}
 	
 	public Patient(String initString) {
 		address = new Address();
@@ -168,16 +185,10 @@ public class Patient extends BaseObject {
 		setCheckSum(ncryptor.NcodeToL(parsingString.next()));
 	}
 
-	@Override
-	public String toString() {
-		return getFullName();
-	}
-	
 	public String getFullName() {
 		return String.format("%s %s", getSurname(), getName());
 	}
 
-	@Override
 	public String forServer() {
 		if (getIsAdditional())
 			return "";
@@ -199,6 +210,7 @@ public class Patient extends BaseObject {
 		super.clear();
 		address = new Address();
 		setIsAdditional(false);
+		setIsDone(false);
 		setSurname("");
 		setAddressID(EMPTY_ID);
 		setSex("");

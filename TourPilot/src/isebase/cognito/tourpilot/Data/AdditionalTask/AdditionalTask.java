@@ -11,21 +11,21 @@ public class AdditionalTask extends BaseObject {
 	public static final String CatalogTypeField = "catalog_type";
 	public static final String QualityField = "quality"; 
 	
-    private int catalogType;
+    private int btyp;
     private int quality;
 
 	public String IdentID() { 
-    	return catalogType + ";" + getId(); 
+    	return btyp + ";" + getId(); 
 	}
     
     @MapField(DatabaseField = CatalogTypeField)
     public int getCatalogType() {
-    	return catalogType;
+    	return btyp;
     }
     
     @MapField(DatabaseField = CatalogTypeField)
-    public void setCatalogType(int catalogType) {
-    	this.catalogType = catalogType;  
+    public void setCatalogType(int fld_btyp) {
+    	this.btyp = fld_btyp;  
     }
     
     @MapField(DatabaseField = QualityField)
@@ -52,7 +52,6 @@ public class AdditionalTask extends BaseObject {
         setCheckSum(Long.parseLong(parsingString.next()));
 	}
 	
-	@Override
     public String forServer()
     {
     	NCryptor nCryptor = new NCryptor();
