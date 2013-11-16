@@ -4,7 +4,8 @@ import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
-
+import isebase.cognito.tourpilot.Data.Patient.Patient;
+import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,12 +32,17 @@ public class PatientsActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_patients);
-		reloadData();
-		initComnponents();
-		initListUndonePatients();
-		initListDonePatients();
+		try{
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_patients);
+			reloadData();
+			initComnponents();
+			initListUndonePatients();
+			initListDonePatients();
+		}catch(Exception ex){
+			ex.printStackTrace();
+			criticalClose();
+		}
 	}
 
 	@Override
@@ -63,7 +69,6 @@ public class PatientsActivity extends BaseActivity {
 		final ArrayAdapter<Employment> adapter = new ArrayAdapter<Employment>(this,
 				android.R.layout.simple_list_item_1, unDonePatients);
 		final ListView lvListUndoneTasks = (ListView) findViewById(R.id.lvUndonePatients);
-
 		lvListUndoneTasks.setAdapter(adapter);
 		lvListUndoneTasks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
@@ -84,7 +89,6 @@ public class PatientsActivity extends BaseActivity {
 		final SlidingDrawer slidingDonePatients = (SlidingDrawer) findViewById(R.id.sdDonePatients);
 		final Button bOpened = (Button) findViewById(R.id.btHandle);
 		slidingDonePatients.setOnDrawerOpenListener(new OnDrawerOpenListener() {
-
 			@Override
 			public void onDrawerOpened() {
 				bOpened.setText(R.string.hide_done_patients);
@@ -93,15 +97,14 @@ public class PatientsActivity extends BaseActivity {
 			}
 
 		});
-		slidingDonePatients
-				.setOnDrawerCloseListener(new OnDrawerCloseListener() {
-					@Override
-					public void onDrawerClosed() {
-						bOpened.setText(R.string.show_done_patients);
-						bOpened.setCompoundDrawablesWithIntrinsicBounds(0, 0,
-								android.R.drawable.arrow_up_float, 0);
-					}
-				});
+		slidingDonePatients.setOnDrawerCloseListener(new OnDrawerCloseListener() {
+			@Override
+			public void onDrawerClosed() {
+				bOpened.setText(R.string.show_done_patients);
+				bOpened.setCompoundDrawablesWithIntrinsicBounds(0, 0,
+						android.R.drawable.arrow_up_float, 0);
+			}
+		});
 	}
 
 	public void reloadData() {

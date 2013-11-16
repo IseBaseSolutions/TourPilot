@@ -27,11 +27,16 @@ public class ToursActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_tours);
-		reloadData();		
-		initComnponents();
-		initListTours();
+		try{
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_tours);
+			reloadData();		
+			initComnponents();
+			initListTours();
+		}catch(Exception ex){
+			ex.printStackTrace();
+			criticalClose();
+		}
 	}
 
 	@Override

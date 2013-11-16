@@ -156,8 +156,9 @@ public abstract class BaseObjectManager<T> {
 		return items;
 	}
 
-	public void afterSave(T item) {
-	}
+	public void beforeSave(T item){}
+	
+	public void afterSave(T item){}
 
 	public void save(List<T> items) {
 		for (T item : items)
@@ -166,6 +167,7 @@ public abstract class BaseObjectManager<T> {
 
 	public void save(T item) {
 		try {
+			beforeSave(item);
 			int id = (Integer) item.getClass().getMethod("getId").invoke(item);
 			if (id == BaseObject.EMPTY_ID || load(id) == null) {
 				int itemID = (int) DataBaseWrapper

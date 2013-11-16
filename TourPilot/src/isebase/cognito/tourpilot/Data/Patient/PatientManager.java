@@ -52,10 +52,10 @@ public class PatientManager extends BaseObjectManager<Patient> {
 	public void afterLoad(List<Patient> items) {
 		String IDs = Utilizer.getIDsString(items);
 		List<Address> addresses = AddressManager.Instance().loadByIDs(IDs);
-		for(Patient relative : items){
+		for(Patient pat : items){
 			for(Address address : addresses){
-				if(address.getId() == relative.getAddressID()){
-					relative.address = address;
+				if(address.getId() == pat.getAddressID()){
+					pat.address = address;
 					break;
 				}
 			}
@@ -63,8 +63,9 @@ public class PatientManager extends BaseObjectManager<Patient> {
 	}
 	
 	@Override
-	public void afterSave(Patient item) {
+	public void beforeSave(Patient item) {
 		AddressManager.Instance().save(item.address);
+		item.setAddressID(item.address.getId());
 	}
 	
 	public List<Patient> loadByOption() {

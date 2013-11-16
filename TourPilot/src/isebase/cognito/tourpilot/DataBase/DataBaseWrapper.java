@@ -98,8 +98,12 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Option.WorkerIDField + " INTEGER, " 
 			+ Option.PilotTourIDField + " INTEGER, "
 			+ Option.EmploymentIDField + " INTEGER, "
+			+ Option.PreviousWorkerIDField + " INTEGER, " 
+			+ Option.PilotTourIDField + " INTEGER, "
+			+ Option.EmploymentIDField + " INTEGER, "
 			+ Option.ServerIPField + " TEXT, "
 			+ Option.ServerPortField + " INTEGER "
+			+ Option.IsAutoField + " INTEGER "
 			+ ");";
 
 	private static final String TASKS_TABLE_CREATE = 
@@ -119,7 +123,12 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Task.IsAdditionalTaskField + " INTEGER, "
 			+ Task.AdditionalTaskIDField + " INTEGER, "
 			+ Task.EmploymentIDField + " INTEGER, "
+<<<<<<< HEAD
 			+ Task.PilotTourIDField + " INTEGER "
+=======
+			+ Task.RealDateField + " INTEGER, "
+			+ Task.ManualDateField + " INTEGER "
+>>>>>>> refs/heads/master
 			+ ");";
 	
 	private static final String ADDITIONAL_TASKS_TABLE_CREATE = 

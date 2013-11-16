@@ -12,7 +12,6 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,19 +25,18 @@ public class WorkersActivity extends BaseActivity implements DialogPin.DialogPin
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_workers);
-		reloadData();
-		initDialogs();
-		initListWorkers();
+		try{
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_workers);
+			reloadData();
+			initDialogs();
+			initListWorkers();
+		}catch(Exception ex){
+			ex.printStackTrace();
+			criticalClose();
+		}
 	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.options_menu, menu);
-		return true;
-	}
-	
+		
 	@Override
 	public void onBackPressed() {
 		startOptionsActivity();
@@ -124,6 +122,7 @@ public class WorkersActivity extends BaseActivity implements DialogPin.DialogPin
 	}
 	
 	private void saveSelectedWorkerID() {
+		Option.Instance().setPrevWorkerID(Option.Instance().getWorkerID());
 		Option.Instance().setWorkerID(selectedWorker.getId());
 		Option.Instance().save();
 	}

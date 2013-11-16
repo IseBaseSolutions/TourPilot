@@ -80,8 +80,7 @@ import android.widget.TextView;
 			@Override
 			public void onProgressUpdate(String text) {
 				progressBar.setMax(connectionStatus.getTotalProgress());				
-			}
-				
+			}				
  		};	
 	
 		connectionStatus = new ConnectionStatus(syncHandler);
@@ -93,8 +92,5 @@ import android.widget.TextView;
  	public void onBackPressed() {
 		connectionTask.terminate();
 		super.onBackPressed();
-	/*	Intent optionActivity= new Intent(getApplicationContext()
-				, OptionsActivity.class);
-		startActivity(optionActivity);	*/
  	}
 }
