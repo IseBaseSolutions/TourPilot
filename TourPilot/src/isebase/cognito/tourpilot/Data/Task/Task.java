@@ -22,6 +22,8 @@ public class Task extends BaseObject {
 	public static final String IsAdditionalTaskField = "additional_task";
 	public static final String AdditionalTaskIDField = "additional_task_id";
 	public static final String EmploymentIDField = "employment_id";
+	public static final String RealDateField = "real_date";
+	public static final String ManualDateField = "manual_date";
 
 	public enum eTaskState {
 		Empty, Done, UnDone
@@ -30,6 +32,9 @@ public class Task extends BaseObject {
 	private eTaskState taskState = eTaskState.Empty;
 
 	private Date planDate;
+
+	private Date realDate;
+	private Date manualDate;
 
 	private String leistungs;
 
@@ -43,6 +48,26 @@ public class Task extends BaseObject {
 	private long patientID;
 
 	private boolean isAdditionaltask;
+
+	@MapField(DatabaseField = RealDateField)
+	public Date getRealDate() {
+		return realDate;
+	}
+
+	@MapField(DatabaseField = RealDateField)
+	public void setRealDate(Date realDate) {
+		this.realDate = realDate;
+	}
+
+	@MapField(DatabaseField = ManualDateField)
+	public Date getManualDate() {
+		return manualDate;
+	}
+
+	@MapField(DatabaseField = ManualDateField)
+	public void setManualDate(Date manualDate) {
+		this.manualDate = manualDate;
+	}
 	
 	@MapField(DatabaseField = AdditionalTaskIDField)
 	public int getAditionalTaskID () {
@@ -158,6 +183,8 @@ public class Task extends BaseObject {
 
 	public Task(String initString) {
 		StringParser parsingString = new StringParser(initString);
+		setManualDate(DateUtils.EmptyDate);
+		setRealDate(DateUtils.EmptyDate);
 		parsingString.next(";");
 		setWorkerID(Integer.parseInt(parsingString.next(";")));
 		String strDate = parsingString.next(";");
@@ -213,6 +240,8 @@ public class Task extends BaseObject {
 		setTourID(0);
 		setPatientID(EMPTY_ID);
 		setIsAdditionalTask(false);
+		setRealDate(DateUtils.EmptyDate);
+		setManualDate(DateUtils.EmptyDate);
 	}
 
 	@Override

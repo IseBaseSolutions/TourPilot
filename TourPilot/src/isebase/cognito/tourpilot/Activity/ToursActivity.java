@@ -1,6 +1,7 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
@@ -10,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -26,11 +26,16 @@ public class ToursActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_tours);
-		reloadData();		
-		initComnponents();
-		initListTours();
+		try{
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_tours);
+			reloadData();		
+			initComnponents();
+			initListTours();
+		}catch(Exception ex){
+			ex.printStackTrace();
+			criticalClose();
+		}
 	}
 
 	@Override
@@ -109,8 +114,8 @@ public class ToursActivity extends BaseActivity {
 	}
 
 	private void clearPersonalOptions() {
-		Option.Instance().setWorkerID(-1);
-		Option.Instance().setTourID(-1);
+		Option.Instance().setWorkerID(BaseObject.EMPTY_ID);
+		Option.Instance().setTourID(BaseObject.EMPTY_ID);
 		Option.Instance().save();
 	}
 

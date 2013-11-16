@@ -132,6 +132,7 @@ public class OptionsActivity extends BaseActivity {
 	}
 
 	private void saveOptions() {
+		Option.Instance().setPrevWorkerID(BaseObject.EMPTY_ID);
 		Option.Instance().setWorkerID(BaseObject.EMPTY_ID);
 		Option.Instance().setServerIP(etServerIP.getText().toString());
 		Option.Instance().setServerPort(Integer.parseInt(etServerPort.getText().toString()));

@@ -12,7 +12,7 @@ public class ConnectionStatus {
 	public static final int Connection = 0;
 	public static final int Invitation = 1;
 	public static final int DateSycnhronizing = 2;
-	public static final int SendHelloRequest = 3;
+	public static final int SendData = 3;
 	public static final int CompareCkeckSums = 4;
 	public static final int ParseRecievedData = 5;
 	public static final int CloseConnection = 6;

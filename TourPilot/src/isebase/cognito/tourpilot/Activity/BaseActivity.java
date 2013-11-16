@@ -4,6 +4,7 @@ import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.DialogInfoBase;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -33,6 +34,12 @@ public class BaseActivity extends FragmentActivity{
 
 	protected boolean isMainActivity(){
 		return false;
+	}
+	
+	protected void criticalClose(){
+		Option.Instance().clearSelected();
+		Intent optionActivity =  new Intent(getApplicationContext(), OptionsActivity.class);
+		startActivity(optionActivity);
 	}
 	
 	@Override
