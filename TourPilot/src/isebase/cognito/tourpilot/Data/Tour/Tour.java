@@ -14,7 +14,7 @@ import java.util.List;
 
 public class Tour extends BaseObject {
 
-	public static final String IsCommonTourField = "IsCommonTour";
+	public static final String IsCommonTourField = "is_common_tour";
 
 	private boolean isCommonTour;
 
@@ -27,8 +27,6 @@ public class Tour extends BaseObject {
 	public void setIsCommonTour(boolean isCommonTour) {
 		this.isCommonTour = isCommonTour;
 	}
-
-	public List<Patient> patients = new ArrayList<Patient>();
 
 	public Tour() {
 		clear();
@@ -48,7 +46,7 @@ public class Tour extends BaseObject {
 	public String toString() {
 		SimpleDateFormat simpleDateformat = new SimpleDateFormat("EE MM.dd");
 		String dayOfTheWeek = simpleDateformat.format(new Date());
-		return String.format("%s - (%s)", getName(), dayOfTheWeek);
+		return String.format("%s %s", getName(), dayOfTheWeek);
 	}
 
 	@Override
@@ -65,4 +63,5 @@ public class Tour extends BaseObject {
 		super.clear();
 		setIsCommonTour(false);
 	}
+	
 }

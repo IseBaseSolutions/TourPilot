@@ -4,7 +4,9 @@ import java.util.List;
 
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
+import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
+import isebase.cognito.tourpilot.Utils.DateUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 public class TaskManager extends BaseObjectManager<Task> {
@@ -35,16 +37,20 @@ public class TaskManager extends BaseObjectManager<Task> {
 
 	}
 	
-	public List<Task> loadByPatientID(int patientID) {
-		return load(String.format(" SELECT t2.* FROM %1$s AS t1 " +
-				" INNER JOIN %2$s AS t2 ON t1.%3$s = t2.%4$s " +
-				" WHERE t1.%3$s = %5$d ORDER BY t2.%3$s", 
-				PatientManager.TableName,
-				TaskManager.TableName,
-				BaseObject.IDField,
-				Task.PatientIDField,
-				patientID
-				));
+	public List<Task> loadByOption() {
+		String strSQL = new String();
+//		strSQL = String.format(" SELECT t2.* FROM %1$s AS t1 " +
+//				" INNER JOIN %2$s AS t2 ON t1.%3$s = t2.%4$s " +
+//				" WHERE t1.%3$s = %5$d AND t2.%6$s / %7$d = %8$d / %7$d GROUP BY t2.%3$s", 
+//				PatientManager.TableName,
+//				TaskManager.TableName,
+//				BaseObject.IDField,
+//				Task.PatientIDField,
+//				Option.Instance().getPatientID(),
+//				Task.PlanDateField,
+//				DateUtils.DayMillisec,
+//				Option.Instance().getPilotTourID().getTime());
+		return load(strSQL);
 	}
 
 }

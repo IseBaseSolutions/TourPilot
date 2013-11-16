@@ -22,6 +22,7 @@ public class Task extends BaseObject {
 	public static final String IsAdditionalTaskField = "additional_task";
 	public static final String AdditionalTaskIDField = "additional_task_id";
 	public static final String EmploymentIDField = "employment_id";
+	public static final String PilotTourIDField = "pilot_tour_id";
 
 	public enum eTaskState {
 		Empty, Done, UnDone
@@ -37,6 +38,7 @@ public class Task extends BaseObject {
 	private int workerID;
 	private int minutePrice;
 	private int additionalTaskID;
+	private int pilotTourID;
 
 	private long employmentID;
 	private long tourID;
@@ -151,6 +153,16 @@ public class Task extends BaseObject {
 	public void setIsAdditionalTask(boolean isAdditionaltask) {
 		this.isAdditionaltask = isAdditionaltask;
 	}
+	
+	@MapField(DatabaseField = PilotTourIDField)
+	public int getPilotTourID() {
+		return pilotTourID;
+	}
+
+	@MapField(DatabaseField = PilotTourIDField)
+	public void setPilotTourID(int pilotTourID) {
+		this.pilotTourID = pilotTourID;
+	}
 
 	public Task() {
 		clear();
@@ -189,7 +201,7 @@ public class Task extends BaseObject {
 		} else {
 			setName(str);
 			setTaskState(eTaskState.Empty);
-			setName(AdditionalTaskManager.Instance().load(GetAddTaskIDFromLeist(getLeistungs())).getName());
+			setName(AdditionalTaskManager.Instance().load(getAddTaskIDFromLeist(getLeistungs())).getName());
 //			else 
 //			{
 //				int zIndex = getLeistungs().indexOf("Z");
@@ -202,7 +214,22 @@ public class Task extends BaseObject {
 		setTourID(Long.parseLong(parsingString.next(";")));
 		setEmploymentID(Long.parseLong(parsingString.next("~")));
 		setCheckSum(Long.parseLong(parsingString.next()));
+		setPilotTourID(getPilotTourIDFromLeist());
 	}
+	
+    public int getPilotTourIDFromLeist()
+    {
+    	int pilotTourID = 0;
+    	String[] strArr = {""};
+    	try {
+    		strArr = leistungs.split("\\+");
+    	} catch(Exception e) {
+    		e.printStackTrace();
+    	}
+    	if (strArr.length == 0 && !leistungs.contains("Anfang") && !leistungs.contains("Ende"))
+    		return pilotTourID;
+    	return Integer.parseInt(strArr[1]);
+    }
 
 	@Override
 	protected void clear() {
@@ -225,7 +252,7 @@ public class Task extends BaseObject {
 		return strValue;
 	}
 	
-    private int GetAddTaskIDFromLeist(String leist) {
+    private int getAddTaskIDFromLeist(String leist) {
         return Integer.valueOf(leist.split("\\+")[3]);
     }
 

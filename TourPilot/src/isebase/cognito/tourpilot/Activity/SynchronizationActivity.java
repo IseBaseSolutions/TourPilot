@@ -3,6 +3,7 @@
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Connection.ConnectionAsyncTask;
 import isebase.cognito.tourpilot.Connection.ConnectionStatus;
+import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
 
@@ -50,7 +51,12 @@ import android.widget.TextView;
 					}
 				}
 				if(isOK){		
-					Intent nextActivity = (Option.Instance().getWorkerID() == -1) 
+					boolean mainSync = Option.Instance().getWorkerID() == -1;
+					if(!mainSync){
+						EmploymentManager.Instance().createEmployments();
+					}
+					
+					Intent nextActivity =  mainSync
 							? new Intent(getApplicationContext(), WorkersActivity.class) 
 							: new Intent(getApplicationContext(), ToursActivity.class);
 					startActivity(nextActivity);					

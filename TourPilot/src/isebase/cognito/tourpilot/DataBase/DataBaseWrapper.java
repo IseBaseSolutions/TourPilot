@@ -9,12 +9,16 @@ import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Diagnose.DiagnoseManager;
 import isebase.cognito.tourpilot.Data.Doctor.Doctor;
 import isebase.cognito.tourpilot.Data.Doctor.DoctorManager;
+import isebase.cognito.tourpilot.Data.Employment.Employment;
+import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Information.Information;
 import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemarkManager;
+import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
+import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.Data.Relative.Relative;
 import isebase.cognito.tourpilot.Data.Relative.RelativeManager;
 import isebase.cognito.tourpilot.Data.Task.Task;
@@ -92,10 +96,10 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			"CREATE TABLE " + Option.TableName + "("
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ Option.WorkerIDField + " INTEGER, " 
-			+ Option.TourIDField + " INTEGER, "
-			+ Option.PatientIDField + " INTEGER, "
+			+ Option.PilotTourIDField + " INTEGER, "
+			+ Option.EmploymentIDField + " INTEGER, "
 			+ Option.ServerIPField + " TEXT, "
-			+ Option.ServerPortField + " INTEGER " 
+			+ Option.ServerPortField + " INTEGER "
 			+ ");";
 
 	private static final String TASKS_TABLE_CREATE = 
@@ -114,7 +118,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Task.TourIDField + " INTEGER, "
 			+ Task.IsAdditionalTaskField + " INTEGER, "
 			+ Task.AdditionalTaskIDField + " INTEGER, "
-			+ Task.EmploymentIDField + " INTEGER "
+			+ Task.EmploymentIDField + " INTEGER, "
+			+ Task.PilotTourIDField + " INTEGER "
 			+ ");";
 	
 	private static final String ADDITIONAL_TASKS_TABLE_CREATE = 
@@ -177,7 +182,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Information.FromDateField + " INTEGER, "  
 			+ Information.TilldateField + " INTEGER, "  
 			+ Information.ReadTimeField + " INTEGER, "  
-			+ Information.IsFromServerField + " INTEGER "  
+			+ Information.IsFromServerField + " INTEGER "
 			+ ");";
 	
 	private static final String PATIENTS_REMARK_TABLE_CREATE = 
@@ -200,6 +205,30 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Relative.ShipField + " TEXT, "
 			+ Relative.AddressIDField + " INTEGER "
 			+ ");";
+	
+	private static final String PILOTTOURS_TABLE_CREATE = 
+			"CREATE TABLE " + PilotTourManager.TableName + "(" 
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+			+ BaseObject.NameField + " TEXT NOT NULL, " 
+			+ BaseObject.CheckSumField + " INTEGER, "
+			+ BaseObject.WasSentField + " INTEGER, "
+			+ BaseObject.IsServerTimeField + " INTEGER, "
+			+ PilotTour.PlanDateField + " INTEGER, "
+			+ PilotTour.IsCommonTourField + " INTEGER "
+			+ ");";
+	
+	private static final String EMPLOYMENTS_TABLE_CREATE = 
+			"CREATE TABLE " + EmploymentManager.TableName + "(" 
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+			+ BaseObject.NameField + " TEXT NOT NULL, " 
+			+ BaseObject.CheckSumField + " INTEGER, "
+			+ BaseObject.WasSentField + " INTEGER, "
+			+ BaseObject.IsServerTimeField + " INTEGER, "
+			+ Employment.PatientIDField + " INTEGER, "
+			+ Employment.PilotTourIDField + " INTEGER, "
+			+ Employment.DateField + " INTEGER, "
+			+ Employment.TourIDField + " INTEGER "
+			+ ");";	
 	
 	public DataBaseWrapper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -227,7 +256,9 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		
 		WORKERS_TABLE_CREATE,
 		ADDITIONAL_TASKS_TABLE_CREATE,
-		ADDITIONAL_WORKS_TABLE_CREATE		
+		ADDITIONAL_WORKS_TABLE_CREATE,
+		PILOTTOURS_TABLE_CREATE,
+		EMPLOYMENTS_TABLE_CREATE
 	};
 		
 	private static String[] deleteDataTables = new String[]{		
@@ -243,7 +274,9 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		
 		"DROP TABLE IF EXISTS " + WorkerManager.TableName,
 		"DROP TABLE IF EXISTS " + AdditionalTaskManager.TableName,
-		"DROP TABLE IF EXISTS " + AdditionalWorkManager.TableName
+		"DROP TABLE IF EXISTS " + AdditionalWorkManager.TableName,
+		"DROP TABLE IF EXISTS " + PilotTourManager.TableName,
+		"DROP TABLE IF EXISTS " + EmploymentManager.TableName
 	};
 			
 	private static String[] clearWorkerDependedDataTables = new String[]{
@@ -255,7 +288,9 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		"DELETE FROM " + DoctorManager.TableName,
 		"DELETE FROM " + InformationManager.TableName,
 		"DELETE FROM " + PatientRemarkManager.TableName,
-		"DELETE FROM " + RelativeManager.TableName,	
+		"DELETE FROM " + RelativeManager.TableName,
+		"DELETE FROM " + PilotTourManager.TableName,
+		"DELETE FROM " + EmploymentManager.TableName
 	};
 	
 	@Override

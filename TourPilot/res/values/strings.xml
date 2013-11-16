@@ -69,5 +69,6 @@
     <string name="data_to_download">Data to download</string>
     <string name="connection_close_ok">Connection closing OK</string>
     <string name="connection_close_fail">Connection closing FAIL</string>
+    <string name="today_is">today is</string>
 
 </resources>

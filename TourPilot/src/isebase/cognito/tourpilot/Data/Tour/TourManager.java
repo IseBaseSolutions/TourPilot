@@ -28,6 +28,7 @@ public class TourManager extends BaseObjectManager<Tour> {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db) {
+		
 	}
-
+	
 }

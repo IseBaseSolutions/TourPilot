@@ -86,8 +86,13 @@ public class TasksActivity extends BaseActivity {
 	}
 
 	public void reloadData() {
-		tasks = TaskManager.Instance().loadByPatientID(
-				Option.Instance().getPatientID());
+		tasks = TaskManager.Instance().load(Task.EmploymentIDField, Option.Instance().getEmploymentID()+"");
+		for (Task task : tasks)
+		{
+			int a = task.getPilotTourID();
+			a = 2;
+		}
+
 	}
 
 	@Override

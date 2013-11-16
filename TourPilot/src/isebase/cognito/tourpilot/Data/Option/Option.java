@@ -12,8 +12,8 @@ public class Option {
 	public static final String TableName = "Options";
 	
 	public static final String WorkerIDField = "worker_id";
-	public static final String TourIDField = "tour_id";
-	public static final String PatientIDField = "patient_id";
+	public static final String PilotTourIDField = "pilot_tour_id";
+	public static final String EmploymentIDField = "employment_id";
 	public static final String ServerIPField = "server_ip";
 	public static final String ServerPortField = "server_port";
 
@@ -25,28 +25,20 @@ public class Option {
 	private static Option instance;
 		
 	private int workerID;
-	private int tourID;
-	private int patientID;
+	private int employmentID;
 	private int serverPort;
-	private int id;
+	private int id;	
+	private int pilotTourID;
 	
-	private int temporaryWorkerID;
-	private int temporaryTourID;
-	private int temporaryPatientID;
-	
-	public void setTemporaryWorkerID(int temporaryWorkerID) {
-		this.temporaryWorkerID = temporaryWorkerID;
-	}
-
-	public void setTemporaryTourID(int temporaryTourID) {
-		this.temporaryTourID = temporaryTourID;
-	}
-
-	public void setTemporaryPatientID(int temporaryPatientID) {
-		this.temporaryPatientID = temporaryPatientID;
+	@MapField(DatabaseField = PilotTourIDField)
+	public int getPilotTourID() {
+		return pilotTourID;
 	}
 	
-	public int count;
+	@MapField(DatabaseField = PilotTourIDField)
+	public void setPilotTourID(int tourDate) {
+		this.pilotTourID = tourDate;
+	}
 	
 	@MapField(DatabaseField = WorkerIDField)
 	public int getWorkerID() {
@@ -58,24 +50,14 @@ public class Option {
 		this.workerID = workerID;
 	}
 
-	@MapField(DatabaseField = TourIDField)
-	public int getTourID() {
-		return tourID;
+	@MapField(DatabaseField = EmploymentIDField)
+	public int getEmploymentID() {
+		return employmentID;
 	}
 
-	@MapField(DatabaseField = TourIDField)
-	public void setTourID(int tourID) {
-		this.tourID = tourID;
-	}
-
-	@MapField(DatabaseField = PatientIDField)
-	public int getPatientID() {
-		return patientID;
-	}
-
-	@MapField(DatabaseField = PatientIDField)
-	public void setPatientID(int patientID) {
-		this.patientID = patientID;
+	@MapField(DatabaseField = EmploymentIDField)
+	public void setEmploymentID(int id) {
+		this.employmentID = id;
 	}
 
 	@MapField(DatabaseField = ServerIPField)
@@ -115,12 +97,12 @@ public class Option {
 	}
 
 	protected void clear() {
-		id = BaseObject.EMPTY_ID;
-		workerID = BaseObject.EMPTY_ID;
-		tourID = BaseObject.EMPTY_ID;
-		patientID = BaseObject.EMPTY_ID;	
-		serverPort = 4448;		
-		serverIP = "192.168.1.8";
+		setId(BaseObject.EMPTY_ID);
+		setWorkerID(BaseObject.EMPTY_ID);
+		setPilotTourID(BaseObject.EMPTY_ID);
+		setEmploymentID(BaseObject.EMPTY_ID);	
+		setServerPort(4448);		
+		setServerIP("192.168.0.138");
 	}
 
 	public String getVersion() {

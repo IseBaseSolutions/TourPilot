@@ -1,10 +1,9 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Data.Employment.Employment;
+import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.Data.Patient.Patient;
-import isebase.cognito.tourpilot.Data.Patient.PatientManager;
-import isebase.cognito.tourpilot.Data.Task.Task;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,9 +25,9 @@ import android.widget.TextView;
 
 public class PatientsActivity extends BaseActivity {
 
-	List<Patient> patients = new ArrayList<Patient>();
-	List<Patient> donePatients = new ArrayList<Patient>();
-	List<Patient> unDonePatients = new ArrayList<Patient>();
+	List<Employment> employments ;
+	List<Employment> donePatients = new ArrayList<Employment>();
+	List<Employment> unDonePatients = new ArrayList<Employment>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,28 +60,23 @@ public class PatientsActivity extends BaseActivity {
 	}
 
 	public void initListUndonePatients() {
-		final ArrayAdapter<Patient> adapter = new ArrayAdapter<Patient>(this,
+		final ArrayAdapter<Employment> adapter = new ArrayAdapter<Employment>(this,
 				android.R.layout.simple_list_item_1, unDonePatients);
 		final ListView lvListUndoneTasks = (ListView) findViewById(R.id.lvUndonePatients);
 
 		lvListUndoneTasks.setAdapter(adapter);
-		lvListUndoneTasks
-				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-					@Override
-					public void onItemClick(AdapterView<?> arg0, View arg1,
-							int position, long arg3) {
-						saveSelectedPatientID(((Patient)patients.get(position)).getId());
-						startTasksActivity();
-					}
-				});
-
+		lvListUndoneTasks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1,
+					int position, long arg3) {
+				saveSelectedEmploymentID(((Employment)employments.get(position)).getId());
+				startTasksActivity();
+			}
+		});
 	}
 	
-
-
 	public void initListDonePatients() {
-		final ArrayAdapter<Patient> adapter = new ArrayAdapter<Patient>(this,
+		final ArrayAdapter<Employment> adapter = new ArrayAdapter<Employment>(this,
 				android.R.layout.simple_list_item_1, donePatients);
 		final ListView lvListDoneTasks = (ListView) findViewById(R.id.lvDonePatients);
 		lvListDoneTasks.setAdapter(adapter);
@@ -111,10 +105,11 @@ public class PatientsActivity extends BaseActivity {
 	}
 
 	public void reloadData() {
-		patients = PatientManager.Instance().loadBytourID(Option.Instance().getTourID());
-		for (Patient patient : patients) {
-			donePatients.add(patient);
-			unDonePatients.add(patient);
+		employments = EmploymentManager.Instance().load(Employment.PilotTourIDField
+				, Option.Instance().getPilotTourID()+"");
+		for (Employment empl : employments) {
+			donePatients.add(empl);
+			unDonePatients.add(empl);
 		}
 	}
 	
@@ -125,8 +120,8 @@ public class PatientsActivity extends BaseActivity {
 				"%s - %s", dayOfTheWeek, Option.Instance().getWorker().getName()));
 	}
 	
-	private void saveSelectedPatientID(int patientID) {
-		Option.Instance().setPatientID(patientID);
+	private void saveSelectedEmploymentID(int emplID) {
+		Option.Instance().setEmploymentID(emplID);
 		Option.Instance().save();
 	}
 	

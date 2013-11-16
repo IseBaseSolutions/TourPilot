@@ -1,16 +1,17 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.Data.Tour.Tour;
-import isebase.cognito.tourpilot.Data.Tour.TourManager;
+import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
+import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
+import isebase.cognito.tourpilot.Utils.DateUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -22,7 +23,7 @@ import android.widget.TextView;
 
 public class ToursActivity extends BaseActivity {
 
-	List<Tour> tours = new ArrayList<Tour>();
+	List<PilotTour> pilotTours = new ArrayList<PilotTour>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,15 +47,15 @@ public class ToursActivity extends BaseActivity {
 
 	public void initListTours() {
 		ListView listView = (ListView) findViewById(R.id.lvTours);
-		ArrayAdapter<Tour> adapter = new ArrayAdapter<Tour>(this,
-				android.R.layout.simple_list_item_1, tours);
+		ArrayAdapter<PilotTour> adapter = new ArrayAdapter<PilotTour>(this,
+				android.R.layout.simple_list_item_1, pilotTours);
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
-				saveSelectedTourID(tours.get(position).getId());
+				saveSelectedTour(pilotTours.get(position));
 				startPatientsActivity();
 			}
 
@@ -93,24 +94,24 @@ public class ToursActivity extends BaseActivity {
 	}
 
 	private void initComnponents() {
-		SimpleDateFormat simpleDateformat = new SimpleDateFormat("EE MM.dd");
+		SimpleDateFormat simpleDateformat = new SimpleDateFormat("EEEE MM.dd");
 		String dayOfTheWeek = simpleDateformat.format(new Date());
 		((TextView) findViewById(R.id.tvCurrentInfo)).setText(String.format(
-				"%s - %s", dayOfTheWeek, Option.Instance().getWorker().getName()));
+				"%s, %s", Option.Instance().getWorker().getName().replace(",", ""), dayOfTheWeek));
 	}
 
 	private void reloadData(){
-		tours = TourManager.Instance().load();
+		pilotTours = PilotTourManager.Instance().loadPilotTours();
 	}
 	
-	private void saveSelectedTourID(int tourID) {
-		Option.Instance().setTourID(tourID);
+	private void saveSelectedTour(PilotTour pilotTour) {
+		Option.Instance().setPilotTourID(pilotTour.getId());
 		Option.Instance().save();
 	}
 
 	private void clearPersonalOptions() {
-		Option.Instance().setWorkerID(-1);
-		Option.Instance().setTourID(-1);
+		Option.Instance().setWorkerID(BaseObject.EMPTY_ID);
+		Option.Instance().setPilotTourID(BaseObject.EMPTY_ID);
 		Option.Instance().save();
 	}
 

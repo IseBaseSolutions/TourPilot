@@ -182,6 +182,7 @@ public final class R {
         public static final int title_activity_relatives=0x7f05002b;
         public static final int title_activity_tasks=0x7f050021;
         public static final int title_activity_test=0x7f050019;
+        public static final int today_is=0x7f050043;
         public static final int version=0x7f050020;
         public static final int yes=0x7f05002f;
     }

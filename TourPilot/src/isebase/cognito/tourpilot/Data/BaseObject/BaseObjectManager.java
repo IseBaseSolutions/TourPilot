@@ -96,7 +96,15 @@ public abstract class BaseObjectManager<T> {
 		return items;
 	}
 
-	public List<T> load(String whereField, String whereClouse) {
+	public List<T> loadAll(String whereField, String whereClouse){
+		return loadWhere(whereField, whereClouse, true);
+	}
+	
+	public List<T> load(String whereField, String whereClouse){
+		return loadWhere(whereField, whereClouse, false);
+	}
+	
+	private List<T> loadWhere(String whereField, String whereClouse, boolean withAll) {
 		List<T> items = new ArrayList<T>();
 		Cursor cursor = null;
 		try {
@@ -112,6 +120,8 @@ public abstract class BaseObjectManager<T> {
 				items.add(object);
 				cursor.moveToNext();
 			}
+			if(withAll)
+				afterLoad(items);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -424,6 +434,14 @@ public abstract class BaseObjectManager<T> {
 		}
 		strResult += ".\0";
 		return strResult;
+	}
+	
+	public void execSQL(String strSQL){
+		DataBaseWrapper.Instance().getReadableDatabase().execSQL(strSQL);
+	}
+	
+	public void clearTable(){
+		DataBaseWrapper.Instance().getReadableDatabase().execSQL("DELETE FROM " + getRecTableName());
 	}
 
 }
