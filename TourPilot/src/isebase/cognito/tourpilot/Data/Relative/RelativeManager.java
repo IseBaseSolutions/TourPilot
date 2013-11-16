@@ -56,7 +56,8 @@ public class RelativeManager extends BaseObjectManager<Relative>{
 	}
 	
 	@Override
-	public void afterSave(Relative item) {
+	public void beforeSave(Relative item) {
 		AddressManager.Instance().save(item.address);
+		item.setAddressID(item.address.getId());
 	}
 }
