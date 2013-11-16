@@ -16,7 +16,7 @@
         android:layout_alignParentLeft="true"
         android:text="@string/options"
         android:textAppearance="?android:attr/textAppearanceLarge" 
-        android:onClick="btOptionsClick" />
+        android:onClick="switchToOptions" />
 
     <ListView
         android:id="@+id/lvWorkers"

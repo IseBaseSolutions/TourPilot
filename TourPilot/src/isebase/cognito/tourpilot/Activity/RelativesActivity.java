@@ -1,7 +1,10 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.R.layout;
+import isebase.cognito.tourpilot.R.menu;
 import android.os.Bundle;
+import android.app.Activity;
 import android.view.Menu;
 
 public class RelativesActivity extends BaseActivity {

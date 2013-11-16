@@ -34,8 +34,7 @@
         android:layout_above="@+id/btLogOut"
         android:layout_alignLeft="@+id/btLogOut"
         android:textAppearance="?android:attr/textAppearanceLarge" 
-        android:text="@string/synchronization"
-        android:onClick="btStartSyncClick"/>
+        android:text="@string/synchronization" />
 
     <Button
         android:id="@+id/btLogOut"
@@ -45,6 +44,6 @@
         android:layout_alignParentLeft="true"
         android:textAppearance="?android:attr/textAppearanceLarge" 
         android:text="@string/log_out" 
-        android:onClick="btlogOutClick"/>
+        android:onClick="logOut"/>
 
 </RelativeLayout>

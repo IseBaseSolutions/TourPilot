@@ -10,52 +10,26 @@ import android.telephony.TelephonyManager;
 public class Option {
 
 	public static final String TableName = "Options";
-
+	
 	public static final String WorkerIDField = "worker_id";
-	public static final String PreviousWorkerIDField = "prev_worker_id";
 	public static final String TourIDField = "tour_id";
-	public static final String PatientIDField = "patient_id";
+	public static final String EmploymentIDField = "employment_id";
 	public static final String ServerIPField = "server_ip";
 	public static final String ServerPortField = "server_port";
-	public static final String IsAutoField = "is_auto";
-
-	public static boolean testMode = false;
-	private Worker worker;
-	private TelephonyManager phoneManager = StaticResources.phoneManager;
-	private OptionManager optionManager;
-	private static Option instance;
 
 	private String serverIP;
-	
-	private int prevWorkerID;
+	public static boolean testMode = false;
+	private Worker worker;
+	private TelephonyManager phoneManager = StaticResources.phoneManager;;
+	private OptionManager optionManager;	
+	private static Option instance;
+		
 	private int workerID;
 	private int tourID;
-	private int patientID;
+	private int employmentID;
 	private int serverPort;
 	private int id;
-
-	private boolean isAuto;
-
-	@MapField(DatabaseField = PreviousWorkerIDField)
-	public void setPrevWorkerID(int id){
-		this.prevWorkerID = id;
-	}
-
-	@MapField(DatabaseField = PreviousWorkerIDField)
-	public int getPrevWorkerID(){
-		return prevWorkerID;
-	}
 	
-	@MapField(DatabaseField = IsAutoField)
-	public void setIsAuto(boolean isAuto) {
-		this.isAuto = isAuto;
-	}
-
-	@MapField(DatabaseField = IsAutoField)
-	public boolean getIsAuto() {
-		return isAuto;
-	}
-
 	@MapField(DatabaseField = WorkerIDField)
 	public int getWorkerID() {
 		return workerID;
@@ -76,14 +50,14 @@ public class Option {
 		this.tourID = tourID;
 	}
 
-	@MapField(DatabaseField = PatientIDField)
-	public int getPatientID() {
-		return patientID;
+	@MapField(DatabaseField = EmploymentIDField)
+	public int getEmploymentID() {
+		return employmentID;
 	}
 
-	@MapField(DatabaseField = PatientIDField)
-	public void setPatientID(int patientID) {
-		this.patientID = patientID;
+	@MapField(DatabaseField = EmploymentIDField)
+	public void setEmploymentID(int employmentID) {
+		this.employmentID = employmentID;
 	}
 
 	@MapField(DatabaseField = ServerIPField)
@@ -108,33 +82,27 @@ public class Option {
 
 	@MapField(DatabaseField = BaseObject.IDField)
 	public int getId() {
-		return id;
-	}
-
+		return id;}
+		
 	@MapField(DatabaseField = BaseObject.IDField)
 	public void setId(int id) {
 		this.id = id;
 	}
-
+		
 	public Worker getWorker() {
 		if (worker != null && worker.getId() == getWorkerID())
 			return worker;
-		worker = WorkerManager.Instance().load(workerID);
+		worker = WorkerManager.Instance().loadAll(workerID);
 		return worker;
 	}
 
 	protected void clear() {
 		id = BaseObject.EMPTY_ID;
-		serverPort = 4448;
-		serverIP = "192.168.1.8";
-		clearSelected();
-	}
-
-	public void clearSelected() {
-		prevWorkerID = BaseObject.EMPTY_ID;
 		workerID = BaseObject.EMPTY_ID;
 		tourID = BaseObject.EMPTY_ID;
-		patientID = BaseObject.EMPTY_ID;
+		employmentID = BaseObject.EMPTY_ID;	
+		serverPort = 4448;		
+		serverIP = "192.168.1.8";
 	}
 
 	public String getVersion() {
@@ -152,22 +120,20 @@ public class Option {
 	}
 
 	public String getPhoneNumber() {
-		return phoneManager.getLine1Number() == null ? "" : phoneManager
-				.getLine1Number().toString();
+		return phoneManager.getLine1Number() == null ? "" : phoneManager.getLine1Number().toString();
 	}
 
 	public String getDeviceID() {
-		return phoneManager.getDeviceId() == null ? "" : phoneManager
-				.getDeviceId().toString();
+		return phoneManager.getDeviceId() == null ? "" : phoneManager.getDeviceId().toString();
 	}
-
+	
 	public static Option Instance() {
-		if (instance == null) {
+		if (instance == null){
 			OptionManager optionManager = new OptionManager();
 			optionManager.open();
 			instance = optionManager.loadOption();
 			instance.optionManager = optionManager;
-		}
+		}			
 		return instance;
 	}
 
@@ -175,7 +141,7 @@ public class Option {
 		clear();
 	}
 
-	public void save() {
+	public void save(){
 		optionManager.save(Option.Instance());
 	}
 
