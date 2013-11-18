@@ -5,13 +5,10 @@ import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
-import isebase.cognito.tourpilot.Utils.DateUtils;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
