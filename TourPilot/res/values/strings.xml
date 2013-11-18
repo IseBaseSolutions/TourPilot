@@ -79,6 +79,21 @@
     <string name="data_to_download">Data to download</string>
     <string name="connection_close_ok">Connection closing OK</string>
     <string name="connection_close_fail">Connection closing FAIL</string>
-    <string name="today_is">today is</string>
+    <string name="services">Services</string>
+    <string name="enter_interval">Enter interval</string>
+    <string name="manual_input">Manual input</string>
+    <string name="sugar">Sugar</string>
+    <string name="pulse">Pulse</string>
+    <string name="pressure_top">Press top</string>
+    <string name="pressure_bottom">Press bottom</string>    
+    <string name="connect_with">Connect with ...</string>
+    <string name="medications_changed">Medications changed</string>
+    <string name="adasdas">qweqw pflege</string>
+    <string name="visit_notes">Visit notes</string>
+    <string name="other">Other (inquire)</string>
+    <string name="relatives">Relatives</string>
+    <string name="additional_tasks_list">Relatives</string>
+    <string name="additional_task">Additional task</string>
+    <string name="empty_time">00:00</string>
 
 </resources>
