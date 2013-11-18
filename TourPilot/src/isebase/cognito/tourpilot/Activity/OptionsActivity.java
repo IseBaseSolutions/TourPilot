@@ -9,7 +9,6 @@ import isebase.cognito.tourpilot.Dialogs.DialogInfoBase;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Utils.DataBaseUtils;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
