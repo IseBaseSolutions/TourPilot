@@ -420,8 +420,7 @@ public abstract class BaseObjectManager<T> {
 		long lngChecksum = 0;
 		List<T> elements = load();
 		for (T element : elements)
-			if (!(element instanceof Patient && ((Patient) element)
-					.getIsAdditional()))
+			if (!((BaseObject)element).getWasSent())
 				lngChecksum += ((BaseObject) element).getCheckSum();
 		return lngChecksum;
 	}

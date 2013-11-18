@@ -1,13 +1,17 @@
 package isebase.cognito.tourpilot.Data.Employment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.Data.Task.Task;
+import isebase.cognito.tourpilot.Data.Task.TaskManager;
+import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
@@ -18,15 +22,13 @@ public class Employment extends BaseObject {
 	public static final String TourIDField = "tour_id"; 
 	public static final String DateField = "date";
 	public static final String IsDoneField = "is_done";
-	public static final String IsAbortedField = "is_aborted";
-		
+	
+	private boolean isDone;
+	
 	private int patientID;	
 	private int pilotTourID;
 	private Date date;
 	private int tourID;
-
-	private boolean isDone;
-	private boolean isAborted; 
 		
 	private List<Task> tasks =  new ArrayList<Task>();
 	
@@ -34,23 +36,13 @@ public class Employment extends BaseObject {
 	private PilotTour pilotTour;
 
 	@MapField(DatabaseField = IsDoneField)
-	public boolean isDone() {
+	public boolean getIsDone() {
 		return isDone;
 	}
 
 	@MapField(DatabaseField = IsDoneField)
-	public void setDone(boolean isDone) {
+	public void setIsDone(boolean isDone) {
 		this.isDone = isDone;
-	}
-
-	@MapField(DatabaseField = IsAbortedField)
-	public boolean isAborted() {
-		return isAborted;
-	}
-
-	@MapField(DatabaseField = IsAbortedField)
-	public void setAborted(boolean isAborted) {
-		this.isAborted = isAborted;
 	}
 	
 	@MapField(DatabaseField = DateField)
@@ -135,5 +127,33 @@ public class Employment extends BaseObject {
 		// TODO Auto-generated method stub
 		return "";
 	}
+	
+    public String getDone()
+    {
+        if (!getIsDone())
+        	return "";
+        String strValue = "";
+        String strEmpl = "E;";
+        strEmpl += Option.Instance().getWorkerID() + ";";
+        strEmpl += getPatientID() + ";";
+        SimpleDateFormat format = new SimpleDateFormat("ddMMyyyy");
+        for (Task task : tasks)
+        {
+        	String strTask = strEmpl;
+            strTask += format.format(task.getPlanDate()) + ";";
+            strTask += task.getPlanDate().toString().substring(11,13);
+            strTask += task.getPlanDate().toString().substring(14,16) + ";";
+            strTask += task.getLeistungs() + ";";
+            strTask += (task.getState().equals(eTaskState.Done) ? "ja" : "nein") + ";";
+            if (!DateUtils.EmptyDate.equals(task.getManualDate()))
+                strTask += DateUtils.toString(task.getManualDate()) + ";";
+            strTask += DateUtils.toString(task.getRealDate());
+            strTask += "\0";
+            strValue += strTask;
+            task.setWasSent(true);            
+        }
+        TaskManager.Instance().save(tasks);
+        return strValue;
+    }
 	
 }

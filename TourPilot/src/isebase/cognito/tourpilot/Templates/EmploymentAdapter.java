@@ -41,13 +41,9 @@ public class EmploymentAdapter extends ArrayAdapter<Employment>{
 			employmentHolder.tvEmploymentTime = (TextView) row.findViewById(R.id.tvEmploymentTime);
 			employmentHolder.tvEmploymentTime.setText(employment.getTime());
 			
-			if(employment.isDone()){
+			if(employment.getIsDone()){
 				employmentHolder.tvEmploymentName.setTextColor(StaticResources.getBaseContext().getResources().getColor(R.color.activeColor));
 				employmentHolder.tvEmploymentTime.setTextColor(StaticResources.getBaseContext().getResources().getColor(R.color.activeColor));
-			}
-			if(employment.isAborted()){
-				employmentHolder.tvEmploymentName.setTextColor(StaticResources.getBaseContext().getResources().getColor(R.color.notActveColor));
-				employmentHolder.tvEmploymentTime.setTextColor(StaticResources.getBaseContext().getResources().getColor(R.color.notActveColor));
 			}
 		
 			row.setTag(employmentHolder);
