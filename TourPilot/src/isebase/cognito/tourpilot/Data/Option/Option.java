@@ -36,6 +36,16 @@ public class Option {
 
 	private boolean isAuto;
 
+	@MapField(DatabaseField = PilotTourIDField)
+	public void setPilotTourID(int id){
+		this.pilotTourID = id;
+	}
+
+	@MapField(DatabaseField = PilotTourIDField)
+	public int getPilotTourID(){
+		return pilotTourID;
+	}
+	
 	@MapField(DatabaseField = PreviousWorkerIDField)
 	public void setPrevWorkerID(int id){
 		this.prevWorkerID = id;
@@ -55,13 +65,7 @@ public class Option {
 	public boolean getIsAuto() {
 		return isAuto;
 	}
-
-	
-	@MapField(DatabaseField = PilotTourIDField)
-	public void setPilotTourID(int tourDate) {
-		this.pilotTourID = tourDate;
-	}
-	
+		
 	@MapField(DatabaseField = WorkerIDField)
 	public int getWorkerID() {
 		return workerID;

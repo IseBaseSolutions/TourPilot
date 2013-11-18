@@ -45,20 +45,17 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
 				"t1.checksum, " +
 				"(t2.surname || ', ' || t2.name) as name, " +
 				"t1.plan_date as date, " +
-				"t1.tour_id as tour_id " +
+				"t1.tour_id as tour_id, " +
+				"'0' as is_done, " +
+				"'0' as is_aborted " +
 				"FROM %1$s t1 " +
 				"INNER JOIN %2$s t2 on t1.patient_id = t2._id " +
 				"GROUP BY t1.employment_id"
 				, TaskManager.TableName
 				, PatientManager.TableName
 				, getRecTableName()); 
-		List<Employment> items = load(strSQL);		
+		List<Employment> items = load(strSQL);
 		save(items);
-	}
-	
-	@Override
-	public void afterLoad(List<Employment> items) {
-		super.afterLoad(items);
 	}
 
 }

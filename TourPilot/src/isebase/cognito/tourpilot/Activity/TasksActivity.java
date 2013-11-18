@@ -2,6 +2,8 @@ package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.AdditionalTasks.CatalogsActivity;
+import isebase.cognito.tourpilot.Data.Employment.Employment;
+import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
@@ -102,8 +104,8 @@ public class TasksActivity extends BaseActivity {
 		fillUpEndTask();
 	}	
 
-	public void reloadData() {
-		tasks = TaskManager.Instance().loadByPatientID(Option.Instance().getPatientID());
+	public void reloadData() {		
+		tasks = TaskManager.Instance().load(Task.EmploymentIDField, Option.Instance().getEmploymentID()+"");
 		startTask = tasks.get(0);
 		endTask = tasks.get(tasks.size() - 1);
 	}
@@ -123,7 +125,7 @@ public class TasksActivity extends BaseActivity {
 		endTask.setRealDate(new Date());
 		TaskManager.Instance().save(endTask);
 		fillUpEndTask();
-//TODO Show message
+		saveEmployment(true,false);	
 		switchToPatientsActivity();
 	}
 	
@@ -173,18 +175,7 @@ public class TasksActivity extends BaseActivity {
 		btEndTask = (Button) findViewById(R.id.btEndTask);
 		btStartTask = (Button) findViewById(R.id.btStartTask);
 	}
-<<<<<<< HEAD
 
-	public void reloadData() {
-		tasks = TaskManager.Instance().load(Task.EmploymentIDField, Option.Instance().getEmploymentID()+"");
-		for (Task task : tasks)
-		{
-			int a = task.getPilotTourID();
-			a = 2;
-		}
-
-=======
-	
 	private void checkAllTasks(Task.eTaskState state){
 		Date newDate = new Date();
 		for(Task t : tasks){
@@ -198,7 +189,23 @@ public class TasksActivity extends BaseActivity {
 	private void switchToPatientsActivity() {
 		Intent patientsActivity = new Intent(getApplicationContext(), PatientsActivity.class);
 		startActivity(patientsActivity);
->>>>>>> refs/heads/master
+	}
+	
+	private void saveEmployment(boolean isDone, boolean isAborted){
+		if(!isAborted){
+			for(Task t: tasks){
+				isAborted =  true;
+				if(t.getTaskState() == eTaskState.Done){
+					isAborted = false;
+					break;
+				}
+			}
+		}
+		
+		Employment empl = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
+		empl.setDone(isDone);
+		empl.setAborted(isAborted);
+		EmploymentManager.Instance().save(empl);
 	}
 
 	@Override
@@ -212,6 +219,8 @@ public class TasksActivity extends BaseActivity {
 			return true;
 		case R.id.cancelAllTasks:
 			checkAllTasks(eTaskState.UnDone);
+			saveEmployment(false,true);
+			switchToPatientsActivity();
 			return true;
 		case R.id.notes:
 			Intent notesActivity = new Intent(getApplicationContext(),

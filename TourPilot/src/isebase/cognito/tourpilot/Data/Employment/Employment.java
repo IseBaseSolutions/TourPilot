@@ -17,16 +17,41 @@ public class Employment extends BaseObject {
 	public static final String PilotTourIDField = "pilot_tour_id";
 	public static final String TourIDField = "tour_id"; 
 	public static final String DateField = "date";
-
+	public static final String IsDoneField = "is_done";
+	public static final String IsAbortedField = "is_aborted";
+		
 	private int patientID;	
 	private int pilotTourID;
 	private Date date;
 	private int tourID;
-	
+
+	private boolean isDone;
+	private boolean isAborted; 
+		
 	private List<Task> tasks =  new ArrayList<Task>();
 	
 	private Patient patient;
 	private PilotTour pilotTour;
+
+	@MapField(DatabaseField = IsDoneField)
+	public boolean isDone() {
+		return isDone;
+	}
+
+	@MapField(DatabaseField = IsDoneField)
+	public void setDone(boolean isDone) {
+		this.isDone = isDone;
+	}
+
+	@MapField(DatabaseField = IsAbortedField)
+	public boolean isAborted() {
+		return isAborted;
+	}
+
+	@MapField(DatabaseField = IsAbortedField)
+	public void setAborted(boolean isAborted) {
+		this.isAborted = isAborted;
+	}
 	
 	@MapField(DatabaseField = DateField)
 	public Date getDate() {
@@ -100,11 +125,15 @@ public class Employment extends BaseObject {
 	public String toString() {
 		return getName() + "  " + DateUtils.HourMinutesFormat.format(getDate());
 	}
-	
+
+	public String getTime() {
+		 return DateUtils.HourMinutesFormat.format(getDate());
+	}
+		
 	@Override
 	public String forServer() {
 		// TODO Auto-generated method stub
 		return "";
 	}
-
+	
 }

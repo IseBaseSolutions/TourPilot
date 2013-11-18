@@ -19,41 +19,11 @@
         android:text="@string/some_text" />
 
     <ListView
-        android:id="@+id/lvUndonePatients"
+        android:id="@+id/lvEmployments"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvCurrentInfo" 
         android:layout_marginBottom="50dp">
 
     </ListView>
-
-    <SlidingDrawer
-        android:id="@+id/sdDonePatients"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/tvCurrentInfo"
-        android:content="@+id/lvDonePatients"      
-        android:handle="@+id/btHandle"
-        android:overScrollMode="never"
-        android:scrollbarStyle="insideOverlay"
-        android:scrollbars="horizontal"
-        android:visibility="visible" >
-
-        <Button
-            android:id="@+id/btHandle"    
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableRight="@android:drawable/arrow_up_float"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/show_done_patients" />
-
-        <ListView
-            android:id="@+id/lvDonePatients"          
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/background_light">
-
-        </ListView>
-    </SlidingDrawer>
-
 </RelativeLayout>

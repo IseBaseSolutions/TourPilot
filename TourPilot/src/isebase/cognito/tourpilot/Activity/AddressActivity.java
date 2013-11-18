@@ -2,6 +2,8 @@ package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Address.Address;
+import isebase.cognito.tourpilot.Data.Employment.Employment;
+import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
@@ -35,7 +37,8 @@ public class AddressActivity extends BaseActivity {
 	}
 	
 	private void reloadData(){
-		patient = PatientManager.Instance().loadAll(Option.Instance().getPatientID());
+		Employment eml = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
+		patient = PatientManager.Instance().loadAll(eml.getPatientID());
 	}
 	
 	private void fillUp(){

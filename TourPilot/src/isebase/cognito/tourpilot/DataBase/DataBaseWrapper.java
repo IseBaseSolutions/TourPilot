@@ -96,13 +96,11 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			"CREATE TABLE " + Option.TableName + "("
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ Option.WorkerIDField + " INTEGER, " 
-			+ Option.PilotTourIDField + " INTEGER, "
-			+ Option.EmploymentIDField + " INTEGER, "
 			+ Option.PreviousWorkerIDField + " INTEGER, " 
 			+ Option.PilotTourIDField + " INTEGER, "
 			+ Option.EmploymentIDField + " INTEGER, "
 			+ Option.ServerIPField + " TEXT, "
-			+ Option.ServerPortField + " INTEGER "
+			+ Option.ServerPortField + " INTEGER, "
 			+ Option.IsAutoField + " INTEGER "
 			+ ");";
 
@@ -123,12 +121,9 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Task.IsAdditionalTaskField + " INTEGER, "
 			+ Task.AdditionalTaskIDField + " INTEGER, "
 			+ Task.EmploymentIDField + " INTEGER, "
-<<<<<<< HEAD
-			+ Task.PilotTourIDField + " INTEGER "
-=======
+			+ Task.PilotTourIDField + " INTEGER, "
 			+ Task.RealDateField + " INTEGER, "
 			+ Task.ManualDateField + " INTEGER "
->>>>>>> refs/heads/master
 			+ ");";
 	
 	private static final String ADDITIONAL_TASKS_TABLE_CREATE = 
@@ -236,7 +231,9 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Employment.PatientIDField + " INTEGER, "
 			+ Employment.PilotTourIDField + " INTEGER, "
 			+ Employment.DateField + " INTEGER, "
-			+ Employment.TourIDField + " INTEGER "
+			+ Employment.TourIDField + " INTEGER, "
+			+ Employment.IsDoneField + " INTEGER, "
+			+ Employment.IsAbortedField + " INTEGER "
 			+ ");";	
 	
 	public DataBaseWrapper(Context context) {
