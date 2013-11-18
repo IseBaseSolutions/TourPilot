@@ -68,23 +68,4 @@ public class PatientManager extends BaseObjectManager<Patient> {
 		item.setAddressID(item.address.getId());
 	}
 	
-	public List<Patient> loadByOption() {
-//		return load(String.format(" SELECT t3.* FROM %1$s AS t1 " +
-//					" INNER JOIN %2$s AS t2 ON t1.%3$s = t2.%4$s " +
-//					" INNER JOIN %5$s AS t3 ON t2.%6$s = t3.%3$s" +
-//					" WHERE t1.%3$s = %7$d AND t2.%8$s / %9$d = %10$d / %9$d GROUP BY t3.%3$s, t2.%11$s", 
-//					TourManager.TableName,
-//					TaskManager.TableName, 
-//					BaseObject.IDField,
-//					Task.TourIDField,
-//					PatientManager.TableName,
-//					Task.PatientIDField,
-//					Option.Instance().getTourID(),
-//					Task.PlanDateField,
-//					DateUtils.DayMillisec,
-//					Option.Instance().getPilotTourID().getTime(),
-//					Task.EmploymentIDField));
-		return null;
-	}
-	
 }
