@@ -2,15 +2,11 @@ package isebase.cognito.tourpilot.Activity;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.R.layout;
-import isebase.cognito.tourpilot.R.menu;
 import isebase.cognito.tourpilot.Data.Doctor.Doctor;
 import isebase.cognito.tourpilot.Templates.AddressAdapter;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
@@ -31,7 +27,6 @@ public class DoctorsActivity extends BaseActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.doctors, menu);
 		return true;
 	}

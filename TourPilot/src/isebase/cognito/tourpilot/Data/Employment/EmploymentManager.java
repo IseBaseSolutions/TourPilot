@@ -1,6 +1,5 @@
 package isebase.cognito.tourpilot.Data.Employment;
 
-import java.util.List;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
@@ -36,14 +35,16 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
 	
 	public void createEmployments() {
 		clearTable();
-		String strSQL = String.format("SELECT " +
+		String strSQL = String.format("INSERT INTO %4$s" +
+				"(_id, patient_id, name, was_sent, checksum, is_server_time" +
+				", pilot_tour_id, date, tour_id, is_done, is_aborted) SELECT " +
 				"t1.employment_id as _id, " +
 				"t1.patient_id as patient_id, " +
-				"t1.pilot_tour_id as pilot_tour_id, " +
-				"t1.was_sent, " +
-				"t1.is_server_time, " +
-				"t1.checksum, " +
 				"(t2.surname || ', ' || t2.name) as name, " +
+				"t1.was_sent as was_sent, " +
+				"t1.checksum as checksum, " +
+				"t1.is_server_time as is_server_time, " +
+				"t1.pilot_tour_id as pilot_tour_id, " +
 				"t1.plan_date as date, " +
 				"t1.tour_id as tour_id, " +
 				"'0' as is_done, " +
@@ -53,9 +54,9 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
 				"GROUP BY t1.employment_id"
 				, TaskManager.TableName
 				, PatientManager.TableName
-				, getRecTableName()); 
-		List<Employment> items = load(strSQL);
-		save(items);
+				, getRecTableName()
+				, EmploymentManager.TableName); 
+		execSQL(strSQL);
 	}
 
 }

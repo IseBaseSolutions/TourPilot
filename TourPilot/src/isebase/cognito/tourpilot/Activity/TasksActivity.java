@@ -11,7 +11,6 @@ import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Templates.TaskAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,9 +36,12 @@ public class TasksActivity extends BaseActivity {
 	private Task endTask;
 	
 	private ListView lvTasks;
-	private TextView tvStartTask;
-	private TextView tvEndTask;
-	private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+	
+	private TextView tvStartTaskTime;
+	private TextView tvEndTaskTime;
+	private TextView tvStartTaskDate;
+	private TextView tvEndTaskDate;
+		
 	private Button btEndTask;
 	private Button btStartTask;
 	
@@ -82,11 +84,18 @@ public class TasksActivity extends BaseActivity {
 	}
 	
 	private void fillUpStartTask(){
-		tvStartTask.setText(timeFormat.format(startTask.getRealDate()));
+		tvStartTaskTime.setText(DateUtils.HourMinutesFormat.format(startTask.getRealDate()));
+		tvStartTaskDate.setText(DateUtils.DateFormat.format(startTask.getRealDate()));
 	}
 	
 	private void fillUpEndTask(){
-		tvEndTask.setText(timeFormat.format(endTask.getRealDate()));
+		tvEndTaskTime.setText(DateUtils.HourMinutesFormat.format(endTask.getRealDate()));
+		tvEndTaskDate.setText(DateUtils.DateFormat.format(endTask.getRealDate()));
+	}
+	
+	private void fillUpTitle(){
+		String title = startTask.getName().substring(15,startTask.getName().length()-1);
+		setTitle(title);
 	}
 	
 	private void fillUpTasks(){
@@ -97,6 +106,7 @@ public class TasksActivity extends BaseActivity {
 				, R.layout.row_task_template
 				, tasksWithoutFirstAndLast);
 		lvTasks.setAdapter(taskAdapter);
+		fillUpTitle();
 		fillUpEndButtonEnabling();
 		fillUpStartTask();
 		fillUpEndTask();
@@ -168,10 +178,14 @@ public class TasksActivity extends BaseActivity {
 
 	private void initControls() {
 		lvTasks = (ListView) findViewById(R.id.lvTasksList);
-		tvStartTask = (TextView) findViewById(R.id.tvStartTask);
-		tvEndTask = (TextView) findViewById(R.id.tvEndTask);
 		btEndTask = (Button) findViewById(R.id.btEndTask);
 		btStartTask = (Button) findViewById(R.id.btStartTask);
+		
+		tvStartTaskTime = (TextView) findViewById(R.id.tvStartTaskTime);
+		tvStartTaskDate = (TextView) findViewById(R.id.tvStartTaskDate);
+		
+		tvEndTaskTime = (TextView) findViewById(R.id.tvEndTaskTime);
+		tvEndTaskDate = (TextView) findViewById(R.id.tvEndTaskDate);
 	}
 
 	private void checkAllTasks(Task.eTaskState state){

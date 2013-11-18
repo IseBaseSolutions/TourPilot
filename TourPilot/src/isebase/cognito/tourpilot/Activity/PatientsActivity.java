@@ -4,9 +4,11 @@ import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
+import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
+import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Templates.EmploymentAdapter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import isebase.cognito.tourpilot.Utils.DateUtils;
 import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +16,6 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class PatientsActivity extends BaseActivity {
 
@@ -26,8 +27,9 @@ public class PatientsActivity extends BaseActivity {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_patients);
 			reloadData();
-			initComnponents();
+			fillUpTitle();
 			fillUp();
+
 		}catch(Exception ex){
 			ex.printStackTrace();
 			criticalClose();
@@ -72,11 +74,13 @@ public class PatientsActivity extends BaseActivity {
 				, String.valueOf(Option.Instance().getPilotTourID()));
 	}
 	
-	private void initComnponents() {
-		SimpleDateFormat simpleDateformat = new SimpleDateFormat("EE MM.dd");
-		String dayOfTheWeek = simpleDateformat.format(new Date());
-		((TextView) findViewById(R.id.tvCurrentInfo)).setText(String.format(
-				"%s - %s", dayOfTheWeek, Option.Instance().getWorker().getName()));
+	private void fillUpTitle() {
+		PilotTour pt = PilotTourManager.Instance().loadPilotTour(Option.Instance().getPilotTourID());
+		Worker worker = Option.Instance().getWorker();
+		setTitle(String.format("%1$s, %2$s - %3$s"
+				, worker.getName()
+				, pt.getName()
+				, DateUtils.WeekDateFormat.format(pt.getPlanDate())));
 	}
 	
 	private void saveSelectedEmploymentID(int emplID) {

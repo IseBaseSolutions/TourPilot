@@ -53,5 +53,26 @@ public class PilotTourManager extends BaseObjectManager<PilotTour> {
 				Employment.PilotTourIDField);
 		return load(strSQL);		
 	}
+	
+	public PilotTour loadPilotTour(int pilotTourID) {
+		String strSQL = String.format("SELECT " +
+				"t1.%3$s as _id, " +
+				"t2._id as tour_id, " +
+				"t2.is_common_tour, " +
+				"t1.date as plan_date, " +
+				"t2.name as name, " +
+				"t2.checksum as checksum, " +
+				"t2.was_sent as was_sent, " +
+				"t2.is_server_time as is_server_time " +
+				"FROM %1$s t1 INNER JOIN %2$s t2 ON t1.tour_id = t2._id " +
+				"WHERE t1.%3$s = %4$d " +
+				"GROUP BY t1.%3$s",
+				EmploymentManager.TableName,
+				TourManager.TableName,
+				Employment.PilotTourIDField,
+				pilotTourID);
+		return load(strSQL).get(0);		
+	}
+
 
 }

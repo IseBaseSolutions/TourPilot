@@ -12,10 +12,10 @@
         android:id="@+id/tvCurrentInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:height="1dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:text="@string/some_text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_alignRight="@+id/btSynchronization"/>
     
     <ListView
         android:id="@+id/lvTours"
@@ -24,7 +24,6 @@
         android:layout_below="@+id/tvCurrentInfo"
         android:layout_alignLeft="@+id/tvCurrentInfo"
         android:layout_above="@+id/btSynchronization" >
-
     </ListView>
 
     <Button

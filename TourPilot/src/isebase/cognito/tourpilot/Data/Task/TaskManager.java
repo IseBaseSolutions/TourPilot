@@ -1,12 +1,7 @@
 package isebase.cognito.tourpilot.Data.Task;
 
 import java.util.List;
-
-import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
-import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.Data.Patient.PatientManager;
-import isebase.cognito.tourpilot.Utils.DateUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 public class TaskManager extends BaseObjectManager<Task> {
