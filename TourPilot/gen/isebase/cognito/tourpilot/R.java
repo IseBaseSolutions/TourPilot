@@ -33,13 +33,13 @@ public final class R {
         public static final int ic_medic=0x7f020005;
     }
     public static final class id {
-        public static final int action_clear_database=0x7f09002f;
-        public static final int action_settings=0x7f09002d;
-        public static final int action_show_program_info=0x7f090030;
-        public static final int add_task_category=0x7f09002e;
-        public static final int address=0x7f090035;
+        public static final int action_clear_database=0x7f090031;
+        public static final int action_settings=0x7f09002f;
+        public static final int action_show_program_info=0x7f090032;
+        public static final int add_task_category=0x7f090030;
+        public static final int address=0x7f090037;
         public static final int btAddTasksCategoriesBack=0x7f090008;
-        public static final int btChangeTaskState=0x7f09002a;
+        public static final int btChangeTaskState=0x7f09002c;
         public static final int btEndTask=0x7f090023;
         public static final int btHandle=0x7f09001c;
         public static final int btLogOut=0x7f090026;
@@ -47,17 +47,17 @@ public final class R {
         public static final int btSaveAddTask=0x7f090005;
         public static final int btStartTask=0x7f090020;
         public static final int btSynchronization=0x7f090012;
-        public static final int cancelAllTasks=0x7f090031;
+        public static final int cancelAllTasks=0x7f090033;
         public static final int cb_SavePin=0x7f09000f;
         public static final int chbAddTask=0x7f090029;
-        public static final int comments=0x7f090038;
-        public static final int doctors=0x7f090036;
+        public static final int comments=0x7f09003a;
+        public static final int doctors=0x7f090038;
         public static final int etAddTasksFilter=0x7f090003;
         public static final int etPhoneNumber=0x7f090010;
         public static final int etPinCode=0x7f09000d;
         public static final int etServerIP=0x7f090013;
         public static final int etServerPort=0x7f090015;
-        public static final int info=0x7f090033;
+        public static final int info=0x7f090035;
         public static final int llFilter=0x7f090001;
         public static final int lvAddTasks=0x7f090004;
         public static final int lvAddTasksCategory=0x7f090007;
@@ -67,16 +67,18 @@ public final class R {
         public static final int lvTours=0x7f090025;
         public static final int lvUndonePatients=0x7f090019;
         public static final int lvWorkers=0x7f090028;
-        public static final int manualInput=0x7f090034;
-        public static final int notes=0x7f090032;
+        public static final int manualInput=0x7f090036;
+        public static final int notes=0x7f090034;
         public static final int pbClearDB=0x7f090017;
         public static final int pbSync=0x7f09001d;
-        public static final int relatives=0x7f090037;
+        public static final int relatives=0x7f090039;
         public static final int sdDonePatients=0x7f09001a;
         public static final int tvAddTasks=0x7f090000;
         public static final int tvAddTasksCategories=0x7f090006;
         public static final int tvCity=0x7f09000b;
         public static final int tvCurrentInfo=0x7f090018;
+        public static final int tvEmploymentName=0x7f09002b;
+        public static final int tvEmploymentTime=0x7f09002a;
         public static final int tvEndTask=0x7f090024;
         public static final int tvFilter=0x7f090002;
         public static final int tvPhone=0x7f09000c;
@@ -87,8 +89,8 @@ public final class R {
         public static final int tvServer=0x7f090014;
         public static final int tvStartTask=0x7f090021;
         public static final int tvStreet=0x7f090009;
-        public static final int tvTaskName=0x7f09002b;
-        public static final int tvWorkerName=0x7f09002c;
+        public static final int tvTaskName=0x7f09002d;
+        public static final int tvWorkerName=0x7f09002e;
         public static final int tvZip=0x7f09000a;
     }
     public static final class layout {
@@ -109,8 +111,9 @@ public final class R {
         public static final int activity_tours=0x7f03000e;
         public static final int activity_workers=0x7f03000f;
         public static final int row_additional_task_template=0x7f030010;
-        public static final int row_task_template=0x7f030011;
-        public static final int row_worker_template=0x7f030012;
+        public static final int row_employment_template=0x7f030011;
+        public static final int row_task_template=0x7f030012;
+        public static final int row_worker_template=0x7f030013;
     }
     public static final class menu {
         public static final int add_tasks=0x7f080000;
