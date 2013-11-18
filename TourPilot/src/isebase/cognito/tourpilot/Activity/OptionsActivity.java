@@ -7,7 +7,9 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.DialogInfoBase;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
+import isebase.cognito.tourpilot.Utils.DataBaseUtils;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -79,6 +81,9 @@ public class OptionsActivity extends BaseActivity {
 			return true;
 		case R.id.action_show_program_info:
 			dialogVersionFragment.show(getSupportFragmentManager(), "dialogVersion");
+			return true;
+		case R.id.action_db_backup:
+			makeBackup();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -154,6 +159,15 @@ public class OptionsActivity extends BaseActivity {
 		dialogNoConnection = new DialogInfoBase(
 				getString(R.string.connection_problems),
 				getString(R.string.no_connection));
+	}
+	
+	private void makeBackup(){
+		try{
+			DataBaseUtils.backup();
+		}
+		catch(Exception ex){
+			ex.printStackTrace();
+		}
 	}
 	
 	private void switchToLastActivity() {

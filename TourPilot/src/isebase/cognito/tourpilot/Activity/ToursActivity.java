@@ -5,11 +5,7 @@ import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
-import isebase.cognito.tourpilot.Utils.DateUtils;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.content.Intent;
@@ -19,7 +15,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class ToursActivity extends BaseActivity {
 
@@ -31,7 +26,7 @@ public class ToursActivity extends BaseActivity {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_tours);
 			reloadData();		
-			initComnponents();
+			fillUpTitle();
 			initListTours();
 		}catch(Exception ex){
 			ex.printStackTrace();
@@ -98,11 +93,8 @@ public class ToursActivity extends BaseActivity {
 		startActivity(synchActivity);
 	}
 
-	private void initComnponents() {
-		SimpleDateFormat simpleDateformat = new SimpleDateFormat("EEEE MM.dd");
-		String dayOfTheWeek = simpleDateformat.format(new Date());
-		((TextView) findViewById(R.id.tvCurrentInfo)).setText(String.format(
-				"%s, %s", Option.Instance().getWorker().getName().replace(",", ""), dayOfTheWeek));
+	private void fillUpTitle() {
+		setTitle(Option.Instance().getWorker().getName());
 	}
 
 	private void reloadData(){
