@@ -5,10 +5,7 @@ import isebase.cognito.tourpilot.Activity.BaseActivity;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Templates.AddTaskAdapter;
-
-import java.util.ArrayList;
 import java.util.List;
-
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
