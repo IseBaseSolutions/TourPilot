@@ -62,6 +62,11 @@ public class AdditionalTask extends BaseObject {
         return strValue;
     }
     
+	@Override
+	public String toString() {
+		return getName();
+	}
+	
     @Override
     protected void clear() {
     	super.clear();

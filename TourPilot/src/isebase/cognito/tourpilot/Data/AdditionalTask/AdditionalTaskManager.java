@@ -1,5 +1,7 @@
 package isebase.cognito.tourpilot.Data.AdditionalTask;
 
+import java.util.List;
+
 import android.database.sqlite.SQLiteDatabase;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
@@ -31,6 +33,10 @@ public class AdditionalTaskManager extends BaseObjectManager<AdditionalTask>{
 	public void onUpgrade(SQLiteDatabase db) {
 		addColumn(db, AdditionalTask.CatalogTypeField, DataBaseWrapper.TYPE_INTEGER);
 		addColumn(db, AdditionalTask.QualityField, DataBaseWrapper.TYPE_INTEGER);
+	}
+	
+	public List<AdditionalTask> loadByCatalog(int catalogID){
+		return load(AdditionalTask.CatalogTypeField, catalogID + "");
 	}
 
 }
