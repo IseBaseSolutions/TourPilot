@@ -103,9 +103,7 @@ public class TasksActivity extends BaseActivity {
 		List<Task> tasksWithoutFirstAndLast = new ArrayList<Task>(tasks);
 		tasksWithoutFirstAndLast.remove(0);
 		tasksWithoutFirstAndLast.remove(tasksWithoutFirstAndLast.size() - 1);
-		taskAdapter = new TaskAdapter(this
-				, R.layout.row_task_template
-				, tasksWithoutFirstAndLast);
+		taskAdapter = new TaskAdapter(this, R.layout.row_task_template, tasksWithoutFirstAndLast);
 		lvTasks.setAdapter(taskAdapter);
 		fillUpTitle();
 		fillUpEndButtonEnabling();
