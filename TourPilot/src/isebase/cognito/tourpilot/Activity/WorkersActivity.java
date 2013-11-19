@@ -6,9 +6,11 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
-import isebase.cognito.tourpilot.Dialogs.DialogPin;
+import isebase.cognito.tourpilot.Dialogs.PinDialog;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -17,10 +19,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class WorkersActivity extends BaseActivity implements DialogPin.DialogPinListener {
+public class WorkersActivity extends BaseActivity implements PinDialog.PinListenerDialog {
 
 	private List<Worker> workers = new ArrayList<Worker>();
-	private DialogPin dialogPin;
+	private PinDialog pinDialog;
 	private Worker selectedWorker;
 
 	@Override
@@ -53,7 +55,7 @@ public class WorkersActivity extends BaseActivity implements DialogPin.DialogPin
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
 				selectedWorker = (Worker) listView.getItemAtPosition(position);
-				showDialogPin();
+				showPinDialog();
 			}
 		});
 	}
@@ -93,21 +95,21 @@ public class WorkersActivity extends BaseActivity implements DialogPin.DialogPin
 	}
 
 	private void initDialogs() {
-		dialogPin = new DialogPin();
+		pinDialog = new PinDialog();
 	}
 
-	private void showDialogPin() {
-		dialogPin.show(getSupportFragmentManager(), "dialogPin");
+	private void showPinDialog() {
+		pinDialog.show(getSupportFragmentManager(), "dialogPin");
 		getSupportFragmentManager().executePendingTransactions();
-		dialogPin.getDialog().setTitle(selectedWorker.getName());
+		pinDialog.getDialog().setTitle(selectedWorker.getName());
 	}
 
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog) {
-		if (dialog != dialogPin)
+		if (dialog != pinDialog)
 			return;
 		String name = selectedWorker.getName();
-		String pinStr = dialogPin.etPin.getText().toString();
+		String pinStr = pinDialog.etPin.getText().toString();
 		if (!checkWorkerPIN(name, pinStr))
 			return;
 

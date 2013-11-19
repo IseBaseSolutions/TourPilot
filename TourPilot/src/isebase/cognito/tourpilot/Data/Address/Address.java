@@ -9,11 +9,15 @@ public class Address {
 	public static final String ZipField = "zip";
 	public static final String CityField = "city";
 	public static final String PhoneField = "phone";
+	public static final String PrivatePhoneField = "private_phone";
+	public static final String MobilePhoneField = "mobile_phone";
 
 	private String street;
 	private String zip;
 	private String city;
 	private String phone;
+	private String privatePhone;
+	private String mobilePhone;
 	private int id;
 
 	@MapField(DatabaseField = BaseObject.IDField)
@@ -64,6 +68,26 @@ public class Address {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+	
+	@MapField(DatabaseField = PrivatePhoneField)
+	public String getPrivatePhone() {
+		return privatePhone;
+	}
+	
+	@MapField(DatabaseField = PrivatePhoneField)
+	public void setPrivatePhone(String privatePhone) {
+		this.privatePhone = privatePhone;
+	}
+	
+	@MapField(DatabaseField = MobilePhoneField)
+	public String getMobilePhone() {
+		return mobilePhone;
+	}
+	
+	@MapField(DatabaseField = MobilePhoneField)
+	public void setMobilePhone(String mobilePhone) {
+		this.mobilePhone = mobilePhone;
+	}
 		
 	public Address(){
 		clear();
@@ -74,6 +98,8 @@ public class Address {
 		setStreet("");
 		setCity("");
 		setPhone("");
+		setPrivatePhone("");
+		setMobilePhone("");
 		setZip("");
 	}
 	

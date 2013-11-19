@@ -28,7 +28,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name="isebase.cognito.tourpilot.Activity.TasksActivity" />
         <activity android:name="isebase.cognito.tourpilot.Activity.AdditionalTasks.CatalogsActivity" />
         <activity android:name="isebase.cognito.tourpilot.Activity.AdditionalTasks.AdditionalTasksActivity" />
@@ -44,7 +43,10 @@
         <activity android:name="isebase.cognito.tourpilot.Activity.WorkersActivity" />
         <activity android:name="isebase.cognito.tourpilot.Activity.BaseActivity" />
         <activity android:name="isebase.cognito.tourpilot.Activity.PatientsActivity" />
-
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.AdditionalWorksActivity"
+            android:label="@string/title_activity_main" >
+        </activity>
     </application>
 
 </manifest>

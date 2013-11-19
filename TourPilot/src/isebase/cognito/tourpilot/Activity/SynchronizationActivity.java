@@ -50,15 +50,15 @@ import android.widget.TextView;
 						progressText.setText(text);
 					}
 				}
-				if(isOK){		
-					boolean mainSync = Option.Instance().getWorkerID() == -1;
-					if(!mainSync){
+				if(isOK) {		
+					if(Option.Instance().getWorkerID() != -1)
 						EmploymentManager.Instance().createEmployments();
-					}
-					
-					Intent nextActivity =  mainSync
-							? new Intent(getApplicationContext(), WorkersActivity.class) 
-							: new Intent(getApplicationContext(), ToursActivity.class);
+
+					Intent nextActivity = (Option.Instance().getPilotTourID() != -1) 
+							? new Intent(getApplicationContext(), PatientsActivity.class) 
+							: (Option.Instance().getWorkerID() != -1)
+									? new Intent(getApplicationContext(), ToursActivity.class)
+									: new Intent(getApplicationContext(), WorkersActivity.class);
 					startActivity(nextActivity);					
 				}
  			}

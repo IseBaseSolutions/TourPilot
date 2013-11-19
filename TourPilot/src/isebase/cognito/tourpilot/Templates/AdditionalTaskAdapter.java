@@ -39,8 +39,8 @@ public class AdditionalTaskAdapter extends ArrayAdapter<AdditionalTask> implemen
 		this.layoutResourceId = layoutResourceId;
 		this.context = context;
 		this.tasks = new ArrayList<AdditionalTasktHolder>();
-		for(AdditionalTask t : tasks)
-			this.tasks.add(new AdditionalTasktHolder(t));
+		for(AdditionalTask task : tasks)
+			this.tasks.add(new AdditionalTasktHolder(task));
 		this.filteredTasks = this.tasks;
 	}
 	
