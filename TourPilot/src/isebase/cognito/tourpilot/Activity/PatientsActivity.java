@@ -90,8 +90,8 @@ public class PatientsActivity extends BaseActivity {
 	}
 	
 	public void reloadData() {
-		employments = EmploymentManager.Instance().load(Employment.PilotTourIDField
-				, String.valueOf(Option.Instance().getPilotTourID()));
+		employments = EmploymentManager.Instance().loadWhereOrder(Employment.PilotTourIDField
+				, String.valueOf(Option.Instance().getPilotTourID()), Employment.DateField);
 	}
 	
 	private void fillUpTitle() {

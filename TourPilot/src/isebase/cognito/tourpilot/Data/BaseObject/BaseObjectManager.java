@@ -96,15 +96,23 @@ public abstract class BaseObjectManager<T> {
 		return items;
 	}
 
+	public List<T> loadAllWhereOrder(String whereField, String whereClouse, String orderBy){
+		return loadWhere(whereField, whereClouse, orderBy, true);
+	}
+	
+	public List<T> loadWhereOrder(String whereField, String whereClouse, String orderBy){
+		return loadWhere(whereField, whereClouse, orderBy, false);
+	}
+	
 	public List<T> loadAll(String whereField, String whereClouse){
-		return loadWhere(whereField, whereClouse, true);
+		return loadWhere(whereField, whereClouse, "",true);
 	}
 	
 	public List<T> load(String whereField, String whereClouse){
-		return loadWhere(whereField, whereClouse, false);
+		return loadWhere(whereField, whereClouse, "",false);
 	}
-	
-	private List<T> loadWhere(String whereField, String whereClouse, boolean withAll) {
+		
+	private List<T> loadWhere(String whereField, String whereClouse,String orderBy, boolean withAll) {
 		List<T> items = new ArrayList<T>();
 		Cursor cursor = null;
 		try {
@@ -113,7 +121,7 @@ public abstract class BaseObjectManager<T> {
 					.getReadableDatabase()
 					.query(getRecTableName(), TABLE_COLUMNS,
 							whereField + " = " + whereClouse, null, null, null,
-							null);
+							orderBy);
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
 				T object = parseObject(cursor);

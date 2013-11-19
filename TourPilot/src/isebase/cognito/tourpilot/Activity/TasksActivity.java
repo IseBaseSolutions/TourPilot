@@ -53,7 +53,8 @@ public class TasksActivity extends BaseActivity {
 	
 	private boolean isAllDone(){
 		return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
-				&& !endTask.getRealDate().equals(DateUtils.EmptyDate);
+				&& !endTask.getRealDate().equals(DateUtils.EmptyDate)
+				|| new Date().getDate() < startTask.getPlanDate().getDate();
 	}
 		
 	@Override
@@ -80,9 +81,10 @@ public class TasksActivity extends BaseActivity {
 	
 	private void fillUpEndButtonEnabling(){
 		btEndTask.setEnabled(false);
-		for(int i=1; i < tasks.size() -1 ; i++){
+		for(int i=1; i < tasks.size(); i++){
 			Task task = tasks.get(i);
-			if(task.getState() == eTaskState.Empty)
+			if(task.getState() == eTaskState.Empty 
+					&& task != startTask && task != endTask)
 				return;
 		}
 		btEndTask.setEnabled(true);
@@ -105,8 +107,8 @@ public class TasksActivity extends BaseActivity {
 	
 	private void fillUpTasks(){
 		List<Task> tasksWithoutFirstAndLast = new ArrayList<Task>(tasks);
-		tasksWithoutFirstAndLast.remove(0);
-		tasksWithoutFirstAndLast.remove(tasksWithoutFirstAndLast.size() - 1);
+		tasksWithoutFirstAndLast.remove(startTask);
+		tasksWithoutFirstAndLast.remove(endTask);
 		taskAdapter = new TaskAdapter(this, R.layout.row_task_template, tasksWithoutFirstAndLast);
 		lvTasks.setAdapter(taskAdapter);
 		fillUpTitle();
@@ -118,7 +120,14 @@ public class TasksActivity extends BaseActivity {
 	public void reloadData() {		
 		tasks = TaskManager.Instance().load(Task.EmploymentIDField, Option.Instance().getEmploymentID()+"");
 		startTask = tasks.get(0);
-		endTask = tasks.get(tasks.size() - 1);
+		int i = 1;
+		while(endTask == null){
+			Task task = tasks.get(tasks.size() - i++);
+			if(!task.getIsAdditionalTask())
+				endTask = task;
+		}
+		startTask.setState(eTaskState.Done);
+		endTask.setState(eTaskState.Done);
 	}
 	
 	public void btStartTaskTimerClick(View view) {
