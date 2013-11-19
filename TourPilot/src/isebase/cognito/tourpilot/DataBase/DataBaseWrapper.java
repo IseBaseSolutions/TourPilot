@@ -161,7 +161,9 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Address.StreetField + " TEXT, "
 			+ Address.ZipField + " TEXT, "
 			+ Address.CityField + " TEXT, "
-			+ Address.PhoneField + " TEXT "
+			+ Address.PhoneField + " TEXT, "
+			+ Address.PrivatePhoneField + " TEXT, "
+			+ Address.MobilePhoneField + " TEXT "
 			+ ");";
 	
 	private static final String DOCTORS_TABLE_CREATE = 

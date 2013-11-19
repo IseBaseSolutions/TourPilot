@@ -138,7 +138,10 @@ public class TasksActivity extends BaseActivity {
 		fillUpEndTask();
 		saveEmployment();
 		clearEmployment();
-		switchToPatientsActivity();
+		if (Option.Instance().getIsAuto())
+			switchToSyncActivity();
+		else
+			switchToPatientsActivity();
 	}
 	
 	@Override
@@ -197,7 +200,7 @@ public class TasksActivity extends BaseActivity {
 
 	private void checkAllTasks(eTaskState state){
 		Date newDate = new Date();
-		for(Task task : tasks){
+		for(Task task : tasks) {
 			task.setState(state);
 			task.setRealDate(newDate);
 		}
@@ -208,6 +211,11 @@ public class TasksActivity extends BaseActivity {
 	private void switchToPatientsActivity() {
 		Intent patientsActivity = new Intent(getApplicationContext(), PatientsActivity.class);
 		startActivity(patientsActivity);
+	}
+	
+	private void switchToSyncActivity() {
+		Intent syncActivity = new Intent(getApplicationContext(), SynchronizationActivity.class);
+		startActivity(syncActivity);
 	}
 	
 	private void saveEmployment() {
@@ -234,7 +242,10 @@ public class TasksActivity extends BaseActivity {
 			checkAllTasks(eTaskState.UnDone);
 			saveEmployment();
 			clearEmployment();
-			switchToPatientsActivity();
+			if (Option.Instance().getIsAuto())
+				switchToSyncActivity();
+			else
+				switchToPatientsActivity();
 			return true;
 		case R.id.notes:
 			Intent notesActivity = new Intent(getApplicationContext(),

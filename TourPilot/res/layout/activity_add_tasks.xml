@@ -27,7 +27,7 @@
             android:id="@+id/tvFilter"
             android:layout_width="77dp"
             android:layout_height="wrap_content"
-            android:text="@string/sFilterText" />
+            android:text="@string/filter" />
 
         <EditText
             android:id="@+id/etAddTasksFilter"

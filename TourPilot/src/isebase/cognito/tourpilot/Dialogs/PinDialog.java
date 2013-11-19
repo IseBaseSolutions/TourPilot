@@ -11,17 +11,17 @@ import android.support.v4.app.DialogFragment;
 import android.text.InputType;
 import android.widget.EditText;
 
-public class DialogPin extends DialogFragment {
+public class PinDialog extends DialogFragment {
 
 	public EditText etPin;
 
-	public interface DialogPinListener {
+	public interface PinListenerDialog {
 		public void onDialogPositiveClick(DialogFragment dialog);
 
 		public void onDialogNegativeClick(DialogFragment dialog);
 	}
 
-	DialogPinListener mListener;
+	PinListenerDialog mListener;
 
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
@@ -37,13 +37,13 @@ public class DialogPin extends DialogFragment {
 		adb.setPositiveButton(isebase.cognito.tourpilot.R.string.ok,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						mListener.onDialogPositiveClick(DialogPin.this);
+						mListener.onDialogPositiveClick(PinDialog.this);
 					}
 				});
 		adb.setNegativeButton(isebase.cognito.tourpilot.R.string.cancel,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						mListener.onDialogNegativeClick(DialogPin.this);
+						mListener.onDialogNegativeClick(PinDialog.this);
 					}
 				});
 		return adb.create();
@@ -53,7 +53,7 @@ public class DialogPin extends DialogFragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			mListener = (DialogPinListener) activity;
+			mListener = (PinListenerDialog) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement NoticeDialogListener");
