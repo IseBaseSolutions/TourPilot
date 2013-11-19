@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
-        android:text="task name"
-        android:onClick="onSelectAddTask" />
+        android:text="task name" />
 
 </LinearLayout>
