@@ -98,6 +98,8 @@ public class Address {
 		setStreet("");
 		setCity("");
 		setPhone("");
+		setPrivatePhone("");
+		setMobilePhone("");
 		setZip("");
 	}
 	
