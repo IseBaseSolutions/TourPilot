@@ -157,11 +157,13 @@ public class Patient extends BaseObject {
 		address.setZip(parsingString.next(";"));
 		address.setCity(parsingString.next(";"));
 		address.setPhone(parsingString.next(";"));
+		address.setPrivatePhone(parsingString.next(";"));
+		address.setMobilePhone(parsingString.next(";"));
 		
 		setKK(parseInt(parsingString.next("+")));
 		setPK(parseInt(parsingString.next("+")));
 		setSA(parseInt(parsingString.next("+")));
-		setPR(parseInt(parsingString.next("+")));
+		setPR(parseInt(parsingString.next(";")));
 				
 		setStrDoctorsIDs(parsingString.next(";"));
 		setStrRelativeIDs(parsingString.next("~"));

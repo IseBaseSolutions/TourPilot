@@ -7,12 +7,12 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
-public class DialogInfoBase extends DialogFragment implements OnClickListener {
+public class InfoBaseDialog extends DialogFragment implements OnClickListener {
 
 	private String title;
 	private String messageText;
 
-	public DialogInfoBase(String title, String messageText) {
+	public InfoBaseDialog(String title, String messageText) {
 		this.title = title;
 		this.messageText = messageText;
 	}

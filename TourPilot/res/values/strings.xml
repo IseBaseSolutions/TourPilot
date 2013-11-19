@@ -2,16 +2,13 @@
 <resources>
 
     <string name="hello_world">Hello world!</string>
-    
     <string name="street">Street:</string>
     <string name="zip">ZIP:</string>
     <string name="city">City:</string>
     <string name="phone">Phone:</string>
-    
     <string name="start_task">Einsatzbeginn</string>
     <string name="end_task">Einsatzende</string>
     <string name="undone_all_tasks">undone tasks</string>
-    
     <string name="app_name">TourPilot</string>
     <string name="action_settings">Settings</string>
     <string name="first">First</string>
@@ -35,28 +32,13 @@
     <string name="connection_problems">Connection problems</string>
     <string name="no_connection">Please enable internet connection</string>
     <string name="no_ip_entered">Please enter server IP address</string>
-    <string name="title_activity_base">BaseActivity</string>
-    <string name="title_activity_test">TestActivity</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="title_activity_patients">PatientsActivity</string>
     <string name="show_done_patients">Show done patients</string>
     <string name="hide_done_patients">Hide done patients</string>
     <string name="str_ok">OK</string>
     <string name="empty_text"></string>
     <string name="version">Version</string>
-    
-    <string name="title_activity_tasks">TasksActivity</string>
-    <string name="title_activity_add_tasks_category">AddTasksCategoryActivity</string>
     <string name="add_tasks_category">Additionaly categories</string>
-    <string name="title_activity_add_tasks">AddTasksActivity</string>
-    <string name="sFilterText">FILTER</string>
-    <string name="title_activity_notes">NotesActivity</string>
-    <string name="title_activity_info">InfoActivity</string>
-    <string name="title_activity_manual_input">ManualInputActivity</string>
-    <string name="title_activity_address">AddressActivity</string>
-    <string name="title_activity_doctors">DoctorsActivity</string>
-    <string name="title_activity_relatives">RelativesActivity</string>
-    <string name="title_activity_comments">CommentsActivity</string>    
+    <string name="filter">Filter</string>
     <string name="program_version">Program version:</string>
     <string name="data_base_version">Database version:</string>
     <string name="yes">Yes</string>
@@ -79,8 +61,6 @@
     <string name="data_to_download">Data to download</string>
     <string name="connection_close_ok">Connection closing OK</string>
     <string name="connection_close_fail">Connection closing FAIL</string>
-    <string name="today_is">today is</string>
-    
     <string name="db_backup">DB backup</string>
     <string name="services">Services</string>
     <string name="enter_interval">Enter interval</string>
@@ -88,15 +68,17 @@
     <string name="sugar">Sugar</string>
     <string name="pulse">Pulse</string>
     <string name="pressure_top">Press top</string>
-    <string name="pressure_bottom">Press bottom</string>    
+    <string name="pressure_bottom">Press bottom</string>
     <string name="connect_with">Connect with ...</string>
     <string name="medications_changed">Medications changed</string>
     <string name="adasdas">qweqw pflege</string>
     <string name="visit_notes">Visit notes</string>
     <string name="other">Other (inquire)</string>
     <string name="relatives">Relatives</string>
-    <string name="additional_tasks_list">Relatives</string>
     <string name="additional_task">Additional task</string>
+    <string name="add_additional_work">Add additional work</string>
+    <string name="additional_work">Additional work</string>
     <string name="empty_time">00:00</string>
+    <string name="title_activity_main">MainActivity</string>
 
 </resources>

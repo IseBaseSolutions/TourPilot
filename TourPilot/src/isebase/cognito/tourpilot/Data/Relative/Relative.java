@@ -64,6 +64,8 @@ public class Relative extends BaseObject {
 		address.setZip(parsingString.next(";"));
 		address.setCity(parsingString.next(";"));
 		address.setPhone(parsingString.next(";"));
+		address.setPrivatePhone(parsingString.next(";"));
+		address.setMobilePhone(parsingString.next(";"));
 		setShip(parsingString.next("~"));
 		setCheckSum(Long.parseLong(parsingString.next()));
 	}

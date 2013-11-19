@@ -9,17 +9,20 @@ import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Templates.EmploymentAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
+
 import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class PatientsActivity extends BaseActivity {
 
-	List<Employment> employments ;
+	private List<Employment> employments;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +41,19 @@ public class PatientsActivity extends BaseActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.patients_menu, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_add_additional_work:
+			startAdditionalWorksActivity();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 	
 	@Override
@@ -54,6 +69,11 @@ public class PatientsActivity extends BaseActivity {
 	private void startTasksActivity() {
 		Intent tasksActivity = new Intent(getApplicationContext(), TasksActivity.class);
 		startActivity(tasksActivity);
+	}
+	
+	private void startAdditionalWorksActivity() {
+		Intent additionalWorksActivity = new Intent(getApplicationContext(), AdditionalWorksActivity.class);
+		startActivity(additionalWorksActivity);
 	}
 
 	public void fillUp() {
