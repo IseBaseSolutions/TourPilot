@@ -7,7 +7,10 @@ import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 public class AddressActivity extends BaseActivity {
@@ -47,5 +50,10 @@ public class AddressActivity extends BaseActivity {
 		tvCity.setText(address().getCity());
 		tvPhone.setText(address().getPhone());
 	}
+	public void onCallToPatient(View view ){
+		Intent callIntent = new Intent(Intent.ACTION_CALL);
+		callIntent.setData(Uri.parse("tel:" + address().getRealPhone()));
+		startActivity(callIntent);
 
+	}
 }

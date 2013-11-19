@@ -2,6 +2,7 @@ package isebase.cognito.tourpilot.Data.Employment;
 
 import java.util.List;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
+import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import android.database.sqlite.SQLiteDatabase;
@@ -56,6 +57,11 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
 				, getRecTableName()); 
 		List<Employment> items = load(strSQL);
 		save(items);
+	}
+	
+	@Override
+	public void afterLoad(Employment item) {
+		item.setPatient(PatientManager.Instance().load(item.getPatientID()));		
 	}
 
 }

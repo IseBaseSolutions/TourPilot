@@ -161,7 +161,7 @@ public class Patient extends BaseObject {
 		setKK(parseInt(parsingString.next("+")));
 		setPK(parseInt(parsingString.next("+")));
 		setSA(parseInt(parsingString.next("+")));
-		setPR(parseInt(parsingString.next("+")));
+		setPR(parseInt(parsingString.next(";")));
 				
 		setStrDoctorsIDs(parsingString.next(";"));
 		setStrRelativeIDs(parsingString.next("~"));

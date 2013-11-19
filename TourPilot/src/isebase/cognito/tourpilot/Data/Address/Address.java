@@ -76,5 +76,16 @@ public class Address {
 		setPhone("");
 		setZip("");
 	}
+	public String getRealPhone()
+	{
+		
+		String realPhone = "";
+		for(char c : this.phone.toCharArray())
+		{
+			if(Character.isDigit(c))
+				realPhone += c;
+		}
+		return realPhone;
+	}
 	
 }

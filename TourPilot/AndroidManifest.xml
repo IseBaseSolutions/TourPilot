@@ -33,7 +33,7 @@
         <activity android:name="isebase.cognito.tourpilot.Activity.AdditionalTasks.AdditionalTasksActivity" />
         <activity android:name="isebase.cognito.tourpilot.Activity.NotesActivity" />
         <activity android:name="isebase.cognito.tourpilot.Activity.InfoActivity" />
-        <activity android:name="isebase.cognito.tourpilot.Activity.ManualPatientsActivity" />
+        <activity android:name="isebase.cognito.tourpilot.Activity.ManualInputActivity" />
         <activity android:name="isebase.cognito.tourpilot.Activity.AddressActivity" />
         <activity android:name="isebase.cognito.tourpilot.Activity.DoctorsActivity" />
         <activity android:name="isebase.cognito.tourpilot.Activity.RelativesActivity" />

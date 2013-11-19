@@ -39,16 +39,34 @@ public class AddressAdapter<T> extends ArrayAdapter<T> {
 
 		addressHolder.address = listAddress.get(position);
 		
-		addressHolder.imageCall = (ImageButton)row.findViewById(R.id.imgbtnCallToDoctor);
-		addressHolder.imageCall.setTag(addressHolder.address);
-		addressHolder.tvDoctorName = (TextView) row.findViewById(R.id.tvAddressName);		
-		addressHolder.tvDoctorName.setText(listAddress.get(position).toString());
+		addressHolder.imageCallMobPhone = (ImageButton)row.findViewById(R.id.btCallMobPhone);
+		addressHolder.imageCallMobPhone.setTag(addressHolder.address);
+		addressHolder.tvMobPhone = (TextView) row.findViewById(R.id.tvMobPhone);	
+		
+		
+		addressHolder.imageCallHomePhone = (ImageButton)row.findViewById(R.id.btCallHomePhone);
+		addressHolder.imageCallHomePhone.setTag(addressHolder.address);
+		addressHolder.tvHomePhone = (TextView) row.findViewById(R.id.tvHomePhone);
+		
+		addressHolder.imageCallWorkPhone = (ImageButton)row.findViewById(R.id.btCallWorkPhone);
+		addressHolder.imageCallWorkPhone.setTag(addressHolder.address);
+		addressHolder.tvMobPhone = (TextView) row.findViewById(R.id.tvWorkPhone);
+
+		addressHolder.tvAddressName = (TextView) row.findViewById(R.id.tvAddressName);		
+		addressHolder.tvAddressName.setText(listAddress.get(position).toString());
 		return row;
 	}
 	public class AddressHolder{
 		T address;
-		ImageButton imageCall;
-		TextView tvDoctorName;
+		ImageButton imageCallMobPhone;
+		ImageButton imageCallHomePhone;
+		ImageButton imageCallWorkPhone;
+		
+		TextView tvMobPhone;
+		TextView tvHomePhone;
+		TextView tvWorkPhone;
+		
+		TextView tvAddressName;
 	}
 }
 

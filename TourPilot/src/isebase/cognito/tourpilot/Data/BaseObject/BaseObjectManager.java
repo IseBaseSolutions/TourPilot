@@ -68,6 +68,12 @@ public abstract class BaseObjectManager<T> {
 		return loadByIDs(Utilizer.getIDsString(ids));
 	}
 
+	public List<T> loadAllByIDs(String ids) {
+		List<T> items = loadByIDs(ids);
+		afterLoad(items);
+		return items;
+	}
+	
 	public List<T> loadByIDs(String ids) {
 		List<T> items = new ArrayList<T>();
 		if (ids == "")
