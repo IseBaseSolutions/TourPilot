@@ -2,6 +2,8 @@ package isebase.cognito.tourpilot.Activity.AdditionalTasks;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivity;
+import isebase.cognito.tourpilot.Activity.PatientsActivity;
+import isebase.cognito.tourpilot.Activity.TasksActivity;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Data.AdditionalTask.Catalog;
@@ -12,8 +14,11 @@ import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
+import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Templates.AdditionalTaskAdapter;
 import java.util.List;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -94,7 +99,9 @@ public class AdditionalTasksActivity extends BaseActivity {
 		lvAddTasks.setAdapter(adapter);
 	}
 
-	public void onSelectAddTask(View view) {
-	
+	public void onSaveAddTasks(View view) {
+		TaskManager.Instance().createTasks(adapter.getSelectedTasks());
+		Intent tasksActivity = new Intent(getApplicationContext(), TasksActivity.class);
+		startActivity(tasksActivity);
 	}
 }

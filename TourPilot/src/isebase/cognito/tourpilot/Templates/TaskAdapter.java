@@ -63,6 +63,5 @@ public class TaskAdapter extends ArrayAdapter<Task> {
 		Task task;
 		TextView tvTaskText;
 		ImageView btTaskState;
-		//Button btTaskState;
 	}
 }

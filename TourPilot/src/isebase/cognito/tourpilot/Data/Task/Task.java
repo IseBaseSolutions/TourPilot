@@ -1,8 +1,10 @@
 package isebase.cognito.tourpilot.Data.Task;
 
 import isebase.cognito.tourpilot.Connection.ServerCommandParser;
+import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 import isebase.cognito.tourpilot.Utils.StringParser;
@@ -192,6 +194,17 @@ public class Task extends BaseObject {
 		clear();
 	}
 
+	public Task(AdditionalTask additionalTask){
+		clear();
+		setAditionalTaskID(additionalTask.getId());
+		setIsAdditionalTask(true);
+		setName(additionalTask.getName());
+		setPlanDate(new Date());
+		setWorkerID(Option.Instance().getWorkerID());
+		setPilotTourID(Option.Instance().getPilotTourID());
+		setEmploymentID(Option.Instance().getEmploymentID());
+	}
+	
 	public Task(String initString) {
 		StringParser parsingString = new StringParser(initString);
 		setManualDate(DateUtils.EmptyDate);

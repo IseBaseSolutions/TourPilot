@@ -46,7 +46,6 @@ public class DoctorsActivity extends BaseActivity {
 		doctorsListView.setAdapter(adapter);
 	}
 	public void onCallToDoctor(View view){
-		
 		Doctor doctor = (Doctor) view.getTag();
 		Intent callIntent = new Intent(Intent.ACTION_CALL);
 		callIntent.setData(Uri.parse("tel:" + doctor.address.getPhone()));

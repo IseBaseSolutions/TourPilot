@@ -50,6 +50,11 @@ public class TasksActivity extends BaseActivity {
 		return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
 				&& endTask.getRealDate().equals(DateUtils.EmptyDate);
 	}
+	
+	private boolean isAllDone(){
+		return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
+				&& !endTask.getRealDate().equals(DateUtils.EmptyDate);
+	}
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +72,7 @@ public class TasksActivity extends BaseActivity {
 	}
 	
 	private void checkAllIsDone(){
-		if(!startTask.getRealDate().equals(DateUtils.EmptyDate) 
-			&& !endTask.getRealDate().equals(DateUtils.EmptyDate)){
+		if(isAllDone()){
 			btEndTask.setEnabled(false);
 			btStartTask.setEnabled(false);
 		}
@@ -221,14 +225,16 @@ public class TasksActivity extends BaseActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
 		switch (item.getItemId()) {
-		case R.id.add_task_category:
-			Intent addTasksCategoryActivity = new Intent(
-					getApplicationContext(), CatalogsActivity.class);
-			startActivity(addTasksCategoryActivity);
+		case R.id.catalogs:			
+			if(isAllDone())
+				return false;
+			Intent catalogsActivity = new Intent(getApplicationContext(), CatalogsActivity.class);
+			startActivity(catalogsActivity);
 			return true;
 		case R.id.cancelAllTasks:
+			if(isAllDone())
+				return false;
 			checkAllTasks(eTaskState.UnDone);
 			saveEmployment();
 			clearEmployment();
