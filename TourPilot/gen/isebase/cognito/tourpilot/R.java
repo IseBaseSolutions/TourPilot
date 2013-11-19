@@ -130,13 +130,14 @@ public final class R {
         public static final int comments=0x7f080004;
         public static final int doctors=0x7f080005;
         public static final int info=0x7f080006;
-        public static final int manual_input=0x7f080007;
-        public static final int notes=0x7f080008;
-        public static final int options_menu=0x7f080009;
-        public static final int patients=0x7f08000a;
-        public static final int relatives=0x7f08000b;
-        public static final int tasks=0x7f08000c;
-        public static final int version_menu=0x7f08000d;
+        public static final int main=0x7f080007;
+        public static final int manual_input=0x7f080008;
+        public static final int notes=0x7f080009;
+        public static final int options_menu=0x7f08000a;
+        public static final int patients=0x7f08000b;
+        public static final int relatives=0x7f08000c;
+        public static final int tasks=0x7f08000d;
+        public static final int version_menu=0x7f08000e;
     }
     public static final class string {
         public static final int action_settings=0x7f060009;
