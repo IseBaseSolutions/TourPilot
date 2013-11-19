@@ -101,20 +101,20 @@ public class Task extends BaseObject {
 	}
 
 	@MapField(DatabaseField = StateField)
-	public int getTaskStateIndex() {
+	public int getStateIndex() {
 		return taskState.ordinal();
 	}
 
 	@MapField(DatabaseField = StateField)
-	public void setTaskState(int taskStateIndex) {
+	public void setStateIndex(int taskStateIndex) {
 		this.taskState = eTaskState.values()[taskStateIndex];
 	}
 
-	public eTaskState getTaskState() {
+	public eTaskState getState() {
 		return taskState;
 	}
 
-	public void setTaskState(eTaskState taskState) {
+	public void setState(eTaskState taskState) {
 		this.taskState = taskState;
 	}
 
@@ -223,10 +223,10 @@ public class Task extends BaseObject {
 			}
 			setName(str);
 			parsingString.next(";");
-			setTaskState(eTaskState.Empty);
+			setState(eTaskState.Empty);
 		} else {
 			setName(str);
-			setTaskState(eTaskState.Empty);
+			setState(eTaskState.Empty);
 			setName(AdditionalTaskManager.Instance().load(getAddTaskIDFromLeist(getLeistungs())).getName());
 //			else 
 //			{
@@ -260,7 +260,7 @@ public class Task extends BaseObject {
 	@Override
 	protected void clear() {
 		super.clear();
-		setTaskState(eTaskState.Empty);
+		setState(eTaskState.Empty);
 		setPlanDate(DateUtils.EmptyDate);
 		setLeistungs("");
 		setTourID(0);
@@ -283,5 +283,5 @@ public class Task extends BaseObject {
     private int getAddTaskIDFromLeist(String leist) {
         return Integer.valueOf(leist.split("\\+")[3]);
     }
-
+    
 }

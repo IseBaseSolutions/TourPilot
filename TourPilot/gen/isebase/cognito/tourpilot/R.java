@@ -33,7 +33,7 @@ public final class R {
         public static final int ic_medic=0x7f020005;
     }
     public static final class id {
-        public static final int LinearLayout1=0x7f09001a;
+        public static final int LinearLayout1=0x7f09001b;
         public static final int action_clear_database=0x7f090035;
         public static final int action_db_backup=0x7f090037;
         public static final int action_settings=0x7f090033;
@@ -79,7 +79,7 @@ public final class R {
         public static final int tvAddTasksCategories=0x7f090005;
         public static final int tvAddressName=0x7f09002c;
         public static final int tvCity=0x7f09000a;
-        public static final int tvCurrentInfo=0x7f09001b;
+        public static final int tvCurrentInfo=0x7f09001a;
         public static final int tvEmploymentName=0x7f09002f;
         public static final int tvEmploymentTime=0x7f09002e;
         public static final int tvEndTaskDate=0x7f090026;

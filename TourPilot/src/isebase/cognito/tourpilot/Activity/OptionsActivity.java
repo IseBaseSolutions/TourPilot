@@ -43,7 +43,7 @@ public class OptionsActivity extends BaseActivity {
 
 	@Override
 	public void onBackPressed() {
-		finish();
+		
 	}
 	
 	@Override
@@ -170,13 +170,13 @@ public class OptionsActivity extends BaseActivity {
 	}
 	
 	private void switchToLastActivity() {
-		if (Option.Instance().getWorkerID() == -1)
-			return;
-		else if (Option.Instance().getPilotTourID() == -1)
-			startToursActivity();
-		else if (Option.Instance().getEmploymentID() == -1)
-			startPatientsActivity();
-		else
+		if (Option.Instance().getEmploymentID() != -1)
 			startTasksActivity();
+		else if (Option.Instance().getPilotTourID() != -1)
+			startPatientsActivity();
+		else if (Option.Instance().getWorkerID() != -1)
+			startToursActivity();
+		else
+			return;
 	}
 }

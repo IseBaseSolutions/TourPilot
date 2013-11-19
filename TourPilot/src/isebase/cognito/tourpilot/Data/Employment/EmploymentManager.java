@@ -1,7 +1,12 @@
 package isebase.cognito.tourpilot.Data.Employment;
 
+import java.util.List;
+
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
+import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
+import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
+import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -37,7 +42,7 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
 		clearTable();
 		String strSQL = String.format("INSERT INTO %4$s" +
 				"(_id, patient_id, name, was_sent, checksum, is_server_time" +
-				", pilot_tour_id, date, tour_id, is_done, is_aborted) SELECT " +
+				", pilot_tour_id, date, tour_id, is_done) SELECT " +
 				"t1.employment_id as _id, " +
 				"t1.patient_id as patient_id, " +
 				"(t2.surname || ', ' || t2.name) as name, " +
@@ -47,16 +52,41 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
 				"t1.pilot_tour_id as pilot_tour_id, " +
 				"t1.plan_date as date, " +
 				"t1.tour_id as tour_id, " +
-				"'0' as is_done, " +
-				"'0' as is_aborted " +
+				"t1.task_state as is_done " +
 				"FROM %1$s t1 " +
 				"INNER JOIN %2$s t2 on t1.patient_id = t2._id " +
 				"GROUP BY t1.employment_id"
 				, TaskManager.TableName
 				, PatientManager.TableName
 				, getRecTableName()
-				, EmploymentManager.TableName); 
+				, EmploymentManager.TableName);
 		execSQL(strSQL);
 	}
+	
+	@Override
+	public void afterLoad(List<Employment> items) {
+		for (Employment employment : items)
+		{
+			employment.setTasks(TaskManager.Instance().load(Task.EmploymentIDField, String.valueOf(employment.getId())));
+			employment.setPatient(PatientManager.Instance().load(employment.getPatientID()));
+			employment.setPilotTour(PilotTourManager.Instance().load(employment.getPilotTourID()));
+		}
+	}
+	
+    public String getDone()
+    {
+    	List<Employment> employments = loadAll();
+    	if (employments.size() == 0)
+    		return "";  
+    	String strEmpls = "";
+    	for (Employment employment : employments)
+    		if (employment.getIsDone() && !employment.getWasSent())
+    		{
+    			strEmpls += employment.getDone();
+    			employment.setWasSent(true);
+    			save(employment);
+    		}
+    	return strEmpls;
+    }
 
 }

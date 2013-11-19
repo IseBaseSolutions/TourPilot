@@ -3,8 +3,10 @@ package isebase.cognito.tourpilot.Connection;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWorkManager;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Diagnose.DiagnoseManager;
 import isebase.cognito.tourpilot.Data.Doctor.DoctorManager;
+import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
@@ -336,13 +338,13 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		strMsg += Option.Instance().getDeviceID() + ";";
 		strMsg += Option.Instance().getPhoneNumber() + "@";
 		strMsg += Option.Instance().getVersion() + "\0R;";
-		// if (User != null)
-		// strMsg += CSettings.Instance().TroubleFlags();
-		// else
-		// strMsg += "0";
+		if (Option.Instance().getWorkerID() != BaseObject.EMPTY_ID)
+			strMsg += "0";//TorubleFlags
+		else
+			strMsg += "0";
 		strMsg += "\0x1\0";
-		// String strDone = new String();
-		// strDone += CEmployments.Instance().GetDone();
+		String strDone = "";
+		strDone += EmploymentManager.Instance().getDone();
 		//
 		// strDone += CUserWorks.Instance().GetDone();
 		//
@@ -369,7 +371,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		// }
 		//
 		// strDone += CFreeAnswers.Instance().GetDone();
-		return strMsg;
+		return strMsg + strDone;
 	}
 
 	private String getStrChecksums() {

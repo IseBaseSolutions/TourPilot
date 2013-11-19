@@ -2,6 +2,7 @@ package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.AdditionalTasks.CatalogsActivity;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
@@ -77,7 +78,7 @@ public class TasksActivity extends BaseActivity {
 		btEndTask.setEnabled(false);
 		for(int i=1; i < tasks.size() -1 ; i++){
 			Task task = tasks.get(i);
-			if(task.getTaskState() == eTaskState.Empty)
+			if(task.getState() == eTaskState.Empty)
 				return;
 		}
 		btEndTask.setEnabled(true);
@@ -119,6 +120,7 @@ public class TasksActivity extends BaseActivity {
 	public void btStartTaskTimerClick(View view) {
 		checkAllTasks(eTaskState.Empty);
 		startTask.setRealDate(new Date());
+		startTask.setState(eTaskState.Done);
 		endTask.setRealDate(DateUtils.EmptyDate);
 		TaskManager.Instance().save(startTask);
 		TaskManager.Instance().save(endTask);
@@ -129,9 +131,11 @@ public class TasksActivity extends BaseActivity {
 	
 	public void btEndTaskTimerClick(View view) {
 		endTask.setRealDate(new Date());
+		endTask.setState(eTaskState.Done);
 		TaskManager.Instance().save(endTask);
 		fillUpEndTask();
-		saveEmployment(true,false);	
+		saveEmployment();
+		clearEmployment();
 		switchToPatientsActivity();
 	}
 	
@@ -151,7 +155,10 @@ public class TasksActivity extends BaseActivity {
 	@Override
 	public void onBackPressed() {
 		if(!isClickable())
+		{
+			clearEmployment();
 			switchToPatientsActivity();
+		}
 	}
 
 	public void onChangeState(View view) {
@@ -159,12 +166,12 @@ public class TasksActivity extends BaseActivity {
 			return;
 		Task task = (Task) view.getTag();
 		task.setRealDate(new Date());
-		task.setTaskState((task.getTaskState() == eTaskState.Done) 
+		task.setState((task.getState() == eTaskState.Done) 
 				? eTaskState.UnDone
 				: eTaskState.Done);
 		try {
 			((ImageView) view).setImageDrawable(StaticResources.getBaseContext()
-				.getResources().getDrawable((task.getTaskState() == eTaskState.UnDone) 
+				.getResources().getDrawable((task.getState() == eTaskState.UnDone) 
 						? R.drawable.ic_action_cancel
 						: R.drawable.ic_action_accept));
 			TaskManager.Instance().save(task);
@@ -186,11 +193,11 @@ public class TasksActivity extends BaseActivity {
 		tvEndTaskDate = (TextView) findViewById(R.id.tvEndTaskDate);
 	}
 
-	private void checkAllTasks(Task.eTaskState state){
+	private void checkAllTasks(eTaskState state){
 		Date newDate = new Date();
-		for(Task t : tasks){
-			t.setTaskState(state);
-			t.setRealDate(newDate);
+		for(Task task : tasks){
+			task.setState(state);
+			task.setRealDate(newDate);
 		}
 		TaskManager.Instance().save(tasks);
 		fillUpTasks();
@@ -201,21 +208,15 @@ public class TasksActivity extends BaseActivity {
 		startActivity(patientsActivity);
 	}
 	
-	private void saveEmployment(boolean isDone, boolean isAborted){
-		if(!isAborted){
-			for(Task t: tasks){
-				isAborted =  true;
-				if(t.getTaskState() == eTaskState.Done){
-					isAborted = false;
-					break;
-				}
-			}
-		}
-		
+	private void saveEmployment() {
 		Employment empl = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
-		empl.setDone(isDone);
-		empl.setAborted(isAborted);
+		empl.setIsDone(true);
 		EmploymentManager.Instance().save(empl);
+	}
+	
+	private void clearEmployment() {
+		Option.Instance().setEmploymentID(BaseObject.EMPTY_ID);
+		Option.Instance().save();
 	}
 
 	@Override
@@ -229,7 +230,8 @@ public class TasksActivity extends BaseActivity {
 			return true;
 		case R.id.cancelAllTasks:
 			checkAllTasks(eTaskState.UnDone);
-			saveEmployment(false,true);
+			saveEmployment();
+			clearEmployment();
 			switchToPatientsActivity();
 			return true;
 		case R.id.notes:
