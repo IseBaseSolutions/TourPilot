@@ -58,7 +58,8 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
 				"GROUP BY t1.employment_id"
 				, TaskManager.TableName
 				, PatientManager.TableName
-				, getRecTableName());
+				, getRecTableName()
+				, EmploymentManager.TableName);
 		execSQL(strSQL);
 	}
 	

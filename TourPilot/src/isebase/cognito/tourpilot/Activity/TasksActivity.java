@@ -136,7 +136,8 @@ public class TasksActivity extends BaseActivity {
 		endTask.setState(eTaskState.Done);
 		TaskManager.Instance().save(endTask);
 		fillUpEndTask();
-		saveEmployment();	
+		saveEmployment();
+		clearEmployment();
 		switchToPatientsActivity();
 	}
 	
@@ -156,7 +157,10 @@ public class TasksActivity extends BaseActivity {
 	@Override
 	public void onBackPressed() {
 		if(!isClickable())
+		{
+			clearEmployment();
 			switchToPatientsActivity();
+		}
 	}
 
 	public void onChangeState(View view) {
@@ -210,6 +214,9 @@ public class TasksActivity extends BaseActivity {
 		Employment empl = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
 		empl.setIsDone(true);
 		EmploymentManager.Instance().save(empl);
+	}
+	
+	private void clearEmployment() {
 		Option.Instance().setEmploymentID(BaseObject.EMPTY_ID);
 		Option.Instance().save();
 	}
@@ -226,6 +233,7 @@ public class TasksActivity extends BaseActivity {
 		case R.id.cancelAllTasks:
 			checkAllTasks(eTaskState.UnDone);
 			saveEmployment();
+			clearEmployment();
 			switchToPatientsActivity();
 			return true;
 		case R.id.notes:
