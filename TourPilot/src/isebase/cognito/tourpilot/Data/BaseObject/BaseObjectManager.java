@@ -305,7 +305,7 @@ public abstract class BaseObjectManager<T> {
 							.getColumnIndex(annos.DatabaseField())));
 				else if (method.getParameterTypes()[0].equals(boolean.class))
 					method.invoke(item, cursor.getInt(cursor
-							.getColumnIndex(annos.DatabaseField())) == 1);
+							.getColumnIndex(annos.DatabaseField())) != 0);
 				else if (method.getParameterTypes()[0].equals(Date.class))
 					method.invoke(item, new Date(cursor.getLong(cursor
 							.getColumnIndex(annos.DatabaseField()))));
