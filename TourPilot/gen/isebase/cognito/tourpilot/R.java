@@ -13,6 +13,7 @@ public final class R {
     public static final class color {
         public static final int activeColor=0x7f040000;
         public static final int notActveColor=0x7f040001;
+        public static final int synchronizedColor=0x7f040002;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 

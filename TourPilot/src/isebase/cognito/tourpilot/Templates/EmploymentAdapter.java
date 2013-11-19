@@ -42,9 +42,11 @@ public class EmploymentAdapter extends ArrayAdapter<Employment>{
 			employmentHolder.tvEmploymentTime.setText(employment.getTime());
 			
 			if(employment.getIsDone())
-				employmentHolder.tvEmploymentName.setTextColor(StaticResources.getBaseContext().getResources().getColor(R.color.activeColor));
+				employmentHolder.tvEmploymentName.setTextColor(
+						StaticResources.getBaseContext().getResources().getColor(R.color.activeColor));
 			if(employment.getWasSent())
-				employmentHolder.tvEmploymentName.setTextColor(StaticResources.getBaseContext().getResources().getColor(R.color.notActveColor));
+				employmentHolder.tvEmploymentName.setTextColor(
+						StaticResources.getBaseContext().getResources().getColor(R.color.synchronizedColor));
 		
 			row.setTag(employmentHolder);
 			return row;
