@@ -2,15 +2,11 @@ package isebase.cognito.tourpilot.Data.Tour;
 
 import isebase.cognito.tourpilot.Connection.ServerCommandParser;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.NCryptor;
 import isebase.cognito.tourpilot.Utils.StringParser;
-
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class Tour extends BaseObject {
 
@@ -37,8 +33,8 @@ public class Tour extends BaseObject {
 		InitString.next(";");
 		setId(Integer.parseInt(InitString.next(";")));
 		setName(InitString.next(";"));
-		setIsCommonTour(Integer.parseInt(InitString.next("~")) == 1 ? true
-				: false);
+		setIsCommonTour(Integer.parseInt(InitString.next("~")) == 1 
+				? true : false);
 		setCheckSum(Long.parseLong(InitString.next()));
 	}
 

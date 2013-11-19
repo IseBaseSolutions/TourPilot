@@ -161,7 +161,9 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Address.StreetField + " TEXT, "
 			+ Address.ZipField + " TEXT, "
 			+ Address.CityField + " TEXT, "
-			+ Address.PhoneField + " TEXT "
+			+ Address.PhoneField + " TEXT, "
+			+ Address.PrivatePhoneField + " TEXT, "
+			+ Address.MobilePhoneField + " TEXT "
 			+ ");";
 	
 	private static final String DOCTORS_TABLE_CREATE = 
@@ -217,6 +219,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ BaseObject.CheckSumField + " INTEGER, "
 			+ BaseObject.WasSentField + " INTEGER, "
 			+ BaseObject.IsServerTimeField + " INTEGER, "
+			+ PilotTour.TourIDField + " INTEGER, "
 			+ PilotTour.PlanDateField + " INTEGER, "
 			+ PilotTour.IsCommonTourField + " INTEGER "
 			+ ");";
@@ -232,8 +235,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Employment.PilotTourIDField + " INTEGER, "
 			+ Employment.DateField + " INTEGER, "
 			+ Employment.TourIDField + " INTEGER, "
-			+ Employment.IsDoneField + " INTEGER, "
-			+ Employment.IsAbortedField + " INTEGER "
+			+ Employment.IsDoneField + " INTEGER "
 			+ ");";	
 	
 	public DataBaseWrapper(Context context) {

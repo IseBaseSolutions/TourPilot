@@ -51,7 +51,9 @@ public class Doctor extends BaseObject {
 		address.setStreet(parsingString.next(";"));
 		address.setZip(parsingString.next(";"));
 		address.setCity(parsingString.next(";"));
-		address.setPhone(parsingString.next("~"));
+		address.setPhone(parsingString.next(";"));
+		address.setPrivatePhone(parsingString.next(";"));
+		address.setMobilePhone(parsingString.next("~"));
 		setCheckSum(Long.parseLong(parsingString.next()));
 	}
 	

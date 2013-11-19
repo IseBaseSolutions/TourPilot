@@ -5,8 +5,9 @@ import isebase.cognito.tourpilot.Connection.ConnectionInfo;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
-import isebase.cognito.tourpilot.Dialogs.DialogInfoBase;
+import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
+import isebase.cognito.tourpilot.Utils.DataBaseUtils;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,8 +21,8 @@ import android.widget.ProgressBar;
 
 public class OptionsActivity extends BaseActivity {
 
-	private DialogFragment dialogNoConnection;
-	private DialogFragment dialogNoIPEntered;
+	private DialogFragment noConnectionDialog;
+	private DialogFragment noIPEnteredDialog;
 
 	private EditText etServerIP;
 	private EditText etServerPort;
@@ -42,7 +43,7 @@ public class OptionsActivity extends BaseActivity {
 
 	@Override
 	public void onBackPressed() {
-		finish();
+		
 	}
 	
 	@Override
@@ -78,7 +79,10 @@ public class OptionsActivity extends BaseActivity {
 			}.execute();
 			return true;
 		case R.id.action_show_program_info:
-			dialogVersionFragment.show(getSupportFragmentManager(), "dialogVersion");
+			versionFragmentDialog.show(getSupportFragmentManager(), "dialogVersion");
+			return true;
+		case R.id.action_db_backup:
+			makeBackup();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -87,13 +91,13 @@ public class OptionsActivity extends BaseActivity {
 	
 	public void btStartSyncClick(View view) {
 		if (etServerIP.getText().toString().equals("")) {
-			dialogNoIPEntered.show(getSupportFragmentManager(),
+			noIPEnteredDialog.show(getSupportFragmentManager(),
 					"dialogNoIPEntered");
 			return;
 		}
 		if (ConnectionInfo.Instance().getNetworkInfo() == null
 				|| !ConnectionInfo.Instance().getNetworkInfo().isConnected()) {
-			dialogNoConnection.show(getSupportFragmentManager(), "dialogNoConnection");
+			noConnectionDialog.show(getSupportFragmentManager(), "dialogNoConnection");
 			return;
 		}
 		saveOptions();
@@ -140,7 +144,7 @@ public class OptionsActivity extends BaseActivity {
 	}
 
 	private void initDialogs() {			
-		dialogVersionFragment = new DialogInfoBase(
+		versionFragmentDialog = new InfoBaseDialog(
 			getString(R.string.program_info), 
 			String.format("%s %s\n%s %s"
 					, getString(R.string.program_version)
@@ -148,22 +152,31 @@ public class OptionsActivity extends BaseActivity {
 					, getString(R.string.data_base_version)
 					, DataBaseWrapper.DATABASE_VERSION)
 			);
-		dialogNoIPEntered = new DialogInfoBase(
+		noIPEnteredDialog = new InfoBaseDialog(
 				getString(R.string.connection_problems),
 				getString(R.string.no_ip_entered));
-		dialogNoConnection = new DialogInfoBase(
+		noConnectionDialog = new InfoBaseDialog(
 				getString(R.string.connection_problems),
 				getString(R.string.no_connection));
 	}
 	
+	private void makeBackup(){
+		try{
+			DataBaseUtils.backup();
+		}
+		catch(Exception ex){
+			ex.printStackTrace();
+		}
+	}
+	
 	private void switchToLastActivity() {
-		if (Option.Instance().getWorkerID() == -1)
-			return;
-		else if (Option.Instance().getPilotTourID() == -1)
-			startToursActivity();
-		else if (Option.Instance().getEmploymentID() == -1)
-			startPatientsActivity();
-		else
+		if (Option.Instance().getEmploymentID() != -1)
 			startTasksActivity();
+		else if (Option.Instance().getPilotTourID() != -1)
+			startPatientsActivity();
+		else if (Option.Instance().getWorkerID() != -1)
+			startToursActivity();
+		else
+			return;
 	}
 }

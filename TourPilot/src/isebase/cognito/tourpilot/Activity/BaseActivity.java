@@ -3,7 +3,7 @@ package isebase.cognito.tourpilot.Activity;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
-import isebase.cognito.tourpilot.Dialogs.DialogInfoBase;
+import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -14,7 +14,7 @@ import android.view.MenuItem;
 
 public class BaseActivity extends FragmentActivity{
 
-	protected DialogFragment dialogVersionFragment;
+	protected DialogFragment versionFragmentDialog;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +22,7 @@ public class BaseActivity extends FragmentActivity{
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
 		if(!isMainActivity())
-			dialogVersionFragment = new DialogInfoBase(
+			versionFragmentDialog = new InfoBaseDialog(
 					getString(R.string.program_info), 
 					String.format("%s %s\n%s %s"
 							, getString(R.string.program_version)
@@ -52,8 +52,8 @@ public class BaseActivity extends FragmentActivity{
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_show_program_info:
-				dialogVersionFragment.show(getSupportFragmentManager(),
-						"dialogVersion");
+				versionFragmentDialog.show(getSupportFragmentManager(),
+						"versionDialog");
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

@@ -102,15 +102,23 @@ public abstract class BaseObjectManager<T> {
 		return items;
 	}
 
+	public List<T> loadAllWhereOrder(String whereField, String whereClouse, String orderBy){
+		return loadWhere(whereField, whereClouse, orderBy, true);
+	}
+	
+	public List<T> loadWhereOrder(String whereField, String whereClouse, String orderBy){
+		return loadWhere(whereField, whereClouse, orderBy, false);
+	}
+	
 	public List<T> loadAll(String whereField, String whereClouse){
-		return loadWhere(whereField, whereClouse, true);
+		return loadWhere(whereField, whereClouse, "",true);
 	}
 	
 	public List<T> load(String whereField, String whereClouse){
-		return loadWhere(whereField, whereClouse, false);
+		return loadWhere(whereField, whereClouse, "",false);
 	}
-	
-	private List<T> loadWhere(String whereField, String whereClouse, boolean withAll) {
+		
+	private List<T> loadWhere(String whereField, String whereClouse,String orderBy, boolean withAll) {
 		List<T> items = new ArrayList<T>();
 		Cursor cursor = null;
 		try {
@@ -119,7 +127,7 @@ public abstract class BaseObjectManager<T> {
 					.getReadableDatabase()
 					.query(getRecTableName(), TABLE_COLUMNS,
 							whereField + " = " + whereClouse, null, null, null,
-							null);
+							orderBy);
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
 				T object = parseObject(cursor);
@@ -311,7 +319,7 @@ public abstract class BaseObjectManager<T> {
 							.getColumnIndex(annos.DatabaseField())));
 				else if (method.getParameterTypes()[0].equals(boolean.class))
 					method.invoke(item, cursor.getInt(cursor
-							.getColumnIndex(annos.DatabaseField())) == 1);
+							.getColumnIndex(annos.DatabaseField())) != 0);
 				else if (method.getParameterTypes()[0].equals(Date.class))
 					method.invoke(item, new Date(cursor.getLong(cursor
 							.getColumnIndex(annos.DatabaseField()))));
@@ -426,8 +434,7 @@ public abstract class BaseObjectManager<T> {
 		long lngChecksum = 0;
 		List<T> elements = load();
 		for (T element : elements)
-			if (!(element instanceof Patient && ((Patient) element)
-					.getIsAdditional()))
+			if (!((BaseObject)element).getWasSent())
 				lngChecksum += ((BaseObject) element).getCheckSum();
 		return lngChecksum;
 	}

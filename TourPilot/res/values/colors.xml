@@ -2,5 +2,6 @@
 
     <color name="activeColor">#ff34c724</color>
     <color name="notActveColor">#ffd4422f</color>
+    <color name="synchronizedColor">#ff6095d1</color>
 
 </resources>

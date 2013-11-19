@@ -4,21 +4,25 @@ import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
+import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
+import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Templates.EmploymentAdapter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import isebase.cognito.tourpilot.Utils.DateUtils;
+
 import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class PatientsActivity extends BaseActivity {
 
-	List<Employment> employments ;
+	private List<Employment> employments;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +30,9 @@ public class PatientsActivity extends BaseActivity {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_patients);
 			reloadData();
-			initComnponents();
+			fillUpTitle();
 			fillUp();
+
 		}catch(Exception ex){
 			ex.printStackTrace();
 			criticalClose();
@@ -36,7 +41,19 @@ public class PatientsActivity extends BaseActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.patients_menu, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_add_additional_work:
+			startAdditionalWorksActivity();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 	
 	@Override
@@ -53,6 +70,11 @@ public class PatientsActivity extends BaseActivity {
 		Intent tasksActivity = new Intent(getApplicationContext(), TasksActivity.class);
 		startActivity(tasksActivity);
 	}
+	
+	private void startAdditionalWorksActivity() {
+		Intent additionalWorksActivity = new Intent(getApplicationContext(), AdditionalWorksActivity.class);
+		startActivity(additionalWorksActivity);
+	}
 
 	public void fillUp() {
 		EmploymentAdapter adapter = new EmploymentAdapter(this,R.layout.row_employment_template, employments);
@@ -68,15 +90,17 @@ public class PatientsActivity extends BaseActivity {
 	}
 	
 	public void reloadData() {
-		employments = EmploymentManager.Instance().load(Employment.PilotTourIDField
-				, String.valueOf(Option.Instance().getPilotTourID()));
+		employments = EmploymentManager.Instance().loadWhereOrder(Employment.PilotTourIDField
+				, String.valueOf(Option.Instance().getPilotTourID()), Employment.DateField);
 	}
 	
-	private void initComnponents() {
-		SimpleDateFormat simpleDateformat = new SimpleDateFormat("EE MM.dd");
-		String dayOfTheWeek = simpleDateformat.format(new Date());
-		((TextView) findViewById(R.id.tvCurrentInfo)).setText(String.format(
-				"%s - %s", dayOfTheWeek, Option.Instance().getWorker().getName()));
+	private void fillUpTitle() {
+		PilotTour pt = PilotTourManager.Instance().loadPilotTour(Option.Instance().getPilotTourID());
+		Worker worker = Option.Instance().getWorker();
+		setTitle(String.format("%1$s, %2$s - %3$s"
+				, worker.getName()
+				, pt.getName()
+				, DateUtils.WeekDateFormat.format(pt.getPlanDate())));
 	}
 	
 	private void saveSelectedEmploymentID(int emplID) {

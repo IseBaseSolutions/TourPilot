@@ -7,9 +7,12 @@ import java.util.Date;
 public class DateUtils {
 	
     public static int DayMillisec = 86400000;
-    public static final Date EmptyDate = new Date(1975,1,1,0,0,0);
-    
-    public static final SimpleDateFormat HourMinutesFormat = new SimpleDateFormat(" HH:mm");
+
+    public static final Date EmptyDate = new Date(1975,1,1);
+    public static final SimpleDateFormat DateTimeformat = new SimpleDateFormat("dd.MM.yyyy/HH:mm:ss");
+    public static final SimpleDateFormat HourMinutesFormat = new SimpleDateFormat("HH:mm");
+    public static final SimpleDateFormat DateFormat = new SimpleDateFormat("dd.MM.yyyy");
+    public static final SimpleDateFormat WeekDateFormat = new SimpleDateFormat("EEE MM.dd");
     
 	private static long timeDiff = 0L;
 	
@@ -27,6 +30,11 @@ public class DateUtils {
     {
         return value.getTime() + (Calendar.getInstance().get(Calendar.ZONE_OFFSET)
         						+ Calendar.getInstance().get(Calendar.DST_OFFSET));
+    }
+
+    public static String toString(Date data)
+    {
+    	return DateTimeformat.format(data);
     }
     	
 }

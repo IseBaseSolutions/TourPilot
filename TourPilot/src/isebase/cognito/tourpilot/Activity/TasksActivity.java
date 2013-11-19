@@ -2,6 +2,7 @@ package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.AdditionalTasks.CatalogsActivity;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
@@ -11,12 +12,9 @@ import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Templates.TaskAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -39,15 +37,24 @@ public class TasksActivity  extends BaseActivity{
 	private Task endTask;
 	
 	private ListView lvTasks;
-	private TextView tvStartTask;
-	private TextView tvEndTask;
-	private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+	
+	private TextView tvStartTaskTime;
+	private TextView tvEndTaskTime;
+	private TextView tvStartTaskDate;
+	private TextView tvEndTaskDate;
+		
 	private Button btEndTask;
 	private Button btStartTask;
 	
 	private boolean isClickable(){
 		return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
 				&& endTask.getRealDate().equals(DateUtils.EmptyDate);
+	}
+	
+	private boolean isAllDone(){
+		return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
+				&& !endTask.getRealDate().equals(DateUtils.EmptyDate)
+				|| new Date().getDate() < startTask.getPlanDate().getDate();
 	}
 		
 	@Override
@@ -66,8 +73,7 @@ public class TasksActivity  extends BaseActivity{
 	}
 	
 	private void checkAllIsDone(){
-		if(!startTask.getRealDate().equals(DateUtils.EmptyDate) 
-			&& !endTask.getRealDate().equals(DateUtils.EmptyDate)){
+		if(isAllDone()){
 			btEndTask.setEnabled(false);
 			btStartTask.setEnabled(false);
 		}
@@ -75,30 +81,37 @@ public class TasksActivity  extends BaseActivity{
 	
 	private void fillUpEndButtonEnabling(){
 		btEndTask.setEnabled(false);
-		for(int i=1; i < tasks.size() -1 ; i++){
+		for(int i=1; i < tasks.size(); i++){
 			Task task = tasks.get(i);
-			if(task.getTaskState() == eTaskState.Empty)
+			if(task.getState() == eTaskState.Empty 
+					&& task != startTask && task != endTask)
 				return;
 		}
 		btEndTask.setEnabled(true);
 	}
 	
 	private void fillUpStartTask(){
-		tvStartTask.setText(timeFormat.format(startTask.getRealDate()));
+		tvStartTaskTime.setText(DateUtils.HourMinutesFormat.format(startTask.getRealDate()));
+		tvStartTaskDate.setText(DateUtils.DateFormat.format(startTask.getRealDate()));
 	}
 	
 	private void fillUpEndTask(){
-		tvEndTask.setText(timeFormat.format(endTask.getRealDate()));
+		tvEndTaskTime.setText(DateUtils.HourMinutesFormat.format(endTask.getRealDate()));
+		tvEndTaskDate.setText(DateUtils.DateFormat.format(endTask.getRealDate()));
+	}
+	
+	private void fillUpTitle(){
+		String title = startTask.getName().substring(15,startTask.getName().length()-1);
+		setTitle(title);
 	}
 	
 	private void fillUpTasks(){
 		List<Task> tasksWithoutFirstAndLast = new ArrayList<Task>(tasks);
-		tasksWithoutFirstAndLast.remove(0);
-		tasksWithoutFirstAndLast.remove(tasksWithoutFirstAndLast.size() - 1);
-		taskAdapter = new TaskAdapter(this
-				, R.layout.row_task_template
-				, tasksWithoutFirstAndLast);
+		tasksWithoutFirstAndLast.remove(startTask);
+		tasksWithoutFirstAndLast.remove(endTask);
+		taskAdapter = new TaskAdapter(this, R.layout.row_task_template, tasksWithoutFirstAndLast);
 		lvTasks.setAdapter(taskAdapter);
+		fillUpTitle();
 		fillUpEndButtonEnabling();
 		fillUpStartTask();
 		fillUpEndTask();
@@ -107,12 +120,20 @@ public class TasksActivity  extends BaseActivity{
 	public void reloadData() {		
 		tasks = TaskManager.Instance().load(Task.EmploymentIDField, Option.Instance().getEmploymentID()+"");
 		startTask = tasks.get(0);
-		endTask = tasks.get(tasks.size() - 1);
+		int i = 1;
+		while(endTask == null){
+			Task task = tasks.get(tasks.size() - i++);
+			if(!task.getIsAdditionalTask())
+				endTask = task;
+		}
+		startTask.setState(eTaskState.Done);
+		endTask.setState(eTaskState.Done);
 	}
 	
 	public void btStartTaskTimerClick(View view) {
 		checkAllTasks(eTaskState.Empty);
 		startTask.setRealDate(new Date());
+		startTask.setState(eTaskState.Done);
 		endTask.setRealDate(DateUtils.EmptyDate);
 		TaskManager.Instance().save(startTask);
 		TaskManager.Instance().save(endTask);
@@ -123,10 +144,15 @@ public class TasksActivity  extends BaseActivity{
 	
 	public void btEndTaskTimerClick(View view) {
 		endTask.setRealDate(new Date());
+		endTask.setState(eTaskState.Done);
 		TaskManager.Instance().save(endTask);
 		fillUpEndTask();
-		saveEmployment(true,false);	
-		switchToPatientsActivity();
+		saveEmployment();
+		clearEmployment();
+		if (Option.Instance().getIsAuto())
+			switchToSyncActivity();
+		else
+			switchToPatientsActivity();
 	}
 	
 	@Override
@@ -145,7 +171,10 @@ public class TasksActivity  extends BaseActivity{
 	@Override
 	public void onBackPressed() {
 		if(!isClickable())
+		{
+			clearEmployment();
 			switchToPatientsActivity();
+		}
 	}
 
 	public void onChangeState(View view) {
@@ -153,12 +182,12 @@ public class TasksActivity  extends BaseActivity{
 			return;
 		Task task = (Task) view.getTag();
 		task.setRealDate(new Date());
-		task.setTaskState((task.getTaskState() == eTaskState.Done) 
+		task.setState((task.getState() == eTaskState.Done) 
 				? eTaskState.UnDone
 				: eTaskState.Done);
 		try {
 			((ImageView) view).setImageDrawable(StaticResources.getBaseContext()
-				.getResources().getDrawable((task.getTaskState() == eTaskState.UnDone) 
+				.getResources().getDrawable((task.getState() == eTaskState.UnDone) 
 						? R.drawable.ic_action_cancel
 						: R.drawable.ic_action_accept));
 			TaskManager.Instance().save(task);
@@ -170,17 +199,21 @@ public class TasksActivity  extends BaseActivity{
 
 	private void initControls() {
 		lvTasks = (ListView) findViewById(R.id.lvTasksList);
-		tvStartTask = (TextView) findViewById(R.id.tvStartTask);
-		tvEndTask = (TextView) findViewById(R.id.tvEndTask);
 		btEndTask = (Button) findViewById(R.id.btEndTask);
 		btStartTask = (Button) findViewById(R.id.btStartTask);
+		
+		tvStartTaskTime = (TextView) findViewById(R.id.tvStartTaskTime);
+		tvStartTaskDate = (TextView) findViewById(R.id.tvStartTaskDate);
+		
+		tvEndTaskTime = (TextView) findViewById(R.id.tvEndTaskTime);
+		tvEndTaskDate = (TextView) findViewById(R.id.tvEndTaskDate);
 	}
 
-	private void checkAllTasks(Task.eTaskState state){
+	private void checkAllTasks(eTaskState state){
 		Date newDate = new Date();
-		for(Task t : tasks){
-			t.setTaskState(state);
-			t.setRealDate(newDate);
+		for(Task task : tasks) {
+			task.setState(state);
+			task.setRealDate(newDate);
 		}
 		TaskManager.Instance().save(tasks);
 		fillUpTasks();
@@ -191,36 +224,41 @@ public class TasksActivity  extends BaseActivity{
 		startActivity(patientsActivity);
 	}
 	
-	private void saveEmployment(boolean isDone, boolean isAborted){
-		if(!isAborted){
-			for(Task t: tasks){
-				isAborted =  true;
-				if(t.getTaskState() == eTaskState.Done){
-					isAborted = false;
-					break;
-				}
-			}
-		}
-		
+	private void switchToSyncActivity() {
+		Intent syncActivity = new Intent(getApplicationContext(), SynchronizationActivity.class);
+		startActivity(syncActivity);
+	}
+	
+	private void saveEmployment() {
 		Employment empl = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
-		empl.setDone(isDone);
-		empl.setAborted(isAborted);
+		empl.setIsDone(true);
 		EmploymentManager.Instance().save(empl);
+	}
+	
+	private void clearEmployment() {
+		Option.Instance().setEmploymentID(BaseObject.EMPTY_ID);
+		Option.Instance().save();
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
 		switch (item.getItemId()) {
-		case R.id.add_task_category:
-			Intent addTasksCategoryActivity = new Intent(
-					getApplicationContext(), CatalogsActivity.class);
-			startActivity(addTasksCategoryActivity);
+		case R.id.catalogs:			
+			if(isAllDone())
+				return false;
+			Intent catalogsActivity = new Intent(getApplicationContext(), CatalogsActivity.class);
+			startActivity(catalogsActivity);
 			return true;
 		case R.id.cancelAllTasks:
+			if(isAllDone())
+				return false;
 			checkAllTasks(eTaskState.UnDone);
-			saveEmployment(false,true);
-			switchToPatientsActivity();
+			saveEmployment();
+			clearEmployment();
+			if (Option.Instance().getIsAuto())
+				switchToSyncActivity();
+			else
+				switchToPatientsActivity();
 			return true;
 		case R.id.notes:
 			Intent notesActivity = new Intent(getApplicationContext(),

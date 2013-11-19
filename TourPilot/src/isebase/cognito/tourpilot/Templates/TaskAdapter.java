@@ -40,7 +40,7 @@ public class TaskAdapter extends ArrayAdapter<Task> {
 				
 		taskHolder.tvTaskText.setText(taskHolder.task.getName());
 		
-		switch (taskHolder.task.getTaskState()) {
+		switch (taskHolder.task.getState()) {
 			case Empty:
 				break;
 			case Done:
@@ -63,6 +63,5 @@ public class TaskAdapter extends ArrayAdapter<Task> {
 		Task task;
 		TextView tvTaskText;
 		ImageView btTaskState;
-		//Button btTaskState;
 	}
 }

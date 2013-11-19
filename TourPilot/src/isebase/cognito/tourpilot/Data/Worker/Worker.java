@@ -1,12 +1,8 @@
 package isebase.cognito.tourpilot.Data.Worker;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
 import isebase.cognito.tourpilot.Connection.ServerCommandParser;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.Data.Tour.Tour;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.NCryptor;
 import isebase.cognito.tourpilot.Utils.StringParser;

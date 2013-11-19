@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
@@ -27,7 +28,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name="isebase.cognito.tourpilot.Activity.TasksActivity" />
         <activity android:name="isebase.cognito.tourpilot.Activity.AdditionalTasks.CatalogsActivity" />
         <activity android:name="isebase.cognito.tourpilot.Activity.AdditionalTasks.AdditionalTasksActivity" />
@@ -43,7 +43,10 @@
         <activity android:name="isebase.cognito.tourpilot.Activity.WorkersActivity" />
         <activity android:name="isebase.cognito.tourpilot.Activity.BaseActivity" />
         <activity android:name="isebase.cognito.tourpilot.Activity.PatientsActivity" />
-
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.AdditionalWorksActivity"
+            android:label="@string/title_activity_main" >
+        </activity>
     </application>
 
 </manifest>
