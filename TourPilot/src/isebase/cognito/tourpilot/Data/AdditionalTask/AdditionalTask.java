@@ -8,6 +8,16 @@ import isebase.cognito.tourpilot.Utils.StringParser;
 
 public class AdditionalTask extends BaseObject {
 
+	public static final int WEIGHT = 1;
+	public static final int DETECT_RESPIRATION = 2;
+	public static final int BALANCE = 3;
+	public static final int BLUTZUCKER = 4;
+	public static final int TEMPERATURE = 7;
+	
+	public static final int BLUTDRUCK = 5;
+	
+	public static final int PULS = 6;
+	
 	public static final String CatalogTypeField = "catalog_type";
 	public static final String QualityField = "quality"; 
 	

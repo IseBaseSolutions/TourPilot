@@ -17,6 +17,7 @@ public class InfoBaseDialog extends DialogFragment implements OnClickListener {
 		this.messageText = messageText;
 	}
 
+	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity())
 				.setTitle(title)

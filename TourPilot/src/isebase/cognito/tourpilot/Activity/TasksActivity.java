@@ -2,6 +2,7 @@ package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.AdditionalTasks.CatalogsActivity;
+import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
@@ -9,6 +10,9 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
+import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
+import isebase.cognito.tourpilot.Dialogs.Tasks.BlutdruckTaskDialog;
+import isebase.cognito.tourpilot.Dialogs.Tasks.StandardTaskDialog;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Templates.TaskAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
@@ -17,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -28,7 +33,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class TasksActivity  extends BaseActivity{
+public class TasksActivity extends BaseActivity implements BaseDialogListener{
 
 	private TaskAdapter taskAdapter;
 	
@@ -45,7 +50,7 @@ public class TasksActivity  extends BaseActivity{
 		
 	private Button btEndTask;
 	private Button btStartTask;
-	
+		
 	private boolean isClickable(){
 		return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
 				&& endTask.getRealDate().equals(DateUtils.EmptyDate);
@@ -176,7 +181,30 @@ public class TasksActivity  extends BaseActivity{
 			switchToPatientsActivity();
 		}
 	}
-
+				
+	public void onTaskClick(View view) {
+		Task task = (Task) view.getTag();
+		switch(task.getQuality()){
+			case AdditionalTask.WEIGHT:
+				StandardTaskDialog dialog = new StandardTaskDialog(task, "Weight", task.getQualityResult());
+				dialog.show(getSupportFragmentManager(), null);
+				getSupportFragmentManager().executePendingTransactions();
+				break;
+			case AdditionalTask.DETECT_RESPIRATION:
+				break;
+			case AdditionalTask.BALANCE:
+				break;
+			case AdditionalTask.BLUTZUCKER:
+				break;
+			case AdditionalTask.TEMPERATURE:
+				break;
+			case AdditionalTask.BLUTDRUCK:
+				break;
+			case AdditionalTask.PULS:
+				break;
+		}
+	}
+	
 	public void onChangeState(View view) {
 		if(!isClickable())
 			return;
@@ -195,6 +223,39 @@ public class TasksActivity  extends BaseActivity{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		openDialogForAdditionalTask(task);
+	}
+	
+	private void openDialogForAdditionalTask(Task task){
+		DialogFragment dialog = null;
+		switch(task.getQuality()){
+			case AdditionalTask.WEIGHT:
+				dialog = new StandardTaskDialog(task, "enter weight...");
+				break;
+			case AdditionalTask.DETECT_RESPIRATION:
+				dialog = new StandardTaskDialog(task, "detect respiration...");
+				break;
+			case AdditionalTask.BALANCE:
+				dialog = new StandardTaskDialog(task, "balance...");
+				break;
+			case AdditionalTask.BLUTZUCKER:
+				dialog = new StandardTaskDialog(task, "blutzucker...");
+				break;
+			case AdditionalTask.TEMPERATURE:
+				dialog = new StandardTaskDialog(task, "temperature...");
+				break;
+			case AdditionalTask.BLUTDRUCK:
+				dialog = new BlutdruckTaskDialog(task);
+				break;
+			case AdditionalTask.PULS:
+				dialog = new StandardTaskDialog(task, "pulse...");
+				break;
+			default:
+				return;
+		}
+		dialog.show(getSupportFragmentManager(), null);
+		getSupportFragmentManager().executePendingTransactions();
+		TaskManager.Instance().save(task);
 	}
 
 	private void initControls() {
@@ -299,4 +360,18 @@ public class TasksActivity  extends BaseActivity{
 			return super.onOptionsItemSelected(item);
 		}
 	}
+	
+	@Override
+	public void onDialogPositiveClick(DialogFragment dialog) {
+		StandardTaskDialog taskDialog = (StandardTaskDialog)dialog;
+		Task task = taskDialog.getTask();
+		String value = taskDialog.getValue();
+		task.setQualityResult(value);
+	}
+
+	@Override
+	public void onDialogNegativeClick(DialogFragment dialog) {
+		return;
+	}
+
 }

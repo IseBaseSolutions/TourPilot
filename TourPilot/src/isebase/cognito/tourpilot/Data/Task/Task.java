@@ -27,6 +27,8 @@ public class Task extends BaseObject {
 	public static final String PilotTourIDField = "pilot_tour_id";
 	public static final String RealDateField = "real_date";
 	public static final String ManualDateField = "manual_date";
+	public static final String QualityField = "quality";
+	public static final String QualityResultField = "quality_result";
 
 	public enum eTaskState {
 		Empty, Done, UnDone
@@ -40,18 +42,40 @@ public class Task extends BaseObject {
 	private Date manualDate;
 
 	private String leistungs;
+	private String qualityResult;
 	
 	private int workerID;
 	private int minutePrice;
 	private int additionalTaskID;
 	private int pilotTourID;
-
+	private int quality;
+		
 	private long employmentID;
 	private long tourID;
 	private long patientID;
 
 	private boolean isAdditionaltask;
 
+	@MapField(DatabaseField = QualityResultField)
+	public void setQualityResult(String qualityResult){
+		this.qualityResult = qualityResult;
+	}
+	
+	@MapField(DatabaseField = QualityResultField)
+	public String getQualityResult(){
+		return qualityResult;
+	}
+	
+	@MapField(DatabaseField = QualityField)
+	public void setQuality(int quality){
+		this.quality = quality;
+	}
+
+	@MapField(DatabaseField = QualityField)
+	public int getQuality(){
+		return quality;
+	}
+	
 	@MapField(DatabaseField = RealDateField)
 	public Date getRealDate() {
 		return realDate;
@@ -203,10 +227,14 @@ public class Task extends BaseObject {
 		setWorkerID(Option.Instance().getWorkerID());
 		setPilotTourID(Option.Instance().getPilotTourID());
 		setEmploymentID(Option.Instance().getEmploymentID());
+		setQuality(additionalTask.getQuality());
+		setQualityResult("");
 	}
 	
 	public Task(String initString) {
 		StringParser parsingString = new StringParser(initString);
+		setQuality(0);
+		setQualityResult("");
 		setManualDate(DateUtils.EmptyDate);
 		setRealDate(DateUtils.EmptyDate);
 		parsingString.next(";");
@@ -273,6 +301,8 @@ public class Task extends BaseObject {
 	@Override
 	protected void clear() {
 		super.clear();
+		setQuality(0);
+		setQualityResult("");
 		setState(eTaskState.Empty);
 		setPlanDate(DateUtils.EmptyDate);
 		setLeistungs("");
