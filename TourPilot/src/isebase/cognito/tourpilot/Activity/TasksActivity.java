@@ -28,7 +28,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class TasksActivity extends BaseActivity {
+public class TasksActivity  extends BaseActivity{
 
 	private TaskAdapter taskAdapter;
 	
@@ -299,5 +299,4 @@ public class TasksActivity extends BaseActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
 }

@@ -43,8 +43,10 @@ public class RelativeManager extends BaseObjectManager<Relative>{
 	
 	@Override
 	public void afterLoad(List<Relative> items) {
-		String IDs = Utilizer.getIDsString(items);
-		List<Address> addresses = AddressManager.Instance().loadByIDs(IDs);
+		int[] addressIDs = new int[items.size()];
+		for(int i = 0;i< items.size(); i++)
+			addressIDs[i] = items.get(i).getAddressID();
+		List<Address> addresses = AddressManager.Instance().loadByIDs(addressIDs);
 		for(Relative relative : items){
 			for(Address address : addresses){
 				if(address.getId() == relative.getAddressID()){

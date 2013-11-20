@@ -6,9 +6,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
-    tools:context=".DoctorsActivity" >
-
+    android:orientation="vertical">
+    
     <ProgressBar
         android:id="@+id/pbSync"
         style="?android:attr/progressBarStyleHorizontal"
@@ -25,8 +24,5 @@
 	    xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:id="@+id/lvSyncText"
 	    android:layout_width="match_parent"
-	    android:layout_height="match_parent" >
-
-	</ListView>
-	
+	    android:layout_height="match_parent" />	
 </LinearLayout>
