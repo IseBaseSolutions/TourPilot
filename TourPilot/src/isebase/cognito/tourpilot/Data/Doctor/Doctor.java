@@ -63,7 +63,7 @@ public class Doctor extends BaseObject {
 	
 	@Override
 	public String toString(){
-		return getFullName();
+		return String.format("%s\n%s\n%s,%s\n",getFullName(),address.getStreet(),address.getZip(),address.getCity());
 	}
 
 	@Override

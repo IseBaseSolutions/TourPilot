@@ -91,8 +91,7 @@ public class OptionsActivity extends BaseActivity {
 	
 	public void btStartSyncClick(View view) {
 		if (etServerIP.getText().toString().equals("")) {
-			noIPEnteredDialog.show(getSupportFragmentManager(),
-					"dialogNoIPEntered");
+			noIPEnteredDialog.show(getSupportFragmentManager(),"dialogNoIPEntered");
 			return;
 		}
 		if (ConnectionInfo.Instance().getNetworkInfo() == null

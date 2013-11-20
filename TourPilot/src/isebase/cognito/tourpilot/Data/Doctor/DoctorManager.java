@@ -43,8 +43,10 @@ public class DoctorManager extends BaseObjectManager<Doctor>{
 	
 	@Override
 	public void afterLoad(List<Doctor> items) {
-		String IDs = Utilizer.getIDsString(items);
-		List<Address> addresses = AddressManager.Instance().loadByIDs(IDs);
+		int[] addressIDs = new int[items.size()];
+		for(int i = 0;i< items.size(); i++)
+			addressIDs[i] = items.get(i).getAddressID();
+		List<Address> addresses = AddressManager.Instance().loadByIDs(addressIDs);
 		for(Doctor relative : items){
 			for(Address address : addresses){
 				if(address.getId() == relative.getAddressID()){

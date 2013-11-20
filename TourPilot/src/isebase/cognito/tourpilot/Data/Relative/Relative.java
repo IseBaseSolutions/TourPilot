@@ -91,5 +91,8 @@ public class Relative extends BaseObject {
 		setShip("");
 		setAddressID(EMPTY_ID);
 	}
-	
+	@Override
+	public String toString(){
+		return String.format("%s\n%s\n%s,%s\n",getFullName(),address.getStreet(),address.getZip(),address.getCity());
+	}
 }
