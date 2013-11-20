@@ -62,7 +62,7 @@
         <activity
             android:name="isebase.cognito.tourpilot.Activity.SynchronizationActivity" 
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"/>"
+            android:launchMode="singleInstance"/>
         <activity
             android:name="isebase.cognito.tourpilot.Activity.ToursActivity"
             android:screenOrientation="portrait" />
