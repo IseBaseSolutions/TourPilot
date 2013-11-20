@@ -1,10 +1,7 @@
 package isebase.cognito.tourpilot.Activity;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Data.Doctor.DoctorManager;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
@@ -27,7 +24,7 @@ public class RelativesActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_relatives);
-		InitList();
+		reloadData();
 		InitForm();
 	}
 
@@ -42,15 +39,27 @@ public class RelativesActivity extends BaseActivity {
 		ListView doctorsListView = (ListView) findViewById(R.id.lvListRelatives);
 		doctorsListView.setAdapter(adapter);
 	}
-	public void onCallMobPhone(View view) {		
+	private void reloadData()
+	{
+		Employment employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
+		listRelatives =  RelativeManager.Instance().loadAllByIDs(employment.getPatient().getStrRelativeIDs());
+	}
+	public void onCallPhone(View view) {		
 		Relative relative = (Relative) view.getTag();
 		Intent callIntent = new Intent(Intent.ACTION_CALL);
 		callIntent.setData(Uri.parse("tel:" + relative.address.getRealPhone()));
 		startActivity(callIntent);
 	}
-	private void InitList()
-	{
-		Employment employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
-		listRelatives =  RelativeManager.Instance().loadAllByIDs(employment.getPatient().getStrRelativeIDs());
+	public void onCallPrivatePhone(View view){
+		Relative relative = (Relative) view.getTag();
+		Intent callIntent = new Intent(Intent.ACTION_CALL);
+		callIntent.setData(Uri.parse("tel:" + relative.address.getRealPrivatePhone()));
+		startActivity(callIntent);
+	}
+	public void onCallMobilePhone(View view){
+		Relative relative = (Relative) view.getTag();
+		Intent callIntent = new Intent(Intent.ACTION_CALL);
+		callIntent.setData(Uri.parse("tel:" + relative.address.getRealMobilePhone()));
+		startActivity(callIntent);
 	}
 }

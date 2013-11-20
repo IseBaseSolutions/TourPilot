@@ -1,10 +1,8 @@
 package isebase.cognito.tourpilot.Templates;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Data.Doctor.Doctor;
+import isebase.cognito.tourpilot.Data.Address.IAddressable;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,7 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class AddressAdapter<T> extends ArrayAdapter<T> {
+public class AddressAdapter<T extends IAddressable> extends ArrayAdapter<T> {
 
 	private List<T> listAddress;
 	private int layoutResourceId;
@@ -39,32 +37,58 @@ public class AddressAdapter<T> extends ArrayAdapter<T> {
 
 		addressHolder.address = listAddress.get(position);
 		
-		addressHolder.imageCallMobPhone = (ImageButton)row.findViewById(R.id.btCallMobPhone);
-		addressHolder.imageCallMobPhone.setTag(addressHolder.address);
-		addressHolder.tvMobPhone = (TextView) row.findViewById(R.id.tvMobPhone);	
+		addressHolder.tvFullname = (TextView) row.findViewById(R.id.tvFullName);
+		addressHolder.tvFullname.setText(addressHolder.address.getFullName());
 		
-		
-		addressHolder.imageCallHomePhone = (ImageButton)row.findViewById(R.id.btCallHomePhone);
-		addressHolder.imageCallHomePhone.setTag(addressHolder.address);
-		addressHolder.tvHomePhone = (TextView) row.findViewById(R.id.tvHomePhone);
-		
-		addressHolder.imageCallWorkPhone = (ImageButton)row.findViewById(R.id.btCallWorkPhone);
-		addressHolder.imageCallWorkPhone.setTag(addressHolder.address);
-		addressHolder.tvMobPhone = (TextView) row.findViewById(R.id.tvWorkPhone);
-
 		addressHolder.tvAddressName = (TextView) row.findViewById(R.id.tvAddressName);		
-		addressHolder.tvAddressName.setText(listAddress.get(position).toString());
+		addressHolder.tvAddressName.setText(addressHolder.address.getAddress().getAddressData());
+
+		addressHolder.tvPhone = (TextView) row.findViewById(R.id.tvPhone);
+		addressHolder.imageCallPhone = (ImageButton)row.findViewById(R.id.btCallPhone);
+		if(addressHolder.address.getAddress().getRealPhone().length() > 0){
+			addressHolder.tvPhone.setText(String.format("%s",addressHolder.address.getAddress().getPhone()));
+			addressHolder.imageCallPhone.setTag(addressHolder.address);
+		}else{
+			
+			addressHolder.tvPhone.setText("IS ABSENT");
+			addressHolder.imageCallPhone.setVisibility(View.INVISIBLE);
+		}
+
+		addressHolder.tvPrivatePhone = (TextView) row.findViewById(R.id.tvPrivatePhone);
+		addressHolder.imageCallPrivatePhone = (ImageButton)row.findViewById(R.id.btCallPrivatePhone);
+		if(addressHolder.address.getAddress().getRealPrivatePhone().length() > 0){
+			addressHolder.tvPrivatePhone.setText(String.format("%s",addressHolder.address.getAddress().getPrivatePhone()));
+			addressHolder.imageCallPrivatePhone.setTag(addressHolder.address);
+		}else{
+			addressHolder.tvPrivatePhone.setText("IS ABSENT");
+			addressHolder.imageCallPrivatePhone.setVisibility(View.INVISIBLE);
+		}
+		
+		addressHolder.tvMobilePhone = (TextView) row.findViewById(R.id.tvMobilePhone);
+		addressHolder.imageCallMobilePhone = (ImageButton)row.findViewById(R.id.btCallMobilePhone);
+		if(addressHolder.address.getAddress().getRealMobilePhone().length() > 0){
+			addressHolder.tvMobilePhone.setText(String.format("%s",addressHolder.address.getAddress().getMobilePhone()));
+			addressHolder.imageCallMobilePhone.setTag(addressHolder.address);
+		}else{
+			addressHolder.tvMobilePhone.setText("IS ABSENT");
+			addressHolder.imageCallMobilePhone.setVisibility(View.INVISIBLE);
+		}
+
 		return row;
 	}
 	public class AddressHolder{
-		T address;
-		ImageButton imageCallMobPhone;
-		ImageButton imageCallHomePhone;
-		ImageButton imageCallWorkPhone;
+
+		IAddressable address;
+
+		TextView tvFullname;
 		
-		TextView tvMobPhone;
-		TextView tvHomePhone;
-		TextView tvWorkPhone;
+		ImageButton imageCallPhone;
+		ImageButton imageCallPrivatePhone;
+		ImageButton imageCallMobilePhone;
+
+		TextView tvPhone;
+		TextView tvPrivatePhone;
+		TextView tvMobilePhone;
 		
 		TextView tvAddressName;
 	}

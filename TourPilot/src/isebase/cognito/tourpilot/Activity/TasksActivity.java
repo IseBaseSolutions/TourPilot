@@ -277,7 +277,7 @@ public class TasksActivity  extends BaseActivity{
 			return true;
 		case R.id.address:
 			Intent addressActivity = new Intent(getApplicationContext(),
-					AddressActivity.class);
+					AddressPatientActivity.class);
 			startActivity(addressActivity);
 			return true;
 		case R.id.doctors:
