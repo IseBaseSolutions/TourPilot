@@ -48,7 +48,7 @@
             android:name="isebase.cognito.tourpilot.Activity.ManualPatientsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="isebase.cognito.tourpilot.Activity.AddressActivity"
+            android:name="isebase.cognito.tourpilot.Activity.AddressPatientActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="isebase.cognito.tourpilot.Activity.DoctorsActivity"

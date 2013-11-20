@@ -113,5 +113,39 @@ public class Address {
 		}
 		return realPhone;
 	}
-	
+	public String getRealPrivatePhone()
+	{
+		
+		String realPhone = "";
+		for(char c : this.privatePhone.toCharArray())
+		{
+			if(Character.isDigit(c))
+				realPhone += c;
+		}
+		return realPhone;
+	}
+	public String getRealMobilePhone()
+	{
+		
+		String realPhone = "";
+		for(char c : this.mobilePhone.toCharArray())
+		{
+			if(Character.isDigit(c))
+				realPhone += c;
+		}
+		return realPhone;
+	}
+	public String getAddressData()
+	{
+		String address = "";
+		if(getStreet().length() > 0)
+			address += getStreet();
+		if(getZip().length() > 0)
+			address += ", " + getZip();
+		if(getCity().length() > 0)
+			address += ", " + getCity();
+		if(address.length() == 0 )
+			address = "there is no the address indatabase";//"no data in database";
+		return address;
+	}
 }
