@@ -59,6 +59,4 @@ public class BaseActivity extends FragmentActivity{
 				return super.onOptionsItemSelected(item);
 			}
 	}
-
-    
 }
