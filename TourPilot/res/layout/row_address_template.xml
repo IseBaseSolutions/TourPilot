@@ -10,6 +10,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal|center"
+        android:layout_margin="5dp"
         android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="@dimen/text_size_big" />
@@ -28,95 +29,131 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center" >
-
+        		
         <TableRow
-            android:id="@+id/tableRow1"
+            android:id="@+id/tableRow12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 
-            <TextView
-                android:id="@+id/tvPhoneLabel"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.3"
-                android:text="@string/phone_label"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:layout_weight="0.5"
+                android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/tvPhone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.4"
-                android:gravity="center_vertical|fill"
-                android:text="Large Text"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                <TextView
+                    android:id="@+id/tvPhoneLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="@string/phone_label"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/text_size_big" />
+
+                <TextView
+                    android:id="@+id/tvPhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|fill"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/text_size_middle"
+                    android:textStyle="italic|bold"
+                    android:typeface="serif" />
+
+            </LinearLayout>
 
             <ImageButton
                 android:id="@+id/btCallPhone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:layout_span="2"
+                android:layout_weight="0.5"
                 android:onClick="onCallPhone"
                 android:src="@android:drawable/stat_sys_phone_call" />
 
         </TableRow>
-
+        
         <TableRow
-            android:id="@+id/tableRow2"
+            android:id="@+id/tableRow22"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 
-            <TextView
-                android:id="@+id/tvPhonePrivateLabel"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.3"
-                android:text="@string/private_phone_label"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:layout_weight="0.5"
+                android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/tvPrivatePhone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.4"
-                android:gravity="right|center_vertical|fill"
-                android:text="Large Text"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                <TextView
+                    android:id="@+id/tvPhonePrivateLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/private_phone_label"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/text_size_big" />
+
+                <TextView
+                    android:id="@+id/tvPrivatePhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right|center_vertical|fill"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/text_size_middle"
+                    android:textStyle="italic|bold"
+                    android:typeface="serif" />
+
+            </LinearLayout>
 
             <ImageButton
                 android:id="@+id/btCallPrivatePhone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:layout_span="2"
+                android:layout_weight="0.5"
                 android:onClick="onCallPrivatePhone"
                 android:src="@android:drawable/stat_sys_phone_call" />
 
-        </TableRow>
-
+        </TableRow>     
+           
         <TableRow
-            android:id="@+id/tableRow3"
+            android:id="@+id/tableRow32"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 
-            <TextView
-                android:id="@+id/tvPhoneMobileLabel"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.3"
-                android:text="@string/mobile_phone_label"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:layout_weight="0.5"
+                android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/tvMobilePhone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.4"
-                android:gravity="right|center_horizontal|fill"
-                android:text="Large Text"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                <TextView
+                    android:id="@+id/tvPhoneMobileLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mobile_phone_label"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/text_size_big" />
+
+                <TextView
+                    android:id="@+id/tvMobilePhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right|center_horizontal|fill"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/text_size_middle"
+                    android:textStyle="italic|bold"
+                    android:typeface="serif" />
+
+            </LinearLayout>
 
             <ImageButton
                 android:id="@+id/btCallMobilePhone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:layout_weight="0.5"
                 android:onClick="onCallMobilePhone"
                 android:src="@android:drawable/stat_sys_phone_call" />
 

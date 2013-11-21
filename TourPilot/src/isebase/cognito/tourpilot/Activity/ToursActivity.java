@@ -2,22 +2,31 @@ package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.Information.Information;
+import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import java.util.ArrayList;
 import java.util.List;
+
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class ToursActivity extends BaseActivity {
 
 	List<PilotTour> pilotTours = new ArrayList<PilotTour>();
+	///Tour info
+	List<Information> infos = new ArrayList<Information>();
+	////////////
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +36,7 @@ public class ToursActivity extends BaseActivity {
 			reloadData();		
 			fillUpTitle();
 			initListTours();
+			
 		}catch(Exception ex){
 			ex.printStackTrace();
 			criticalClose();
