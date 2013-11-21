@@ -16,11 +16,11 @@ public class DateUtils {
     public static final SimpleDateFormat WeekDateFormat = new SimpleDateFormat("EEE MM.dd");
     
     public static Date getDateOnly(Date date){
-    	return getDateOnly(date);
+    	return parseDateOnly(date);
     }
     
     public static Date getTodayDateOnly(){
-    	return getDateOnly(new Date());
+    	return parseDateOnly(new Date());
     }
     
     public static Date getTodayDateTime(){
