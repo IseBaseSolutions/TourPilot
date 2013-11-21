@@ -18,6 +18,7 @@
     <string name="menu_program_info">Program info</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_add_additional_work">Add additional work</string>
+    <string name="menu_diagnose">Diagnoses</string>
     
  <!-- Option -->
     <string name="program_options">Program options</string>

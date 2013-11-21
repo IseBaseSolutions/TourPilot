@@ -57,6 +57,6 @@
         android:showAsAction="never"
         android:orderInCategory="109"
         android:menuCategory="container"
-        android:title="Diagnoses" />
+        android:title="@string/menu_diagnose" />
 
 </menu>

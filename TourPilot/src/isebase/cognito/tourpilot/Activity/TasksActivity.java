@@ -14,6 +14,7 @@ import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
+import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.BlutdruckTaskDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.StandardTaskDialog;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
@@ -22,17 +23,11 @@ import isebase.cognito.tourpilot.Utils.DateUtils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -403,33 +398,10 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 		}
 	}
 	private void showDiagnose(){
-		
-		Employment employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
-		Diagnose diagnose = DiagnoseManager.Instance().load(employment.getPatient().getId());
-		
-		TextView tvDiagnose;
-		AlertDialog.Builder adb = new AlertDialog.Builder(this);
-		tvDiagnose = new TextView(this);
-//		tvDiagnose.setTextColor(Color.BLACK);
-//		tvDiagnose.setTypeface(null, Typeface.BOLD); 
-		tvDiagnose.setTextSize(20);
-		tvDiagnose.setText(diagnose.getName());
-		tvDiagnose.setGravity(Gravity.CENTER);
-		adb.setView(tvDiagnose);
-		adb.setIcon(android.R.drawable.ic_dialog_info);
-		adb.setTitle("PATIENT DIAGNOSE");
-		adb.setNegativeButton("Close",
-				new DialogInterface.OnClickListener() {
-				@Override
-				 public void onClick(DialogInterface dialog,int which){
-					dialog.cancel();
-				}
-		});
-		adb.show();
-		
-//		AlertDialog.Builder builder = new AlertDialog.Builder(this); 
-//		AlertDialog alert = builder.create();
-//		alert.show();
+		Diagnose diagnose = DiagnoseManager.Instance().load(employment.getPatientID());
+		InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_diagnose),diagnose.getName());
+		dialog.show(getSupportFragmentManager(), "");
+		getSupportFragmentManager().executePendingTransactions();
 	}
 	
 	private void removeAdditionalTasks(){
