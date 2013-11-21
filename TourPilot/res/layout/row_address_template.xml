@@ -64,7 +64,6 @@
                     android:text = "123991329123"
                     android:textStyle="italic|bold"
                     android:typeface="monospace" />
-
             </LinearLayout>
 
             <ImageButton
@@ -108,7 +107,6 @@
                     android:text = "123991329123"
                     android:textStyle="italic|bold"
                     android:typeface="monospace" />
-
             </LinearLayout>
 
             <ImageButton
@@ -152,7 +150,6 @@
                     android:textStyle="italic|bold"
                     android:text = "123991329123"
                     android:typeface="monospace" />
-
             </LinearLayout>
 
             <ImageButton

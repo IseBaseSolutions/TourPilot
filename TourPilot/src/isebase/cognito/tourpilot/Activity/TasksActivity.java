@@ -4,6 +4,8 @@ import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.AdditionalTasks.CatalogsActivity;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.Diagnose.Diagnose;
+import isebase.cognito.tourpilot.Data.Diagnose.DiagnoseManager;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
@@ -12,6 +14,7 @@ import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
+import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.BlutdruckTaskDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.StandardTaskDialog;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
@@ -387,9 +390,18 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 					CommentsActivity.class);
 			startActivity(commentsActivity);
 			return true;
+		case R.id.diagnose:
+			showDiagnose();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+	private void showDiagnose(){
+		Diagnose diagnose = DiagnoseManager.Instance().load(employment.getPatientID());
+		InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_diagnose),diagnose.getName());
+		dialog.show(getSupportFragmentManager(), "");
+		getSupportFragmentManager().executePendingTransactions();
 	}
 	
 	private void removeAdditionalTasks(){
@@ -419,5 +431,6 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 	public void onDialogNegativeClick(DialogFragment dialog) {
 		return;
 	}
+
 
 }

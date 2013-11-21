@@ -52,5 +52,11 @@
         android:orderInCategory="108"
         android:menuCategory="container"
         android:title="@string/menu_comments" />
+    <item
+        android:id="@+id/diagnose"
+        android:showAsAction="never"
+        android:orderInCategory="109"
+        android:menuCategory="container"
+        android:title="@string/menu_diagnose" />
 
 </menu>
