@@ -26,8 +26,7 @@ public class PinDialog extends DialogFragment {
 				| InputType.TYPE_NUMBER_VARIATION_PASSWORD);
 		adb.setView(etPin);
 		adb.setIcon(isebase.cognito.tourpilot.R.drawable.ic_action_screen_locked_to_landscape);
-		adb.setTitle(isebase.cognito.tourpilot.R.string.some_text);
-		adb.setMessage(isebase.cognito.tourpilot.R.string.pin_code);
+		adb.setTitle(isebase.cognito.tourpilot.R.string.pin_code);
 		adb.setPositiveButton(isebase.cognito.tourpilot.R.string.ok,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {

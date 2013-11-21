@@ -2,11 +2,7 @@ package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
 import android.os.Bundle;
-import android.app.Activity;
-import android.content.Context;
-import android.text.InputType;
 import android.view.Menu;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;

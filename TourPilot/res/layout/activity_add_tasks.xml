@@ -31,6 +31,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:onClick="onSaveAddTasks"
-        android:text="ADD TASKS" />
+        android:text="@string/add_tasks" />
 
 </RelativeLayout>
