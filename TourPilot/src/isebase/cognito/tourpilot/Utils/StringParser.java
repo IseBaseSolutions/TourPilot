@@ -6,9 +6,9 @@ final public class StringParser {
     private int pos1 = 0;
     private int pos2 = 0;
 
-    public StringParser(String InitString)
+    public StringParser(String initString)
     {
-        fldInitString=InitString;
+        fldInitString=initString;
     }
 
     public String next(String token)

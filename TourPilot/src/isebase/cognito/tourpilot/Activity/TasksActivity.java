@@ -61,7 +61,8 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 	private boolean isAllDone(){
 		return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
 				&& !endTask.getRealDate().equals(DateUtils.EmptyDate)
-				|| new Date().getDate() < startTask.getPlanDate().getDate();
+				|| DateUtils.getTodayDateOnly().getTime() 
+					<  DateUtils.getDateOnly(startTask.getPlanDate()).getTime();
 	}
 		
 	@Override
