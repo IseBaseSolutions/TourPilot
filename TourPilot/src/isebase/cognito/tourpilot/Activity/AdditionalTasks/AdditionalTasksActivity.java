@@ -2,7 +2,6 @@ package isebase.cognito.tourpilot.Activity.AdditionalTasks;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivity;
-import isebase.cognito.tourpilot.Activity.PatientsActivity;
 import isebase.cognito.tourpilot.Activity.TasksActivity;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
@@ -17,7 +16,6 @@ import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Templates.AdditionalTaskAdapter;
 import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -37,12 +35,19 @@ public class AdditionalTasksActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_add_tasks);
-		init();
-		reloadData();
-		fillUp();
-		initFilter();
+		try{
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_add_tasks);
+			init();
+			reloadData();
+			fillUp();
+			fillUpTitle();
+			initFilter();
+		}
+		catch(Exception ex){
+			ex.printStackTrace();
+			criticalClose();
+		}
 	}
 	
 	private void init(){
@@ -93,6 +98,10 @@ public class AdditionalTasksActivity extends BaseActivity {
 		}		
 	}
 
+	private void fillUpTitle(){
+		setTitle(catalog.getName());
+	}
+	
 	private void fillUp(){
 		adapter = new AdditionalTaskAdapter(this
 				,R.layout.row_additional_task_template, additionalTasks);

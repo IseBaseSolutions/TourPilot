@@ -94,9 +94,9 @@ public final class R {
         public static final int pbClearDB=0x7f090020;
         public static final int pbSync=0x7f090025;
         public static final int relatives=0x7f090053;
-        public static final int tableRow1=0x7f090036;
-        public static final int tableRow2=0x7f09003a;
-        public static final int tableRow3=0x7f09003e;
+        public static final int tableRow12=0x7f090036;
+        public static final int tableRow22=0x7f09003a;
+        public static final int tableRow32=0x7f09003e;
         public static final int tvAddTasksCategories=0x7f090005;
         public static final int tvAddressName=0x7f090035;
         public static final int tvCurrentInfo=0x7f090022;

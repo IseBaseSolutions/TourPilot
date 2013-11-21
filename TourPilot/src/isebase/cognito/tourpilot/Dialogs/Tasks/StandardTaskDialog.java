@@ -18,7 +18,7 @@ public class StandardTaskDialog extends DialogFragment{
 	private String title;
 	private boolean isViewMode;
 	
-	private Task task;
+	protected Task task;
 	public Task getTask(){
 		return task;
 	}
@@ -31,18 +31,20 @@ public class StandardTaskDialog extends DialogFragment{
 	private BaseDialogListener listener;
 		
 	public StandardTaskDialog(Task task, String title){
-		etValue = new EditText(StaticResources.getBaseContext());
+		this();
 		this.task = task;
 		this.title = title;
 		this.isViewMode = false;
 	}
 	
 	public StandardTaskDialog(Task task, String title, String value){
-		etValue = new EditText(StaticResources.getBaseContext());
-		this.task = task;
-		this.title = title;
+		this(task, title);
 		this.isViewMode = true;
 		etValue.setText(value);
+	}
+	
+	protected StandardTaskDialog(){
+		etValue = new EditText(StaticResources.getBaseContext());
 	}
 	
 	@Override

@@ -14,7 +14,6 @@ import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import android.os.Bundle;
 import android.content.Intent;
-import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,17 +22,25 @@ import android.widget.ListView;
 public class CatalogsActivity extends BaseActivity {
 
 	private List<Catalog> listCatalogs = new ArrayList<Catalog>();
+	Employment employment;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_add_tasks_category);
-		reloadData();
-		fillUp();
+		try{
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_add_tasks_category);
+			reloadData();
+			fillUpTitle();
+			fillUp();
+		}
+		catch(Exception ex){
+			ex.printStackTrace();
+			criticalClose();
+		}
 	}
 
 	private void reloadData(){
-		Employment employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
+		employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
 		Patient patient = PatientManager.Instance().load(employment.getPatientID());
 		if(patient.getKK() != BaseObject.EMPTY_ID)
 			listCatalogs.add(new Catalog(eCatalogType.btyp_kk));
@@ -49,12 +56,9 @@ public class CatalogsActivity extends BaseActivity {
 	public void onBackPressed() {
 		super.onBackPressed();
 	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-// 		Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.add_tasks_category, menu);
-		return true;
+		
+	private void fillUpTitle(){
+		setTitle(employment.getName());
 	}
 	
 	private void fillUp(){

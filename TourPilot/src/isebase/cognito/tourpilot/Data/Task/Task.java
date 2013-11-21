@@ -4,7 +4,11 @@ import isebase.cognito.tourpilot.Connection.ServerCommandParser;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.Employment.Employment;
+import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
+import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 import isebase.cognito.tourpilot.Utils.StringParser;
@@ -30,6 +34,10 @@ public class Task extends BaseObject {
 	public static final String QualityField = "quality";
 	public static final String QualityResultField = "quality_result";
 
+	public String getDayPart(){
+		return getName().substring(15,getName().length()-1);
+	}
+	
 	public enum eTaskState {
 		Empty, Done, UnDone
 	}
@@ -227,6 +235,10 @@ public class Task extends BaseObject {
 		setWorkerID(Option.Instance().getWorkerID());
 		setPilotTourID(Option.Instance().getPilotTourID());
 		setEmploymentID(Option.Instance().getEmploymentID());
+		PilotTour pilotTour = PilotTourManager.Instance().loadPilotTour(getPilotTourID());
+		setTourID(pilotTour.getTourID());
+		Employment employment = EmploymentManager.Instance().load((int)getEmploymentID());
+		setPatientID(employment.getPatientID());
 		setQuality(additionalTask.getQuality());
 		setQualityResult("");
 	}
@@ -265,10 +277,13 @@ public class Task extends BaseObject {
 			setName(str);
 			parsingString.next(";");
 			setState(eTaskState.Empty);
+			setPilotTourID(getPilotTourIDFromLeist());
 		} else {
 			setName(str);
 			setState(eTaskState.Empty);
-			setName(AdditionalTaskManager.Instance().load(getAddTaskIDFromLeist(getLeistungs())).getName());
+			setAditionalTaskID(getAddTaskIDFromLeist());
+			setQuality(getQualityFromLeist());
+			setName(AdditionalTaskManager.Instance().load(getAddTaskIDFromLeist()).getName());
 //			else 
 //			{
 //				int zIndex = getLeistungs().indexOf("Z");
@@ -281,23 +296,8 @@ public class Task extends BaseObject {
 		setTourID(Long.parseLong(parsingString.next(";")));
 		setEmploymentID(Long.parseLong(parsingString.next("~")));
 		setCheckSum(Long.parseLong(parsingString.next()));
-		setPilotTourID(getPilotTourIDFromLeist());
 	}
 	
-    public int getPilotTourIDFromLeist()
-    {
-    	int pilotTourID = 0;
-    	String[] strArr = {""};
-    	try {
-    		strArr = leistungs.split("\\+");
-    	} catch(Exception e) {
-    		e.printStackTrace();
-    	}
-    	if (strArr.length == 0 && !leistungs.contains("Anfang") && !leistungs.contains("Ende"))
-    		return pilotTourID;
-    	return Integer.parseInt(strArr[1]);
-    }
-
 	@Override
 	protected void clear() {
 		super.clear();
@@ -323,8 +323,33 @@ public class Task extends BaseObject {
 		return strValue;
 	}
 	
-    private int getAddTaskIDFromLeist(String leist) {
-        return Integer.valueOf(leist.split("\\+")[3]);
+    private int getAddTaskIDFromLeist() {
+        return Integer.valueOf(leistungs.split("\\+")[3]);
     }
     
+    private int getQualityFromLeist() {
+    	String quality = leistungs.split("\\+")[4];
+    	int retVal = 0;
+    	try{
+    		retVal = Integer.valueOf(quality);;
+    	}
+    	catch(Exception ex){
+    		retVal = 0;
+    	}
+		return retVal;
+    }
+    
+    public int getPilotTourIDFromLeist()
+    {
+    	int pilotTourID = 0;
+    	String[] strArr = {""};
+    	try {
+    		strArr = leistungs.split("\\+");
+    	} catch(Exception e) {
+    		e.printStackTrace();
+    	}
+    	if (strArr.length == 0 && !leistungs.contains("Anfang") && !leistungs.contains("Ende"))
+    		return pilotTourID;
+    	return Integer.parseInt(strArr[1]);
+    }    
 }

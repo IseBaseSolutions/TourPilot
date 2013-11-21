@@ -9,22 +9,17 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.text.InputType;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-public class BlutdruckTaskDialog extends DialogFragment{
+public class BlutdruckTaskDialog extends StandardTaskDialog{
 	
 	private boolean isViewMode;
-	
-	private Task task;
-	public Task getTask(){
-		return task;
-	}
-	
+		
+	@Override
 	public String getValue(){
-		return etMinValue.getText().toString() + ";" + etMaxValue.getText().toString();
+		return etMinValue.getText().toString() + "$" + etMaxValue.getText().toString();
 	}
 	
 	private EditText etMinValue;
@@ -33,15 +28,17 @@ public class BlutdruckTaskDialog extends DialogFragment{
 		
 	public BlutdruckTaskDialog(Task task){
 		this();
+		this.task = task;
 		this.isViewMode = false;
 	}
 	
 	public BlutdruckTaskDialog(Task task, String value){
 		this();
+		this.task = task;
 		this.isViewMode = true;
-		String[] parsedData = value.split(";");
-		String minValue = parsedData[0];
-		String maxValue = parsedData[1];
+		String[] parsedData = value.split("\\$");
+		String minValue = parsedData.length > 0 ? parsedData[0] : "";
+		String maxValue = parsedData.length > 1 ? parsedData[1] : "";
 		etMinValue.setText(minValue);
 		etMaxValue.setText(maxValue);
 	}

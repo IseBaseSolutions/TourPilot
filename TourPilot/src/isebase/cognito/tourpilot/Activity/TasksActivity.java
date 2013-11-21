@@ -10,6 +10,7 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
+import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.Tasks.BlutdruckTaskDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.StandardTaskDialog;
@@ -36,6 +37,7 @@ import android.widget.TextView;
 public class TasksActivity extends BaseActivity implements BaseDialogListener{
 
 	private TaskAdapter taskAdapter;
+	private Employment employment;
 	
 	private Task startTask;
 	private List<Task> tasks;
@@ -96,18 +98,24 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 	}
 	
 	private void fillUpStartTask(){
-		tvStartTaskTime.setText(DateUtils.HourMinutesFormat.format(startTask.getRealDate()));
-		tvStartTaskDate.setText(DateUtils.DateFormat.format(startTask.getRealDate()));
+		fillUpDate(tvStartTaskTime, tvStartTaskDate, startTask);
 	}
 	
 	private void fillUpEndTask(){
-		tvEndTaskTime.setText(DateUtils.HourMinutesFormat.format(endTask.getRealDate()));
-		tvEndTaskDate.setText(DateUtils.DateFormat.format(endTask.getRealDate()));
+		fillUpDate(tvEndTaskTime, tvEndTaskDate, endTask);
+	}
+	
+	private void fillUpDate(TextView tvTime, TextView tvDate, Task task){
+		tvTime.setText(task.getRealDate().equals(DateUtils.EmptyDate)
+				? "00:00" 
+				: DateUtils.HourMinutesFormat.format(task.getRealDate()));
+		tvDate.setText(task.getRealDate().equals(DateUtils.EmptyDate)
+				? "xx.xx.xxxx"
+				: DateUtils.DateFormat.format(task.getRealDate()));
 	}
 	
 	private void fillUpTitle(){
-		String title = startTask.getName().substring(15,startTask.getName().length()-1);
-		setTitle(title);
+		setTitle(employment.getName() + ", " + startTask.getDayPart());
 	}
 	
 	private void fillUpTasks(){
@@ -123,6 +131,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 	}	
 
 	public void reloadData() {		
+		employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
 		tasks = TaskManager.Instance().load(Task.EmploymentIDField, Option.Instance().getEmploymentID()+"");
 		startTask = tasks.get(0);
 		int i = 1;
@@ -136,7 +145,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 	}
 	
 	public void btStartTaskTimerClick(View view) {
-		checkAllTasks(eTaskState.Empty);
+		checkAllTasksAndFillUp(eTaskState.Empty);
 		startTask.setRealDate(new Date());
 		startTask.setState(eTaskState.Done);
 		endTask.setRealDate(DateUtils.EmptyDate);
@@ -175,7 +184,13 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 
 	@Override
 	public void onBackPressed() {
-		if(!isClickable())
+		if(isClickable()){
+			BaseDialog dialog = new BaseDialog("If you press OK programm " +
+					"will not save your progress");
+			dialog.show(getSupportFragmentManager(), "dialogBack");
+			getSupportFragmentManager().executePendingTransactions();
+		}
+		else
 		{
 			clearEmployment();
 			switchToPatientsActivity();
@@ -184,25 +199,34 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 				
 	public void onTaskClick(View view) {
 		Task task = (Task) view.getTag();
+		DialogFragment dialog = null;
 		switch(task.getQuality()){
 			case AdditionalTask.WEIGHT:
-				StandardTaskDialog dialog = new StandardTaskDialog(task, "Weight", task.getQualityResult());
-				dialog.show(getSupportFragmentManager(), null);
-				getSupportFragmentManager().executePendingTransactions();
+				dialog = new StandardTaskDialog(task, "Weight", task.getQualityResult());
 				break;
 			case AdditionalTask.DETECT_RESPIRATION:
+				dialog = new StandardTaskDialog(task, "Detect respiration", task.getQualityResult());
 				break;
 			case AdditionalTask.BALANCE:
+				dialog = new StandardTaskDialog(task, "Balance", task.getQualityResult());
 				break;
 			case AdditionalTask.BLUTZUCKER:
+				dialog = new StandardTaskDialog(task, "Blutzucker", task.getQualityResult());
 				break;
 			case AdditionalTask.TEMPERATURE:
+				dialog = new StandardTaskDialog(task, "Temperature", task.getQualityResult());
 				break;
 			case AdditionalTask.BLUTDRUCK:
+				dialog = new BlutdruckTaskDialog(task, task.getQualityResult());
 				break;
 			case AdditionalTask.PULS:
+				dialog = new StandardTaskDialog(task, "Puls", task.getQualityResult());
 				break;
+			default:
+				return;
 		}
+		dialog.show(getSupportFragmentManager(), "dialogTasks");
+		getSupportFragmentManager().executePendingTransactions();
 	}
 	
 	public void onChangeState(View view) {
@@ -253,9 +277,8 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 			default:
 				return;
 		}
-		dialog.show(getSupportFragmentManager(), null);
+		dialog.show(getSupportFragmentManager(), "dialogTasks");
 		getSupportFragmentManager().executePendingTransactions();
-		TaskManager.Instance().save(task);
 	}
 
 	private void initControls() {
@@ -271,12 +294,20 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 	}
 
 	private void checkAllTasks(eTaskState state){
-		Date newDate = new Date();
+		checkAllTasks(state, new Date());
+	}
+	
+	private void checkAllTasks(eTaskState state, Date date){
 		for(Task task : tasks) {
 			task.setState(state);
-			task.setRealDate(newDate);
+			task.setRealDate(date);
+			task.setQualityResult("");
 		}
-		TaskManager.Instance().save(tasks);
+		TaskManager.Instance().save(tasks);	
+	}
+	
+	private void checkAllTasksAndFillUp(eTaskState state){
+		checkAllTasks(state);
 		fillUpTasks();
 	}
 	
@@ -313,7 +344,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 		case R.id.cancelAllTasks:
 			if(isAllDone())
 				return false;
-			checkAllTasks(eTaskState.UnDone);
+			checkAllTasksAndFillUp(eTaskState.UnDone);
 			saveEmployment();
 			clearEmployment();
 			if (Option.Instance().getIsAuto())
@@ -361,12 +392,27 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 		}
 	}
 	
+	private void removeAdditionalTasks(){
+		for(Task t : tasks)
+			if(t.getIsAdditionalTask())
+				TaskManager.Instance().delete(t.getId());
+	}
+	
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog) {
-		StandardTaskDialog taskDialog = (StandardTaskDialog)dialog;
-		Task task = taskDialog.getTask();
-		String value = taskDialog.getValue();
-		task.setQualityResult(value);
+		if(dialog.getTag().equals("dialogBack")){
+			checkAllTasks(eTaskState.Empty, DateUtils.EmptyDate);
+			removeAdditionalTasks();
+			clearEmployment();
+			switchToPatientsActivity();
+		}
+		else{
+			StandardTaskDialog taskDialog = (StandardTaskDialog)dialog;
+			Task task = taskDialog.getTask();
+			String value = taskDialog.getValue();
+			task.setQualityResult(value);
+			TaskManager.Instance().save(task);
+		}
 	}
 
 	@Override
