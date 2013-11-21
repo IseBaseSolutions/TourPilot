@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import isebase.cognito.tourpilot.Data.Address.Address;
 import isebase.cognito.tourpilot.Data.Address.AddressManager;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
-import isebase.cognito.tourpilot.Utils.Utilizer;
 
 public class RelativeManager extends BaseObjectManager<Relative>{
 

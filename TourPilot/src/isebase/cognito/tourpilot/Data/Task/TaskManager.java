@@ -1,8 +1,6 @@
 package isebase.cognito.tourpilot.Data.Task;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 import android.database.sqlite.SQLiteDatabase;

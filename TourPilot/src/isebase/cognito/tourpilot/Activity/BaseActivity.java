@@ -35,6 +35,7 @@ public class BaseActivity extends FragmentActivity{
 	
 	protected void criticalClose(){
 		Option.Instance().clearSelected();
+		Option.Instance().save();
 		Intent optionActivity =  new Intent(getApplicationContext(), OptionsActivity.class);
 		startActivity(optionActivity);
 	}

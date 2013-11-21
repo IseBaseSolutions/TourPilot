@@ -32,15 +32,11 @@ public class NotesActivity extends BaseActivity {
 		
 		return true;
 	}
-	private void initElements(){
-		
+	private void initElements(){		
 		linearElements = (LinearLayout)findViewById(R.id.linearElements);
-		
-		
 		chbConnect = (CheckBox)findViewById(R.id.chbConnect);
 		chbMedchanges = (CheckBox)findViewById(R.id.chbMedchanges);
 		chbPflege = (CheckBox)findViewById(R.id.chbPflege);
-		
 		etOther = (EditText)findViewById(R.id.etOther);
 	}
 }
