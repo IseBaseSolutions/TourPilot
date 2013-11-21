@@ -144,10 +144,14 @@ public class Employment extends BaseObject {
             strTask += task.getPlanDate().toString().substring(11,13);
             strTask += task.getPlanDate().toString().substring(14,16) + ";";
             strTask += task.getLeistungs() + ";";
-            strTask += (task.getState().equals(eTaskState.Done) ? "ja" : "nein") + ";";
+            strTask += (task.getState().equals(eTaskState.Done) ? "ja" : "nein") 
+            		+ task.getQualityResult() == ""
+            			? ""
+            			: "$" + task.getQualityResult()
+            		+ ";";
             if (!DateUtils.EmptyDate.equals(task.getManualDate()))
-                strTask += DateUtils.toString(task.getManualDate()) + ";";
-            strTask += DateUtils.toString(task.getRealDate());
+                strTask += DateUtils.toDateTime(task.getManualDate()) + ";";
+            strTask += DateUtils.toDateTime(task.getRealDate());
             strTask += "\0";
             strValue += strTask;
             task.setWasSent(true);            
