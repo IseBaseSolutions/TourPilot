@@ -1,7 +1,6 @@
 package isebase.cognito.tourpilot.Templates;
 
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
-import android.content.Context;
 import android.graphics.Color;
 import android.text.InputFilter;
 import android.widget.EditText;

@@ -20,7 +20,7 @@ public class BaseActivity extends FragmentActivity{
 		super.onCreate(savedInstanceState);		
 		if(!isMainActivity())
 			versionFragmentDialog = new InfoBaseDialog(
-					getString(R.string.program_info), 
+					getString(R.string.menu_program_info), 
 					String.format("%s %s\n%s %s"
 							, getString(R.string.program_version)
 							, Option.Instance().getVersion()

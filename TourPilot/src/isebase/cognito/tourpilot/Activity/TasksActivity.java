@@ -107,10 +107,10 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 	
 	private void fillUpDate(TextView tvTime, TextView tvDate, Task task){
 		tvTime.setText(task.getRealDate().equals(DateUtils.EmptyDate)
-				? "00:00" 
+				? getString(R.string.def_empty_time)
 				: DateUtils.HourMinutesFormat.format(task.getRealDate()));
 		tvDate.setText(task.getRealDate().equals(DateUtils.EmptyDate)
-				? "xx.xx.xxxx"
+				? getString(R.string.def_empty_date)
 				: DateUtils.DateFormat.format(task.getRealDate()));
 	}
 	
@@ -185,8 +185,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 	@Override
 	public void onBackPressed() {
 		if(isClickable()){
-			BaseDialog dialog = new BaseDialog("If you press OK programm " +
-					"will not save your progress");
+			BaseDialog dialog = new BaseDialog(getString(R.string.dialog_task_proof_back));
 			dialog.show(getSupportFragmentManager(), "dialogBack");
 			getSupportFragmentManager().executePendingTransactions();
 		}
@@ -202,25 +201,25 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 		DialogFragment dialog = null;
 		switch(task.getQuality()){
 			case AdditionalTask.WEIGHT:
-				dialog = new StandardTaskDialog(task, "Weight", task.getQualityResult());
+				dialog = new StandardTaskDialog(task, getString(R.string.weight), task.getQualityResult());
 				break;
 			case AdditionalTask.DETECT_RESPIRATION:
-				dialog = new StandardTaskDialog(task, "Detect respiration", task.getQualityResult());
+				dialog = new StandardTaskDialog(task, getString(R.string.detect_respiration), task.getQualityResult());
 				break;
 			case AdditionalTask.BALANCE:
-				dialog = new StandardTaskDialog(task, "Balance", task.getQualityResult());
+				dialog = new StandardTaskDialog(task, getString(R.string.balance), task.getQualityResult());
 				break;
 			case AdditionalTask.BLUTZUCKER:
-				dialog = new StandardTaskDialog(task, "Blutzucker", task.getQualityResult());
+				dialog = new StandardTaskDialog(task, getString(R.string.blood_sugar), task.getQualityResult());
 				break;
 			case AdditionalTask.TEMPERATURE:
-				dialog = new StandardTaskDialog(task, "Temperature", task.getQualityResult());
+				dialog = new StandardTaskDialog(task, getString(R.string.temperature), task.getQualityResult());
 				break;
 			case AdditionalTask.BLUTDRUCK:
 				dialog = new BlutdruckTaskDialog(task, task.getQualityResult());
 				break;
 			case AdditionalTask.PULS:
-				dialog = new StandardTaskDialog(task, "Puls", task.getQualityResult());
+				dialog = new StandardTaskDialog(task, getString(R.string.pulse), task.getQualityResult());
 				break;
 			default:
 				return;
@@ -254,25 +253,25 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 		DialogFragment dialog = null;
 		switch(task.getQuality()){
 			case AdditionalTask.WEIGHT:
-				dialog = new StandardTaskDialog(task, "enter weight...");
+				dialog = new StandardTaskDialog(task, getString(R.string.weight));
 				break;
 			case AdditionalTask.DETECT_RESPIRATION:
-				dialog = new StandardTaskDialog(task, "detect respiration...");
+				dialog = new StandardTaskDialog(task, getString(R.string.detect_respiration));
 				break;
 			case AdditionalTask.BALANCE:
-				dialog = new StandardTaskDialog(task, "balance...");
+				dialog = new StandardTaskDialog(task, getString(R.string.balance));
 				break;
 			case AdditionalTask.BLUTZUCKER:
-				dialog = new StandardTaskDialog(task, "blutzucker...");
+				dialog = new StandardTaskDialog(task, getString(R.string.blood_sugar));
 				break;
 			case AdditionalTask.TEMPERATURE:
-				dialog = new StandardTaskDialog(task, "temperature...");
+				dialog = new StandardTaskDialog(task, getString(R.string.temperature));
 				break;
 			case AdditionalTask.BLUTDRUCK:
 				dialog = new BlutdruckTaskDialog(task);
 				break;
 			case AdditionalTask.PULS:
-				dialog = new StandardTaskDialog(task, "pulse...");
+				dialog = new StandardTaskDialog(task, getString(R.string.pulse));
 				break;
 			default:
 				return;

@@ -52,7 +52,7 @@ public class DoctorsActivity extends BaseActivity {
 	}
 
 	private void fillUpTitle(){
-		setTitle(employment.getName() + ", " + " doctors");
+		setTitle(getString(R.string.menu_doctors) + ", " + employment.getName());
 	}
 	
 	public void onCallPhone(View view) {		

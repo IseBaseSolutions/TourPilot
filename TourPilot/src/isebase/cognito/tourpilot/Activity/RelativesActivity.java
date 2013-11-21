@@ -35,7 +35,7 @@ public class RelativesActivity extends BaseActivity {
 	}
 	
 	private void fillUpTitle(){
-		setTitle(employment.getName() + ", " + " relatives");
+		setTitle(getString(R.string.menu_relatives) + ", " + employment.getName());
 	}
 	
 	private void init() {

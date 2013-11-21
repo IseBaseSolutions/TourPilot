@@ -3,6 +3,7 @@ package isebase.cognito.tourpilot.Templates;
 import java.util.List;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Address.IAddressable;
+import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -49,8 +50,8 @@ public class AddressAdapter<T extends IAddressable> extends ArrayAdapter<T> {
 			addressHolder.tvPhone.setText(String.format("%s",addressHolder.address.getAddress().getPhone()));
 			addressHolder.imageCallPhone.setTag(addressHolder.address);
 		}else{
-			
-			addressHolder.tvPhone.setText("IS ABSENT");
+			addressHolder.tvPhone.setText(StaticResources.getBaseContext()
+					.getString(R.string.err_no_phone));
 			addressHolder.imageCallPhone.setVisibility(View.INVISIBLE);
 		}
 
@@ -60,7 +61,8 @@ public class AddressAdapter<T extends IAddressable> extends ArrayAdapter<T> {
 			addressHolder.tvPrivatePhone.setText(String.format("%s",addressHolder.address.getAddress().getPrivatePhone()));
 			addressHolder.imageCallPrivatePhone.setTag(addressHolder.address);
 		}else{
-			addressHolder.tvPrivatePhone.setText("IS ABSENT");
+			addressHolder.tvPrivatePhone.setText(StaticResources.getBaseContext()
+					.getString(R.string.err_no_phone));
 			addressHolder.imageCallPrivatePhone.setVisibility(View.INVISIBLE);
 		}
 		
@@ -70,7 +72,8 @@ public class AddressAdapter<T extends IAddressable> extends ArrayAdapter<T> {
 			addressHolder.tvMobilePhone.setText(String.format("%s",addressHolder.address.getAddress().getMobilePhone()));
 			addressHolder.imageCallMobilePhone.setTag(addressHolder.address);
 		}else{
-			addressHolder.tvMobilePhone.setText("IS ABSENT");
+			addressHolder.tvMobilePhone.setText(StaticResources.getBaseContext()
+					.getString(R.string.err_no_phone));
 			addressHolder.imageCallMobilePhone.setVisibility(View.INVISIBLE);
 		}
 

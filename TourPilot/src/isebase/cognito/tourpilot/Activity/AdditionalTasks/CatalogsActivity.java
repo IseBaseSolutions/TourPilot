@@ -22,7 +22,7 @@ import android.widget.ListView;
 public class CatalogsActivity extends BaseActivity {
 
 	private List<Catalog> listCatalogs = new ArrayList<Catalog>();
-	Employment employment;
+	private Employment employment;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -1,7 +1,9 @@
 package isebase.cognito.tourpilot.Data.Address;
 
+import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.DataBase.MapField;
+import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
 public class Address {
 
@@ -136,7 +138,7 @@ public class Address {
 		if(getCity().length() > 0)
 			address += ", " + getCity();
 		if(address.length() == 0 )
-			address = "there is no address in database";
+			address = StaticResources.getBaseContext().getString(R.string.err_no_address);
 		return address;
 	}
 }

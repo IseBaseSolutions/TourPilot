@@ -4,6 +4,6 @@
         android:id="@+id/catalogs"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/add_tasks_category" android:menuCategory="system"/>
+        android:menuCategory="system"/>
 
 </menu>

@@ -49,7 +49,7 @@ public class AddressPatientActivity extends BaseActivity {
 	}
 	
 	private void fillUpTitle(){
-		setTitle(employment.getName() + ", " + " address");
+		setTitle(getString(R.string.menu_address) + ". " + employment.getName());
 	}
 	
 	public void onCallPhone(View view) {		

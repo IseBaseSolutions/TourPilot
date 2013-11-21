@@ -1,5 +1,6 @@
 package isebase.cognito.tourpilot.Dialogs.Tasks;
 
+import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
@@ -51,15 +52,15 @@ public class BlutdruckTaskDialog extends StandardTaskDialog{
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
-		adb.setTitle("blutdruck...");
+		adb.setTitle(getString(R.string.blood_pressure));
 				
 		etMinValue.setTextColor(Color.BLACK);
-		etMinValue.setHint("min...");
+		etMinValue.setHint(getString(R.string.min));
 		etMinValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
 		etMinValue.setEnabled(!isViewMode);
 		
 		etMaxValue.setTextColor(Color.BLACK);
-		etMaxValue.setHint("max...");
+		etMaxValue.setHint(getString(R.string.max));
 		etMaxValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
 		etMaxValue.setEnabled(!isViewMode);
 		

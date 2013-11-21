@@ -34,12 +34,6 @@ public class ToursActivity extends BaseActivity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// getMenuInflater().inflate(R.menu.options_menu, menu);
-		return true;
-	}
-
-	@Override
 	public void onBackPressed() {
 		logOut();
 	}

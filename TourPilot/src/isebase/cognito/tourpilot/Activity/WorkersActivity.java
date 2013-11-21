@@ -8,10 +8,8 @@ import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.PinDialog;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;

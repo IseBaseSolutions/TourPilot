@@ -144,7 +144,7 @@ public class OptionsActivity extends BaseActivity {
 
 	private void initDialogs() {			
 		versionFragmentDialog = new InfoBaseDialog(
-			getString(R.string.program_info), 
+			getString(R.string.menu_program_info), 
 			String.format("%s %s\n%s %s"
 					, getString(R.string.program_version)
 					, Option.Instance().getVersion()
@@ -152,11 +152,11 @@ public class OptionsActivity extends BaseActivity {
 					, DataBaseWrapper.DATABASE_VERSION)
 			);
 		noIPEnteredDialog = new InfoBaseDialog(
-				getString(R.string.connection_problems),
-				getString(R.string.no_ip_entered));
+				getString(R.string.dialog_connection_problems),
+				getString(R.string.dialog_no_ip_entered));
 		noConnectionDialog = new InfoBaseDialog(
-				getString(R.string.connection_problems),
-				getString(R.string.no_connection));
+				getString(R.string.dialog_connection_problems),
+				getString(R.string.dialog_no_connection));
 	}
 	
 	private void makeBackup(){

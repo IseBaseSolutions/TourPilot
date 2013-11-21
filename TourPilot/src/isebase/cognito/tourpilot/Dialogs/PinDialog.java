@@ -14,7 +14,7 @@ import android.widget.EditText;
 public class PinDialog extends DialogFragment {
 
 	public EditText etPin;
-	BaseDialogListener mListener;
+	private BaseDialogListener mListener;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
