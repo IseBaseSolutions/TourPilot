@@ -67,6 +67,7 @@ public final class R {
         public static final int chbMedchanges=0x7f09000f;
         public static final int chbPflege=0x7f090010;
         public static final int comments=0x7f090054;
+        public static final int diagnose=0x7f090055;
         public static final int doctors=0x7f090052;
         public static final int etAddTasksFilter=0x7f090000;
         public static final int etOther=0x7f090012;
