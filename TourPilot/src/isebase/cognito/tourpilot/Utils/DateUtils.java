@@ -1,5 +1,6 @@
 package isebase.cognito.tourpilot.Utils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,6 +15,28 @@ public class DateUtils {
     public static final SimpleDateFormat DateFormat = new SimpleDateFormat("dd.MM.yyyy");
     public static final SimpleDateFormat WeekDateFormat = new SimpleDateFormat("EEE MM.dd");
     
+    public static Date getDateOnly(Date date){
+    	return getDateOnly(date);
+    }
+    
+    public static Date getTodayDateOnly(){
+    	return getDateOnly(new Date());
+    }
+    
+    public static Date getTodayDateTime(){
+    	return new Date();
+    }
+    
+    private static Date parseDateOnly(Date date){
+    	Date retVal = date;
+    	try {
+    		retVal = DateFormat.parse(DateFormat.format(date));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return retVal;	
+    }
+    
 	private static long timeDiff = 0L;
 	
 	public static Date GetServerDateTime() {
@@ -23,7 +46,7 @@ public class DateUtils {
     public static Date getLocalDate(long milliseconds)
     {
     	return new Date(milliseconds -(Calendar.getInstance().get(Calendar.ZONE_OFFSET)
-									 + Calendar.getInstance().get(Calendar.DST_OFFSET)));
+									  + Calendar.getInstance().get(Calendar.DST_OFFSET)));
     }
     
     public static long getLocalTime(Date value)

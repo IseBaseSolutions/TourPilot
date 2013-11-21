@@ -3,13 +3,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="horizontal" >
-
-   <!--   <Button
-        android:id="@+id/btChangeTaskState"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:onClick="onChangeState" /> -->
     
     <ImageView
         android:id="@+id/btChangeTaskState"
@@ -25,6 +18,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:clickable="true"
+        android:onClick="onTaskClick"
         android:layout_marginLeft="4dp"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 

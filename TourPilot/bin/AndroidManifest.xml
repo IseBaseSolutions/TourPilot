@@ -62,7 +62,6 @@
         <activity
             android:name="isebase.cognito.tourpilot.Activity.SynchronizationActivity" 
             android:screenOrientation="portrait"/>
-
         <activity
             android:name="isebase.cognito.tourpilot.Activity.ToursActivity"
             android:screenOrientation="portrait" />
@@ -77,7 +76,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="isebase.cognito.tourpilot.Activity.AdditionalWorksActivity"
-            android:label="@string/title_activity_main"
             android:screenOrientation="portrait" />
     </application>
 

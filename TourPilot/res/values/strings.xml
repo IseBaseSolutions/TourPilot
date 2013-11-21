@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="hello_world">Hello world!</string>
-    <string name="street">Street:</string>
-    <string name="zip">ZIP:</string>
-    <string name="city">City:</string>
-    <string name="phone">Phone:</string>
-    <string name="start_task">Einsatzbeginn</string>
-    <string name="end_task">Einsatzende</string>
-    <string name="undone_all_tasks">undone tasks</string>
-    <string name="app_name">TourPilot</string>
-    <string name="action_settings">Settings</string>
-    <string name="first">First</string>
+    
+ <!-- Menus -->
+    <string name="menu_undone_all_tasks">Undone tasks</string>
+    <string name="menu_catalogs">Catalogs</string>
+    <string name="menu_notes">Notes</string>
+    <string name="menu_info">Info</string>
+    <string name="menu_manual_input">Manual input</string>
+    <string name="menu_address">Address</string>
+    <string name="menu_relatives">Relatives</string>
+    <string name="menu_doctors">Doctors</string>
+    <string name="menu_comments">Comments</string>    
+    <string name="menu_add_tasks">Add tasks</string>        
+    <string name="menu_additional_work">Additional work</string>
+    <string name="menu_db_backup">DB backup</string>
+    <string name="menu_clear_darabase">Clear database</string>
+    <string name="menu_program_info">Program info</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_add_additional_work">Add additional work</string>
+    
+ <!-- Option -->
     <string name="program_options">Program options</string>
     <string name="options">Options</string>
     <string name="pin_code">Pin-code:</string>
@@ -20,41 +28,29 @@
     <string name="input_server_ip">Input server IP here</string>
     <string name="server_port">Port:</string>
     <string name="phone_number">Phone number:</string>
-    <string name="back">Back</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Cancel</string>
-    <string name="synchronization">Synchronization</string>
-    <string name="clear_darabase">Clear database</string>
-    <string name="standart_port">4448</string>
-    <string name="complete_tour">Complete the tour</string>
-    <string name="log_out">Log out</string>
-    <string name="some_text">some text..</string>
-    <string name="connection_problems">Connection problems</string>
-    <string name="no_connection">Please enable internet connection</string>
-    <string name="no_ip_entered">Please enter server IP address</string>
-    <string name="show_done_patients">Show done patients</string>
-    <string name="hide_done_patients">Hide done patients</string>
-    <string name="str_ok">OK</string>
-    <string name="empty_text"></string>
-    <string name="version">Version</string>
-    <string name="add_tasks_category">Additionaly categories</string>
-    <string name="filter">Filter</string>
-    <string name="title_activity_add_tasks">AddTasksActivity</string>
-    <string name="sFilterText">FILTER</string>
-    <string name="title_activity_notes">NotesActivity</string>
-    <string name="title_activity_info">InfoActivity</string>
-    <string name="title_activity_manual_input">ManualInputActivity</string>
-    <string name="title_activity_address">AddressActivity</string>
-    <string name="title_activity_doctors">DoctorsActivity</string>
-    <string name="title_activity_relatives">RelativesActivity</string>
-    <string name="title_activity_comments">CommentsActivity</string>    
     
-    <string name="program_version">Program version:</string>
-    <string name="data_base_version">Database version:</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-    <string name="close">Close</string>
-    <string name="program_info">Program info</string>
+ <!-- Notes -->    
+    <string name="enter_interval">Enter interval</string>
+    <string name="connect_with">Connect with ...</string>
+    <string name="medications_changed">Medications changed</string>
+    <string name="aubrplanmäbige_pflege">Aubrplanmäbige pflege</string>
+    <string name="visit_notes">Visit notes</string>
+    <string name="other">Other (inquire)</string>
+    
+ <!-- Tasks -->    
+    <string name="start_task">Einsatzbeginn</string>
+    <string name="end_task">Einsatzende</string>
+    <string name="weight">Weight</string>
+    <string name="detect_respiration">Detect respiration</string>
+    <string name="balance">Balance</string>
+    <string name="blood_sugar">Blood sugar</string>
+    <string name="temperature">Temperature</string>
+    <string name="blood_pressure">Blood pressure</string>
+    <string name="pulse">Pulse</string>
+    
+ <!-- Synchronization -->
+    <string name="synchronization">Synchronization</string>
+    <string name="waitng_sockets_to_close">Waiting open sockets to automatically close...</string>
     <string name="enter_pin">Enter Your PIN code here..</string>
     <string name="connection_try">Trying to connect</string>
     <string name="connection_ok">Connection OK. Recieving invintation...</string>
@@ -71,31 +67,47 @@
     <string name="data_to_download">Data to download</string>
     <string name="connection_close_ok">Connection closing OK</string>
     <string name="connection_close_fail">Connection closing FAIL</string>
-    <string name="db_backup">DB backup</string>
-    <string name="services">Services</string>
-    <string name="enter_interval">Enter interval</string>
-    <string name="manual_input">Manual input</string>
-    <string name="sugar">Sugar</string>
-    <string name="pulse">Pulse</string>
-    <string name="pressure_top">Press top</string>
-    <string name="pressure_bottom">Press bottom</string>
-    <string name="connect_with">Connect with ...</string>
-    <string name="medications_changed">Medications changed</string>
-    <string name="aubrplanmäbige_pflege">Aubrplanmäbige pflege</string>
-    <string name="visit_notes">Visit notes</string>
-    <string name="other">Other (inquire)</string>
-    <string name="relatives">Relatives</string>
-    <string name="additional_task">Additional task</string>
 
-    
-    <string name="search">search...</string>    
-    <string name="add_additional_work">Add additional work</string>
-    <string name="additional_work">Additional work</string>
-    <string name="empty_time">00:00</string>
+ <!-- Programm info -->
+    <string name="app_name">TourPilot</string>
+    <string name="program_version">Program version:</string>
+    <string name="data_base_version">Database version:</string>
+    <string name="version">Version</string>
     <string name="title_activity_main">MainActivity</string>
     
-    <string name="phone_label">Phone : </string>
-    <string name="private_phone_label">Private phone : </string>
-    <string name="mobile_phone_label">Mobile phone : </string>
+ <!-- Address -->   
+ 	<string name="street">Street:</string>
+    <string name="zip">ZIP:</string>
+    <string name="city">City:</string>
+    <string name="phone">Phone:</string>
+    <string name="phone_private">Private phone:</string>
+    <string name="phone_mobile">Mobile phone:</string>    
+    
+ <!-- Defaults -->
+    <string name="def_empty_time">00:00</string>
+    <string name="def_empty_date">xx.xx.xxxx</string>
+    <string name="def_port">4448</string>
+    
+ <!-- Trivial -->  
+    <string name="min">min</string>
+    <string name="max">max</string>
+    <string name="back">Back</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>    
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="close">Close</string>
+    <string name="search">search...</string>
+    <string name="log_out">Log out</string>
+    
+ <!-- Dialogs -->   
+    <string name="dialog_task_proof_back"> If you press OK programm will not save your progress</string>
+    <string name="dialog_no_connection">Please enable internet connection</string>
+    <string name="dialog_no_ip_entered">Please enter server IP address</string>
+    <string name="dialog_connection_problems">Connection problems</string>
 
+ <!-- Errors -->    
+    <string name="err_no_phone">no phone</string>
+    <string name="err_no_address">no address</string>
+    
 </resources>

@@ -6,11 +6,10 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
+import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.PinDialog;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -19,7 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class WorkersActivity extends BaseActivity implements PinDialog.PinListenerDialog {
+public class WorkersActivity extends BaseActivity implements BaseDialogListener {
 
 	private List<Worker> workers = new ArrayList<Worker>();
 	private PinDialog pinDialog;

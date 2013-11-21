@@ -5,7 +5,6 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
@@ -18,12 +17,10 @@ public class BaseActivity extends FragmentActivity{
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-//		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		
+		super.onCreate(savedInstanceState);		
 		if(!isMainActivity())
 			versionFragmentDialog = new InfoBaseDialog(
-					getString(R.string.program_info), 
+					getString(R.string.menu_program_info), 
 					String.format("%s %s\n%s %s"
 							, getString(R.string.program_version)
 							, Option.Instance().getVersion()

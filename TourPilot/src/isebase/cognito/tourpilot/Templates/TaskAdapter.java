@@ -37,6 +37,7 @@ public class TaskAdapter extends ArrayAdapter<Task> {
 		taskHolder.tvTaskText = (TextView) row.findViewById(R.id.tvTaskName);
 		taskHolder.btTaskState = (ImageView) row.findViewById(R.id.btChangeTaskState);		
 		taskHolder.btTaskState.setTag(taskHolder.task);
+		taskHolder.tvTaskText.setTag(taskHolder.task);
 				
 		taskHolder.tvTaskText.setText(taskHolder.task.getName());
 		

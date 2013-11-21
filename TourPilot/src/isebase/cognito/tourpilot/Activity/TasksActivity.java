@@ -2,6 +2,7 @@ package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.AdditionalTasks.CatalogsActivity;
+import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Diagnose.Diagnose;
 import isebase.cognito.tourpilot.Data.Diagnose.DiagnoseManager;
@@ -11,6 +12,10 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
+import isebase.cognito.tourpilot.Dialogs.BaseDialog;
+import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
+import isebase.cognito.tourpilot.Dialogs.Tasks.BlutdruckTaskDialog;
+import isebase.cognito.tourpilot.Dialogs.Tasks.StandardTaskDialog;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Templates.TaskAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
@@ -24,6 +29,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Gravity;
@@ -37,9 +43,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.support.v4.app.DialogFragment;
 
-public class TasksActivity  extends BaseActivity{
+public class TasksActivity extends BaseActivity implements BaseDialogListener{
 
 	private TaskAdapter taskAdapter;
+	private Employment employment;
 	
 	private Task startTask;
 	private List<Task> tasks;
@@ -54,7 +61,7 @@ public class TasksActivity  extends BaseActivity{
 		
 	private Button btEndTask;
 	private Button btStartTask;
-	
+		
 	private boolean isClickable(){
 		return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
 				&& endTask.getRealDate().equals(DateUtils.EmptyDate);
@@ -63,7 +70,8 @@ public class TasksActivity  extends BaseActivity{
 	private boolean isAllDone(){
 		return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
 				&& !endTask.getRealDate().equals(DateUtils.EmptyDate)
-				|| new Date().getDate() < startTask.getPlanDate().getDate();
+				|| DateUtils.getTodayDateOnly().getTime() 
+					<  DateUtils.getDateOnly(startTask.getPlanDate()).getTime();
 	}
 		
 	@Override
@@ -100,18 +108,24 @@ public class TasksActivity  extends BaseActivity{
 	}
 	
 	private void fillUpStartTask(){
-		tvStartTaskTime.setText(DateUtils.HourMinutesFormat.format(startTask.getRealDate()));
-		tvStartTaskDate.setText(DateUtils.DateFormat.format(startTask.getRealDate()));
+		fillUpDate(tvStartTaskTime, tvStartTaskDate, startTask);
 	}
 	
 	private void fillUpEndTask(){
-		tvEndTaskTime.setText(DateUtils.HourMinutesFormat.format(endTask.getRealDate()));
-		tvEndTaskDate.setText(DateUtils.DateFormat.format(endTask.getRealDate()));
+		fillUpDate(tvEndTaskTime, tvEndTaskDate, endTask);
+	}
+	
+	private void fillUpDate(TextView tvTime, TextView tvDate, Task task){
+		tvTime.setText(task.getRealDate().equals(DateUtils.EmptyDate)
+				? getString(R.string.def_empty_time)
+				: DateUtils.HourMinutesFormat.format(task.getRealDate()));
+		tvDate.setText(task.getRealDate().equals(DateUtils.EmptyDate)
+				? getString(R.string.def_empty_date)
+				: DateUtils.DateFormat.format(task.getRealDate()));
 	}
 	
 	private void fillUpTitle(){
-		String title = startTask.getName().substring(15,startTask.getName().length()-1);
-		setTitle(title);
+		setTitle(employment.getName() + ", " + startTask.getDayPart());
 	}
 	
 	private void fillUpTasks(){
@@ -127,6 +141,7 @@ public class TasksActivity  extends BaseActivity{
 	}	
 
 	public void reloadData() {		
+		employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
 		tasks = TaskManager.Instance().load(Task.EmploymentIDField, Option.Instance().getEmploymentID()+"");
 		startTask = tasks.get(0);
 		int i = 1;
@@ -140,7 +155,7 @@ public class TasksActivity  extends BaseActivity{
 	}
 	
 	public void btStartTaskTimerClick(View view) {
-		checkAllTasks(eTaskState.Empty);
+		checkAllTasksAndFillUp(eTaskState.Empty);
 		startTask.setRealDate(new Date());
 		startTask.setState(eTaskState.Done);
 		endTask.setRealDate(DateUtils.EmptyDate);
@@ -179,13 +194,50 @@ public class TasksActivity  extends BaseActivity{
 
 	@Override
 	public void onBackPressed() {
-		if(!isClickable())
+		if(isClickable()){
+			BaseDialog dialog = new BaseDialog(getString(R.string.dialog_task_proof_back));
+			dialog.show(getSupportFragmentManager(), "dialogBack");
+			getSupportFragmentManager().executePendingTransactions();
+		}
+		else
 		{
 			clearEmployment();
 			switchToPatientsActivity();
 		}
 	}
-
+				
+	public void onTaskClick(View view) {
+		Task task = (Task) view.getTag();
+		DialogFragment dialog = null;
+		switch(task.getQuality()){
+			case AdditionalTask.WEIGHT:
+				dialog = new StandardTaskDialog(task, getString(R.string.weight), task.getQualityResult());
+				break;
+			case AdditionalTask.DETECT_RESPIRATION:
+				dialog = new StandardTaskDialog(task, getString(R.string.detect_respiration), task.getQualityResult());
+				break;
+			case AdditionalTask.BALANCE:
+				dialog = new StandardTaskDialog(task, getString(R.string.balance), task.getQualityResult());
+				break;
+			case AdditionalTask.BLUTZUCKER:
+				dialog = new StandardTaskDialog(task, getString(R.string.blood_sugar), task.getQualityResult());
+				break;
+			case AdditionalTask.TEMPERATURE:
+				dialog = new StandardTaskDialog(task, getString(R.string.temperature), task.getQualityResult());
+				break;
+			case AdditionalTask.BLUTDRUCK:
+				dialog = new BlutdruckTaskDialog(task, task.getQualityResult());
+				break;
+			case AdditionalTask.PULS:
+				dialog = new StandardTaskDialog(task, getString(R.string.pulse), task.getQualityResult());
+				break;
+			default:
+				return;
+		}
+		dialog.show(getSupportFragmentManager(), "dialogTasks");
+		getSupportFragmentManager().executePendingTransactions();
+	}
+	
 	public void onChangeState(View view) {
 		if(!isClickable())
 			return;
@@ -204,6 +256,38 @@ public class TasksActivity  extends BaseActivity{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		openDialogForAdditionalTask(task);
+	}
+	
+	private void openDialogForAdditionalTask(Task task){
+		DialogFragment dialog = null;
+		switch(task.getQuality()){
+			case AdditionalTask.WEIGHT:
+				dialog = new StandardTaskDialog(task, getString(R.string.weight));
+				break;
+			case AdditionalTask.DETECT_RESPIRATION:
+				dialog = new StandardTaskDialog(task, getString(R.string.detect_respiration));
+				break;
+			case AdditionalTask.BALANCE:
+				dialog = new StandardTaskDialog(task, getString(R.string.balance));
+				break;
+			case AdditionalTask.BLUTZUCKER:
+				dialog = new StandardTaskDialog(task, getString(R.string.blood_sugar));
+				break;
+			case AdditionalTask.TEMPERATURE:
+				dialog = new StandardTaskDialog(task, getString(R.string.temperature));
+				break;
+			case AdditionalTask.BLUTDRUCK:
+				dialog = new BlutdruckTaskDialog(task);
+				break;
+			case AdditionalTask.PULS:
+				dialog = new StandardTaskDialog(task, getString(R.string.pulse));
+				break;
+			default:
+				return;
+		}
+		dialog.show(getSupportFragmentManager(), "dialogTasks");
+		getSupportFragmentManager().executePendingTransactions();
 	}
 
 	private void initControls() {
@@ -219,12 +303,20 @@ public class TasksActivity  extends BaseActivity{
 	}
 
 	private void checkAllTasks(eTaskState state){
-		Date newDate = new Date();
+		checkAllTasks(state, new Date());
+	}
+	
+	private void checkAllTasks(eTaskState state, Date date){
 		for(Task task : tasks) {
 			task.setState(state);
-			task.setRealDate(newDate);
+			task.setRealDate(date);
+			task.setQualityResult("");
 		}
-		TaskManager.Instance().save(tasks);
+		TaskManager.Instance().save(tasks);	
+	}
+	
+	private void checkAllTasksAndFillUp(eTaskState state){
+		checkAllTasks(state);
 		fillUpTasks();
 	}
 	
@@ -261,7 +353,7 @@ public class TasksActivity  extends BaseActivity{
 		case R.id.cancelAllTasks:
 			if(isAllDone())
 				return false;
-			checkAllTasks(eTaskState.UnDone);
+			checkAllTasksAndFillUp(eTaskState.UnDone);
 			saveEmployment();
 			clearEmployment();
 			if (Option.Instance().getIsAuto())
@@ -340,4 +432,33 @@ public class TasksActivity  extends BaseActivity{
 //		AlertDialog alert = builder.create();
 //		alert.show();
 	}
+	
+	private void removeAdditionalTasks(){
+		for(Task t : tasks)
+			if(t.getIsAdditionalTask())
+				TaskManager.Instance().delete(t.getId());
+	}
+	
+	@Override
+	public void onDialogPositiveClick(DialogFragment dialog) {
+		if(dialog.getTag().equals("dialogBack")){
+			checkAllTasks(eTaskState.Empty, DateUtils.EmptyDate);
+			removeAdditionalTasks();
+			clearEmployment();
+			switchToPatientsActivity();
+		}
+		else{
+			StandardTaskDialog taskDialog = (StandardTaskDialog)dialog;
+			Task task = taskDialog.getTask();
+			String value = taskDialog.getValue();
+			task.setQualityResult(value);
+			TaskManager.Instance().save(task);
+		}
+	}
+
+	@Override
+	public void onDialogNegativeClick(DialogFragment dialog) {
+		return;
+	}
+
 }
