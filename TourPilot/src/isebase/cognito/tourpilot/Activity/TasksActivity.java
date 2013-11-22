@@ -85,8 +85,8 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 	
 	private void checkAllIsDone(){
 		if(isAllDone()){
-			btEndTask.setEnabled(false);
 			btStartTask.setEnabled(false);
+			btEndTask.setEnabled(false);
 		}
 	}
 	
@@ -366,9 +366,9 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 			startActivity(infoActivity);
 			return true;
 		case R.id.manualInput:
-			Intent manualInputActivity = new Intent(getApplicationContext(),
-					ManualInputActivity.class);
-			startActivity(manualInputActivity);
+			//Intent manualInputActivity = new Intent(getApplicationContext(),
+			//		ManualInputActivity.class);
+			//startActivity(manualInputActivity);
 			return true;
 		case R.id.address:
 			Intent addressActivity = new Intent(getApplicationContext(),

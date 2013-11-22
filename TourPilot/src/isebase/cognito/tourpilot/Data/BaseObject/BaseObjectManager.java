@@ -40,7 +40,7 @@ public abstract class BaseObjectManager<T> {
 		DataBaseWrapper.Instance().close();
 	}
 
-	public void delete(int id) {
+	public void delete(long id) {
 		try {
 			DataBaseWrapper
 					.Instance()
@@ -110,11 +110,11 @@ public abstract class BaseObjectManager<T> {
 	}
 	
 	public List<T> loadAll(String whereField, String whereClouse){
-		return loadWhere(whereField, whereClouse, "",true);
+		return loadWhere(whereField, whereClouse, "", true);
 	}
 	
 	public List<T> load(String whereField, String whereClouse){
-		return loadWhere(whereField, whereClouse, "",false);
+		return loadWhere(whereField, whereClouse, "", false);
 	}
 		
 	private List<T> loadWhere(String whereField, String whereClouse,String orderBy, boolean withAll) {
@@ -219,7 +219,7 @@ public abstract class BaseObjectManager<T> {
 		return items;
 	}
 
-	public T loadAll(int id) {
+	public T loadAll(long id) {
 		T item = load(id);
 		afterLoad(item);
 		return item;
@@ -260,7 +260,7 @@ public abstract class BaseObjectManager<T> {
 		return items;
 	}
 
-	public T load(int id) {
+	public T load(long id) {
 		Cursor cursor = null;
 		T item = null;
 		try {
@@ -450,6 +450,32 @@ public abstract class BaseObjectManager<T> {
 		return strResult;
 	}
 	
+	public int getIntValue(String strSQL){
+		Cursor cursor = null;
+		int retVal = 0;
+		try {
+			cursor = DataBaseWrapper
+					.Instance()
+					.getReadableDatabase()
+					.rawQuery(strSQL, null);
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				retVal = cursor.getInt(0);
+				cursor.moveToNext();
+				break;
+			}
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+			ex.printStackTrace();
+		} finally {
+			if (cursor != null)
+				cursor.close();
+			close();
+		}
+		
+		return retVal;
+	}
+	
 	public void execSQL(String strSQL){
 		DataBaseWrapper.Instance().getReadableDatabase().execSQL(strSQL);
 	}
@@ -457,5 +483,4 @@ public abstract class BaseObjectManager<T> {
 	public void clearTable(){
 		DataBaseWrapper.Instance().getReadableDatabase().execSQL("DELETE FROM " + getRecTableName());
 	}
-
 }
