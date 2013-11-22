@@ -37,4 +37,10 @@ public class TaskManager extends BaseObjectManager<Task> {
 		for(AdditionalTask additionalTask : additionalTasks)
 			save(new Task(additionalTask));
 	}
+	
+	public int getFirstSymbol(int emplID){
+		String strSQL = "select substr(leistungs,1,1) as val from Tasks where employment_id = "
+					+ emplID + " limit 1";
+		return getIntValue(strSQL);
+	}
 }

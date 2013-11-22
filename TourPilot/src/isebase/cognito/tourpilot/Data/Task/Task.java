@@ -33,6 +33,7 @@ public class Task extends BaseObject {
 	public static final String ManualDateField = "manual_date";
 	public static final String QualityField = "quality";
 	public static final String QualityResultField = "quality_result";
+	public static final String CatalogField = "catalog";
 
 	public String getDayPart(){
 		return getName().substring(15,getName().length()-1);
@@ -57,6 +58,7 @@ public class Task extends BaseObject {
 	private int additionalTaskID;
 	private int pilotTourID;
 	private int quality;
+	private int catalog;
 		
 	private long employmentID;
 	private long tourID;
@@ -64,6 +66,16 @@ public class Task extends BaseObject {
 
 	private boolean isAdditionaltask;
 
+	@MapField(DatabaseField = CatalogField)
+	public void setCatalog(int catalog){
+		this.catalog = catalog;
+	}
+
+	@MapField(DatabaseField = CatalogField)
+	public int getCatalog(){
+		return this.catalog;
+	}
+	
 	@MapField(DatabaseField = QualityResultField)
 	public void setQualityResult(String qualityResult){
 		this.qualityResult = qualityResult;
@@ -237,10 +249,21 @@ public class Task extends BaseObject {
 		setEmploymentID(Option.Instance().getEmploymentID());
 		PilotTour pilotTour = PilotTourManager.Instance().loadPilotTour(getPilotTourID());
 		setTourID(pilotTour.getTourID());
-		Employment employment = EmploymentManager.Instance().load((int)getEmploymentID());
+		Employment employment = EmploymentManager.Instance().load(getEmploymentID());
 		setPatientID(employment.getPatientID());
 		setQuality(additionalTask.getQuality());
 		setQualityResult("");
+		SimpleDateFormat ddMMyyyyFormat = new SimpleDateFormat("ddMMyyyy");
+		String lstStr = TaskManager.Instance().getFirstSymbol(employment.getId()) + "";
+		lstStr += additionalTask.getCatalogType();
+		lstStr += "Z";
+		if ( additionalTask.getCatalogType() < 10 ) lstStr += "0";
+		lstStr += additionalTask.getCatalogType();
+        if ( additionalTask.getId() < 100 ) lstStr += "0";
+        if ( additionalTask.getId() < 10 ) lstStr += "0";
+        lstStr += additionalTask.getId();
+        lstStr += ddMMyyyyFormat.format(getPlanDate());
+		setLeistungs(lstStr);
 	}
 	
 	public Task(String initString) {
@@ -283,6 +306,7 @@ public class Task extends BaseObject {
 			setState(eTaskState.Empty);
 			setAditionalTaskID(getAddTaskIDFromLeist());
 			setQuality(getQualityFromLeist());
+			setCatalog(getCatalogFromLeist());
 			setName(AdditionalTaskManager.Instance().load(getAddTaskIDFromLeist()).getName());
 //			else 
 //			{
@@ -325,6 +349,10 @@ public class Task extends BaseObject {
 	
     private int getAddTaskIDFromLeist() {
         return Integer.valueOf(leistungs.split("\\+")[3]);
+    }
+    
+    private int getCatalogFromLeist() {
+        return Integer.valueOf(leistungs.split("\\+")[1]);
     }
     
     private int getQualityFromLeist() {

@@ -125,6 +125,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Task.RealDateField + " INTEGER, "
 			+ Task.ManualDateField + " INTEGER, "
 			+ Task.QualityField + " INTEGER, "
+			+ Task.CatalogField + " INTEGER, "
 			+ Task.QualityResultField + " TEXT "
 			+ ");";
 	

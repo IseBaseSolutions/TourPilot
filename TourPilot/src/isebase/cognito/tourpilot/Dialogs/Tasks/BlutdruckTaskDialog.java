@@ -20,7 +20,7 @@ public class BlutdruckTaskDialog extends StandardTaskDialog{
 		
 	@Override
 	public String getValue(){
-		return etMinValue.getText().toString() + "$" + etMaxValue.getText().toString();
+		return etMinValue.getText().toString() + ":" + etMaxValue.getText().toString();
 	}
 	
 	private EditText etMinValue;
@@ -37,7 +37,7 @@ public class BlutdruckTaskDialog extends StandardTaskDialog{
 		this();
 		this.task = task;
 		this.isViewMode = true;
-		String[] parsedData = value.split("\\$");
+		String[] parsedData = value.split("\\:");
 		String minValue = parsedData.length > 0 ? parsedData[0] : "";
 		String maxValue = parsedData.length > 1 ? parsedData[1] : "";
 		etMinValue.setText(minValue);
