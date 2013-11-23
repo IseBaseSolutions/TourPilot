@@ -25,7 +25,7 @@ public class RelativesActivity extends BaseActivity {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_relatives);
 			reloadData();
-			init();
+			fillUp();
 			fillUpTitle();
 		}
 		catch(Exception ex){
@@ -38,7 +38,7 @@ public class RelativesActivity extends BaseActivity {
 		setTitle(getString(R.string.menu_relatives) + ", " + employment.getName());
 	}
 	
-	private void init() {
+	private void fillUp() {
 		AddressAdapter<Relative> adapter = new AddressAdapter<Relative>(this
 				, R.layout.row_address_template, relatives);
 		ListView doctorsListView = (ListView) findViewById(R.id.lvListRelatives);
@@ -51,7 +51,7 @@ public class RelativesActivity extends BaseActivity {
 		relatives =  RelativeManager.Instance().loadAllByIDs(employment.getPatient().getStrRelativeIDs());
 	}
 	
-	public void onCallPhone(View view) {		
+	public void onCallPhone(View view) {
 		Relative relative = (Relative) view.getTag();
 		Intent callIntent = new Intent(Intent.ACTION_CALL);
 		callIntent.setData(Uri.parse("tel:" + relative.address.getRealPhone()));
