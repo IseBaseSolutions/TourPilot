@@ -8,7 +8,6 @@ import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Utils.DataBaseUtils;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -101,26 +100,6 @@ public class OptionsActivity extends BaseActivity {
 		}
 		saveOptions();
 		startSyncActivity();
-	}
-	
-	private void startSyncActivity() {
-		Intent synchActivity = new Intent(getApplicationContext(), SynchronizationActivity.class);
-		startActivity(synchActivity);
-	}
-	
-	private void startToursActivity() {
-		Intent toursActivity = new Intent(getApplicationContext(), ToursActivity.class);
-		startActivity(toursActivity);
-	}
-	
-	private void startPatientsActivity() {
-		Intent patientsActivity = new Intent(getApplicationContext(), PatientsActivity.class);
-		startActivity(patientsActivity);
-	}
-	
-	private void startTasksActivity() {
-		Intent tasksActivity = new Intent(getApplicationContext(), TasksActivity.class);
-		startActivity(tasksActivity);
 	}
 
 	public void initControls() {

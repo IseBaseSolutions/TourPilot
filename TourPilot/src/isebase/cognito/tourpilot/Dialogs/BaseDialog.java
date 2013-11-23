@@ -12,6 +12,8 @@ public class BaseDialog extends DialogFragment{
 	private String title;
 	private BaseDialogListener listener;
 	
+	public BaseDialog(){}
+	
 	public BaseDialog(String title){
 		this.title = title;
 	}

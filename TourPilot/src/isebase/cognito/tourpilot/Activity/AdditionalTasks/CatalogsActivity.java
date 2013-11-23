@@ -65,15 +65,18 @@ public class CatalogsActivity extends BaseActivity {
 		ListView lvAddTasksCategories = (ListView)findViewById(R.id.lvAddTasksCategory);
 		ArrayAdapter<Catalog> adapter = new ArrayAdapter<Catalog>(this, android.R.layout.simple_list_item_1, listCatalogs);
 		lvAddTasksCategories.setAdapter(adapter);		
-		lvAddTasksCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-				Catalog catalog = listCatalogs.get(position);
-				Intent addTasksActivity = new Intent(getApplicationContext(), AdditionalTasksActivity.class);
-				addTasksActivity.putExtra("catalog_type", catalog.getCatalogType().ordinal());
-				startActivity(addTasksActivity);
-			}
-		});
+		lvAddTasksCategories.setOnItemClickListener(catalogOnItemClickListener);
 	}
+	
+	private AdapterView.OnItemClickListener catalogOnItemClickListener 
+			= new AdapterView.OnItemClickListener() {
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+			Catalog catalog = listCatalogs.get(position);
+			Intent addTasksActivity = new Intent(getApplicationContext(), AdditionalTasksActivity.class);
+			addTasksActivity.putExtra("catalog_type", catalog.getCatalogType().ordinal());
+			startActivity(addTasksActivity);
+		}
+	};
+	
 }

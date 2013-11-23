@@ -12,7 +12,17 @@
         android:id="@+id/lvEmployments"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvCurrentInfo">
+        android:layout_above="@+id/btEndTour"
+        android:layout_below="@+id/tvCurrentInfo" />
 
-    </ListView>
+    <Button
+        android:id="@+id/btEndTour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/lvEmployments"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/lvEmployments"
+        android:onClick="btEndTourClick"
+        android:text="@string/tour_end" />
+
 </RelativeLayout>
