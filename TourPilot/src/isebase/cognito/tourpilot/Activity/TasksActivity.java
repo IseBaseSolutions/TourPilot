@@ -349,7 +349,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 			return true;
 		case R.id.notes:
 			Intent notesActivity = new Intent(getApplicationContext(),
-					NotesActivity.class);
+					UserRemarksActivity.class);
 			startActivity(notesActivity);
 			return true;
 		case R.id.info:

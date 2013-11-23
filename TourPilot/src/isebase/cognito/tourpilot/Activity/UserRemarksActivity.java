@@ -7,7 +7,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-public class NotesActivity extends BaseActivity {
+public class UserRemarksActivity extends BaseActivity {
 	
 	private LinearLayout linearElements;
 	
@@ -21,7 +21,6 @@ public class NotesActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_notes);
-		
 		initElements();
 	}
 
@@ -32,6 +31,7 @@ public class NotesActivity extends BaseActivity {
 		
 		return true;
 	}
+	
 	private void initElements(){		
 		linearElements = (LinearLayout)findViewById(R.id.linearElements);
 		chbConnect = (CheckBox)findViewById(R.id.chbConnect);

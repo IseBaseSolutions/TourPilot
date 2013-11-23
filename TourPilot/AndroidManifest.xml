@@ -39,7 +39,7 @@
             android:name="isebase.cognito.tourpilot.Activity.AdditionalTasks.AdditionalTasksActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="isebase.cognito.tourpilot.Activity.NotesActivity"
+            android:name="isebase.cognito.tourpilot.Activity.UserRemarksActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="isebase.cognito.tourpilot.Activity.InfoActivity"

@@ -96,7 +96,6 @@ public abstract class BaseObjectManager<T> {
 		} finally {
 			if (cursor != null)
 				cursor.close();
-			close();
 		}
 		return items;
 	}
@@ -140,7 +139,6 @@ public abstract class BaseObjectManager<T> {
 		} finally {
 			if (cursor != null)
 				cursor.close();
-			close();
 		}
 		return items;
 	}
@@ -164,7 +162,6 @@ public abstract class BaseObjectManager<T> {
 		} finally {
 			if (cursor != null)
 				cursor.close();
-			close();
 		}
 		return items;
 	}
@@ -185,7 +182,7 @@ public abstract class BaseObjectManager<T> {
 			if (id == BaseObject.EMPTY_ID || load(id) == null) {
 				int itemID = (int) DataBaseWrapper
 						.Instance()
-						.getReadableDatabase()
+						.getWritableDatabase()
 						.insert(getRecTableName(),
 								null,
 								id == BaseObject.EMPTY_ID ? getValues(item)
@@ -195,7 +192,7 @@ public abstract class BaseObjectManager<T> {
 			} else {
 				DataBaseWrapper
 						.Instance()
-						.getReadableDatabase()
+						.getWritableDatabase()
 						.update(getRecTableName(), getValues(item),
 								BaseObject.IDField + " = " + id, null);
 			}
@@ -203,7 +200,6 @@ public abstract class BaseObjectManager<T> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			close();
 		}
 	}
 
@@ -255,7 +251,6 @@ public abstract class BaseObjectManager<T> {
 		} finally {
 			if (cursor != null)
 				cursor.close();
-			close();
 		}
 		return items;
 	}
@@ -279,13 +274,12 @@ public abstract class BaseObjectManager<T> {
 		} finally {
 			if (cursor != null)
 				cursor.close();
-			close();
 		}
 		return item;
 	}
 
-	private T parseObject(Cursor cursor) throws InstantiationException,
-			IllegalAccessException {
+	private T parseObject(Cursor cursor) 
+			throws InstantiationException, IllegalAccessException {
 		T item = getRecType().newInstance();
 		Method[] methods = item.getClass().getMethods();
 		for (Method method : methods) {
@@ -402,8 +396,7 @@ public abstract class BaseObjectManager<T> {
 	protected void addColumn(SQLiteDatabase db, String colName, String colType) {
 		Cursor tableInfo = null;
 		try {
-			tableInfo = db
-					.rawQuery(String.format("PRAGMA table_info(%1$s)",
+			tableInfo = db.rawQuery(String.format("PRAGMA table_info(%1$s)",
 							getRecTableName()), null);
 			tableInfo.moveToFirst();
 			boolean isColumnExists = false;
@@ -470,7 +463,6 @@ public abstract class BaseObjectManager<T> {
 		} finally {
 			if (cursor != null)
 				cursor.close();
-			close();
 		}
 		
 		return retVal;

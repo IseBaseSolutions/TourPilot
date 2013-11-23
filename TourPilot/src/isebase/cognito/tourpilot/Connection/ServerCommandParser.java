@@ -38,6 +38,7 @@ public class ServerCommandParser {
 	public static final char TIME = '[';
 
 	public static final char WORKER = 'A';
+	public static final char USER_REMARK = 'O';
 	public static final char PATIENT_REMARK = 'B';
 	public static final char DIAGNOSE = 'D';
 	public static final char INFORMATION = 'I';
