@@ -35,17 +35,13 @@ public class DoctorsActivity extends BaseActivity {
 		}
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.doctors, menu);
-		return true;
-	}
 	private void initForm(){
 		AddressAdapter<Doctor> adapter = new AddressAdapter<Doctor>(this
-				, R.layout.row_address_template,doctors);
+				, R.layout.row_address_template, doctors);
 		ListView doctorsListView = (ListView) findViewById(R.id.lvListDoctors);
 		doctorsListView.setAdapter(adapter);
 	}
+	
 	public void reloadData() {
 		employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
 		doctors =  DoctorManager.Instance().loadAllByIDs(employment.getPatient().getStrDoctorsIDs());
