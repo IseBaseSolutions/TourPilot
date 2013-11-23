@@ -57,4 +57,42 @@ public class BaseActivity extends FragmentActivity{
 				return super.onOptionsItemSelected(item);
 			}
 	}
+
+	protected void startWorkersActivity() {
+		Intent workersActivity = new Intent(getApplicationContext(),
+				WorkersActivity.class);
+		startActivity(workersActivity);
+	}
+
+	protected void startPatientsActivity() {
+		Intent patientsActivity = new Intent(getApplicationContext(),
+				PatientsActivity.class);
+		startActivity(patientsActivity);
+	}
+
+	protected void startSyncActivity() {
+		Intent synchActivity = new Intent(getApplicationContext(),
+				SynchronizationActivity.class);
+		startActivity(synchActivity);
+	}
+	
+	protected void startToursActivity() {
+		Intent toursActivity = new Intent(getApplicationContext(), ToursActivity.class);
+		startActivity(toursActivity);
+	}
+	
+	protected void startTasksActivity() {
+		Intent tasksActivity = new Intent(getApplicationContext(), TasksActivity.class);
+		startActivity(tasksActivity);
+	}
+	
+	protected void startAdditionalWorksActivity() {
+		Intent additionalWorksActivity = new Intent(getApplicationContext(), AdditionalWorksActivity.class);
+		startActivity(additionalWorksActivity);
+	}
+
+	protected void startOptionsActivity() {
+		Intent optionsActivity = new Intent(getApplicationContext(), OptionsActivity.class);
+		startActivity(optionsActivity);
+	}
 }

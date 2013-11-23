@@ -10,7 +10,6 @@ import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Templates.EmploymentAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 import java.util.List;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -59,19 +58,8 @@ public class PatientsActivity extends BaseActivity {
 		startToursActivity();
 	}
 	
-	private void startToursActivity() {
-		Intent toursActivity = new Intent(getApplicationContext(), ToursActivity.class);
-		startActivity(toursActivity);
-	}
-	
-	private void startTasksActivity() {
-		Intent tasksActivity = new Intent(getApplicationContext(), TasksActivity.class);
-		startActivity(tasksActivity);
-	}
-	
-	private void startAdditionalWorksActivity() {
-		Intent additionalWorksActivity = new Intent(getApplicationContext(), AdditionalWorksActivity.class);
-		startActivity(additionalWorksActivity);
+	public void btEndTourClick(View view){
+		startSyncActivity();
 	}
 
 	public void fillUp() {

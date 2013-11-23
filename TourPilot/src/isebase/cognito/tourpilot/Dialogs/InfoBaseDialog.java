@@ -12,6 +12,8 @@ public class InfoBaseDialog extends DialogFragment implements OnClickListener {
 	private String title;
 	private String messageText;
 
+	public InfoBaseDialog(){}
+	
 	public InfoBaseDialog(String title, String messageText) {
 		this.title = title;
 		this.messageText = messageText;

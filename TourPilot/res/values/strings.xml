@@ -50,6 +50,7 @@
     <string name="pulse">Pulse</string>
     
  <!-- Synchronization -->
+    <string name="tour_end">Tour ende</string>
     <string name="synchronization">Synchronization</string>
     <string name="waitng_sockets_to_close">Waiting open sockets to automatically close...</string>
     <string name="enter_pin">Enter Your PIN code here..</string>
@@ -103,6 +104,7 @@
     
  <!-- Dialogs -->   
     <string name="dialog_task_proof_back"> If you press OK programm will not save your progress</string>
+    <string name="dialog_proof_logout">Möchten Sie wirklich abmelden?</string>
     <string name="dialog_no_connection">Please enable internet connection</string>
     <string name="dialog_no_ip_entered">Please enter server IP address</string>
     <string name="dialog_connection_problems">Connection problems</string>
