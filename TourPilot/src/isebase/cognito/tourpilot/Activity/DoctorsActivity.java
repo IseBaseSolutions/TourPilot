@@ -11,13 +11,12 @@ import isebase.cognito.tourpilot.Templates.AddressAdapter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.content.Intent;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ListView;
 
 public class DoctorsActivity extends BaseActivity {
 
-	private List<Doctor> doctors;
+	private List<Doctor> addressable;
 	private Employment employment;
 	
 	@Override
@@ -26,7 +25,7 @@ public class DoctorsActivity extends BaseActivity {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_doctors);
 			reloadData();
-			initForm();
+			fillUp();
 			fillUpTitle();
 		}
 		catch(Exception ex){
@@ -35,20 +34,16 @@ public class DoctorsActivity extends BaseActivity {
 		}
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.doctors, menu);
-		return true;
-	}
-	private void initForm(){
+	private void fillUp(){
 		AddressAdapter<Doctor> adapter = new AddressAdapter<Doctor>(this
-				, R.layout.row_address_template,doctors);
+				, R.layout.row_address_template, addressable);
 		ListView doctorsListView = (ListView) findViewById(R.id.lvListDoctors);
 		doctorsListView.setAdapter(adapter);
 	}
+	
 	public void reloadData() {
 		employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
-		doctors =  DoctorManager.Instance().loadAllByIDs(employment.getPatient().getStrDoctorsIDs());
+		addressable = DoctorManager.Instance().loadAllByIDs(employment.getPatient().getStrDoctorsIDs());
 	}
 
 	private void fillUpTitle(){
