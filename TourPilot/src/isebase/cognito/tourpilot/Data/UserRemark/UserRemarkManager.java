@@ -1,5 +1,6 @@
 package isebase.cognito.tourpilot.Data.UserRemark;
 
+import java.util.List;
 import android.database.sqlite.SQLiteDatabase;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 
@@ -33,5 +34,28 @@ public class UserRemarkManager extends BaseObjectManager<UserRemark>{
 	public void onUpgrade(SQLiteDatabase db) {
 		
 	}
+	
+	public UserRemark loadByWorkerPatient(int workerID, int patientID){
+		List<UserRemark> items = loadAll(UserRemark.IDField, workerID + " AND " 
+					+ UserRemark.PatientIDField + " = " + patientID);
+		if(items.size() > 0)
+			return items.get(0);
+		return new UserRemark(workerID, patientID, false, false, false, false, "");
+	}
 
+	public String getDone(){
+    	List<UserRemark> userRemarks = load();
+    	if (userRemarks.size() == 0)
+    		return "";  
+    	String strEmpls = "";
+    	for (UserRemark userRemark : userRemarks)
+    		if (!userRemark.getWasSent())
+    		{
+    			strEmpls += userRemark.getDone();
+    			userRemark.setWasSent(true);
+    			save(userRemark);
+    		}
+    	return strEmpls;
+	}
+	
 }

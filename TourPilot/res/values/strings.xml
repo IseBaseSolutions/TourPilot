@@ -101,6 +101,7 @@
     <string name="close">Close</string>
     <string name="search">search...</string>
     <string name="log_out">Log out</string>
+    <string name="save">Speichern</string>
     
  <!-- Dialogs -->   
     <string name="dialog_task_proof_back"> If you press OK programm will not save your progress</string>

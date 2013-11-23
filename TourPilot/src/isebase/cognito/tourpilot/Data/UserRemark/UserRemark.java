@@ -86,7 +86,7 @@ public class UserRemark extends BaseObject {
         return strValue;
     }    
     
-    public String GetDone()
+    public String getDone()
     {
         //O;358;4926;2008-08-19 22:14:59;0;ferting
         String strValue = new String("O;");
@@ -103,4 +103,16 @@ public class UserRemark extends BaseObject {
 	    return "";
 	}
 
+	public void setCheckboxes(boolean chkContact
+			, boolean chkMed, boolean chkVisit, boolean chkOther ){
+        checkboxes = 0;
+        if (chkContact) 
+        	checkboxes += 1;
+        if (chkMed) 
+        	checkboxes += 2;
+        if (chkVisit) 
+        	checkboxes += 4;
+        if (chkOther) 
+        	checkboxes += 8;
+	}
 }

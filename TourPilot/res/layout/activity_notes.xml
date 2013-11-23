@@ -10,34 +10,26 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".UserRemarksActivity" >
 
-    <TextView
-        android:id="@+id/tvNotes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/visit_notes"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="@dimen/text_size_big" />
-
     <CheckBox
         android:id="@+id/chbConnect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/connect_with"
-        android:textSize="@dimen/text_size" />
+        android:textSize="@dimen/text_size_middle" />
 
     <CheckBox
         android:id="@+id/chbMedchanges"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/medications_changed"
-        android:textSize="@dimen/text_size" />
+        android:textSize="@dimen/text_size_middle" />
 
     <CheckBox
         android:id="@+id/chbPflege"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/aubrplanmäbige_pflege"
-        android:textSize="@dimen/text_size" />
+        android:textSize="@dimen/text_size_middle" />
 
     <TextView
         android:id="@+id/tvOther"
@@ -50,18 +42,12 @@
     <EditText
         android:id="@+id/etOther"
         android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:ems="10"
+        android:layout_height="248dp"
+        android:layout_weight="0.79"
         android:focusable="true"
         android:gravity="start"
-        android:textSize="@dimen/text_size"
-        android:visibility="visible"
-        android:drawableTop="@android:color/black"
-        android:drawableBottom="@android:color/black"
         android:top="2dp"
-        android:background="#72cdf4" >
-
+        android:visibility="visible" >
     </EditText>
 
     <LinearLayout
@@ -71,23 +57,14 @@
         android:gravity="bottom" >
 
         <Button
-            android:id="@+id/btNotesCancel"
+            android:id="@+id/btUserRemarkSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_weight="0.5"
-            android:text="@string/no"
-            android:textSize="@dimen/text_size" />
-
-        <Button
-            android:id="@+id/btNotesOK"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_weight="0.5"
-            android:text="@string/yes"
-            android:textSize="@dimen/text_size" />
-
+            android:text="@string/save"
+            android:onClick="btUserRemarkSaveClick"
+            android:textSize="@dimen/text_size_middle" />
     </LinearLayout>
 
 </LinearLayout>
