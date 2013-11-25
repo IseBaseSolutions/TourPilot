@@ -30,7 +30,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class AdditionalWorksActivity extends BaseActivity implements BaseDialog.ListenerDialog {
+public class AdditionalWorksActivity extends BaseActivity implements BaseDialogListener {
 
 	private DialogFragment addWorkInputDialog;
 	private DialogFragment stopDialog;
