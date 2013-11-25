@@ -81,7 +81,7 @@ public class Information extends BaseObject {
 		StringParser parsingString = new StringParser(initString);
 		parsingString.next(";");
 		setIsFromServer(true);
-		setId(Integer.parseInt(parsingString.next(";")));
+		setID(Integer.parseInt(parsingString.next(";")));
 		setEmploymentCode(Long.parseLong(parsingString.next(";")));
 		SimpleDateFormat format = new SimpleDateFormat("ddMMyyyyHHmm");
 		try {
@@ -97,7 +97,7 @@ public class Information extends BaseObject {
 	@Override
 	public String forServer() {
 		String strValue = new String(ServerCommandParser.INFORMATION + ";");
-		strValue += String.format("%d;%d", getId(), getEmploymentCode()) + ";";
+		strValue += String.format("%d;%d", getID(), getEmploymentCode()) + ";";
 		strValue += getCheckSum();
 		return strValue;
 	}

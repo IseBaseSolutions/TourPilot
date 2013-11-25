@@ -15,6 +15,7 @@ public class Option {
 	public static final String PilotTourIDField = "pilot_tour_id";
 	public static final String EmploymentIDField = "employment_id";
 	public static final String PreviousWorkerIDField = "prev_worker_id";
+	public static final String WorkIDField = "work_id";
 	public static final String ServerIPField = "server_ip";
 	public static final String ServerPortField = "server_port";
 	public static final String IsAutoField = "is_auto";
@@ -31,11 +32,22 @@ public class Option {
 	private int workerID;
 	private int employmentID;
 	private int pilotTourID;
+	private int workID;
 	private int serverPort;
 	private int id;
 
 	private boolean isAuto;
 
+	@MapField(DatabaseField = WorkIDField)
+	public int getWorkID() {
+		return workID;
+	}
+
+	@MapField(DatabaseField = WorkIDField)
+	public void setWorkID(int workID) {
+		this.workID = workID;
+	}
+	
 	@MapField(DatabaseField = PilotTourIDField)
 	public void setPilotTourID(int id){
 		this.pilotTourID = id;
@@ -107,25 +119,26 @@ public class Option {
 	}
 
 	@MapField(DatabaseField = BaseObject.IDField)
-	public int getId() {
+	public int getID() {
 		return id;
 	}
 
 	@MapField(DatabaseField = BaseObject.IDField)
-	public void setId(int id) {
+	public void setID(int id) {
 		this.id = id;
 	}
 
 	public Worker getWorker() {
-		if (worker != null && worker.getId() == getWorkerID())
+		if (worker != null && worker.getID() == getWorkerID())
 			return worker;
 		worker = WorkerManager.Instance().load(workerID);
 		return worker;
 	}
 
 	protected void clear() {
-		setId(BaseObject.EMPTY_ID);
+		setID(BaseObject.EMPTY_ID);
 		setWorkerID(BaseObject.EMPTY_ID);
+		setWorkID(BaseObject.EMPTY_ID);
 		setPilotTourID(BaseObject.EMPTY_ID);
 		setEmploymentID(BaseObject.EMPTY_ID);	
 		setServerPort(4448);		
@@ -136,6 +149,7 @@ public class Option {
 	public void clearSelected() {
 		prevWorkerID = BaseObject.EMPTY_ID;
 		workerID = BaseObject.EMPTY_ID;
+		workID = BaseObject.EMPTY_ID;
 		pilotTourID = BaseObject.EMPTY_ID;
 		employmentID = BaseObject.EMPTY_ID;
 	}

@@ -23,11 +23,11 @@ public class Address {
 	private int id;
 
 	@MapField(DatabaseField = BaseObject.IDField)
-	public int getId() {
+	public int getID() {
 		return id;}
 		
 	@MapField(DatabaseField = BaseObject.IDField)
-	public void setId(int id) {
+	public void setID(int id) {
 		this.id = id;
 	}
 	
@@ -96,7 +96,7 @@ public class Address {
 	}
 	
 	private void clear(){
-		setId(BaseObject.EMPTY_ID);
+		setID(BaseObject.EMPTY_ID);
 		setStreet("");
 		setCity("");
 		setPhone("");

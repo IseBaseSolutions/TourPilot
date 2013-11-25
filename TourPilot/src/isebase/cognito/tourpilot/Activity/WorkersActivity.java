@@ -97,7 +97,7 @@ public class WorkersActivity extends BaseActivity implements BaseDialogListener 
 	
 	private void saveSelectedWorkerID() {
 		Option.Instance().setPrevWorkerID(Option.Instance().getWorkerID());
-		Option.Instance().setWorkerID(selectedWorker.getId());
+		Option.Instance().setWorkerID(selectedWorker.getID());
 		Option.Instance().save();
 	}
 

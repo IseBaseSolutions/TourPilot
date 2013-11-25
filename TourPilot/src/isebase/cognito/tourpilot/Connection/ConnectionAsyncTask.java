@@ -15,6 +15,7 @@ import isebase.cognito.tourpilot.Data.Relative.RelativeManager;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
+import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import java.io.IOException;
@@ -346,8 +347,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		strMsg += "\0x1\0";
 		String strDone = "";
 		strDone += EmploymentManager.Instance().getDone();
-		//
-		// strDone += CUserWorks.Instance().GetDone();
+		strDone += WorkManager.Instance().getDone();
 		//
 		// if (User != null)
 		// strDone += CInformations.Instance().GetDone();

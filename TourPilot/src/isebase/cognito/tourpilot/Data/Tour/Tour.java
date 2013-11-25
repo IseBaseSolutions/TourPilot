@@ -31,7 +31,7 @@ public class Tour extends BaseObject {
 	public Tour(String strInitString) {
 		StringParser InitString = new StringParser(strInitString);
 		InitString.next(";");
-		setId(Integer.parseInt(InitString.next(";")));
+		setID(Integer.parseInt(InitString.next(";")));
 		setName(InitString.next(";"));
 		setIsCommonTour(Integer.parseInt(InitString.next("~")) == 1 
 				? true : false);
@@ -49,7 +49,7 @@ public class Tour extends BaseObject {
 	public String forServer() {
 		NCryptor ncryptor = new NCryptor();
 		String strValue = new String(ServerCommandParser.TOUR + ";");
-		strValue += getId() + ";";
+		strValue += getID() + ";";
 		strValue += ncryptor.LToNcode(getCheckSum());
 		return strValue;
 	}

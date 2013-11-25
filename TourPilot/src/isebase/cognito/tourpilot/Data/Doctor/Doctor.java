@@ -46,7 +46,7 @@ public class Doctor extends BaseObject implements IAddressable {
 		address = new Address();
 		StringParser parsingString = new StringParser(initString);
 		parsingString.next(";");
-		setId(Integer.parseInt(parsingString.next(";")));
+		setID(Integer.parseInt(parsingString.next(";")));
 		setSurname(parsingString.next(";"));
 		setName(parsingString.next(";"));
 		address.setStreet(parsingString.next(";"));
@@ -71,7 +71,7 @@ public class Doctor extends BaseObject implements IAddressable {
 	public String forServer() {
 		NCryptor ncryptor = new NCryptor();
 		String strValue = new String(ServerCommandParser.DOCTOR + ";");
-		strValue += ncryptor.LToNcode(getId()) + ";";
+		strValue += ncryptor.LToNcode(getID()) + ";";
 		strValue += ncryptor.LToNcode(getCheckSum());
 		return strValue;
 	}

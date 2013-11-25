@@ -56,7 +56,7 @@ public abstract class BaseObjectManager<T> {
 
 	public void delete(Class<T> item) {
 		try {
-			int id = (Integer) item.getMethod("getId").invoke(item);
+			int id = (Integer) item.getMethod("getID").invoke(item);
 			delete(id);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -178,7 +178,7 @@ public abstract class BaseObjectManager<T> {
 	public void save(T item) {
 		try {
 			beforeSave(item);
-			int id = (Integer) item.getClass().getMethod("getId").invoke(item);
+			int id = (Integer) item.getClass().getMethod("getID").invoke(item);
 			if (id == BaseObject.EMPTY_ID || load(id) == null) {
 				int itemID = (int) DataBaseWrapper
 						.Instance()
@@ -187,7 +187,7 @@ public abstract class BaseObjectManager<T> {
 								null,
 								id == BaseObject.EMPTY_ID ? getValues(item)
 										: getValuesWithID(item));
-				item.getClass().getMethod("setId", int.class)
+				item.getClass().getMethod("setID", int.class)
 						.invoke(item, (int) itemID);
 			} else {
 				DataBaseWrapper
@@ -469,10 +469,28 @@ public abstract class BaseObjectManager<T> {
 	}
 	
 	public void execSQL(String strSQL){
-		DataBaseWrapper.Instance().getReadableDatabase().execSQL(strSQL);
+		try {
+			DataBaseWrapper.Instance().getReadableDatabase().execSQL(strSQL);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void clearTable(){
 		DataBaseWrapper.Instance().getReadableDatabase().execSQL("DELETE FROM " + getRecTableName());
 	}
+	
+	public String getDone() {
+		String strDone = "";
+		List<T> elements = load();
+		for (T element : elements)
+			if (!((BaseObject)element).getWasSent())
+			{
+				strDone += ((BaseObject)element).getDone() + "\0";
+				((BaseObject)element).setWasSent(true);
+				save(element);
+			}
+		return strDone;	
+	}
+	
 }

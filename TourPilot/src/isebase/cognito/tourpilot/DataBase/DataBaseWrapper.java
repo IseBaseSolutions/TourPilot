@@ -11,6 +11,8 @@ import isebase.cognito.tourpilot.Data.Doctor.Doctor;
 import isebase.cognito.tourpilot.Data.Doctor.DoctorManager;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
+import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentInterval;
+import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentIntervalManager;
 import isebase.cognito.tourpilot.Data.Information.Information;
 import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
@@ -25,6 +27,8 @@ import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
+import isebase.cognito.tourpilot.Data.Work.Work;
+import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemark;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
@@ -126,7 +130,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	private static final String OPTIONS_TABLE_CREATE = 
 			"CREATE TABLE " + Option.TableName + "("
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ Option.WorkerIDField + " INTEGER, " 
+			+ Option.WorkerIDField + " INTEGER, "
+			+ Option.WorkIDField + " INTEGER, "
 			+ Option.PreviousWorkerIDField + " INTEGER, " 
 			+ Option.PilotTourIDField + " INTEGER, "
 			+ Option.EmploymentIDField + " INTEGER, "
@@ -257,7 +262,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ PilotTour.PlanDateField + " INTEGER, "
 			+ PilotTour.IsCommonTourField + " INTEGER "
 			+ ");";
-	
+
 	private static final String EMPLOYMENTS_TABLE_CREATE = 
 			"CREATE TABLE " + EmploymentManager.TableName + "(" 
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -269,7 +274,37 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Employment.PilotTourIDField + " INTEGER, "
 			+ Employment.DateField + " INTEGER, "
 			+ Employment.TourIDField + " INTEGER, "
-			+ Employment.IsDoneField + " INTEGER "
+			+ Employment.IsDoneField + " INTEGER, "
+			+ Employment.StartTimeField + " INTEGER, "
+			+ Employment.StopTimeField + " INTEGER "
+			+ ");";	
+	
+	private static final String WORKS_TABLE_CREATE = 
+			"CREATE TABLE " + WorkManager.TableName + "(" 
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+			+ BaseObject.NameField + " TEXT NOT NULL, " 
+			+ BaseObject.CheckSumField + " INTEGER, "
+			+ BaseObject.WasSentField + " INTEGER, "
+			+ BaseObject.IsServerTimeField + " INTEGER, "
+			+ Work.AdditionalWorkIDField + " INTEGER, "
+			+ Work.PilotTourIDField + " INTEGER, "
+			+ Work.StartTimeField + " INTEGER, "
+			+ Work.StopTimeField + " INTEGER, "
+			+ Work.ManualTimeField + " INTEGER, "
+			+ Work.IsDoneField + " INTEGER, "
+			+ Work.PatientIDsField + " INTEGER "
+			+ ");";	
+	
+	private static final String EMPLOYMENT_INTERVALS_TABLE_CREATE = 
+			"CREATE TABLE " + EmploymentIntervalManager.TableName + "(" 
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+			+ BaseObject.NameField + " TEXT NOT NULL, " 
+			+ BaseObject.CheckSumField + " INTEGER, "
+			+ BaseObject.WasSentField + " INTEGER, "
+			+ BaseObject.IsServerTimeField + " INTEGER, "
+			+ EmploymentInterval.EmploymentIDField + " INTEGER, "
+			+ EmploymentInterval.StartTimeField + " INTEGER, "
+			+ EmploymentInterval.StopTimeField + " INTEGER "
 			+ ");";	
 		
 	private static String[] createDataTables = new String[]{
@@ -288,7 +323,9 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		ADDITIONAL_TASKS_TABLE_CREATE,
 		ADDITIONAL_WORKS_TABLE_CREATE,
 		PILOTTOURS_TABLE_CREATE,
-		EMPLOYMENTS_TABLE_CREATE
+		EMPLOYMENTS_TABLE_CREATE,
+		WORKS_TABLE_CREATE,
+		EMPLOYMENT_INTERVALS_TABLE_CREATE
 	};
 		
 	private static String[] deleteDataTables = new String[]{		
@@ -307,7 +344,9 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		"DROP TABLE IF EXISTS " + AdditionalTaskManager.TableName,
 		"DROP TABLE IF EXISTS " + AdditionalWorkManager.TableName,
 		"DROP TABLE IF EXISTS " + PilotTourManager.TableName,
-		"DROP TABLE IF EXISTS " + EmploymentManager.TableName
+		"DROP TABLE IF EXISTS " + EmploymentManager.TableName,
+		"DROP TABLE IF EXISTS " + WorkManager.TableName,
+		"DROP TABLE IF EXISTS " + EmploymentIntervalManager.TableName
 	};
 			
 	private static String[] clearWorkerDependedDataTables = new String[]{
@@ -322,6 +361,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		"DELETE FROM " + RelativeManager.TableName,
 		"DELETE FROM " + PilotTourManager.TableName,
 		"DELETE FROM " + EmploymentManager.TableName,
+		"DELETE FROM " + WorkManager.TableName,
+		"DELETE FROM " + EmploymentIntervalManager.TableName,
 		"DELETE FROM " + UserRemarkManager.TableName
 	};
 	

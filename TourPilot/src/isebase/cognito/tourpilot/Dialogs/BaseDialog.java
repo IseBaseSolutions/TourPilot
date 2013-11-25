@@ -10,7 +10,7 @@ import android.support.v4.app.DialogFragment;
 public class BaseDialog extends DialogFragment{
 
 	private String title;
-	private BaseDialogListener listener;
+	protected BaseDialogListener listener;
 	
 	public BaseDialog(){}
 	
@@ -47,5 +47,4 @@ public class BaseDialog extends DialogFragment{
 					+ " must implement BaseDialogListener");
 		}
 	}
-	
 }

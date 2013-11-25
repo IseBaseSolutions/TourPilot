@@ -48,7 +48,7 @@ public class Worker extends BaseObject {
     public Worker(String strInitString, Date _actualDate) {
         StringParser initString = new StringParser(strInitString);
         initString.next(";");
-        setId(Integer.parseInt(initString.next(";")));
+        setID(Integer.parseInt(initString.next(";")));
         setName(initString.next(";"));
         setIsUseGPS(Integer.parseInt(initString.next("~")) == 1 ? true : false);
         setCheckSum(Long.parseLong(initString.next()));
@@ -65,7 +65,7 @@ public class Worker extends BaseObject {
     {
         NCryptor nCryptor = new NCryptor();
         String strValue = new String(ServerCommandParser.WORKER + ";");
-        strValue += nCryptor.LToNcode(getId()) + ";";
+        strValue += nCryptor.LToNcode(getID()) + ";";
         strValue += nCryptor.LToNcode(getCheckSum());
         return strValue;
     }
