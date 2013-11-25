@@ -38,6 +38,7 @@ public class ServerCommandParser {
 	public static final char TIME = '[';
 
 	public static final char WORKER = 'A';
+	public static final char USER_REMARK = 'O';
 	public static final char PATIENT_REMARK = 'B';
 	public static final char DIAGNOSE = 'D';
 	public static final char INFORMATION = 'I';
@@ -90,8 +91,7 @@ public class ServerCommandParser {
 				// TODO Check version
 				// CheckVersion(commandLine.substring(SERVER_CURRENT_VERSION.length()));
 			if (commandLine.indexOf(SERVER_VERSION_LINK) == 0)
-				strVerlink = commandLine.substring(SERVER_VERSION_LINK
-						.length());
+				strVerlink = commandLine.substring(SERVER_VERSION_LINK.length());
 			if (commandLine.indexOf(SERVER_SET_TIME_KEY) == 0)
 				// TODO Set time
 				// SetTime(commandLine.substring(SERVER_SET_TIME_KEY.length()));

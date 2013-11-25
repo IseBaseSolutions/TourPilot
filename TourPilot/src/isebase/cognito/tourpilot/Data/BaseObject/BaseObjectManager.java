@@ -40,7 +40,7 @@ public abstract class BaseObjectManager<T> {
 		DataBaseWrapper.Instance().close();
 	}
 
-	public void delete(int id) {
+	public void delete(long id) {
 		try {
 			DataBaseWrapper
 					.Instance()
@@ -96,7 +96,6 @@ public abstract class BaseObjectManager<T> {
 		} finally {
 			if (cursor != null)
 				cursor.close();
-			close();
 		}
 		return items;
 	}
@@ -110,11 +109,11 @@ public abstract class BaseObjectManager<T> {
 	}
 	
 	public List<T> loadAll(String whereField, String whereClouse){
-		return loadWhere(whereField, whereClouse, "",true);
+		return loadWhere(whereField, whereClouse, "", true);
 	}
 	
 	public List<T> load(String whereField, String whereClouse){
-		return loadWhere(whereField, whereClouse, "",false);
+		return loadWhere(whereField, whereClouse, "", false);
 	}
 		
 	private List<T> loadWhere(String whereField, String whereClouse,String orderBy, boolean withAll) {
@@ -140,7 +139,6 @@ public abstract class BaseObjectManager<T> {
 		} finally {
 			if (cursor != null)
 				cursor.close();
-			close();
 		}
 		return items;
 	}
@@ -164,7 +162,6 @@ public abstract class BaseObjectManager<T> {
 		} finally {
 			if (cursor != null)
 				cursor.close();
-			close();
 		}
 		return items;
 	}
@@ -185,7 +182,7 @@ public abstract class BaseObjectManager<T> {
 			if (id == BaseObject.EMPTY_ID || load(id) == null) {
 				int itemID = (int) DataBaseWrapper
 						.Instance()
-						.getReadableDatabase()
+						.getWritableDatabase()
 						.insert(getRecTableName(),
 								null,
 								id == BaseObject.EMPTY_ID ? getValues(item)
@@ -195,7 +192,7 @@ public abstract class BaseObjectManager<T> {
 			} else {
 				DataBaseWrapper
 						.Instance()
-						.getReadableDatabase()
+						.getWritableDatabase()
 						.update(getRecTableName(), getValues(item),
 								BaseObject.IDField + " = " + id, null);
 			}
@@ -203,7 +200,6 @@ public abstract class BaseObjectManager<T> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			close();
 		}
 	}
 
@@ -219,7 +215,7 @@ public abstract class BaseObjectManager<T> {
 		return items;
 	}
 
-	public T loadAll(int id) {
+	public T loadAll(long id) {
 		T item = load(id);
 		afterLoad(item);
 		return item;
@@ -255,12 +251,11 @@ public abstract class BaseObjectManager<T> {
 		} finally {
 			if (cursor != null)
 				cursor.close();
-			close();
 		}
 		return items;
 	}
 
-	public T load(int id) {
+	public T load(long id) {
 		Cursor cursor = null;
 		T item = null;
 		try {
@@ -279,13 +274,12 @@ public abstract class BaseObjectManager<T> {
 		} finally {
 			if (cursor != null)
 				cursor.close();
-			close();
 		}
 		return item;
 	}
 
-	private T parseObject(Cursor cursor) throws InstantiationException,
-			IllegalAccessException {
+	private T parseObject(Cursor cursor) 
+			throws InstantiationException, IllegalAccessException {
 		T item = getRecType().newInstance();
 		Method[] methods = item.getClass().getMethods();
 		for (Method method : methods) {
@@ -402,8 +396,7 @@ public abstract class BaseObjectManager<T> {
 	protected void addColumn(SQLiteDatabase db, String colName, String colType) {
 		Cursor tableInfo = null;
 		try {
-			tableInfo = db
-					.rawQuery(String.format("PRAGMA table_info(%1$s)",
+			tableInfo = db.rawQuery(String.format("PRAGMA table_info(%1$s)",
 							getRecTableName()), null);
 			tableInfo.moveToFirst();
 			boolean isColumnExists = false;
@@ -450,6 +443,31 @@ public abstract class BaseObjectManager<T> {
 		return strResult;
 	}
 	
+	public int getIntValue(String strSQL){
+		Cursor cursor = null;
+		int retVal = 0;
+		try {
+			cursor = DataBaseWrapper
+					.Instance()
+					.getReadableDatabase()
+					.rawQuery(strSQL, null);
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				retVal = cursor.getInt(0);
+				cursor.moveToNext();
+				break;
+			}
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+			ex.printStackTrace();
+		} finally {
+			if (cursor != null)
+				cursor.close();
+		}
+		
+		return retVal;
+	}
+	
 	public void execSQL(String strSQL){
 		DataBaseWrapper.Instance().getReadableDatabase().execSQL(strSQL);
 	}
@@ -457,5 +475,4 @@ public abstract class BaseObjectManager<T> {
 	public void clearTable(){
 		DataBaseWrapper.Instance().getReadableDatabase().execSQL("DELETE FROM " + getRecTableName());
 	}
-
 }

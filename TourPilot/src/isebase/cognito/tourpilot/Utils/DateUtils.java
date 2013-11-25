@@ -8,19 +8,20 @@ import java.util.Date;
 public class DateUtils {
 	
     public static int DayMillisec = 86400000;
+    
+    public static final Date EmptyDate = new Date(1975,1,1);    
 
-    public static final Date EmptyDate = new Date(1975,1,1);
     public static final SimpleDateFormat DateTimeformat = new SimpleDateFormat("dd.MM.yyyy/HH:mm:ss");
     public static final SimpleDateFormat HourMinutesFormat = new SimpleDateFormat("HH:mm");
     public static final SimpleDateFormat DateFormat = new SimpleDateFormat("dd.MM.yyyy");
-    public static final SimpleDateFormat WeekDateFormat = new SimpleDateFormat("EEE MM.dd");
+    public static final SimpleDateFormat WeekDateFormat = new SimpleDateFormat("EEE dd.MM");
     
     public static Date getDateOnly(Date date){
-    	return getDateOnly(date);
+    	return parseDateOnly(date);
     }
     
     public static Date getTodayDateOnly(){
-    	return getDateOnly(new Date());
+    	return parseDateOnly(new Date());
     }
     
     public static Date getTodayDateTime(){
@@ -54,10 +55,15 @@ public class DateUtils {
         return value.getTime() + (Calendar.getInstance().get(Calendar.ZONE_OFFSET)
         						+ Calendar.getInstance().get(Calendar.DST_OFFSET));
     }
-
-    public static String toString(Date data)
+    
+    public static String toDateTime(Date data)
     {
     	return DateTimeformat.format(data);
     }
     	
+    public static String formatDate(Date date, String format){
+    	SimpleDateFormat df = new SimpleDateFormat(format);
+    	return df.format(date);
+    }
+    
 }

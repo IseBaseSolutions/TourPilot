@@ -21,7 +21,7 @@ import android.widget.ListView;
 
 public class CatalogsActivity extends BaseActivity {
 
-	private List<Catalog> listCatalogs = new ArrayList<Catalog>();
+	private List<Catalog> catalogs = new ArrayList<Catalog>();
 	private Employment employment;
 	
 	@Override
@@ -43,13 +43,13 @@ public class CatalogsActivity extends BaseActivity {
 		employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
 		Patient patient = PatientManager.Instance().load(employment.getPatientID());
 		if(patient.getKK() != BaseObject.EMPTY_ID)
-			listCatalogs.add(new Catalog(eCatalogType.btyp_kk));
+			catalogs.add(new Catalog(eCatalogType.btyp_kk));
 		if(patient.getPK() != BaseObject.EMPTY_ID)
-			listCatalogs.add(new Catalog(eCatalogType.btyp_pk));
+			catalogs.add(new Catalog(eCatalogType.btyp_pk));
 		if(patient.getPR() != BaseObject.EMPTY_ID)
-			listCatalogs.add(new Catalog(eCatalogType.btyp_pr));
+			catalogs.add(new Catalog(eCatalogType.btyp_pr));
 		if(patient.getSA() != BaseObject.EMPTY_ID)
-			listCatalogs.add(new Catalog(eCatalogType.btyp_sa));
+			catalogs.add(new Catalog(eCatalogType.btyp_sa));
 	}
 	
 	@Override
@@ -63,17 +63,20 @@ public class CatalogsActivity extends BaseActivity {
 	
 	private void fillUp(){
 		ListView lvAddTasksCategories = (ListView)findViewById(R.id.lvAddTasksCategory);
-		ArrayAdapter<Catalog> adapter = new ArrayAdapter<Catalog>(this, android.R.layout.simple_list_item_1, listCatalogs);
+		ArrayAdapter<Catalog> adapter = new ArrayAdapter<Catalog>(this, android.R.layout.simple_list_item_1, catalogs);
 		lvAddTasksCategories.setAdapter(adapter);		
-		lvAddTasksCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-				Catalog catalog = listCatalogs.get(position);
-				Intent addTasksActivity = new Intent(getApplicationContext(), AdditionalTasksActivity.class);
-				addTasksActivity.putExtra("catalog_type", catalog.getCatalogType().ordinal());
-				startActivity(addTasksActivity);
-			}
-		});
+		lvAddTasksCategories.setOnItemClickListener(catalogOnItemClickListener);
 	}
+	
+	private AdapterView.OnItemClickListener catalogOnItemClickListener 
+			= new AdapterView.OnItemClickListener() {
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+			Catalog catalog = catalogs.get(position);
+			Intent addTasksActivity = new Intent(getApplicationContext(), AdditionalTasksActivity.class);
+			addTasksActivity.putExtra("catalog_type", catalog.getCatalogType().ordinal());
+			startActivity(addTasksActivity);
+		}
+	};
+	
 }

@@ -2,7 +2,6 @@ package isebase.cognito.tourpilot.Activity.AdditionalTasks;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivity;
-import isebase.cognito.tourpilot.Activity.TasksActivity;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Data.AdditionalTask.Catalog;
@@ -16,7 +15,6 @@ import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Templates.AdditionalTaskAdapter;
 import java.util.List;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -31,7 +29,6 @@ public class AdditionalTasksActivity extends BaseActivity {
 	
 	private List<AdditionalTask> additionalTasks;
 	private Catalog catalog;
-	private Patient patient;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +36,10 @@ public class AdditionalTasksActivity extends BaseActivity {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_add_tasks);
 			init();
+			initFilter();
 			reloadData();
 			fillUp();
 			fillUpTitle();
-			initFilter();
 		}
 		catch(Exception ex){
 			ex.printStackTrace();
@@ -80,7 +77,7 @@ public class AdditionalTasksActivity extends BaseActivity {
 		catalog = new Catalog(eCatalogType.values()[catalogType]);	
 		
 		Employment empl = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
-		patient = PatientManager.Instance().load(empl.getPatientID());
+		Patient patient = PatientManager.Instance().load(empl.getPatientID());
 		
 		switch (catalog.getCatalogType()) {
 			case btyp_kk:
@@ -98,19 +95,18 @@ public class AdditionalTasksActivity extends BaseActivity {
 		}		
 	}
 
-	private void fillUpTitle(){
-		setTitle(catalog.getName());
-	}
-	
 	private void fillUp(){
 		adapter = new AdditionalTaskAdapter(this
 				,R.layout.row_additional_task_template, additionalTasks);
 		lvAddTasks.setAdapter(adapter);
 	}
+	
+	private void fillUpTitle(){
+		setTitle(catalog.getName());
+	}
 
 	public void onSaveAddTasks(View view) {
 		TaskManager.Instance().createTasks(adapter.getSelectedTasks());
-		Intent tasksActivity = new Intent(getApplicationContext(), TasksActivity.class);
-		startActivity(tasksActivity);
+		startTasksActivity();
 	}
 }

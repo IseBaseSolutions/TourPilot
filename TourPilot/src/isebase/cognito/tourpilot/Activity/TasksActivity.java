@@ -85,8 +85,8 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 	
 	private void checkAllIsDone(){
 		if(isAllDone()){
-			btEndTask.setEnabled(false);
 			btStartTask.setEnabled(false);
+			btEndTask.setEnabled(false);
 		}
 	}
 	
@@ -168,9 +168,9 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 		saveEmployment();
 		clearEmployment();
 		if (Option.Instance().getIsAuto())
-			switchToSyncActivity();
+			startSyncActivity();
 		else
-			switchToPatientsActivity();
+			startPatientsActivity();
 	}
 	
 	@Override
@@ -196,12 +196,14 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 		else
 		{
 			clearEmployment();
-			switchToPatientsActivity();
+			startPatientsActivity();
 		}
 	}
 				
 	public void onTaskClick(View view) {
 		Task task = (Task) view.getTag();
+		if(task.getQualityResult().isEmpty())
+			return;
 		DialogFragment dialog = null;
 		switch(task.getQuality()){
 			case AdditionalTask.WEIGHT:
@@ -314,16 +316,6 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 		fillUpTasks();
 	}
 	
-	private void switchToPatientsActivity() {
-		Intent patientsActivity = new Intent(getApplicationContext(), PatientsActivity.class);
-		startActivity(patientsActivity);
-	}
-	
-	private void switchToSyncActivity() {
-		Intent syncActivity = new Intent(getApplicationContext(), SynchronizationActivity.class);
-		startActivity(syncActivity);
-	}
-	
 	private void saveEmployment() {
 		Employment empl = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
 		empl.setIsDone(true);
@@ -351,13 +343,13 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 			saveEmployment();
 			clearEmployment();
 			if (Option.Instance().getIsAuto())
-				switchToSyncActivity();
+				startSyncActivity();
 			else
-				switchToPatientsActivity();
+				startPatientsActivity();
 			return true;
 		case R.id.notes:
 			Intent notesActivity = new Intent(getApplicationContext(),
-					NotesActivity.class);
+					UserRemarksActivity.class);
 			startActivity(notesActivity);
 			return true;
 		case R.id.info:
@@ -366,9 +358,9 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 			startActivity(infoActivity);
 			return true;
 		case R.id.manualInput:
-			Intent manualInputActivity = new Intent(getApplicationContext(),
-					ManualInputActivity.class);
-			startActivity(manualInputActivity);
+			//Intent manualInputActivity = new Intent(getApplicationContext(),
+			//		ManualInputActivity.class);
+			//startActivity(manualInputActivity);
 			return true;
 		case R.id.address:
 			Intent addressActivity = new Intent(getApplicationContext(),
@@ -397,6 +389,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 			return super.onOptionsItemSelected(item);
 		}
 	}
+	
 	private void showDiagnose(){
 		Diagnose diagnose = DiagnoseManager.Instance().load(employment.getPatientID());
 		InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_diagnose),diagnose.getName());
@@ -416,7 +409,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 			checkAllTasks(eTaskState.Empty, DateUtils.EmptyDate);
 			removeAdditionalTasks();
 			clearEmployment();
-			switchToPatientsActivity();
+			startPatientsActivity();
 		}
 		else{
 			StandardTaskDialog taskDialog = (StandardTaskDialog)dialog;
@@ -431,6 +424,5 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 	public void onDialogNegativeClick(DialogFragment dialog) {
 		return;
 	}
-
 
 }

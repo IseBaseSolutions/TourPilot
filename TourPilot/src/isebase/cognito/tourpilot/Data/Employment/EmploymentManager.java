@@ -91,6 +91,4 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
     		}
     	return strEmpls;
     }
-
-
 }
