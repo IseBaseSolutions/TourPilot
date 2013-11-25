@@ -1,33 +1,42 @@
 package isebase.cognito.tourpilot.Data.Employment;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
+import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.Data.Task.Task;
-import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
+import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.DataBase.MapField;
+import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
+import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
-public class Employment extends BaseObject {
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+public class Employment extends BaseObject implements IJob {
 	
 	public static final String PatientIDField = "patient_id";
 	public static final String PilotTourIDField = "pilot_tour_id";
 	public static final String TourIDField = "tour_id"; 
 	public static final String DateField = "date";
 	public static final String IsDoneField = "is_done";
+	public static final String StartTimeField = "start_time";
+	public static final String StopTimeField = "stop_time";
 	
 	private boolean isDone;
 	
 	private int patientID;	
 	private int pilotTourID;
+	
 	private Date date;
+	private Date startTime;
+	private Date stopTime;
+
 	private int tourID;
 		
 	private List<Task> tasks =  new ArrayList<Task>();
@@ -84,6 +93,27 @@ public class Employment extends BaseObject {
 	public void setPilotTourID(int pilotTourID) {
 		this.pilotTourID = pilotTourID;
 	}
+	
+	@MapField(DatabaseField = StartTimeField)
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	@MapField(DatabaseField = StartTimeField)
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	@MapField(DatabaseField = StopTimeField)
+	public Date getStopTime() {
+		return stopTime;
+	}
+
+	@MapField(DatabaseField = StopTimeField)
+	public void setStopTime(Date stopTime) {
+		this.stopTime = stopTime;
+	}
+
 
 	public List<Task> getTasks() {
 		return tasks;
@@ -107,7 +137,7 @@ public class Employment extends BaseObject {
 
 	public void setPilotTour(PilotTour pilotTour) {
 		this.pilotTour = pilotTour;
-	}
+	}	
 	
 	public Employment() {
 		
@@ -119,12 +149,11 @@ public class Employment extends BaseObject {
 	}
 
 	public String getTime() {
-		 return DateUtils.HourMinutesFormat.format(getDate());
+		return DateUtils.HourMinutesFormat.format(startTime());
 	}
 		
 	@Override
 	public String forServer() {
-		// TODO Auto-generated method stub
 		return "";
 	}
 	
@@ -158,5 +187,67 @@ public class Employment extends BaseObject {
         TaskManager.Instance().save(tasks);
         return strValue;
     }
+    
+    public Task getFirstTask() {
+    	if (tasks.size() == 0)
+    		return null;
+    	if (tasks.get(0).getLeistungs().contains("Anfang"))
+    		return tasks.get(0);
+    	for (Task task : tasks)
+    		if (task.getLeistungs().contains("Anfang"))
+    			return task;
+    	return null;
+    }
+    
+    public Task getLastTask() {
+    	if (tasks.size() == 0)
+    		return null;
+    	if (tasks.get(tasks.size()-1).getLeistungs().contains("Ende"))
+    		return tasks.get(tasks.size()-1);
+    	for (Task task : tasks)
+    		if (task.getLeistungs().contains("Ende"))
+    			return task;
+    	return null;
+    }
+
+	@Override
+	public String timeInterval() {
+		return String.format("%s-%s", (getStartTime().equals(DateUtils.EmptyDate) 
+				? StaticResources.getBaseContext().getString(R.string.empty_time) 
+						: DateUtils.HourMinutesFormat.format(getStartTime())), 
+				(getStopTime().equals(DateUtils.EmptyDate) 
+						? StaticResources.getBaseContext().getString(R.string.empty_time)
+								: DateUtils.HourMinutesFormat.format(getStopTime())));
+	}
+
+	@Override
+	public boolean isDone() {
+		return getIsDone();
+	}
+
+	@Override
+	public String text() {
+		return getName();
+	}
+
+	@Override
+	public String time() {
+		return getTime();
+	}
+	
+	@Override
+	public boolean wasSent() {
+		return getWasSent();
+	}
+
+	@Override
+	public Date startTime() {
+		return getStartTime().equals(DateUtils.EmptyDate) ? getDate() : getStartTime();
+	}
+
+	@Override
+	public Date stopTime() {
+		return getStopTime().equals(DateUtils.EmptyDate) ? DateUtils.EmptyDate : getStopTime();
+	}
 	
 }

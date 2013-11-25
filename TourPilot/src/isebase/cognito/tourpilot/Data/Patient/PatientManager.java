@@ -3,6 +3,8 @@ package isebase.cognito.tourpilot.Data.Patient;
 import isebase.cognito.tourpilot.Data.Address.Address;
 import isebase.cognito.tourpilot.Data.Address.AddressManager;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
+import isebase.cognito.tourpilot.Data.Employment.Employment;
+import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import java.util.List;
 
 import android.database.sqlite.SQLiteDatabase;
@@ -49,7 +51,7 @@ public class PatientManager extends BaseObjectManager<Patient> {
 		List<Address> addresses = AddressManager.Instance().loadByIDs(addressIDs);
 		for(Patient pat : items){
 			for(Address address : addresses){
-				if(address.getId() == pat.getAddressID()){
+				if(address.getID() == pat.getAddressID()){
 					pat.address = address;
 					break;
 				}
@@ -60,7 +62,19 @@ public class PatientManager extends BaseObjectManager<Patient> {
 	@Override
 	public void beforeSave(Patient item) {
 		AddressManager.Instance().save(item.address);
-		item.setAddressID(item.address.getId());
+		item.setAddressID(item.address.getID());
+	}
+	
+	public List<Patient> loadByPilotTourID(int tourPilotID) {
+		String strSQL = String.format("SELECT t1.* " +
+				"FROM %1$s as t1 " +
+				"INNER JOIN %2$s as t2 ON t1._id = t2.patient_id " +
+				"WHERE t2.%3$s = %4$d GROUP BY t2._id "
+				, PatientManager.TableName
+				, EmploymentManager.TableName
+				, Employment.PilotTourIDField
+				, tourPilotID);
+		return load(strSQL);
 	}
 	
 }

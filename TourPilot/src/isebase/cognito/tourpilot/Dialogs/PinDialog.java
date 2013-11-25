@@ -2,22 +2,19 @@ package isebase.cognito.tourpilot.Dialogs;
 
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class PinDialog extends DialogFragment {
+public class PinDialog extends BaseDialog {
 
 	private EditText etPin;
-	private BaseDialogListener mListener;
 	private Worker worker;
 	public void setWorker(Worker worker){
 		this.worker = worker;
@@ -47,7 +44,7 @@ public class PinDialog extends DialogFragment {
 		adb.setNegativeButton(isebase.cognito.tourpilot.R.string.cancel,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						mListener.onDialogNegativeClick(PinDialog.this);
+						listener.onDialogNegativeClick(PinDialog.this);
 					}
 				});
 		return adb.create();
@@ -68,7 +65,7 @@ public class PinDialog extends DialogFragment {
                 {
 					if(worker.checkPIN(getPin())){
 						dismiss();
-						mListener.onDialogPositiveClick(PinDialog.this);
+						listener.onDialogPositiveClick(PinDialog.this);
 					}	                   
 					else{
 						etPin.setText("");
@@ -78,15 +75,5 @@ public class PinDialog extends DialogFragment {
             });
 	    }
 	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		try {
-			mListener = (BaseDialogListener) activity;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement BaseDialogListener");
-		}
-	}
+	
 }

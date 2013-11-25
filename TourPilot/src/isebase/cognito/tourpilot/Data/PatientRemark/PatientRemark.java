@@ -14,7 +14,7 @@ public class PatientRemark extends BaseObject {
 	public PatientRemark(String initString) {
 		StringParser parsingString = new StringParser(initString);
 		parsingString.next(";");
-		setId(Integer.parseInt(parsingString.next(";")));
+		setID(Integer.parseInt(parsingString.next(";")));
 		setName(parsingString.next("~"));
 		setCheckSum(Long.parseLong(parsingString.next()));
 	}
@@ -23,7 +23,7 @@ public class PatientRemark extends BaseObject {
 	public String forServer() {
 		NCryptor ncryptor = new NCryptor();
 		String strValue = new String(ServerCommandParser.PATIENT_REMARK + ";");
-		strValue += ncryptor.LToNcode(getId()) + ";";
+		strValue += ncryptor.LToNcode(getID()) + ";";
 		strValue += ncryptor.LToNcode(getCheckSum());
 		return strValue;
 	}

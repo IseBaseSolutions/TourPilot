@@ -240,7 +240,7 @@ public class Task extends BaseObject {
 
 	public Task(AdditionalTask additionalTask){
 		clear();
-		setAditionalTaskID(additionalTask.getId());
+		setAditionalTaskID(additionalTask.getID());
 		setIsAdditionalTask(true);
 		setName(additionalTask.getName());
 		setPlanDate(new Date());
@@ -254,14 +254,14 @@ public class Task extends BaseObject {
 		setQuality(additionalTask.getQuality());
 		setQualityResult("");
 		SimpleDateFormat ddMMyyyyFormat = new SimpleDateFormat("ddMMyyyy");
-		String lstStr = TaskManager.Instance().getFirstSymbol(employment.getId()) + "";
+		String lstStr = TaskManager.Instance().getFirstSymbol(employment.getID()) + "";
 		lstStr += additionalTask.getCatalogType();
 		lstStr += "Z";
 		if ( additionalTask.getCatalogType() < 10 ) lstStr += "0";
 		lstStr += additionalTask.getCatalogType();
-        if ( additionalTask.getId() < 100 ) lstStr += "0";
-        if ( additionalTask.getId() < 10 ) lstStr += "0";
-        lstStr += additionalTask.getId();
+        if ( additionalTask.getID() < 100 ) lstStr += "0";
+        if ( additionalTask.getID() < 10 ) lstStr += "0";
+        lstStr += additionalTask.getID();
         lstStr += ddMMyyyyFormat.format(getPlanDate());
 		setLeistungs(lstStr);
 	}
@@ -342,7 +342,7 @@ public class Task extends BaseObject {
 		if (getWasSent())
 			return new String();
 		String strValue = new String(ServerCommandParser.TASK + ";");
-		strValue += getId() + ";";
+		strValue += getID() + ";";
 		strValue += getCheckSum();
 		return strValue;
 	}

@@ -114,4 +114,16 @@
     <string name="err_no_phone">no phone</string>
     <string name="err_no_address">no address</string>
     
+ <!-- Manual input -->    
+    <string name="manual_input">Manual input</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="empty_time">00:00</string>
+    <string name="start_time">Start time:</string>
+    <string name="stop_time">Stop time:</string>
+    <string name="started_at">Started at</string>    
+    <string name="no_any_patient">There is no any selected patient</string>
+    <string name="additional_work">Additional work</string>   
+    
+
 </resources>

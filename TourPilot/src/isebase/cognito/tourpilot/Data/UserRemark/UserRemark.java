@@ -51,7 +51,7 @@ public class UserRemark extends BaseObject {
     		, boolean chkContact, boolean chkMed, boolean chkVisit
             , boolean chkOther, String strRemark)
     {
-        setId(workerID);
+        setID(workerID);
         setPatientID(patientID);
         checkboxes = 0;
         if (chkContact) 
@@ -69,7 +69,7 @@ public class UserRemark extends BaseObject {
     public UserRemark(String strInitString) {
         StringParser initString = new StringParser(strInitString);
         initString.next(";");
-        setId(Integer.parseInt(initString.next(";")));
+        setID(Integer.parseInt(initString.next(";")));
         setPatientID(Integer.parseInt(initString.next(";")));
         setDate(new Date(Long.parseLong(initString.next(";"))));
         setCheckboxes(Integer.parseInt(initString.next(";")));
@@ -80,7 +80,7 @@ public class UserRemark extends BaseObject {
     
     public String toString(){
         String strValue = new String("O;");
-        strValue += getId() + ";";
+        strValue += getID() + ";";
         strValue += getPatientID() + ";";
         strValue += String.valueOf(DateUtils.getLocalTime(getDate())) + ";";
         strValue += getCheckboxes() + ";";
@@ -94,7 +94,7 @@ public class UserRemark extends BaseObject {
     {
         //O;358;4926;2008-08-19 22:14:59;0;ferting
         String strValue = new String("O;");
-        strValue += getId() + ";";
+        strValue += getID() + ";";
         strValue += getPatientID() + ";";
         strValue += DateUtils.getLocalTime(getDate()) + ";";
         strValue += getCheckboxes() + ";";

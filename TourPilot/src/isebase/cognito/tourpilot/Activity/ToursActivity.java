@@ -35,7 +35,7 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 			setContentView(R.layout.activity_tours);
 			reloadData();		
 			fillUpTitle();
-			initListTours();
+			fillUp();
 			loadTourInfos(false);
 		}catch(Exception ex){
 			ex.printStackTrace();
@@ -74,7 +74,7 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 		return true;
 	}
 
-	public void initListTours() {
+	public void fillUp() {
 		ListView listView = (ListView) findViewById(R.id.lvTours);
 		ArrayAdapter<PilotTour> adapter = new ArrayAdapter<PilotTour>(this,
 				android.R.layout.simple_list_item_1, pilotTours);
@@ -119,7 +119,7 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	}
 	
 	private void saveSelectedTour(PilotTour pilotTour) {
-		Option.Instance().setPilotTourID(pilotTour.getId());
+		Option.Instance().setPilotTourID(pilotTour.getID());
 		Option.Instance().save();
 	}
 

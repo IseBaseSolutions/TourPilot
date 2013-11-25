@@ -148,7 +148,9 @@ public class OptionsActivity extends BaseActivity {
 	}
 	
 	private void switchToLastActivity() {
-		if (Option.Instance().getEmploymentID() != -1)
+		if (Option.Instance().getWorkID() != -1)
+			startAdditionalWorksActivity();
+		else if (Option.Instance().getEmploymentID() != -1)
 			startTasksActivity();
 		else if (Option.Instance().getPilotTourID() != -1)
 			startPatientsActivity();

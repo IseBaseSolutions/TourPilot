@@ -48,7 +48,7 @@ public class RelativeManager extends BaseObjectManager<Relative>{
 		List<Address> addresses = AddressManager.Instance().loadByIDs(addressIDs);
 		for(Relative relative : items){
 			for(Address address : addresses){
-				if(address.getId() == relative.getAddressID()){
+				if(address.getID() == relative.getAddressID()){
 					relative.address = address;
 					break;
 				}
@@ -59,6 +59,6 @@ public class RelativeManager extends BaseObjectManager<Relative>{
 	@Override
 	public void beforeSave(Relative item) {
 		AddressManager.Instance().save(item.address);
-		item.setAddressID(item.address.getId());
+		item.setAddressID(item.address.getID());
 	}
 }
