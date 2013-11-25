@@ -1,7 +1,9 @@
 package isebase.cognito.tourpilot.Data.Address;
 
+import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.DataBase.MapField;
+import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
 public class Address {
 
@@ -103,4 +105,40 @@ public class Address {
 		setZip("");
 	}
 	
+	public String getRealPhone()
+	{
+		return getOnlyNumbers(phone);
+	}
+	
+	public String getRealPrivatePhone()
+	{
+		return getOnlyNumbers(privatePhone);
+	}
+	
+	public String getRealMobilePhone()
+	{
+		return getOnlyNumbers(mobilePhone);
+	}
+	
+	private String getOnlyNumbers(String val){
+		String retVal = "";
+		for(char c : val.toCharArray())
+			if(Character.isDigit(c))
+				retVal += c;
+		return retVal;
+	}
+	
+	public String getAddressData()
+	{
+		String address = "";
+		if(getStreet().length() > 0)
+			address += getStreet();
+		if(getZip().length() > 0)
+			address += ", " + getZip();
+		if(getCity().length() > 0)
+			address += ", " + getCity();
+		if(address.length() == 0 )
+			address = StaticResources.getBaseContext().getString(R.string.err_no_address);
+		return address;
+	}
 }

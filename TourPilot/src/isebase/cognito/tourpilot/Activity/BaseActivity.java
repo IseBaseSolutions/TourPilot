@@ -5,7 +5,6 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
@@ -18,12 +17,10 @@ public class BaseActivity extends FragmentActivity{
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		
+		super.onCreate(savedInstanceState);		
 		if(!isMainActivity())
 			versionFragmentDialog = new InfoBaseDialog(
-					getString(R.string.program_info), 
+					getString(R.string.menu_program_info), 
 					String.format("%s %s\n%s %s"
 							, getString(R.string.program_version)
 							, Option.Instance().getVersion()
@@ -38,6 +35,7 @@ public class BaseActivity extends FragmentActivity{
 	
 	protected void criticalClose(){
 		Option.Instance().clearSelected();
+		Option.Instance().save();
 		Intent optionActivity =  new Intent(getApplicationContext(), OptionsActivity.class);
 		startActivity(optionActivity);
 	}
@@ -60,5 +58,41 @@ public class BaseActivity extends FragmentActivity{
 			}
 	}
 
-    
+	protected void startWorkersActivity() {
+		Intent workersActivity = new Intent(getApplicationContext(),
+				WorkersActivity.class);
+		startActivity(workersActivity);
+	}
+
+	protected void startPatientsActivity() {
+		Intent patientsActivity = new Intent(getApplicationContext(),
+				PatientsActivity.class);
+		startActivity(patientsActivity);
+	}
+
+	protected void startSyncActivity() {
+		Intent synchActivity = new Intent(getApplicationContext(),
+				SynchronizationActivity.class);
+		startActivity(synchActivity);
+	}
+	
+	protected void startToursActivity() {
+		Intent toursActivity = new Intent(getApplicationContext(), ToursActivity.class);
+		startActivity(toursActivity);
+	}
+	
+	protected void startTasksActivity() {
+		Intent tasksActivity = new Intent(getApplicationContext(), TasksActivity.class);
+		startActivity(tasksActivity);
+	}
+	
+	protected void startAdditionalWorksActivity() {
+		Intent additionalWorksActivity = new Intent(getApplicationContext(), AdditionalWorksActivity.class);
+		startActivity(additionalWorksActivity);
+	}
+
+	protected void startOptionsActivity() {
+		Intent optionsActivity = new Intent(getApplicationContext(), OptionsActivity.class);
+		startActivity(optionsActivity);
+	}
 }

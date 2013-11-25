@@ -2,23 +2,32 @@ package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.Information.Information;
+import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
+import isebase.cognito.tourpilot.Dialogs.BaseDialog;
+import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
+import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
+import isebase.cognito.tourpilot.Utils.DateUtils;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class ToursActivity extends BaseActivity {
+public class ToursActivity extends BaseActivity implements BaseDialogListener{
 
-	List<PilotTour> pilotTours = new ArrayList<PilotTour>();
-
+	private List<PilotTour> pilotTours = new ArrayList<PilotTour>();
+	private List<Information> infos = new ArrayList<Information>();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		try{
@@ -27,21 +36,42 @@ public class ToursActivity extends BaseActivity {
 			reloadData();		
 			fillUpTitle();
 			fillUp();
+			loadTourInfos(false);
 		}catch(Exception ex){
 			ex.printStackTrace();
 			criticalClose();
 		}
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// getMenuInflater().inflate(R.menu.options_menu, menu);
+		getMenuInflater().inflate(R.menu.tour_info, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		switch(item.getItemId()){
+		case R.id.tour_info:
+			loadTourInfos(true);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
 	public void onBackPressed() {
+		showDialogLogout();
 		logOut();
+	}
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu){
+		if(infos.size() == 0){
+			MenuItem item = menu.findItem(R.id.tour_info);
+			item.setEnabled(false);
+		}
+		return true;
 	}
 
 	public void fillUp() {
@@ -62,31 +92,22 @@ public class ToursActivity extends BaseActivity {
 	}
 
 	public void btlogOutClick(View view) {
-		logOut();
+		showDialogLogout();
 	}
 
 	public void btStartSyncClick(View view) {
 		startSyncActivity();
 	}
 
+	private void showDialogLogout(){
+		BaseDialog dialog = new BaseDialog(getString(R.string.dialog_proof_logout));
+		dialog.show(getSupportFragmentManager(), "dialogBack");
+		getSupportFragmentManager().executePendingTransactions();
+	}
+	
 	private void logOut() {
 		clearPersonalOptions();
 		startWorkersActivity();
-	}
-
-	private void startWorkersActivity() {
-		Intent workersActivity = new Intent(getApplicationContext(), WorkersActivity.class);
-		startActivity(workersActivity);
-	}
-
-	private void startPatientsActivity() {
-		Intent patientsActivity = new Intent(getApplicationContext(), PatientsActivity.class);
-		startActivity(patientsActivity);
-	}
-
-	private void startSyncActivity() {
-		Intent synchActivity = new Intent(getApplicationContext(), SynchronizationActivity.class);
-		startActivity(synchActivity);
 	}
 
 	private void fillUpTitle() {
@@ -108,4 +129,33 @@ public class ToursActivity extends BaseActivity {
 		Option.Instance().save();
 	}
 
+	@Override
+	public void onDialogPositiveClick(DialogFragment dialog) {
+		logOut();
+	}
+
+	@Override
+	public void onDialogNegativeClick(DialogFragment dialog) {
+	}
+
+	private void loadTourInfos(boolean is_from_menu){
+		infos = InformationManager.Instance().load(Information.EmploymentCodeField, BaseObject.EMPTY_ID +"");
+		String strInfos = "";
+		
+		Date today = new Date();
+		for(Information info : infos){
+			if((DateUtils.getDateOnly(today).getTime() != DateUtils.getDateOnly(info.getReadTime()).getTime()) || is_from_menu)
+				if((today.getTime() >= info.getFromDate().getTime()) && (today.getTime() <= info.getTillDate().getTime())){
+					if(strInfos != "" )
+						strInfos += "\n";
+					strInfos += info.getName();
+					info.setReadTime(today);
+				}
+		}
+		if(strInfos.length() > 0){
+			InformationManager.Instance().save(infos);
+			InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_diagnose),strInfos);
+			dialog.show(getSupportFragmentManager(), "");
+		}
+	}
 }

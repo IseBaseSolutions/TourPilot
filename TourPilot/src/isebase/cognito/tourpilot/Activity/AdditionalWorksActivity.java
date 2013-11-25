@@ -10,6 +10,7 @@ import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.Work.Work;
 import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
+import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.PatientsDialog;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
@@ -30,7 +31,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class AdditionalWorksActivity extends BaseActivity implements BaseDialog.ListenerDialog {
+public class AdditionalWorksActivity extends BaseActivity implements BaseDialogListener {
 
 	private DialogFragment addWorkInputDialog;
 	private DialogFragment stopDialog;
@@ -57,8 +58,7 @@ public class AdditionalWorksActivity extends BaseActivity implements BaseDialog.
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		//getMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 
@@ -94,11 +94,6 @@ public class AdditionalWorksActivity extends BaseActivity implements BaseDialog.
 		Intent manualInputActivity = new Intent(getApplicationContext(), ManualInputActivity.class);
 		manualInputActivity.putExtra("addWorkID", addWork.getID());
 		startActivity(manualInputActivity);
-	}
-	
-	private void startPatientsActivity() {
-		Intent patientsActivity = new Intent(StaticResources.getBaseContext().getApplicationContext(), PatientsActivity.class);
-		startActivity(patientsActivity);
 	}
 	
 	private void initDialogs() {

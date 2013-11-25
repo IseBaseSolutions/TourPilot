@@ -1,55 +1,74 @@
 package isebase.cognito.tourpilot.Activity;
 
-import java.util.ArrayList;
 import java.util.List;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Doctor.Doctor;
+import isebase.cognito.tourpilot.Data.Doctor.DoctorManager;
+import isebase.cognito.tourpilot.Data.Employment.Employment;
+import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
+import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Templates.AddressAdapter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.content.Intent;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ListView;
 
 public class DoctorsActivity extends BaseActivity {
 
-	List<Doctor> listDoctors = new ArrayList<Doctor>();
-	AddressAdapter adapter;
+	private List<Doctor> addressable;
+	private Employment employment;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_doctors);
-		InitListDoctor(listDoctors.size());
-		InitForm();
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.doctors, menu);
-		return true;
-	}
-	private void InitListDoctor(int iTableSize){
-		if(iTableSize > 0)
-			return;
-		for(int i = 0;i < 20;i++){
-			Doctor doctor = new Doctor();
-			doctor.address.setPhone("87654321" + i);
-			doctor.setName("DOCTOR #" + i);
-			listDoctors.add(doctor);
+		try{
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_doctors);
+			reloadData();
+			fillUp();
+			fillUpTitle();
+		}
+		catch(Exception ex){
+			ex.printStackTrace();
+			criticalClose();
 		}
 	}
-	private void InitForm(){
-		adapter = new AddressAdapter(this, R.layout.row_address_template,listDoctors);
+
+	private void fillUp(){
+		AddressAdapter<Doctor> adapter = new AddressAdapter<Doctor>(this
+				, R.layout.row_address_template, addressable);
 		ListView doctorsListView = (ListView) findViewById(R.id.lvListDoctors);
 		doctorsListView.setAdapter(adapter);
 	}
-	public void onCallToDoctor(View view){
-		
+	
+	public void reloadData() {
+		employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
+		addressable = DoctorManager.Instance().loadAllByIDs(employment.getPatient().getStrDoctorsIDs());
+	}
+
+	private void fillUpTitle(){
+		setTitle(getString(R.string.menu_doctors) + ", " + employment.getName());
+	}
+	
+	public void onCallPhone(View view) {		
 		Doctor doctor = (Doctor) view.getTag();
 		Intent callIntent = new Intent(Intent.ACTION_CALL);
-		callIntent.setData(Uri.parse("tel:" + doctor.address.getPhone()));
+		callIntent.setData(Uri.parse("tel:" + doctor.address.getRealPhone()));
 		startActivity(callIntent);
 	}
+	
+	public void onCallPrivatePhone(View view){
+		Doctor doctor = (Doctor) view.getTag();
+		Intent callIntent = new Intent(Intent.ACTION_CALL);
+		callIntent.setData(Uri.parse("tel:" + doctor.address.getRealPrivatePhone()));
+		startActivity(callIntent);
+	}
+	
+	public void onCallMobilePhone(View view){
+		Doctor doctor = (Doctor) view.getTag();
+		Intent callIntent = new Intent(Intent.ACTION_CALL);
+		callIntent.setData(Uri.parse("tel:" + doctor.address.getRealMobilePhone()));
+		startActivity(callIntent);
+	}
+
 }

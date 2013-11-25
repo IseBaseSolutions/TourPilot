@@ -8,14 +8,14 @@ import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
 
 public class ConnectionStatus {
 	
-	public static final int InitState = -1;
-	public static final int Connection = 0;
-	public static final int Invitation = 1;
-	public static final int DateSycnhronizing = 2;
-	public static final int SendData = 3;
-	public static final int CompareCkeckSums = 4;
-	public static final int ParseRecievedData = 5;
-	public static final int CloseConnection = 6;
+	public static final int INIT = -1;
+	public static final int CONNECTION = 0;
+	public static final int INVINTATION = 1;
+	public static final int DATE_SYNC = 2;
+	public static final int SEND_DATA = 3;
+	public static final int COMPARE_CHECKSUMS = 4;
+	public static final int PARSE_DATA = 5;
+	public static final int CLOSE_CONNECTION = 6;
 	
 	public int CurrentState;
 
@@ -76,7 +76,7 @@ public class ConnectionStatus {
 		
 	public ConnectionStatus(SynchronizationHandler synchHandler){
 		currProgress = 0;
-		CurrentState = InitState;
+		CurrentState = INIT;
 		isFinished = false;
 		dataFromServer = new String[0];
 		UISynchHandler = synchHandler;

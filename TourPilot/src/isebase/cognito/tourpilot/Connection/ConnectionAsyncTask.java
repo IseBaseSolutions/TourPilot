@@ -14,6 +14,7 @@ import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemarkManager;
 import isebase.cognito.tourpilot.Data.Relative.RelativeManager;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
+import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
 import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
@@ -78,7 +79,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 	@Override
 	protected Void doInBackground(Void... params) {
 		switch (conStatus.CurrentState) {
-		case ConnectionStatus.InitState:
+		case ConnectionStatus.INIT:
 			conStatus.setMessage(String.format(
 					"%1$s %2$s : %3$s ...",
 					StaticResources.getBaseContext().getString(
@@ -86,25 +87,25 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 							Option.Instance().getServerIP(),
 							Option.Instance().getServerPort()));
 			break;
-		case ConnectionStatus.Connection:
+		case ConnectionStatus.CONNECTION:
 			conStatus.lastExecuteOK = initializeConnection();
 			break;
-		case ConnectionStatus.Invitation:
+		case ConnectionStatus.INVINTATION:
 			conStatus.lastExecuteOK = recievingInvitation();
 			break;
-		case ConnectionStatus.DateSycnhronizing:
+		case ConnectionStatus.DATE_SYNC:
 			conStatus.lastExecuteOK = sendDateSycnhronizationRequest();
 			break;
-		case ConnectionStatus.SendData:
+		case ConnectionStatus.SEND_DATA:
 			conStatus.lastExecuteOK = sendHelloRequest();
 			break;
-		case ConnectionStatus.CompareCkeckSums:
+		case ConnectionStatus.COMPARE_CHECKSUMS:
 			conStatus.lastExecuteOK = compareCkeckSums();
 			break;
-		case ConnectionStatus.ParseRecievedData:
+		case ConnectionStatus.PARSE_DATA:
 			conStatus.lastExecuteOK = parseRecievedData();
 			break;
-		case ConnectionStatus.CloseConnection:
+		case ConnectionStatus.CLOSE_CONNECTION:
 			conStatus.isFinished = true;
 			conStatus.lastExecuteOK = closeConnection();
 			break;
@@ -353,7 +354,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		//
 		// strDone += CLogs.Instance().GetDone();
 		//
-		// strDone += CUserRemarks.Instance().GetDone();
+		strDone += UserRemarkManager.Instance().getDone();
 		//
 		// strDone += CMergedEmploymentTimes.Instance().GetDone(); // Andrew
 		//
@@ -455,9 +456,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		}
 	}
 
-	public String readPack(InputStream is) throws IOException,
-			InterruptedException {
-		
+	public String readPack(InputStream is) throws IOException, InterruptedException {
 		int counter = 0;
 		int timeoutSeconds = 120;
 		while (is.available() == 0)

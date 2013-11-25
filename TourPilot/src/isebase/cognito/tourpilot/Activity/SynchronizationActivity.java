@@ -39,7 +39,7 @@ import android.widget.TextView;
 		adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, new ArrayList<String>());
 		lvConnectionLog.setAdapter(adapter);
-		adapter.add("Waiting open sockets to automatically close...");
+		adapter.add(getString(R.string.waitng_sockets_to_close));
  		syncHandler = new SynchronizationHandler() {
  			
  			@Override

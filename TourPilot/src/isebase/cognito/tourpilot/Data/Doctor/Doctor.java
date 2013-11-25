@@ -2,12 +2,13 @@ package isebase.cognito.tourpilot.Data.Doctor;
 
 import isebase.cognito.tourpilot.Connection.ServerCommandParser;
 import isebase.cognito.tourpilot.Data.Address.Address;
+import isebase.cognito.tourpilot.Data.Address.IAddressable;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.NCryptor;
 import isebase.cognito.tourpilot.Utils.StringParser;
 
-public class Doctor extends BaseObject {
+public class Doctor extends BaseObject implements IAddressable {
 
 	public static final String SurnameField = "surname";
 	public static final String AddressIDField = "address_id";
@@ -63,7 +64,7 @@ public class Doctor extends BaseObject {
 	
 	@Override
 	public String toString(){
-		return getFullName();
+		return String.format("%s\n%s\n%s,%s\n",getFullName(),address.getStreet(),address.getZip(),address.getCity());
 	}
 
 	@Override
@@ -81,6 +82,12 @@ public class Doctor extends BaseObject {
 		address = new Address();
 		setAddressID(EMPTY_ID);
 		setSurname("");
+	}
+
+	@Override
+	public Address getAddress() {
+		// TODO Auto-generated method stub
+		return address;
 	}
 	
 }

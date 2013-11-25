@@ -1,10 +1,9 @@
 package isebase.cognito.tourpilot.Data.PilotTour;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.DataBase.MapField;
+import isebase.cognito.tourpilot.Utils.DateUtils;
 
 public class PilotTour extends BaseObject {
 
@@ -48,15 +47,13 @@ public class PilotTour extends BaseObject {
 	
 	@Override
 	public String toString() {
-		SimpleDateFormat simpleDateformat = new SimpleDateFormat("EE MM.dd");
-		String dayOfTheWeek = simpleDateformat.format(getPlanDate());
+		String dayOfTheWeek = DateUtils.WeekDateFormat.format(getPlanDate());
 		return String.format("%s - %s", getName(), dayOfTheWeek);
 	}
 	
 	@Override
 	public String forServer() {
-		// TODO Auto-generated method stub
-		return null;
+		return "";
 	}	
 
 }

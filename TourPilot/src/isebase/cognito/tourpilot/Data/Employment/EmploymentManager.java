@@ -67,7 +67,6 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
 		execSQL(strSQL);
 	}
 	
-	@Override
 	public void afterLoad(List<Employment> items) {
 		for (Employment employment : items)
 			afterLoad(employment);
@@ -105,5 +104,4 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
     		}
     	return strEmpls;
     }
-
 }

@@ -5,22 +5,18 @@ import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWork;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWorkManager;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
-import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentInterval;
-import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentIntervalManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.SelectionPeriod.SelectionPeriod;
-import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.Work.Work;
 import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
 import isebase.cognito.tourpilot.DataInterfaces.Job.JobComparer;
+import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.IntervalInputDialog;
 import isebase.cognito.tourpilot.Dialogs.PatientsDialog;
-import isebase.cognito.tourpilot.Dialogs.BaseDialog;
-import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Templates.ManualInputAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
@@ -29,7 +25,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.Menu;
@@ -37,7 +32,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-public class ManualInputActivity extends BaseActivity implements BaseDialog.ListenerDialog {
+public class ManualInputActivity extends BaseActivity implements BaseDialogListener {
 
 	private List<IJob> jobs = new ArrayList<IJob>();
 	private List<Patient> patients = new ArrayList<Patient>();
@@ -83,16 +78,6 @@ public class ManualInputActivity extends BaseActivity implements BaseDialog.List
 				intervalInputDialog.show(getSupportFragmentManager(), "intervalDialog");
 			}
 		});
-	}
-	
-	private void startPatientsActivity() {
-		Intent patientsActivity = new Intent(StaticResources.getBaseContext().getApplicationContext(), PatientsActivity.class);
-		startActivity(patientsActivity);
-	}
-	
-	private void startTasksActivity() {
-		Intent tasksActivity = new Intent(getApplicationContext(), TasksActivity.class);
-		startActivity(tasksActivity);
 	}
 
 	private void reloadData() {

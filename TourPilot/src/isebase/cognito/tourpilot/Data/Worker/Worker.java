@@ -13,24 +13,20 @@ public class Worker extends BaseObject {
 	public static final String ActualDateField = "actualDate";
 	
 	private boolean isUseGPS;
-
 	@MapField(DatabaseField = IsUseGPSField)		
 	public boolean getIsUseGPS() {
 		return isUseGPS;
 	}
-
 	@MapField(DatabaseField = IsUseGPSField)
 	public void setIsUseGPS(boolean isUseGPS) {
 		this.isUseGPS = isUseGPS;
 	}
 	
 	public Date actualDate;
-	
 	@MapField(DatabaseField = ActualDateField)
 	public Date getActualDate() {
 		return actualDate;
 	}
-
 	@MapField(DatabaseField = ActualDateField)
 	public void setActualDate(Date actualDate) {
 		this.actualDate = actualDate;
@@ -79,6 +75,22 @@ public class Worker extends BaseObject {
     	super.clear();
     	setIsUseGPS(false);
     	setActualDate(new Date());
+    }
+    
+    public boolean checkPIN(String strPin){
+    	if (strPin.isEmpty())
+			return false;
+		Long pin = Long.parseLong(strPin);
+		long num = 0;
+		int numArray[] = new int[] { 1, 3, 5, 7, 13, 0x11 };
+		try {
+			byte byteText[] = getName().getBytes("latin1");
+			for (int i = 0; i < byteText.length; i++)
+				num += (byteText[i]) * numArray[i % 6];
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return num == pin;
     }
     
 }

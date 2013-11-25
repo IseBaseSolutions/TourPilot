@@ -8,7 +8,6 @@ import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Utils.DataBaseUtils;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -91,8 +90,7 @@ public class OptionsActivity extends BaseActivity {
 	
 	public void btStartSyncClick(View view) {
 		if (etServerIP.getText().toString().equals("")) {
-			noIPEnteredDialog.show(getSupportFragmentManager(),
-					"dialogNoIPEntered");
+			noIPEnteredDialog.show(getSupportFragmentManager(),"dialogNoIPEntered");
 			return;
 		}
 		if (ConnectionInfo.Instance().getNetworkInfo() == null
@@ -102,31 +100,6 @@ public class OptionsActivity extends BaseActivity {
 		}
 		saveOptions();
 		startSyncActivity();
-	}
-	
-	private void startSyncActivity() {
-		Intent synchActivity = new Intent(getApplicationContext(), SynchronizationActivity.class);
-		startActivity(synchActivity);
-	}
-	
-	private void startToursActivity() {
-		Intent toursActivity = new Intent(getApplicationContext(), ToursActivity.class);
-		startActivity(toursActivity);
-	}
-	
-	private void startPatientsActivity() {
-		Intent patientsActivity = new Intent(getApplicationContext(), PatientsActivity.class);
-		startActivity(patientsActivity);
-	}
-	
-	private void startTasksActivity() {
-		Intent tasksActivity = new Intent(getApplicationContext(), TasksActivity.class);
-		startActivity(tasksActivity);
-	}
-	
-	private void startAdditionalWorksActivity() {
-		Intent additionalWorksActivity = new Intent(getApplicationContext(), AdditionalWorksActivity.class);
-		startActivity(additionalWorksActivity);
 	}
 
 	public void initControls() {
@@ -150,7 +123,7 @@ public class OptionsActivity extends BaseActivity {
 
 	private void initDialogs() {			
 		versionFragmentDialog = new InfoBaseDialog(
-			getString(R.string.program_info), 
+			getString(R.string.menu_program_info), 
 			String.format("%s %s\n%s %s"
 					, getString(R.string.program_version)
 					, Option.Instance().getVersion()
@@ -158,11 +131,11 @@ public class OptionsActivity extends BaseActivity {
 					, DataBaseWrapper.DATABASE_VERSION)
 			);
 		noIPEnteredDialog = new InfoBaseDialog(
-				getString(R.string.connection_problems),
-				getString(R.string.no_ip_entered));
+				getString(R.string.dialog_connection_problems),
+				getString(R.string.dialog_no_ip_entered));
 		noConnectionDialog = new InfoBaseDialog(
-				getString(R.string.connection_problems),
-				getString(R.string.no_connection));
+				getString(R.string.dialog_connection_problems),
+				getString(R.string.dialog_no_connection));
 	}
 	
 	private void makeBackup(){

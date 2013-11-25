@@ -86,7 +86,7 @@ public class IntervalInputDialog extends BaseDialog  {
 				.setPositiveButton(isebase.cognito.tourpilot.R.string.ok,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								mListener.onDialogPositiveClick(IntervalInputDialog.this);
+								
 							}
 						});
 		return adb.create();

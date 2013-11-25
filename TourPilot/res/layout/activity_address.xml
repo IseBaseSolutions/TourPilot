@@ -7,88 +7,12 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".AddressActivity" >
+    tools:context=".AddressPatientActivity" >
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/street"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/tvStreet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:text="street"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_margin="8dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-	    <TextView
-        	android:textAppearance="?android:attr/textAppearanceMedium"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@string/zip" />
-	    <TextView
-        	android:layout_marginLeft="8dp"
-	        android:id="@+id/tvZip"
-        	android:textAppearance="?android:attr/textAppearanceMedium"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="zip" />
-    </LinearLayout>
-    
-    <LinearLayout
-        android:layout_margin="8dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-	    <TextView
-        	android:textAppearance="?android:attr/textAppearanceMedium"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@string/city" />
-	    <TextView
-        	android:layout_marginLeft="8dp"
-	        android:id="@+id/tvCity"
-        	android:textAppearance="?android:attr/textAppearanceMedium"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="city_name" />
-    </LinearLayout>
-    
-    <LinearLayout
-        android:layout_margin="8dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-	    <TextView
-       		android:textAppearance="?android:attr/textAppearanceMedium"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@string/phone" />
-	    <TextView
-        	android:layout_marginLeft="8dp"
-	        android:id="@+id/tvPhone"
-        	android:textAppearance="?android:attr/textAppearanceMedium"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="+000000000" />
-    </LinearLayout>
-
+    <ListView
+        android:id="@+id/lvListPatientAdrress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
 
 </LinearLayout>
