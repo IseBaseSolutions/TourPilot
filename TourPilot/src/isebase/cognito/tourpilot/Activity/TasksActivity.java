@@ -8,6 +8,8 @@ import isebase.cognito.tourpilot.Data.Diagnose.Diagnose;
 import isebase.cognito.tourpilot.Data.Diagnose.DiagnoseManager;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
+import isebase.cognito.tourpilot.Data.Information.Information;
+import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
@@ -55,7 +57,9 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 		
 	private Button btEndTask;
 	private Button btStartTask;
-		
+
+	List<Information> infos = new ArrayList<Information>();
+
 	private boolean isClickable(){
 		return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
 				&& endTask.getRealDate().equals(DateUtils.EmptyDate);
@@ -77,11 +81,22 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 			reloadData();	
 			fillUpTasks();
 			checkAllIsDone();
+			loadPatientInfos(false);
 		}catch(Exception ex){
 			ex.printStackTrace();
 			criticalClose();
 		}
 	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu){
+		if(infos.size() == 0){
+			MenuItem item = menu.findItem(R.id.info);
+			item.setEnabled(false);
+		}
+		return true;
+	}
+
 	
 	private void checkAllIsDone(){
 		if(isAllDone()){
@@ -353,9 +368,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 			startActivity(notesActivity);
 			return true;
 		case R.id.info:
-			Intent infoActivity = new Intent(getApplicationContext(),
-					InfoActivity.class);
-			startActivity(infoActivity);
+			loadPatientInfos(true);
 			return true;
 		case R.id.manualInput:
 			//Intent manualInputActivity = new Intent(getApplicationContext(),
@@ -423,6 +436,27 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 	@Override
 	public void onDialogNegativeClick(DialogFragment dialog) {
 		return;
+	}
+
+	private void loadPatientInfos(boolean is_from_menu){
+		infos = InformationManager.Instance().load(Information.EmploymentCodeField, String.valueOf(employment.getId()));
+		String strInfos = "";
+		Date today = new Date();
+
+		for(Information info : infos){
+			if((DateUtils.getDateOnly(today).getTime() != DateUtils.getDateOnly(info.getReadTime()).getTime()) || is_from_menu)
+				if((today.getTime() >= info.getFromDate().getTime()) && (today.getTime() <= info.getTillDate().getTime())){
+					if(strInfos != "")
+						strInfos += "\n";
+					strInfos += info.getName();
+					info.setReadTime(today);
+				}
+		}
+		if(strInfos.length() > 0){
+			InformationManager.Instance().save(infos);
+			InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_diagnose),strInfos);
+			dialog.show(getSupportFragmentManager(), "");
+		}
 	}
 
 }
