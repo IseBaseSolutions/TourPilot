@@ -11,7 +11,6 @@ import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import isebase.cognito.tourpilot.Utils.DateUtils;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
