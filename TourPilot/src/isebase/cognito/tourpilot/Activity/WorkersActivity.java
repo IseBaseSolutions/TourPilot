@@ -6,7 +6,6 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
-import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.PinDialog;
 
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class WorkersActivity extends BaseActivity implements BaseDialog.ListenerDialog {
+public class WorkersActivity extends BaseActivity {
 
 	private List<Worker> workers = new ArrayList<Worker>();
 	private PinDialog pinDialog;
@@ -100,29 +99,29 @@ public class WorkersActivity extends BaseActivity implements BaseDialog.Listener
 	}
 
 	private void showPinDialog() {
-		pinDialog.show(getSupportFragmentManager(), "dialogPin");
-		getSupportFragmentManager().executePendingTransactions();
-		pinDialog.getDialog().setTitle(selectedWorker.getName());
+//		pinDialog.show(getSupportFragmentManager(), "dialogPin");
+//		getSupportFragmentManager().executePendingTransactions();
+//		pinDialog.getDialog().setTitle(selectedWorker.getName());
 	}
 
-	@Override
-	public void onDialogPositiveClick(DialogFragment dialog) {
-		if (dialog != pinDialog)
-			return;
-		String name = selectedWorker.getName();
-		String pinStr = pinDialog.etPin.getText().toString();
-		if (!checkWorkerPIN(name, pinStr))
-			return;
-
-		DataBaseWrapper.Instance().clearWorkerData();
-		saveSelectedWorkerID();
-		startWorkerSync();
-	}
-
-	@Override
-	public void onDialogNegativeClick(DialogFragment dialog) {
-		return;
-	}
+//	@Override
+//	public void onDialogPositiveClick(DialogFragment dialog) {
+//		if (dialog != pinDialog)
+//			return;
+//		String name = selectedWorker.getName();
+//		String pinStr = pinDialog.etPin.getText().toString();
+//		if (!checkWorkerPIN(name, pinStr))
+//			return;
+//
+//		DataBaseWrapper.Instance().clearWorkerData();
+//		saveSelectedWorkerID();
+//		startWorkerSync();
+//	}
+//
+//	@Override
+//	public void onDialogNegativeClick(DialogFragment dialog) {
+//		return;
+//	}
 	
 	private void saveSelectedWorkerID() {
 		Option.Instance().setPrevWorkerID(Option.Instance().getWorkerID());
