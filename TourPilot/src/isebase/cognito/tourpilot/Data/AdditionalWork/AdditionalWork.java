@@ -14,7 +14,7 @@ public class AdditionalWork extends BaseObject{
 	public AdditionalWork(String initString) {
 		StringParser parsingString = new StringParser(initString);		
 		parsingString.next(";");
-        setId(Integer.parseInt(parsingString.next(";")));
+        setID(Integer.parseInt(parsingString.next(";")));
         setName(parsingString.next("~"));
         setCheckSum(Long.parseLong(parsingString.next()));
 	}
@@ -23,7 +23,7 @@ public class AdditionalWork extends BaseObject{
     public String forServer(){
     	NCryptor ncryptor = new NCryptor();
         String strValue = new String(ServerCommandParser.ADDITIONAL_WORK + ";");
-        strValue += getId() + ";";
+        strValue += getID() + ";";
         strValue += ncryptor.LToNcode(getCheckSum());
         return strValue;
     }

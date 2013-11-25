@@ -26,7 +26,7 @@ public class ToursActivity extends BaseActivity {
 			setContentView(R.layout.activity_tours);
 			reloadData();		
 			fillUpTitle();
-			initListTours();
+			fillUp();
 		}catch(Exception ex){
 			ex.printStackTrace();
 			criticalClose();
@@ -44,7 +44,7 @@ public class ToursActivity extends BaseActivity {
 		logOut();
 	}
 
-	public void initListTours() {
+	public void fillUp() {
 		ListView listView = (ListView) findViewById(R.id.lvTours);
 		ArrayAdapter<PilotTour> adapter = new ArrayAdapter<PilotTour>(this,
 				android.R.layout.simple_list_item_1, pilotTours);
@@ -75,20 +75,17 @@ public class ToursActivity extends BaseActivity {
 	}
 
 	private void startWorkersActivity() {
-		Intent workersActivity = new Intent(getApplicationContext(),
-				WorkersActivity.class);
+		Intent workersActivity = new Intent(getApplicationContext(), WorkersActivity.class);
 		startActivity(workersActivity);
 	}
 
 	private void startPatientsActivity() {
-		Intent patientsActivity = new Intent(getApplicationContext(),
-				PatientsActivity.class);
+		Intent patientsActivity = new Intent(getApplicationContext(), PatientsActivity.class);
 		startActivity(patientsActivity);
 	}
 
 	private void startSyncActivity() {
-		Intent synchActivity = new Intent(getApplicationContext(),
-				SynchronizationActivity.class);
+		Intent synchActivity = new Intent(getApplicationContext(), SynchronizationActivity.class);
 		startActivity(synchActivity);
 	}
 
@@ -101,7 +98,7 @@ public class ToursActivity extends BaseActivity {
 	}
 	
 	private void saveSelectedTour(PilotTour pilotTour) {
-		Option.Instance().setPilotTourID(pilotTour.getId());
+		Option.Instance().setPilotTourID(pilotTour.getID());
 		Option.Instance().save();
 	}
 

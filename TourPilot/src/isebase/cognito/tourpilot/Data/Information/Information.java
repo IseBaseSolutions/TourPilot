@@ -78,26 +78,26 @@ public class Information extends BaseObject {
 	}
 	
 	public Information(String initString) {
-		setIsFromServer(true);
-		initString = initString.substring(0, 2);
-		StringParser parsingString = new StringParser(initString);
-		setId(Integer.parseInt(parsingString.next(";")));
-		SimpleDateFormat format = new SimpleDateFormat("ddMMyyyyHHmm");
-		setEmploymentCode(Long.parseLong(parsingString.next(";")));
-		try {
-			setFromDate(format.parse(parsingString.next(";") + "0000"));
-			setTillDate(format.parse(parsingString.next(";") + "2359"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		setName(parsingString.next(";"));
-		setCheckSum(Long.parseLong(parsingString.next()));
+//		setIsFromServer(true);
+//		initString = initString.substring(0, 2);
+//		StringParser parsingString = new StringParser(initString);
+//		setID(Integer.parseInt(parsingString.next(";")));
+//		SimpleDateFormat format = new SimpleDateFormat("ddMMyyyyHHmm");
+//		setEmploymentCode(Long.parseLong(parsingString.next(";")));
+//		try {
+//			setFromDate(format.parse(parsingString.next(";") + "0000"));
+//			setTillDate(format.parse(parsingString.next(";") + "2359"));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		setName(parsingString.next(";"));
+//		setCheckSum(Long.parseLong(parsingString.next()));
 	}
 
 	@Override
 	public String forServer() {
 		String strValue = new String(ServerCommandParser.INFORMATION + ";");
-		strValue += String.format("%d;%d", getId(), getEmploymentCode()) + ";";
+		strValue += String.format("%d;%d", getID(), getEmploymentCode()) + ";";
 		strValue += getCheckSum();
 		return strValue;
 	}

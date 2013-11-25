@@ -15,7 +15,7 @@ public class AdditionalTask extends BaseObject {
     private int quality;
 
 	public String IdentID() { 
-    	return catalogType + ";" + getId(); 
+    	return catalogType + ";" + getID(); 
 	}
     
     @MapField(DatabaseField = CatalogTypeField)
@@ -46,7 +46,7 @@ public class AdditionalTask extends BaseObject {
 		StringParser parsingString = new StringParser(initString);
 		parsingString.next(";");
 		setCatalogType(Integer.parseInt(parsingString.next(";")));
-        setId(Integer.parseInt(parsingString.next(";")));
+        setID(Integer.parseInt(parsingString.next(";")));
         setName(parsingString.next(";"));
         setQuality(Integer.parseInt(parsingString.next("~")));
         setCheckSum(Long.parseLong(parsingString.next()));

@@ -43,9 +43,11 @@
         <activity android:name="isebase.cognito.tourpilot.Activity.WorkersActivity" />
         <activity android:name="isebase.cognito.tourpilot.Activity.BaseActivity" />
         <activity android:name="isebase.cognito.tourpilot.Activity.PatientsActivity" />
+        <activity android:name="isebase.cognito.tourpilot.Activity.AdditionalWorksActivity" />
+        <activity android:name="isebase.cognito.tourpilot.Activity.WorkActivity" />
         <activity
-            android:name="isebase.cognito.tourpilot.Activity.AdditionalWorksActivity"
-            android:label="@string/title_activity_main" >
+            android:name="isebase.cognito.tourpilot.Activity.ManualInputActivity"
+            android:label="@string/title_activity_manual_input" >
         </activity>
     </application>
 

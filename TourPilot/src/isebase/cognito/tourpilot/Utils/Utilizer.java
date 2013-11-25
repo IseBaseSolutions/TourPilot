@@ -8,7 +8,7 @@ public class Utilizer {
 	public static int[] getIDs(List<? extends BaseObject> items){
 		int[] retVal = new int[items.size()];
 		for(int i = 0; i < items.size();i++)
-			retVal[i] = items.get(i).getId();
+			retVal[i] = items.get(i).getID();
 		return retVal;
 	}
 	
@@ -18,7 +18,7 @@ public class Utilizer {
 		{
 			retVal += String.format("%s%s" 
 					, retVal == "" ? "" : ", "
-					, items.get(i).getId());
+					, items.get(i).getID());
 		}
 		return retVal;
 	}

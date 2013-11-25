@@ -1,8 +1,10 @@
 package isebase.cognito.tourpilot.Templates;
 
-import java.util.List;
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Data.Worker.Worker;
+import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
+
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,17 +13,17 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class WorkerAdapter extends ArrayAdapter<Worker>{
+public class ManualInputAdapter extends ArrayAdapter<IJob> {
 	
-	private List<Worker> workers;
+	private List<IJob> jobs;
 	private int layoutResourceId;
 	private Context context;
 
-	public WorkerAdapter(Context context, int layoutResourceId, List<Worker> workers) {
-		super(context, layoutResourceId, workers);
+	public ManualInputAdapter(Context context, int layoutResourceId, List<IJob> jobs) {
+		super(context, layoutResourceId, jobs);
 		this.layoutResourceId = layoutResourceId;
 		this.context = context;
-		this.workers = workers;
+		this.jobs = jobs;
 	}
 
 	@Override
@@ -31,16 +33,16 @@ public class WorkerAdapter extends ArrayAdapter<Worker>{
 		LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 		row = inflater.inflate(layoutResourceId, parent, false);
 
-		workerHolder.worker = workers.get(position);
-		workerHolder.tvWorkerName = (TextView) row.findViewById(R.id.tvWorkerName);
-		workerHolder.tvWorkerName.setText(workerHolder.worker.getName());
+		workerHolder.job = jobs.get(position);
+		workerHolder.tvJob = (TextView) row.findViewById(R.id.tvJob);
+		workerHolder.tvJob.setText(workerHolder.job.timeInterval() + " " + workerHolder.job.text());
 	
 		row.setTag(workerHolder);
 		return row;
 	}
 
 	class WorkerHolder {
-		 Worker worker;
-		 TextView tvWorkerName;
+		IJob job;
+		TextView tvJob;
 	}
 }
