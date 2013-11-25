@@ -24,12 +24,12 @@ public abstract class BaseObject {
 	private int id;
 
 	@MapField(DatabaseField = IDField)
-	public int getId() {
+	public int getID() {
 		return id;
 	}
 
 	@MapField(DatabaseField = IDField)
-	public void setId(int id) {
+	public void setID(int id) {
 		this.id = id;
 	}
 
@@ -85,7 +85,7 @@ public abstract class BaseObject {
 	public void setIsServerTime(boolean isServerTime) {
 		this.isServerTime = isServerTime;
 	}
-
+	
 	protected void clear() {
 		id = EMPTY_ID;
 		name = "";
@@ -95,5 +95,9 @@ public abstract class BaseObject {
 	}
 	
 	public abstract String forServer();
+	
+	public String getDone() {
+		return "";
+	}
 	
 }

@@ -47,7 +47,7 @@ public class DoctorManager extends BaseObjectManager<Doctor>{
 		List<Address> addresses = AddressManager.Instance().loadByIDs(IDs);
 		for(Doctor relative : items){
 			for(Address address : addresses){
-				if(address.getId() == relative.getAddressID()){
+				if(address.getID() == relative.getAddressID()){
 					relative.address = address;
 					break;
 				}
@@ -58,6 +58,6 @@ public class DoctorManager extends BaseObjectManager<Doctor>{
 	@Override
 	public void beforeSave(Doctor item) {
 		AddressManager.Instance().save(item.address);
-		item.setAddressID(item.address.getId());
+		item.setAddressID(item.address.getID());
 	}
 }

@@ -123,6 +123,11 @@ public class OptionsActivity extends BaseActivity {
 		Intent tasksActivity = new Intent(getApplicationContext(), TasksActivity.class);
 		startActivity(tasksActivity);
 	}
+	
+	private void startAdditionalWorksActivity() {
+		Intent additionalWorksActivity = new Intent(getApplicationContext(), AdditionalWorksActivity.class);
+		startActivity(additionalWorksActivity);
+	}
 
 	public void initControls() {
 		syncButton = (Button)findViewById(R.id.btSynchronization);
@@ -170,7 +175,9 @@ public class OptionsActivity extends BaseActivity {
 	}
 	
 	private void switchToLastActivity() {
-		if (Option.Instance().getEmploymentID() != -1)
+		if (Option.Instance().getWorkID() != -1)
+			startAdditionalWorksActivity();
+		else if (Option.Instance().getEmploymentID() != -1)
 			startTasksActivity();
 		else if (Option.Instance().getPilotTourID() != -1)
 			startPatientsActivity();

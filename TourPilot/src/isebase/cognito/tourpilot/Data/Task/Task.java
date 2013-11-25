@@ -275,7 +275,7 @@ public class Task extends BaseObject {
 		if (getWasSent())
 			return new String();
 		String strValue = new String(ServerCommandParser.TASK + ";");
-		strValue += getId() + ";";
+		strValue += getID() + ";";
 		strValue += getCheckSum();
 		return strValue;
 	}

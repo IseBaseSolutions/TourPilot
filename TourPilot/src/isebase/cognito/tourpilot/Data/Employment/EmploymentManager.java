@@ -3,6 +3,7 @@ package isebase.cognito.tourpilot.Data.Employment;
 import java.util.List;
 
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
+import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentIntervalManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
@@ -40,9 +41,9 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
 	
 	public void createEmployments() {
 		clearTable();
-		String strSQL = String.format("INSERT INTO %4$s" +
+		String strSQL = String.format("INSERT INTO %3$s" +
 				"(_id, patient_id, name, was_sent, checksum, is_server_time" +
-				", pilot_tour_id, date, tour_id, is_done) SELECT " +
+				", pilot_tour_id, date, tour_id, is_done, start_time, stop_time) SELECT " +
 				"t1.employment_id as _id, " +
 				"t1.patient_id as patient_id, " +
 				"(t2.surname || ', ' || t2.name) as name, " +
@@ -52,25 +53,41 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
 				"t1.pilot_tour_id as pilot_tour_id, " +
 				"t1.plan_date as date, " +
 				"t1.tour_id as tour_id, " +
-				"t1.task_state as is_done " +
+				"t1.task_state as is_done, " +
+				"t3.start_time as start_time, " +
+				"t3.stop_time as stop_time " +
 				"FROM %1$s t1 " +
 				"INNER JOIN %2$s t2 on t1.patient_id = t2._id " +
+				"LEFT JOIN %4$s t3 on t1.employment_id = t3.employment_id " +
 				"GROUP BY t1.employment_id"
 				, TaskManager.TableName
 				, PatientManager.TableName
-				, getRecTableName()
-				, EmploymentManager.TableName);
+				, EmploymentManager.TableName
+				, EmploymentIntervalManager.TableName);
 		execSQL(strSQL);
 	}
 	
 	@Override
 	public void afterLoad(List<Employment> items) {
 		for (Employment employment : items)
-		{
-			employment.setTasks(TaskManager.Instance().load(Task.EmploymentIDField, String.valueOf(employment.getId())));
-			employment.setPatient(PatientManager.Instance().load(employment.getPatientID()));
-			employment.setPilotTour(PilotTourManager.Instance().load(employment.getPilotTourID()));
-		}
+			afterLoad(employment);
+	}
+	
+	@Override
+	public void afterLoad(Employment employment) {
+		employment.setTasks(TaskManager.Instance().load(Task.EmploymentIDField, String.valueOf(employment.getID())));
+		employment.setPatient(PatientManager.Instance().load(employment.getPatientID()));
+		employment.setPilotTour(PilotTourManager.Instance().load(employment.getPilotTourID()));
+	}
+	
+	public List<Employment> loadDoneByPilotTourID(int tourPilotID) {
+		String strSQL = String.format("SELECT * " +
+				"FROM %1$s " +
+				"WHERE %2$s = %3$d AND is_done = 1"
+				, EmploymentManager.TableName
+				, Employment.PilotTourIDField
+				, tourPilotID);
+		return load(strSQL);
 	}
 	
     public String getDone()

@@ -148,7 +148,7 @@ public class Patient extends BaseObject {
 		initString = initString.replace("^", "");
 		StringParser parsingString = new StringParser(initString);
 		parsingString.next(";");
-		setId(Integer.parseInt(parsingString.next(";")));
+		setID(Integer.parseInt(parsingString.next(";")));
 		setSurname(parsingString.next(";"));
 		setName(parsingString.next(";"));
 		String sexStr = parsingString.next(";");
@@ -185,7 +185,7 @@ public class Patient extends BaseObject {
 			return "";
 		NCryptor ncryptor = new NCryptor();
 		String strValue = new String(ServerCommandParser.PATIENT + ";");
-		strValue += ncryptor.LToNcode(getId()) + ";";
+		strValue += ncryptor.LToNcode(getID()) + ";";
 		strValue += ncryptor.LToNcode(getCheckSum());
 		return strValue;
 	}

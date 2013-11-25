@@ -5,6 +5,8 @@ import isebase.cognito.tourpilot.Activity.AdditionalTasks.CatalogsActivity;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
+import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentInterval;
+import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentIntervalManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
@@ -85,13 +87,13 @@ public class TasksActivity extends BaseActivity {
 	}
 	
 	private void fillUpStartTask(){
-		tvStartTaskTime.setText(DateUtils.HourMinutesFormat.format(startTask.getRealDate()));
-		tvStartTaskDate.setText(DateUtils.DateFormat.format(startTask.getRealDate()));
+		tvStartTaskTime.setText(DateUtils.HourMinutesFormat.format(startTask.getManualDate().equals(DateUtils.EmptyDate) ? startTask.getRealDate() : startTask.getManualDate()));
+		tvStartTaskDate.setText(DateUtils.DateFormat.format(startTask.getManualDate().equals(DateUtils.EmptyDate) ? startTask.getRealDate() : startTask.getManualDate()));
 	}
 	
 	private void fillUpEndTask(){
-		tvEndTaskTime.setText(DateUtils.HourMinutesFormat.format(endTask.getRealDate()));
-		tvEndTaskDate.setText(DateUtils.DateFormat.format(endTask.getRealDate()));
+		tvEndTaskTime.setText(DateUtils.HourMinutesFormat.format(endTask.getManualDate().equals(DateUtils.EmptyDate) ? endTask.getRealDate() : endTask.getManualDate()));
+		tvEndTaskDate.setText(DateUtils.DateFormat.format(endTask.getManualDate().equals(DateUtils.EmptyDate) ? endTask.getRealDate() : endTask.getManualDate()));
 	}
 	
 	private void fillUpTitle(){
@@ -111,7 +113,7 @@ public class TasksActivity extends BaseActivity {
 		fillUpEndTask();
 	}	
 
-	public void reloadData() {		
+	public void reloadData() {	
 		tasks = TaskManager.Instance().load(Task.EmploymentIDField, Option.Instance().getEmploymentID()+"");
 		startTask = tasks.get(0);
 		endTask = tasks.get(tasks.size() - 1);
@@ -122,6 +124,7 @@ public class TasksActivity extends BaseActivity {
 		startTask.setRealDate(new Date());
 		startTask.setState(eTaskState.Done);
 		endTask.setRealDate(DateUtils.EmptyDate);
+
 		TaskManager.Instance().save(startTask);
 		TaskManager.Instance().save(endTask);
 		fillUpStartTask();
@@ -169,6 +172,8 @@ public class TasksActivity extends BaseActivity {
 			return;
 		Task task = (Task) view.getTag();
 		task.setRealDate(new Date());
+		if (startTask.getManualDate().equals(DateUtils.EmptyDate))
+			task.setManualDate(DateUtils.getAverageDate(startTask.getManualDate(), endTask.getManualDate()));
 		task.setState((task.getState() == eTaskState.Done) 
 				? eTaskState.UnDone
 				: eTaskState.Done);
@@ -218,7 +223,18 @@ public class TasksActivity extends BaseActivity {
 	
 	private void saveEmployment() {
 		Employment empl = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
+		EmploymentInterval emplInterval = new EmploymentInterval(empl.getID(), 
+				(startTask.getManualDate().equals(DateUtils.EmptyDate) 
+						? startTask.getRealDate()
+						: startTask.getManualDate()), 
+							(endTask.getManualDate().equals(DateUtils.EmptyDate) 
+								? endTask.getRealDate()
+								: endTask.getManualDate()));
+		EmploymentIntervalManager.Instance().save(emplInterval);
+		empl.setStartTime(emplInterval.getStartTime());
+		empl.setStopTime(emplInterval.getStopTime());
 		empl.setIsDone(true);
+		EmploymentIntervalManager.Instance().save(new EmploymentInterval(empl.getID(), empl.getStartTime(), empl.getStopTime()));
 		EmploymentManager.Instance().save(empl);
 	}
 	

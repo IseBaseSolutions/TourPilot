@@ -47,6 +47,7 @@ public class ServerCommandParser {
 	public static final char PATIENT = 'P';
 	public static final char TASK = 'T';
 	public static final char ADDITIONAL_WORK = 'U';
+	public static final char WORK = 'W';
 	public static final char TOUR = 'R';
 	public static final char RELATIVE = 'V';
 	public static final char QUESTION = 'Q';

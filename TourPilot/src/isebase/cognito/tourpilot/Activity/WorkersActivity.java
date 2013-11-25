@@ -6,6 +6,7 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
+import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.PinDialog;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class WorkersActivity extends BaseActivity implements PinDialog.PinListenerDialog {
+public class WorkersActivity extends BaseActivity implements BaseDialog.ListenerDialog {
 
 	private List<Worker> workers = new ArrayList<Worker>();
 	private PinDialog pinDialog;
@@ -125,7 +126,7 @@ public class WorkersActivity extends BaseActivity implements PinDialog.PinListen
 	
 	private void saveSelectedWorkerID() {
 		Option.Instance().setPrevWorkerID(Option.Instance().getWorkerID());
-		Option.Instance().setWorkerID(selectedWorker.getId());
+		Option.Instance().setWorkerID(selectedWorker.getID());
 		Option.Instance().save();
 	}
 

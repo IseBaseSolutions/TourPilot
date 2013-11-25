@@ -1,27 +1,17 @@
 package isebase.cognito.tourpilot.Dialogs;
 
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.text.InputType;
 import android.widget.EditText;
 
-public class PinDialog extends DialogFragment {
+public class PinDialog extends BaseDialog {
 
 	public EditText etPin;
-
-	public interface PinListenerDialog {
-		public void onDialogPositiveClick(DialogFragment dialog);
-
-		public void onDialogNegativeClick(DialogFragment dialog);
-	}
-
-	PinListenerDialog mListener;
 
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
@@ -49,14 +39,4 @@ public class PinDialog extends DialogFragment {
 		return adb.create();
 	}
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		try {
-			mListener = (PinListenerDialog) activity;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement NoticeDialogListener");
-		}
-	}
 }

@@ -28,6 +28,7 @@ public class WorkerManager extends BaseObjectManager<Worker> {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db) {
+		
 	}
 
 }

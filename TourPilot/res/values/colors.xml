@@ -1,6 +1,7 @@
 <resources>
 
-    <color name="activeColor">#ff34c724</color>
-    <color name="notActveColor">#ffd4422f</color>
+    <color name="active">#ff34c724</color>
+    <color name="not_active">#ffff4500</color>
+    <color name="synchronize">#ffffd700</color>
 
 </resources>
