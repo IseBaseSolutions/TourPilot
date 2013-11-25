@@ -70,8 +70,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	private boolean isAllDone(){
 		return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
 				&& !endTask.getRealDate().equals(DateUtils.EmptyDate)
-				|| DateUtils.getTodayDateOnly().getTime() 
-					<  DateUtils.getDateOnly(startTask.getPlanDate()).getTime();
+				|| DateUtils.getTodayDateOnly().getTime() < DateUtils.getDateOnly(startTask.getPlanDate()).getTime();
 	}
 		
 	@Override
@@ -342,6 +341,8 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 	
 	private void saveEmployment() {
+		if (Option.Instance().getEmploymentID() == BaseObject.EMPTY_ID)
+			return;			
 		Employment empl = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
 		EmploymentInterval emplInterval = new EmploymentInterval(empl.getID(), 
 				(startTask.getManualDate().equals(DateUtils.EmptyDate) 

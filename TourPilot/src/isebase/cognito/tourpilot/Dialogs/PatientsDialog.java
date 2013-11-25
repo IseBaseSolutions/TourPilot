@@ -42,7 +42,7 @@ public class PatientsDialog extends BaseDialog {
 				.setPositiveButton(isebase.cognito.tourpilot.R.string.ok, new DialogInterface.OnClickListener() {
 					
 					public void onClick(DialogInterface dialog, int id) {
-						
+						listener.onDialogPositiveClick(PatientsDialog.this);
 					}
 					
 				});

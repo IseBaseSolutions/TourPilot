@@ -3,6 +3,7 @@ package isebase.cognito.tourpilot.Data.Work;
 import isebase.cognito.tourpilot.Connection.ServerCommandParser;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWork;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
@@ -150,7 +151,7 @@ public class Work extends BaseObject implements IJob {
 	@Override
 	public String forServer() {
         String strValue = new String(ServerCommandParser.WORK + ";");
-        strValue += getID() + ";";
+        strValue += Option.Instance().getWorkerID() + ";";
         strValue += getStartTime().getTime() + ";";
         strValue += getStopTime().getTime() + ";";
         strValue += getAdditionalWorkID() + ";";

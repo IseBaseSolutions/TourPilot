@@ -9,10 +9,8 @@ import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.Work.Work;
 import isebase.cognito.tourpilot.Data.Work.WorkManager;
-import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.PatientsDialog;
-import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
