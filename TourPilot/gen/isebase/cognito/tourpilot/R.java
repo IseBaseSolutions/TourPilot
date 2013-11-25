@@ -98,6 +98,7 @@ public final class R {
         public static final int tableRow12=0x7f090035;
         public static final int tableRow22=0x7f090039;
         public static final int tableRow32=0x7f09003d;
+        public static final int tour_info=0x7f090055;
         public static final int tvAddTasksCategories=0x7f090005;
         public static final int tvAddressName=0x7f090034;
         public static final int tvCurrentInfo=0x7f090021;
@@ -162,7 +163,8 @@ public final class R {
         public static final int patients_menu=0x7f08000b;
         public static final int relatives=0x7f08000c;
         public static final int tasks=0x7f08000d;
-        public static final int version_menu=0x7f08000e;
+        public static final int tour_info=0x7f08000e;
+        public static final int version_menu=0x7f08000f;
     }
     public static final class string {
         /**  Programm info 
