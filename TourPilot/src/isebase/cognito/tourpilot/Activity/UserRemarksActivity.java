@@ -1,5 +1,7 @@
 package isebase.cognito.tourpilot.Activity;
 
+import java.util.Date;
+
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
@@ -61,6 +63,7 @@ public class UserRemarksActivity extends BaseActivity {
 				, chbMedchanges.isChecked()
 				, chbPflege.isChecked()
 				, !etOther.getText().toString().isEmpty());
+		userRemark.setDate(new Date());
 		userRemark.setWasSent(false);
 	}
 	
@@ -71,5 +74,6 @@ public class UserRemarksActivity extends BaseActivity {
 	public void btUserRemarkSaveClick(View view){
 		pickUp();
 		save();
+		startTasksActivity();
 	}
 }

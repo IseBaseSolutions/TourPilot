@@ -43,6 +43,10 @@ public class UserRemark extends BaseObject {
 		this.checkboxes = checkboxes;
 	}
 	
+	public UserRemark(){
+		clear();
+	}
+	
     public UserRemark(int workerID, int patientID
     		, boolean chkContact, boolean chkMed, boolean chkVisit
             , boolean chkOther, String strRemark)
@@ -115,4 +119,13 @@ public class UserRemark extends BaseObject {
         if (chkOther) 
         	checkboxes += 8;
 	}
+
+	@Override
+	public void clear(){
+		super.clear();
+		setPatientID(EMPTY_ID);
+		setDate(DateUtils.EmptyDate);
+		setCheckboxes(0);
+	}
+	
 }
