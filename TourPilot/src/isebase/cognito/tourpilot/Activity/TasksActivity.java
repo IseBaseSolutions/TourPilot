@@ -60,7 +60,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	private Button btEndTask;
 	private Button btStartTask;
 
-	List<Information> infos = new ArrayList<Information>();
+	private List<Information> infos = new ArrayList<Information>();
 
 	private boolean isClickable(){
 		return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
@@ -128,14 +128,14 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	private void fillUpDate(TextView tvTime, TextView tvDate, Task task){
 		tvTime.setText(task.getRealDate().equals(DateUtils.EmptyDate)
 				? getString(R.string.def_empty_time)
-				: DateUtils.HourMinutesFormat.format(startTask.getManualDate().equals(DateUtils.EmptyDate) 
-						? startTask.getRealDate() 
-						: startTask.getManualDate()));
+				: DateUtils.HourMinutesFormat.format(task.getManualDate().equals(DateUtils.EmptyDate) 
+						? task.getRealDate() 
+						: task.getManualDate()));
 		tvDate.setText(task.getRealDate().equals(DateUtils.EmptyDate)
 				? getString(R.string.def_empty_date)
-				: DateUtils.DateFormat.format(startTask.getManualDate().equals(DateUtils.EmptyDate) 
-						? startTask.getRealDate() 
-						: startTask.getManualDate()));
+				: DateUtils.DateFormat.format(task.getManualDate().equals(DateUtils.EmptyDate) 
+						? task.getRealDate() 
+						: task.getManualDate()));
 	}
 	
 	private void fillUpTitle(){
