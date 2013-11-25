@@ -12,6 +12,7 @@ import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
+import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Templates.AdditionalTaskAdapter;
 import java.util.List;
 import android.os.Bundle;
@@ -28,16 +29,22 @@ public class AdditionalTasksActivity extends BaseActivity {
 	
 	private List<AdditionalTask> additionalTasks;
 	private Catalog catalog;
-	private Patient patient;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_add_tasks);
-		init();
-		reloadData();
-		fillUp();
-		initFilter();
+		try{
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_add_tasks);
+			init();
+			initFilter();
+			reloadData();
+			fillUp();
+			fillUpTitle();
+		}
+		catch(Exception ex){
+			ex.printStackTrace();
+			criticalClose();
+		}
 	}
 	
 	private void init(){
@@ -70,7 +77,7 @@ public class AdditionalTasksActivity extends BaseActivity {
 		catalog = new Catalog(eCatalogType.values()[catalogType]);	
 		
 		Employment empl = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
-		patient = PatientManager.Instance().load(empl.getPatientID());
+		Patient patient = PatientManager.Instance().load(empl.getPatientID());
 		
 		switch (catalog.getCatalogType()) {
 			case btyp_kk:
@@ -93,8 +100,13 @@ public class AdditionalTasksActivity extends BaseActivity {
 				,R.layout.row_additional_task_template, additionalTasks);
 		lvAddTasks.setAdapter(adapter);
 	}
-
-	public void onSelectAddTask(View view) {
 	
+	private void fillUpTitle(){
+		setTitle(catalog.getName());
+	}
+
+	public void onSaveAddTasks(View view) {
+		TaskManager.Instance().createTasks(adapter.getSelectedTasks());
+		startTasksActivity();
 	}
 }

@@ -2,12 +2,13 @@ package isebase.cognito.tourpilot.Data.Relative;
 
 import isebase.cognito.tourpilot.Connection.ServerCommandParser;
 import isebase.cognito.tourpilot.Data.Address.Address;
+import isebase.cognito.tourpilot.Data.Address.IAddressable;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.NCryptor;
 import isebase.cognito.tourpilot.Utils.StringParser;
 
-public class Relative extends BaseObject {
+public class Relative extends BaseObject implements IAddressable {
 
 	public static final String SurnameField = "surname";
 	public static final String ShipField = "ship";
@@ -73,6 +74,9 @@ public class Relative extends BaseObject {
 	public String getFullName() {
 		return String.format("%s %s", getSurname(), getName());
 	}
+	public Address getAddress(){
+		return address;
+	}
 
 	@Override
 	public String forServer() {
@@ -90,6 +94,11 @@ public class Relative extends BaseObject {
 		setSurname("");
 		setShip("");
 		setAddressID(EMPTY_ID);
+	}
+	
+	@Override
+	public String toString(){
+		return String.format("%s\n%s\n%s,%s\n",getFullName(),address.getStreet(),address.getZip(),address.getCity());
 	}
 	
 }

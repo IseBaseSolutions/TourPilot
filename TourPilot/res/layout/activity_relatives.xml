@@ -10,12 +10,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".RelativesActivity" >
 
-    <TextView
-        android:id="@+id/tvCurrentInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/relatives" />
-
     <ListView
         android:id="@+id/lvListRelatives"
         android:layout_width="match_parent"

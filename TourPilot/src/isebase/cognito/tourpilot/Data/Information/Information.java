@@ -78,20 +78,20 @@ public class Information extends BaseObject {
 	}
 	
 	public Information(String initString) {
-//		setIsFromServer(true);
-//		initString = initString.substring(0, 2);
-//		StringParser parsingString = new StringParser(initString);
-//		setID(Integer.parseInt(parsingString.next(";")));
-//		SimpleDateFormat format = new SimpleDateFormat("ddMMyyyyHHmm");
-//		setEmploymentCode(Long.parseLong(parsingString.next(";")));
-//		try {
-//			setFromDate(format.parse(parsingString.next(";") + "0000"));
-//			setTillDate(format.parse(parsingString.next(";") + "2359"));
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		setName(parsingString.next(";"));
-//		setCheckSum(Long.parseLong(parsingString.next()));
+		StringParser parsingString = new StringParser(initString);
+		parsingString.next(";");
+		setIsFromServer(true);
+		setID(Integer.parseInt(parsingString.next(";")));
+		setEmploymentCode(Long.parseLong(parsingString.next(";")));
+		SimpleDateFormat format = new SimpleDateFormat("ddMMyyyyHHmm");
+		try {
+			setFromDate(format.parse(parsingString.next(";") + "0000"));
+			setTillDate(format.parse(parsingString.next(";") + "2359"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		setName(parsingString.next("~"));
+		setCheckSum(Long.parseLong(parsingString.next()));
 	}
 
 	@Override

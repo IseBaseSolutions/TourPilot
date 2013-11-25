@@ -14,7 +14,6 @@ import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import android.os.Bundle;
 import android.content.Intent;
-import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,54 +21,62 @@ import android.widget.ListView;
 
 public class CatalogsActivity extends BaseActivity {
 
-	private List<Catalog> listCatalogs = new ArrayList<Catalog>();
+	private List<Catalog> catalogs = new ArrayList<Catalog>();
+	private Employment employment;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_add_tasks_category);
-		reloadData();
-		fillUp();
+		try{
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_add_tasks_category);
+			reloadData();
+			fillUpTitle();
+			fillUp();
+		}
+		catch(Exception ex){
+			ex.printStackTrace();
+			criticalClose();
+		}
 	}
 
 	private void reloadData(){
-		Employment employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
+		employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
 		Patient patient = PatientManager.Instance().load(employment.getPatientID());
 		if(patient.getKK() != BaseObject.EMPTY_ID)
-			listCatalogs.add(new Catalog(eCatalogType.btyp_kk));
+			catalogs.add(new Catalog(eCatalogType.btyp_kk));
 		if(patient.getPK() != BaseObject.EMPTY_ID)
-			listCatalogs.add(new Catalog(eCatalogType.btyp_pk));
+			catalogs.add(new Catalog(eCatalogType.btyp_pk));
 		if(patient.getPR() != BaseObject.EMPTY_ID)
-			listCatalogs.add(new Catalog(eCatalogType.btyp_pr));
+			catalogs.add(new Catalog(eCatalogType.btyp_pr));
 		if(patient.getSA() != BaseObject.EMPTY_ID)
-			listCatalogs.add(new Catalog(eCatalogType.btyp_sa));
+			catalogs.add(new Catalog(eCatalogType.btyp_sa));
 	}
 	
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
 	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-// 		Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.add_tasks_category, menu);
-		return true;
+		
+	private void fillUpTitle(){
+		setTitle(employment.getName());
 	}
 	
 	private void fillUp(){
 		ListView lvAddTasksCategories = (ListView)findViewById(R.id.lvAddTasksCategory);
-		ArrayAdapter<Catalog> adapter = new ArrayAdapter<Catalog>(this, android.R.layout.simple_list_item_1, listCatalogs);
+		ArrayAdapter<Catalog> adapter = new ArrayAdapter<Catalog>(this, android.R.layout.simple_list_item_1, catalogs);
 		lvAddTasksCategories.setAdapter(adapter);		
-		lvAddTasksCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-				Catalog catalog = listCatalogs.get(position);
-				Intent addTasksActivity = new Intent(getApplicationContext(), AdditionalTasksActivity.class);
-				addTasksActivity.putExtra("catalog_type", catalog.getCatalogType().ordinal());
-				startActivity(addTasksActivity);
-			}
-		});
+		lvAddTasksCategories.setOnItemClickListener(catalogOnItemClickListener);
 	}
+	
+	private AdapterView.OnItemClickListener catalogOnItemClickListener 
+			= new AdapterView.OnItemClickListener() {
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+			Catalog catalog = catalogs.get(position);
+			Intent addTasksActivity = new Intent(getApplicationContext(), AdditionalTasksActivity.class);
+			addTasksActivity.putExtra("catalog_type", catalog.getCatalogType().ordinal());
+			startActivity(addTasksActivity);
+		}
+	};
+	
 }

@@ -10,7 +10,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.os.Bundle;
 
-public class PatientsDialog {
+public class PatientsDialog extends BaseDialog {
 	
 	private List<Patient> patients;
 	private String[] patientNames;
@@ -29,24 +29,24 @@ public class PatientsDialog {
 	}
 
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-//		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity())
-//				.setTitle(title)
-//				.setMultiChoiceItems(patientNames, selectedPatients, new OnMultiChoiceClickListener() {
-//			
-//					@Override
-//					public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-//						selectedPatients[which] = isChecked;
-//					}
-//			
-//				})
-//				.setPositiveButton(isebase.cognito.tourpilot.R.string.ok, new DialogInterface.OnClickListener() {
-//					
-//					public void onClick(DialogInterface dialog, int id) {
-//						mListener.onDialogPositiveClick(PatientsDialog.this);
-//					}
-//					
-//				});
-		return null;//adb.create();
+		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity())
+				.setTitle(title)
+				.setMultiChoiceItems(patientNames, selectedPatients, new OnMultiChoiceClickListener() {
+			
+					@Override
+					public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+						selectedPatients[which] = isChecked;
+					}
+			
+				})
+				.setPositiveButton(isebase.cognito.tourpilot.R.string.ok, new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int id) {
+						
+					}
+					
+				});
+		return adb.create();
 	}
 		
 	private void initPatientNames() {

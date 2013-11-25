@@ -1,12 +1,10 @@
 package isebase.cognito.tourpilot.Data.Doctor;
 
 import java.util.List;
-
 import android.database.sqlite.SQLiteDatabase;
 import isebase.cognito.tourpilot.Data.Address.Address;
 import isebase.cognito.tourpilot.Data.Address.AddressManager;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
-import isebase.cognito.tourpilot.Utils.Utilizer;
 
 public class DoctorManager extends BaseObjectManager<Doctor>{
 
@@ -43,8 +41,10 @@ public class DoctorManager extends BaseObjectManager<Doctor>{
 	
 	@Override
 	public void afterLoad(List<Doctor> items) {
-		String IDs = Utilizer.getIDsString(items);
-		List<Address> addresses = AddressManager.Instance().loadByIDs(IDs);
+		int[] addressIDs = new int[items.size()];
+		for(int i = 0;i< items.size(); i++)
+			addressIDs[i] = items.get(i).getAddressID();
+		List<Address> addresses = AddressManager.Instance().loadByIDs(addressIDs);
 		for(Doctor relative : items){
 			for(Address address : addresses){
 				if(address.getID() == relative.getAddressID()){

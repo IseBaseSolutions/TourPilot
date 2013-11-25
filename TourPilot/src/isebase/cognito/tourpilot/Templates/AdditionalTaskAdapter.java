@@ -19,6 +19,14 @@ import android.widget.Filterable;
 public class AdditionalTaskAdapter extends ArrayAdapter<AdditionalTask> implements Filterable {
 
 	private List<AdditionalTasktHolder> tasks;
+	public List<AdditionalTask> getSelectedTasks(){
+		List<AdditionalTask> selectedTasks = new ArrayList<AdditionalTask>();
+		for(AdditionalTasktHolder taskHolder : tasks)
+			if(taskHolder.isChecked)
+				selectedTasks.add(taskHolder.additionalTask);
+		return selectedTasks;
+	}
+	
 	private List<AdditionalTasktHolder> filteredTasks;
 	private int layoutResourceId;
 	private Context context;
@@ -75,15 +83,11 @@ public class AdditionalTaskAdapter extends ArrayAdapter<AdditionalTask> implemen
 	            FilterResults results = new FilterResults();
 	            ArrayList<AdditionalTasktHolder> filteredTasks = new ArrayList<AdditionalTasktHolder>();
 	            constraint = constraint.toString().toLowerCase();
-	            for (AdditionalTasktHolder task : tasks) {
-	                if (task.additionalTask.getName().toLowerCase().contains(constraint.toString()))  {
-	                    filteredTasks.add(task);
-	                }
-	            }
-	
+	            for (AdditionalTasktHolder task : tasks) 
+	                if (task.additionalTask.getName().toLowerCase().startsWith(constraint.toString()))
+	                    filteredTasks.add(task);	
 	            results.count = filteredTasks.size();
-	            results.values = filteredTasks;
-	
+	            results.values = filteredTasks;	
 	            return results;
         	}
         };

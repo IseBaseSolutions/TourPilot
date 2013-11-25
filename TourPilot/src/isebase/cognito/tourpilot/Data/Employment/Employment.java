@@ -169,14 +169,17 @@ public class Employment extends BaseObject implements IJob {
         for (Task task : tasks)
         {
         	String strTask = strEmpl;
-            strTask += format.format(task.getPlanDate()) + ";";
-            strTask += task.getPlanDate().toString().substring(11,13);
-            strTask += task.getPlanDate().toString().substring(14,16) + ";";
+            strTask += format.format(task.getPlanDate()) + ";"; // date only
+            strTask += task.getPlanDate().toString().substring(11,13); // time hours
+            strTask += task.getPlanDate().toString().substring(14,16) + ";"; // time minutes
             strTask += task.getLeistungs() + ";";
-            strTask += (task.getState().equals(eTaskState.Done) ? "ja" : "nein") + ";";
+            strTask += (task.getState().equals(eTaskState.Done) ? "ja" : "nein"); 
+            String qulityResult = task.getQualityResult().isEmpty() ? "" : "$" + task.getQualityResult();
+            strTask += qulityResult;
+            strTask += ";";
             if (!DateUtils.EmptyDate.equals(task.getManualDate()))
-                strTask += DateUtils.toString(task.getManualDate()) + ";";
-            strTask += DateUtils.toString(task.getRealDate());
+                strTask += DateUtils.toDateTime(task.getManualDate()) + ";";
+            strTask += DateUtils.toDateTime(task.getRealDate());
             strTask += "\0";
             strValue += strTask;
             task.setWasSent(true);            

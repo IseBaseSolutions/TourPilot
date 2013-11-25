@@ -9,8 +9,8 @@ import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.Work.Work;
 import isebase.cognito.tourpilot.Data.Work.WorkManager;
+import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.PatientsDialog;
-import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,7 +29,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class AdditionalWorksActivity extends BaseActivity {
+public class AdditionalWorksActivity extends BaseActivity implements BaseDialogListener {
 
 	private DialogFragment addWorkInputDialog;
 	private DialogFragment stopDialog;
@@ -95,11 +95,6 @@ public class AdditionalWorksActivity extends BaseActivity {
 		startActivity(manualInputActivity);
 	}
 	
-	private void startPatientsActivity() {
-		Intent patientsActivity = new Intent(StaticResources.getBaseContext().getApplicationContext(), PatientsActivity.class);
-		startActivity(patientsActivity);
-	}
-	
 	private void initDialogs() {
 		addWorkInputDialog = new DialogFragment() {
 			@Override
@@ -148,7 +143,7 @@ public class AdditionalWorksActivity extends BaseActivity {
 										work.setStopTime(new Date());
 										WorkManager.Instance().save(work);
 										patientsDialog.setTitle(work.getName());
-										//patientsDialog.show(getSupportFragmentManager(), "patientsDialog");
+										patientsDialog.show(getSupportFragmentManager(), "patientsDialog");
 									}
 
 								});
@@ -164,23 +159,23 @@ public class AdditionalWorksActivity extends BaseActivity {
 			stopDialog.show(getSupportFragmentManager(), "stopDialog");
 	}
 
-//	@Override
-//	public void onDialogPositiveClick(DialogFragment dialog) {
-//		if (dialog == patientsDialog)
-//		{
-//			work.setPatientIDs(patientsDialog.getSelectedPatientIDs());
-//			work.setIsDone(true);
-//			WorkManager.Instance().save(work);
-//			Option.Instance().setWorkID(BaseObject.EMPTY_ID);
-//			Option.Instance().save();
-//			startPatientsActivity();
-//		}
-//		
-//	}
-//
-//	@Override
-//	public void onDialogNegativeClick(DialogFragment dialog) {
-//		// TODO Auto-generated method stub		
-//	}
+	@Override
+	public void onDialogPositiveClick(DialogFragment dialog) {
+		if (dialog == patientsDialog)
+		{
+			work.setPatientIDs(patientsDialog.getSelectedPatientIDs());
+			work.setIsDone(true);
+			WorkManager.Instance().save(work);
+			Option.Instance().setWorkID(BaseObject.EMPTY_ID);
+			Option.Instance().save();
+			startPatientsActivity();
+		}
+		
+	}
+
+	@Override
+	public void onDialogNegativeClick(DialogFragment dialog) {
+		// TODO Auto-generated method stub		
+	}
 
 }

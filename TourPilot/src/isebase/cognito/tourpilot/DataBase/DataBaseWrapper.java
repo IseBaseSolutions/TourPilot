@@ -29,6 +29,8 @@ import isebase.cognito.tourpilot.Data.Tour.Tour;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
 import isebase.cognito.tourpilot.Data.Work.Work;
 import isebase.cognito.tourpilot.Data.Work.WorkManager;
+import isebase.cognito.tourpilot.Data.UserRemark.UserRemark;
+import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
@@ -55,7 +57,36 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "TourPilot.db";
 
 	public static final int DATABASE_VERSION = 11;
+	
+	private DataBaseWrapper(Context context) {
+		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+	}
 
+	private static DataBaseWrapper instance;
+
+	public static synchronized DataBaseWrapper Instance() {
+		if (instance == null)
+			instance = new DataBaseWrapper(StaticResources.getBaseContext());
+		return instance;
+	}	
+	
+	/*
+	 * Create tables
+	 * 
+	 * */
+	
+	private static final String USER_REMARKS_TABLE_CREATE = 
+			"CREATE TABLE " + UserRemarkManager.TableName + "(" 
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
+			+ BaseObject.NameField + " TEXT NOT NULL, "
+			+ BaseObject.CheckSumField + " INTEGER, "
+			+ BaseObject.WasSentField + " INTEGER, "
+			+ BaseObject.IsServerTimeField + " INTEGER, "
+			+ UserRemark.PatientIDField + " INTEGER, " 
+			+ UserRemark.DateField + " INTEGER, " 
+			+ UserRemark.CheckboxField + " INTEGER " 
+			+ ");";
+	
 	private static final String WORKERS_TABLE_CREATE = 
 			"CREATE TABLE " + WorkerManager.TableName + "(" 
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
@@ -128,7 +159,10 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Task.EmploymentIDField + " INTEGER, "
 			+ Task.PilotTourIDField + " INTEGER, "
 			+ Task.RealDateField + " INTEGER, "
-			+ Task.ManualDateField + " INTEGER "
+			+ Task.ManualDateField + " INTEGER, "
+			+ Task.QualityField + " INTEGER, "
+			+ Task.CatalogField + " INTEGER, "
+			+ Task.QualityResultField + " TEXT "
 			+ ");";
 	
 	private static final String ADDITIONAL_TASKS_TABLE_CREATE = 
@@ -272,19 +306,6 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ EmploymentInterval.StartTimeField + " INTEGER, "
 			+ EmploymentInterval.StopTimeField + " INTEGER "
 			+ ");";	
-	
-	public DataBaseWrapper(Context context) {
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
-	}
-
-	private static DataBaseWrapper instance;
-
-	public static DataBaseWrapper Instance() {
-		if (instance != null)
-			return instance;
-		instance = new DataBaseWrapper(StaticResources.getBaseContext());
-		return instance;
-	}	
 		
 	private static String[] createDataTables = new String[]{
 		TOURS_TABLE_CREATE,
@@ -296,6 +317,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		INFORMATIONS_TABLE_CREATE,
 		PATIENTS_REMARK_TABLE_CREATE,
 		RELATIVES_TABLE_CREATE,		
+		USER_REMARKS_TABLE_CREATE,
 		
 		WORKERS_TABLE_CREATE,
 		ADDITIONAL_TASKS_TABLE_CREATE,
@@ -316,6 +338,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		"DROP TABLE IF EXISTS " + InformationManager.TableName,
 		"DROP TABLE IF EXISTS " + PatientRemarkManager.TableName,
 		"DROP TABLE IF EXISTS " + RelativeManager.TableName,
+		"DROP TABLE IF EXISTS " + UserRemarkManager.TableName,
 		
 		"DROP TABLE IF EXISTS " + WorkerManager.TableName,
 		"DROP TABLE IF EXISTS " + AdditionalTaskManager.TableName,
@@ -339,7 +362,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		"DELETE FROM " + PilotTourManager.TableName,
 		"DELETE FROM " + EmploymentManager.TableName,
 		"DELETE FROM " + WorkManager.TableName,
-		"DELETE FROM " + EmploymentIntervalManager.TableName
+		"DELETE FROM " + EmploymentIntervalManager.TableName,
+		"DELETE FROM " + UserRemarkManager.TableName
 	};
 	
 	@Override
@@ -408,4 +432,5 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
 	}
+
 }

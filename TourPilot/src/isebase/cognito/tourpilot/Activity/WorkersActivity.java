@@ -6,12 +6,10 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
+import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.PinDialog;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
@@ -19,7 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class WorkersActivity extends BaseActivity {
+public class WorkersActivity extends BaseActivity implements BaseDialogListener {
 
 	private List<Worker> workers = new ArrayList<Worker>();
 	private PinDialog pinDialog;
@@ -27,18 +25,18 @@ public class WorkersActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		try{
+		try {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_workers);
 			reloadData();
 			initDialogs();
 			initListWorkers();
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			ex.printStackTrace();
 			criticalClose();
 		}
 	}
-		
+
 	@Override
 	public void onBackPressed() {
 		startOptionsActivity();
@@ -63,35 +61,10 @@ public class WorkersActivity extends BaseActivity {
 	public void btOptionsClick(View view) {
 		startOptionsActivity();
 	}
-	
-	private void startOptionsActivity() {
-		Intent optionsActivity = new Intent(getApplicationContext(), OptionsActivity.class);
-		startActivity(optionsActivity);
-	}
-
-	public void startWorkerSync() {
-		Intent synchActivity = new Intent(getApplicationContext(), SynchronizationActivity.class);
-		startActivity(synchActivity);
-	}
 
 	public void reloadData() {
-		workers = WorkerManager.Instance().load(null, null, BaseObject.NameField);
-	}
-
-	public boolean checkWorkerPIN(String workerName, String strPin) {
-		if (strPin.equals(""))
-			return false;
-		Long pin = Long.parseLong(strPin);
-		long num = 0;
-		int numArray[] = new int[] { 1, 3, 5, 7, 13, 0x11 };
-		try {
-			byte byteText[] = workerName.getBytes("latin1");
-			for (int i = 0; i < byteText.length; i++)
-				num += (byteText[i]) * numArray[i % 6];
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return num == pin;
+		workers = WorkerManager.Instance().load(null, null,
+				BaseObject.NameField);
 	}
 
 	private void initDialogs() {
@@ -99,30 +72,30 @@ public class WorkersActivity extends BaseActivity {
 	}
 
 	private void showPinDialog() {
-//		pinDialog.show(getSupportFragmentManager(), "dialogPin");
-//		getSupportFragmentManager().executePendingTransactions();
-//		pinDialog.getDialog().setTitle(selectedWorker.getName());
+		pinDialog.setWorker(selectedWorker);
+		pinDialog.show(getSupportFragmentManager(), "dialogPin");
+		getSupportFragmentManager().executePendingTransactions();
+		pinDialog.getDialog().setTitle(selectedWorker.getName());
 	}
 
-//	@Override
-//	public void onDialogPositiveClick(DialogFragment dialog) {
-//		if (dialog != pinDialog)
-//			return;
-//		String name = selectedWorker.getName();
-//		String pinStr = pinDialog.etPin.getText().toString();
-//		if (!checkWorkerPIN(name, pinStr))
-//			return;
-//
-//		DataBaseWrapper.Instance().clearWorkerData();
-//		saveSelectedWorkerID();
-//		startWorkerSync();
-//	}
-//
-//	@Override
-//	public void onDialogNegativeClick(DialogFragment dialog) {
-//		return;
-//	}
-	
+	@Override
+	public void onDialogPositiveClick(DialogFragment dialog) {
+		if (dialog != pinDialog)
+			return;
+		logIn();
+	}
+
+	@Override
+	public void onDialogNegativeClick(DialogFragment dialog) {
+		return;
+	}
+
+	private void logIn() {
+		DataBaseWrapper.Instance().clearWorkerData();
+		saveSelectedWorkerID();
+		startSyncActivity();
+	}
+
 	private void saveSelectedWorkerID() {
 		Option.Instance().setPrevWorkerID(Option.Instance().getWorkerID());
 		Option.Instance().setWorkerID(selectedWorker.getID());

@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -85,19 +84,8 @@ public class PatientsActivity extends BaseActivity {
 		startToursActivity();
 	}
 	
-	private void startToursActivity() {
-		Intent toursActivity = new Intent(getApplicationContext(), ToursActivity.class);
-		startActivity(toursActivity);
-	}
-	
-	private void startTasksActivity() {
-		Intent tasksActivity = new Intent(getApplicationContext(), TasksActivity.class);
-		startActivity(tasksActivity);
-	}
-	
-	private void startAdditionalWorksActivity() {
-		Intent additionalWorksActivity = new Intent(getApplicationContext(), AdditionalWorksActivity.class);
-		startActivity(additionalWorksActivity);
+	public void btEndTourClick(View view){
+		startSyncActivity();
 	}
 
 	public void fillUp() {
@@ -181,5 +169,4 @@ public class PatientsActivity extends BaseActivity {
 		};
 		
 	}
-	
 }
