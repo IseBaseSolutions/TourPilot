@@ -1,6 +1,7 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
@@ -28,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 public class PatientsActivity extends BaseActivity {
@@ -39,11 +41,14 @@ public class PatientsActivity extends BaseActivity {
 	private DialogFragment patientsDialog;
 	private String[] patientsArr;
 	
+	private Button btTourEnd;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		try{
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_patients);
+			init();
 			reloadData();
 			fillUpTitle();
 			fillUp();
@@ -78,10 +83,16 @@ public class PatientsActivity extends BaseActivity {
 	}
 	
 	public void btEndTourClick(View view){
+		Option.Instance().setPilotTourID(BaseObject.EMPTY_ID);
+		Option.Instance().save();
 		startSyncActivity();
 	}
 
-	public void fillUp() {
+	private void init(){
+		btTourEnd = (Button) findViewById(R.id.btEndTour);
+	}
+	
+	private void fillUp() {
 		WorkEmploymentAdapter adapter = new WorkEmploymentAdapter(this,R.layout.row_work_employment_template, items);
 		ListView lvEmployments = (ListView) findViewById(R.id.lvEmployments);
 		lvEmployments.setAdapter(adapter);
@@ -112,13 +123,27 @@ public class PatientsActivity extends BaseActivity {
 		});
 	}
 
-	public void reloadData() {
+	private void reloadData() {
 		employments = EmploymentManager.Instance().load(Employment.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID()));
 		works = WorkManager.Instance().loadAll(Work.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID()));
 		items = new ArrayList<IJob>();
 		items.addAll(employments);
 		items.addAll(works);
 		Collections.sort(items, new JobComparer());
+		checkTourEndButton();
+	}
+	
+	private void checkTourEndButton(){
+		int taskCount = items.size();
+		int doneTaskCount = 0;
+		int syncTaskCount = 0;
+		for(IJob job : items){
+			if(job.isDone())
+				doneTaskCount++;
+			if(job.wasSent())
+				syncTaskCount++;
+		}
+		btTourEnd.setEnabled(!(doneTaskCount < taskCount || syncTaskCount == taskCount));		
 	}
 	
 	private void fillUpTitle() {
@@ -159,6 +184,5 @@ public class PatientsActivity extends BaseActivity {
 				return adb.create();
 			}
 		};
-		
 	}
 }
