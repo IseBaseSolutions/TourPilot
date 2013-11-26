@@ -93,11 +93,9 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
     {
     	List<Employment> employments = loadAll(BaseObject.WasSentField, "0 AND is_done = 1");
     	String strEmpls = "";
-    	for (Employment employment : employments){
+    	for (Employment employment : employments)
 			strEmpls += employment.getDone();
-			employment.setWasSent(true);
-			save(employment);
-		}
+    	execSQL("update Relatives set was_sent = 1 where was_sent = 0 and is_done = 1");
     	return strEmpls;
     }
 }

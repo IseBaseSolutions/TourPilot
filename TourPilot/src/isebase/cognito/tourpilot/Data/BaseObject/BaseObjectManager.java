@@ -507,12 +507,15 @@ public abstract class BaseObjectManager<T> {
 	public String getDone() {
 		List<T> elements = load(BaseObject.WasSentField, "0");
 		String strDone = "";
-		for (T element : elements){
+		for (T element : elements)
 			strDone += ((BaseObject)element).getDone() + "\0";
-			((BaseObject)element).setWasSent(true);
-			save(element);
-		}
+		updateNotSent();
 		return strDone;	
+	}
+	
+	public void updateNotSent(){
+		execSQL(String.format("update %1$s set was_sent = 1 where was_sent = 0",
+				getRecTableName()));
 	}
 	
 }
