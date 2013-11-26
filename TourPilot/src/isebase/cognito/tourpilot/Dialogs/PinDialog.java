@@ -16,7 +16,6 @@ import android.widget.EditText;
 public class PinDialog extends BaseDialog {
 
 	private EditText etPin;
-	private BaseDialogListener mListener;
 	private Worker worker;
 
 	public void setWorker(Worker worker) {
@@ -42,13 +41,13 @@ public class PinDialog extends BaseDialog {
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
-
+						listener.onDialogPositiveClick(PinDialog.this);
 					}
 				});
 		adb.setNegativeButton(isebase.cognito.tourpilot.R.string.cancel,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						mListener.onDialogNegativeClick(PinDialog.this);
+						listener.onDialogNegativeClick(PinDialog.this);
 					}
 				});
 		return adb.create();
@@ -66,24 +65,13 @@ public class PinDialog extends BaseDialog {
 				public void onClick(View v) {
 					if (worker.checkPIN(getPin())) {
 						dismiss();
-						mListener.onDialogPositiveClick(PinDialog.this);
+						listener.onDialogPositiveClick(PinDialog.this);
 					} else {
 						etPin.setText("");
 						etPin.setHintTextColor(Color.RED);
 					}
 				}
 			});
-		}
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		try {
-			mListener = (BaseDialogListener) activity;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement BaseDialogListener");
 		}
 	}
 }

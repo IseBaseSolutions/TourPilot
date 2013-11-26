@@ -1,11 +1,8 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
-import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentInterval;
-import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentIntervalManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
@@ -16,19 +13,19 @@ import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
 import isebase.cognito.tourpilot.DataInterfaces.Job.JobComparer;
+import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Templates.WorkEmploymentAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
-import android.content.DialogInterface.OnMultiChoiceClickListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.Menu;
@@ -37,13 +34,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-public class PatientsActivity extends BaseActivity {
+public class PatientsActivity extends BaseActivity implements BaseDialogListener {
 
 	private List<Employment> employments;
 	private List<Work> works;
 	private List<IJob> items;
 	private Work work;
-	private DialogFragment patientsDialog;
+	private DialogFragment selectedPatientsDialog;
 	private String[] patientsArr;
 	
 	@Override
@@ -102,18 +99,8 @@ public class PatientsActivity extends BaseActivity {
 				}
 				else
 				{
-					work = (Work) items.get(position);
-					List<Patient> patients = PatientManager.Instance().loadByIDs(work.getPatientIDs());
-					if (patients.size() > 0)
-					{
-						patientsArr = new String[patients.size()];
-						int counter = 0;
-						for (Patient patient : patients)
-							patientsArr[counter++] = patient.getFullName(); 
-					}
-					else						
-						patientsArr = new String[]{getString(R.string.no_any_patient)};
-					patientsDialog.show(getSupportFragmentManager(), "patientsDialog");
+					showPatientsDialog(position);
+					return;
 				}
 			}
 		});
@@ -122,7 +109,6 @@ public class PatientsActivity extends BaseActivity {
 	public void reloadData() {
 		employments = EmploymentManager.Instance().load(Employment.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID()));
 		works = WorkManager.Instance().loadAll(Work.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID()));
-		List<EmploymentInterval> s = EmploymentIntervalManager.Instance().load();
 		items = new ArrayList<IJob>();
 		items.addAll(employments);
 		items.addAll(works);
@@ -144,7 +130,7 @@ public class PatientsActivity extends BaseActivity {
 	}
 	
 	private void initDialogs() {
-		patientsDialog = new DialogFragment() {
+		selectedPatientsDialog = new DialogFragment() {
 			@Override
 			public Dialog onCreateDialog(Bundle savedInstanceState) {
 				AlertDialog.Builder adb = new AlertDialog.Builder(getActivity())
@@ -169,4 +155,37 @@ public class PatientsActivity extends BaseActivity {
 		};
 		
 	}
+	
+	private void showPatientsDialog(int position) {
+		work = (Work) items.get(position);
+		List<Patient> patients = PatientManager.Instance().loadByIDs(work.getPatientIDs());
+		if (patients.size() > 0)
+		{
+			patientsArr = new String[patients.size()];
+			int counter = 0;
+			for (Patient patient : patients)
+				patientsArr[counter++] = patient.getFullName(); 
+		}
+		else						
+			patientsArr = new String[]{getString(R.string.no_any_patient)};
+		selectedPatientsDialog.show(getSupportFragmentManager(), "patientsDialog");
+	}
+
+	@Override
+	public void onDialogPositiveClick(DialogFragment dialog) {
+	
+	}
+
+	@Override
+	public void onDialogNegativeClick(DialogFragment dialog) {
+
+	}
+	
+	@Override
+	protected void startManualInputActivity() {
+		Intent manualInputActivity = new Intent(getApplicationContext(), ManualInputActivity.class);
+		manualInputActivity.putExtra("WorkID", work.getID());
+		startActivity(manualInputActivity);
+	}
+	
 }

@@ -227,7 +227,7 @@ public class Employment extends BaseObject implements IJob {
 
 	@Override
 	public String text() {
-		return getName();
+		return (getPatientID() < 999900 ? getName() : getName().replace(", ", ""));
 	}
 
 	@Override

@@ -153,7 +153,8 @@ public class Patient extends BaseObject implements IAddressable {
 		setSurname(parsingString.next(";"));
 		setName(parsingString.next(";"));
 		String sexStr = parsingString.next(";");
-		setSex(sexStr.substring(1, sexStr.length()));
+		if (!sexStr.equals(""))
+			setSex(sexStr.substring(1, sexStr.length()));
 		address.setStreet(parsingString.next(";"));
 		address.setZip(parsingString.next(";"));
 		address.setCity(parsingString.next(";"));

@@ -4,6 +4,9 @@ import isebase.cognito.tourpilot.Connection.ServerCommandParser;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWork;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
+import isebase.cognito.tourpilot.Data.Task.Task;
+import isebase.cognito.tourpilot.Data.Task.TaskManager;
+import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
 import isebase.cognito.tourpilot.Utils.DateUtils;
@@ -52,6 +55,7 @@ public class Work extends BaseObject implements IJob {
 	public void setAdditionalWork(AdditionalWork additionalWork) {
 		this.additionalWork = additionalWork;
 	}
+	
 	@MapField(DatabaseField = AdditionalWorkIDField)
 	public int getAdditionalWorkID() {
 		return additionalWorkID;
@@ -139,7 +143,7 @@ public class Work extends BaseObject implements IJob {
     {
         setStartTime(startDate);
         setStopTime(stopDate);
-        setManualTime(stopDate);
+        setManualTime(manualtime);
         setAdditionalWorkID(addWorkID);
         setPilotTourID(pilotTourID);
         setName(name);

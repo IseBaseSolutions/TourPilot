@@ -22,6 +22,8 @@ import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
+import isebase.cognito.tourpilot.Data.Work.Work;
+import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
@@ -164,7 +166,7 @@ public class ServerCommandParser {
 				TaskManager.Instance().save(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else
-				removeByID(commandLine, TaskManager.Instance());
+				removeByID (commandLine, TaskManager.Instance());
 			break;
 		case ADDITIONAL_WORK:
 			if (commandActionType == NEED_TO_ADD) {

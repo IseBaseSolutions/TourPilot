@@ -130,17 +130,17 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		tvTime.setText(task.getRealDate().equals(DateUtils.EmptyDate)
 				? getString(R.string.def_empty_time)
 				: DateUtils.HourMinutesFormat.format(startTask.getManualDate().equals(DateUtils.EmptyDate) 
-						? startTask.getRealDate() 
-						: startTask.getManualDate()));
+						? task.getRealDate() 
+						: task.getManualDate()));
 		tvDate.setText(task.getRealDate().equals(DateUtils.EmptyDate)
 				? getString(R.string.def_empty_date)
 				: DateUtils.DateFormat.format(startTask.getManualDate().equals(DateUtils.EmptyDate) 
-						? startTask.getRealDate() 
-						: startTask.getManualDate()));
+						? task.getRealDate() 
+						: task.getManualDate()));
 	}
 	
 	private void fillUpTitle(){
-		setTitle(employment.getName() + ", " + startTask.getDayPart());
+		setTitle(employment.text() + ", " + startTask.getDayPart());
 	}
 	
 	private void fillUpTasks(){

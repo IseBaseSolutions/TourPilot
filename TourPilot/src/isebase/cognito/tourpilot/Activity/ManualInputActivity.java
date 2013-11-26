@@ -34,11 +34,11 @@ import android.widget.ListView;
 
 public class ManualInputActivity extends BaseActivity implements BaseDialogListener {
 
-        private List<IJob> jobs = new ArrayList<IJob>();
-        private List<Patient> patients = new ArrayList<Patient>();
-  
-        private IntervalInputDialog intervalInputDialog;
-        private PatientsDialog patientsDialog;
+    private List<IJob> jobs = new ArrayList<IJob>();
+    private List<Patient> patients = new ArrayList<Patient>();
+	  
+    private IntervalInputDialog intervalInputDialog;
+    private PatientsDialog patientsDialog;
     
     private AdditionalWork additionalWork;
     private Employment employment;
@@ -86,12 +86,13 @@ public class ManualInputActivity extends BaseActivity implements BaseDialogListe
                 Collections.sort(jobs, new JobComparer());
                 insertSelectionPeriods();
                 patients = PatientManager.Instance().loadByPilotTourID(Option.Instance().getPilotTourID());
-                manualInputType = Option.Instance().getEmploymentID() != -1 ? eManualInputType.employment : eManualInputType.work;
                 
+                manualInputType = Option.Instance().getEmploymentID() != -1 ? eManualInputType.employment : eManualInputType.work;                
                 if (manualInputType == eManualInputType.employment)
-                        employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
-                else
-                        additionalWork = AdditionalWorkManager.Instance().load(getIntent().getExtras().getInt("addWorkID"));
+                	employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
+              	if (getIntent().getExtras() == null)
+               		return;
+           		additionalWork = AdditionalWorkManager.Instance().load(getIntent().getExtras().getInt("addWorkID"));
         }
         
         private void insertSelectionPeriods() {                
@@ -147,24 +148,19 @@ public class ManualInputActivity extends BaseActivity implements BaseDialogListe
         @Override
         public void onDialogPositiveClick(DialogFragment dialog) {
                 if (dialog == intervalInputDialog)
-                        if (manualInputType == eManualInputType.work)
-                                patientsDialog.show(getSupportFragmentManager(), "patientsDialog");
-                        else
-                        {
-                                employment = EmploymentManager.Instance().loadAll(employment.getID());
-                                employment.getFirstTask().setManualDate(intervalInputDialog.getStartDate());
-                                employment.getLastTask().setManualDate(intervalInputDialog.getStopDate());
-                                TaskManager.Instance().save(employment.getTasks());
-                                startTasksActivity();
-                        }
+                    if (manualInputType == eManualInputType.work)
+                            patientsDialog.show(getSupportFragmentManager(), "patientsDialog");
+                    else
+                    {                        employment = EmploymentManager.Instance().loadAll(employment.getID());
+                        employment.getFirstTask().setManualDate(intervalInputDialog.getStartDate());
+                        employment.getLastTask().setManualDate(intervalInputDialog.getStopDate());
+                        TaskManager.Instance().save(employment.getTasks());
+                        startTasksActivity();;
+                    }
                 if (dialog == patientsDialog)
                 {
-                        Work work = new Work(intervalInputDialog.getStartDate(), intervalInputDialog.getStopDate(), 
-                                        new Date(), additionalWork.getID(), Option.Instance().getPilotTourID(), additionalWork.getName());
-                        work.setPatientIDs(patientsDialog.getSelectedPatientIDs());
-                        work.setIsDone(true);
-                        WorkManager.Instance().save(work);
-                        startPatientsActivity();
+                    saveWork();
+                    startPatientsActivity();
                 }
                 
         }
@@ -172,6 +168,14 @@ public class ManualInputActivity extends BaseActivity implements BaseDialogListe
         @Override
         public void onDialogNegativeClick(DialogFragment dialog) {
                 
+        }
+        
+        private void saveWork() {            Work work = new Work(intervalInputDialog.getStartDate(), new Date(), 
+            		intervalInputDialog.getStopDate(), additionalWork.getID(), 
+            		Option.Instance().getPilotTourID(), additionalWork.getName());
+        	work.setPatientIDs(patientsDialog.getSelectedPatientIDs());
+	        work.setIsDone(true);
+	        WorkManager.Instance().save(work);
         }
         
 }
