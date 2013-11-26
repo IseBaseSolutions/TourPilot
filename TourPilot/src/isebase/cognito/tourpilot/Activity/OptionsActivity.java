@@ -130,6 +130,7 @@ public class OptionsActivity extends BaseActivity {
 		etPhoneNumber.setText(Option.Instance().getPhoneNumber());
 		etServerIP.setText(Option.Instance().getServerIP());
 		etServerPort.setText(String.valueOf(Option.Instance().getServerPort()));
+		etPin.setText(String.valueOf(Option.Instance().getPin()));
 	}
 
 	private void saveOptions() {
