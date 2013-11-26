@@ -19,6 +19,7 @@ public class Option {
 	public static final String ServerIPField = "server_ip";
 	public static final String ServerPortField = "server_port";
 	public static final String IsAutoField = "is_auto";
+	public static final String IsWorkerActivityField = "is_worker_activity";
 
 	public static boolean testMode = false;
 	private Worker worker;
@@ -37,6 +38,17 @@ public class Option {
 	private int id;
 
 	private boolean isAuto;
+	private boolean isWorkerActivity;
+
+	@MapField(DatabaseField = IsWorkerActivityField)
+	public boolean isWorkerActivity() {
+		return isWorkerActivity;
+	}
+
+	@MapField(DatabaseField = IsWorkerActivityField)
+	public void setWorkerActivity(boolean isWorkerActivity) {
+		this.isWorkerActivity = isWorkerActivity;
+	}
 
 	@MapField(DatabaseField = WorkIDField)
 	public int getWorkID() {

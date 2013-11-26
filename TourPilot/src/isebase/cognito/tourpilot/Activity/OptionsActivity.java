@@ -32,12 +32,16 @@ public class OptionsActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		StaticResources.setBaseContext(getBaseContext());
-		setContentView(R.layout.activity_options);
-		switchToLastActivity();
-		initControls();
-		initDialogs();
+		try{
+			super.onCreate(savedInstanceState);
+			StaticResources.setBaseContext(getBaseContext());
+			setContentView(R.layout.activity_options);
+			switchToLastActivity();
+			initControls();
+			initDialogs();
+		}
+		catch(Exception ex){
+		}
 	}
 
 	@Override
@@ -56,37 +60,45 @@ public class OptionsActivity extends BaseActivity {
 		return true;
 	}
 
+	private void busy(final boolean dbBackup){
+		pbClearDB.setVisibility(View.VISIBLE);
+		syncButton.setEnabled(false);
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				try{
+					if(dbBackup)
+						DataBaseUtils.backup();
+					else
+						DataBaseWrapper.Instance().clearAllData();	
+				}
+				catch(Exception ex){
+					ex.printStackTrace();
+				}
+
+				return null;
+			}
+							
+			@Override
+			protected void onPostExecute(Void result) {
+				pbClearDB.setVisibility(View.INVISIBLE);
+				syncButton.setEnabled(true);
+			}
+		}.execute();
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_clear_database:
-			pbClearDB.setVisibility(View.VISIBLE);
-			syncButton.setEnabled(false);
-			new AsyncTask<Void, Void, Void>() {
-
-				@Override
-				protected Void doInBackground(Void... params) {
-					DataBaseWrapper.Instance().clearAllData();
-					return null;
-				}
-								
-				@Override
-				protected void onPostExecute(Void result) {
-					pbClearDB.setVisibility(View.INVISIBLE);
-					syncButton.setEnabled(true);
-				}
-			}.execute();
+			busy(false);
 			return true;
 		case R.id.action_show_program_info:
 			versionFragmentDialog.show(getSupportFragmentManager(), "dialogVersion");
 			return true;
 		case R.id.action_db_backup:		
-			try{
-				DataBaseUtils.backup();
-			}
-			catch(Exception ex){
-				ex.printStackTrace();
-			}
+			busy(true);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -152,7 +164,8 @@ public class OptionsActivity extends BaseActivity {
 			startPatientsActivity();
 		else if (Option.Instance().getWorkerID() != -1)
 			startToursActivity();
-		else
+		else if (Option.Instance().isWorkerActivity())
+			startWorkersActivity();
 			return;
 	}
 }

@@ -137,7 +137,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Option.EmploymentIDField + " INTEGER, "
 			+ Option.ServerIPField + " TEXT, "
 			+ Option.ServerPortField + " INTEGER, "
-			+ Option.IsAutoField + " INTEGER "
+			+ Option.IsAutoField + " INTEGER, "
+			+ Option.IsWorkerActivityField + " INTEGER "
 			+ ");";
 
 	private static final String TASKS_TABLE_CREATE = 
@@ -369,9 +370,9 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		try {
-			Instance().getReadableDatabase().execSQL(OPTIONS_TABLE_CREATE);
+			db.execSQL(OPTIONS_TABLE_CREATE);
 			for(String createTable : createDataTables)
-				Instance().getReadableDatabase().execSQL(createTable);
+				db.execSQL(createTable);
 		} catch(Exception e){
 			e.printStackTrace();
 		}
