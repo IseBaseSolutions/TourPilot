@@ -161,7 +161,6 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		fillUpEndTask();
 	}	
 
-
 	public void reloadData() {
 		employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
 		patientRemark = PatientRemarkManager.Instance().load(employment.getPatientID());
