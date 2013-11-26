@@ -106,13 +106,13 @@
     <string name="tour_end">Tour ende</string>
     <string name="stop">Stop</string>
     <string name="start">Start</string>
-    <string name="started_at">Started at</string>
+    <string name="started_at">Gestartet um</string>
     <string name="attention">Achtung!</string>
     
  <!-- Dialogs -->   
     <string name="dialog_task_proof_back">Möchten Sie wirklich die Zeiten verwerfen? Wenn Sie diese Medlung mit OK bestätigen, werden die Zeiten gelöscht.</string>
     <string name="dialog_no_connection">Bitte, die Internet Verbindung zulassen</string>
-    <string name="dialog_complete_all_tasks">please complete all tasks</string>
+    <string name="dialog_complete_all_tasks">Es fehlen noch Daten, die Sie für diese Tour noch nicht eingegeben haben. Bitte nehmen Sie die Eingabe jetzt vor.</string>
     <string name="dialog_no_ip_entered">Tragen Sie bitte die Server IP ein</string>
     <string name="dialog_connection_problems">Verbindungsstörungen</string>
     <string name="dialog_proof_logout">Möchten Sie wirklich abmelden?</string>
@@ -120,6 +120,6 @@
  <!-- Errors -->    
     <string name="err_no_phone">Keine TelefonNr.</string>
     <string name="err_no_address">Keine Adresse</string>
-    <string name="err_no_patients">No patients</string>
+    <string name="err_no_patients">Keine Patienten</string>
     
 </resources>
