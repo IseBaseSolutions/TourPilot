@@ -19,6 +19,7 @@ public class AddressPatientActivity extends BaseActivity {
 
 	private List<Patient> patients;
 	private Employment employment;
+	private AddressAdapter<Patient> adapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,7 @@ public class AddressPatientActivity extends BaseActivity {
 	}
 	
 	private void initForm(){
-		AddressAdapter<Patient> adapter = new AddressAdapter<Patient>(this
+		adapter = new AddressAdapter<Patient>(this
 				, R.layout.row_address_template, patients);
 		ListView doctorsListView = (ListView) findViewById(R.id.lvListPatientAdrress);
 		doctorsListView.setAdapter(adapter);
@@ -52,22 +53,4 @@ public class AddressPatientActivity extends BaseActivity {
 		setTitle(getString(R.string.menu_address) + ". " + employment.getName());
 	}
 	
-	public void onCallPhone(View view) {		
-		Patient patinet = (Patient) view.getTag();
-		Intent callIntent = new Intent(Intent.ACTION_CALL);
-		callIntent.setData(Uri.parse("tel:" + patinet.address.getRealPhone()));
-		startActivity(callIntent);
-	}
-	public void onCallPrivatePhone(View view){
-		Patient patient = (Patient) view.getTag();
-		Intent callIntent = new Intent(Intent.ACTION_CALL);
-		callIntent.setData(Uri.parse("tel:" + patient.address.getRealPrivatePhone()));
-		startActivity(callIntent);
-	}
-	public void onCallMobilePhone(View view){
-		Patient patient = (Patient) view.getTag();
-		Intent callIntent = new Intent(Intent.ACTION_CALL);
-		callIntent.setData(Uri.parse("tel:" + patient.address.getRealMobilePhone()));
-		startActivity(callIntent);
-	}
 }
