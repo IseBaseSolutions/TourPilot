@@ -461,8 +461,34 @@ public abstract class BaseObjectManager<T> {
 		} finally {
 			if (cursor != null)
 				cursor.close();
-		}
-		
+		}		
+		return retVal;
+	}
+	
+	public long getCheckSumByRequest(){
+		return getLongValue(String.format("select sum(checksum) " +
+				"from %1$s where was_sent = 0", getRecTableName()));
+	}
+	
+	public long getLongValue(String strSQL){
+		Cursor cursor = null;
+		long retVal = 0;
+		try {
+			cursor = DataBaseWrapper.Instance()
+					.getReadableDatabase().rawQuery(strSQL, null);
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				retVal = cursor.getLong(0);
+				cursor.moveToNext();
+				break;
+			}
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+			ex.printStackTrace();
+		} finally {
+			if (cursor != null)
+				cursor.close();
+		}		
 		return retVal;
 	}
 	
@@ -479,15 +505,13 @@ public abstract class BaseObjectManager<T> {
 	}
 	
 	public String getDone() {
+		List<T> elements = load(BaseObject.WasSentField, "0");
 		String strDone = "";
-		List<T> elements = load();
-		for (T element : elements)
-			if (!((BaseObject)element).getWasSent())
-			{
-				strDone += ((BaseObject)element).getDone() + "\0";
-				((BaseObject)element).setWasSent(true);
-				save(element);
-			}
+		for (T element : elements){
+			strDone += ((BaseObject)element).getDone() + "\0";
+			((BaseObject)element).setWasSent(true);
+			save(element);
+		}
 		return strDone;	
 	}
 	

@@ -377,23 +377,23 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 
 	private String getStrChecksums() {
 		String strMsg = "";
-		strMsg += "z" + AdditionalTaskManager.Instance().getCheckSums() + "\0.\0";
-		strMsg += "a" + WorkerManager.Instance().getCheckSums() + "\0.\0";
-		strMsg += "u" + AdditionalWorkManager.Instance().getCheckSums() + "\0.\0";
+		strMsg += "z" + AdditionalTaskManager.Instance().getCheckSumByRequest() + "\0.\0";
+		strMsg += "a" + WorkerManager.Instance().getCheckSumByRequest() + "\0.\0";
+		strMsg += "u" + AdditionalWorkManager.Instance().getCheckSumByRequest() + "\0.\0";
 //		strMsg += "q" + CQuestions.Instance().getCheckSums() + "\0.\0";
 //		strMsg += "y" + CTopics.Instance().getCheckSums() + "\0.\0";
 //		strMsg += "j" + CLinks.Instance().getCheckSums() + "\0.\0";
 //		strMsg += ">" + CFreeQuestions.Instance().getCheckSums() + "\0.\0";
 //		strMsg += "<" + CFreeTopics.Instance().getCheckSums() + "\0.\0";
 		boolean userIsPresent = Option.Instance().getWorkerID() != -1;
-		strMsg += "d" + (userIsPresent ? DiagnoseManager.Instance().getCheckSums() : 0) + "\0.\0";
-		strMsg += "b" + (userIsPresent ? PatientRemarkManager.Instance().getCheckSums() : 0) + "\0.\0";
-		strMsg += "v" + (userIsPresent ? RelativeManager.Instance().getCheckSums() : 0) + "\0.\0";
-		strMsg += "m" + (userIsPresent ? DoctorManager.Instance().getCheckSums() : 0) + "\0.\0";
-		strMsg += "p" + (userIsPresent ? PatientManager.Instance().getCheckSums() : 0) + "\0.\0";
-		strMsg += "i" + (userIsPresent ? InformationManager.Instance().getCheckSums() : 0) + "\0.\0";
-		strMsg += "r" + (userIsPresent ? TourManager.Instance().getCheckSums() : 0) + "\0.\0";
-		strMsg += "t" + (userIsPresent ? TaskManager.Instance().getCheckSums() : 0) + "\0.\0";
+		strMsg += "d" + (userIsPresent ? DiagnoseManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
+		strMsg += "b" + (userIsPresent ? PatientRemarkManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
+		strMsg += "v" + (userIsPresent ? RelativeManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
+		strMsg += "m" + (userIsPresent ? DoctorManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
+		strMsg += "p" + (userIsPresent ? PatientManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
+		strMsg += "i" + (userIsPresent ? InformationManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
+		strMsg += "r" + (userIsPresent ? TourManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
+		strMsg += "t" + (userIsPresent ? TaskManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
 //		strMsg += "x" + (userIsPresent ? CQuestionSettings.Instance().getCheckSums() : 0) + "\0.\0";
 //		strMsg += "*" + (userIsPresent ? CFreeQuestionSettings.Instance().getCheckSums() : 0) + "\0.\0";
 //		strMsg += "^" + (userIsPresent ? CAutoQuestionSettings.Instance().getCheckSums() : 0) + "\0.\0";
