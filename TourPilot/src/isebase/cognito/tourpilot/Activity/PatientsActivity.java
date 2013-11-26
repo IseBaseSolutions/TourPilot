@@ -18,6 +18,7 @@ import isebase.cognito.tourpilot.Templates.WorkEmploymentAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -40,6 +41,7 @@ public class PatientsActivity extends BaseActivity {
 	private Work work;
 	private DialogFragment patientsDialog;
 	private String[] patientsArr;
+	private PilotTour pilotTour;
 	
 	private Button btTourEnd;
 	
@@ -126,6 +128,7 @@ public class PatientsActivity extends BaseActivity {
 	private void reloadData() {
 		employments = EmploymentManager.Instance().load(Employment.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID()));
 		works = WorkManager.Instance().loadAll(Work.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID()));
+		pilotTour = PilotTourManager.Instance().loadPilotTour(Option.Instance().getPilotTourID());
 		items = new ArrayList<IJob>();
 		items.addAll(employments);
 		items.addAll(works);
@@ -135,24 +138,20 @@ public class PatientsActivity extends BaseActivity {
 	
 	private void checkTourEndButton(){
 		int taskCount = items.size();
-		int doneTaskCount = 0;
 		int syncTaskCount = 0;
-		for(IJob job : items){
-			if(job.isDone())
-				doneTaskCount++;
+		for(IJob job : items)
 			if(job.wasSent())
 				syncTaskCount++;
-		}
-		btTourEnd.setEnabled(!(doneTaskCount < taskCount || syncTaskCount == taskCount));		
+		btTourEnd.setEnabled(!(syncTaskCount == taskCount 
+				|| new Date().getDate() != pilotTour.getPlanDate().getDate() ));		
 	}
 	
 	private void fillUpTitle() {
-		PilotTour pt = PilotTourManager.Instance().loadPilotTour(Option.Instance().getPilotTourID());
 		Worker worker = Option.Instance().getWorker();
 		setTitle(String.format("%1$s, %2$s - %3$s"
 				, worker.getName()
-				, pt.getName()
-				, DateUtils.WeekDateFormat.format(pt.getPlanDate())));
+				, pilotTour.getName()
+				, DateUtils.WeekDateFormat.format(pilotTour.getPlanDate())));
 	}
 	
 	private void saveSelectedEmploymentID(int emplID) {

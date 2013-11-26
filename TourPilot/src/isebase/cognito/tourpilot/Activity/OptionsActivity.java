@@ -80,8 +80,13 @@ public class OptionsActivity extends BaseActivity {
 		case R.id.action_show_program_info:
 			versionFragmentDialog.show(getSupportFragmentManager(), "dialogVersion");
 			return true;
-		case R.id.action_db_backup:
-			makeBackup();
+		case R.id.action_db_backup:		
+			try{
+				DataBaseUtils.backup();
+			}
+			catch(Exception ex){
+				ex.printStackTrace();
+			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -137,16 +142,7 @@ public class OptionsActivity extends BaseActivity {
 				getString(R.string.dialog_connection_problems),
 				getString(R.string.dialog_no_connection));
 	}
-	
-	private void makeBackup(){
-		try{
-			DataBaseUtils.backup();
-		}
-		catch(Exception ex){
-			ex.printStackTrace();
-		}
-	}
-	
+		
 	private void switchToLastActivity() {
 		if (Option.Instance().getWorkID() != -1)
 			startAdditionalWorksActivity();

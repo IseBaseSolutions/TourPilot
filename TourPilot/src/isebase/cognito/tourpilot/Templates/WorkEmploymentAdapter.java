@@ -3,10 +3,7 @@ package isebase.cognito.tourpilot.Templates;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
-
-import java.text.SimpleDateFormat;
 import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -20,7 +17,6 @@ public class WorkEmploymentAdapter extends ArrayAdapter<IJob>{
 		private List<IJob> jobs;
 		private int layoutResourceId;
 		private Context context;
-		SimpleDateFormat format = new SimpleDateFormat("HH:mm");
 
 		public WorkEmploymentAdapter(Context context, int layoutResourceId, List<IJob> items) {
 			super(context, layoutResourceId, items);

@@ -6,5 +6,8 @@
         android:showAsAction="never" 
         android:menuCategory="system"
         android:title="@string/menu_info"/>
+    <item
+        android:id="@+id/action_db_backup"
+        android:title="@string/menu_db_backup"/>
     
 </menu>

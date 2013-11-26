@@ -10,6 +10,8 @@ import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
+import isebase.cognito.tourpilot.Templates.PilotToursAdapter;
+import isebase.cognito.tourpilot.Utils.DataBaseUtils;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class ToursActivity extends BaseActivity implements BaseDialogListener{
@@ -51,11 +52,18 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
 		switch(item.getItemId()){
-		case R.id.tour_info:
-			loadTourInfos(true);
-			return true;
+			case R.id.tour_info:
+				loadTourInfos(true);
+				return true;
+			case R.id.action_db_backup:
+				try{
+					DataBaseUtils.backup();
+				}
+				catch(Exception ex){
+					ex.printStackTrace();
+				}
+				return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -64,6 +72,7 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	public void onBackPressed() {
 		showDialogLogout();
 	}
+	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu){
 		if(infos.size() == 0){
@@ -75,8 +84,8 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 
 	public void fillUp() {
 		ListView listView = (ListView) findViewById(R.id.lvTours);
-		ArrayAdapter<PilotTour> adapter = new ArrayAdapter<PilotTour>(this,
-				android.R.layout.simple_list_item_1, pilotTours);
+		PilotToursAdapter adapter = new PilotToursAdapter(this,
+				R.layout.row_tour_template, pilotTours);
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -86,7 +95,6 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 				saveSelectedTour(pilotTours.get(position));
 				startPatientsActivity();
 			}
-
 		});
 	}
 

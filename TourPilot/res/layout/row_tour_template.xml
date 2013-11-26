@@ -4,23 +4,31 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
     android:orientation="horizontal" >
+    
+    <TextView
+        android:id="@+id/tvTourDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_gravity="center_vertical"
+        android:text="Mi.25.11"/>
 
     <TextView
-        android:id="@+id/tvEmploymentTime"
+        android:id="@+id/tvTourName"
+        android:text="B-EsPs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="5dp"
-        android:text="00:00"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <TextView
-        android:id="@+id/tvEmploymentName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="5dp"
-        android:text="employment name"
+        android:layout_marginRight="5dp"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+     
+    <TextView
+        android:id="@+id/tvTourStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:textColor="@color/active"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
 </LinearLayout>

@@ -65,7 +65,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	private static DataBaseWrapper instance;
 
 	public static synchronized DataBaseWrapper Instance() {
-		if (instance == null || instance.getReadableDatabase() == null)
+		if (instance == null)
 			instance = new DataBaseWrapper(StaticResources.getBaseContext());
 		return instance;
 	}	
@@ -369,9 +369,9 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		try {
-			db.execSQL(OPTIONS_TABLE_CREATE);
+			Instance().getReadableDatabase().execSQL(OPTIONS_TABLE_CREATE);
 			for(String createTable : createDataTables)
-				db.execSQL(createTable);
+				Instance().getReadableDatabase().execSQL(createTable);
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -398,16 +398,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 				ex.printStackTrace();
 				continue;
 			}
-		}		
-		try{
-			if (DataBaseWrapper.Instance().getReadableDatabase() != null)
-				DataBaseWrapper.Instance().getReadableDatabase().close();
-			DataBaseWrapper.Instance().close();
-		}catch(Exception ex){
-			ex.printStackTrace();
-			retVal = false;
-		}
-		
+		}	
 		return retVal;	
 	}
 	
@@ -419,11 +410,6 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		}catch(Exception ex){
 			ex.printStackTrace();
 			retVal = false;
-		}
-		finally{
-			if (DataBaseWrapper.Instance().getReadableDatabase() != null)
-				DataBaseWrapper.Instance().getReadableDatabase().close();
-			DataBaseWrapper.Instance().close();
 		}
 		return retVal;
 	}
