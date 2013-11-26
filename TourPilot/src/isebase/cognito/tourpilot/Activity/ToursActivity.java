@@ -164,7 +164,7 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 		}
 		if(strInfos.length() > 0){
 			InformationManager.Instance().save(infos);
-			InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_diagnose),strInfos);
+			InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.dialog_info),strInfos);
 			dialog.show(getSupportFragmentManager(), "");
 		}
 	}
