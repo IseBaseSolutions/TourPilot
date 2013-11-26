@@ -116,15 +116,8 @@
     <string name="dialog_no_ip_entered">Tragen Sie bitte die Server IP ein</string>
     <string name="dialog_connection_problems">Verbindungsstörungen</string>
     <string name="dialog_proof_logout">Möchten Sie wirklich abmelden?</string>
-<<<<<<< HEAD
-=======
-    <string name="dialog_no_connection">Please enable internet connection</string>
-    <string name="dialog_no_ip_entered">Please enter server IP address</string>
-    <string name="dialog_connection_problems">Connection problems</string>
     <string name="dialog_info">Information</string>
     <string name="dialog_comments">Comments</string>
->>>>>>> refs/heads/VladimirsBranch
-
  <!-- Errors -->    
     <string name="err_no_phone">Keine TelefonNr.</string>
     <string name="err_no_address">Keine Adresse</string>
