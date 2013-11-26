@@ -26,6 +26,7 @@ public class OptionsActivity extends BaseActivity {
 	private EditText etServerIP;
 	private EditText etServerPort;
 	private EditText etPhoneNumber;
+	private EditText etPin;
 	
 	private ProgressBar pbClearDB;
 	private Button syncButton;	
@@ -125,6 +126,7 @@ public class OptionsActivity extends BaseActivity {
 		etServerIP = (EditText) findViewById(R.id.etServerIP);
 		etServerPort = (EditText) findViewById(R.id.etServerPort);
 		etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
+		etPin = (EditText) findViewById(R.id.etPinCode);
 		etPhoneNumber.setText(Option.Instance().getPhoneNumber());
 		etServerIP.setText(Option.Instance().getServerIP());
 		etServerPort.setText(String.valueOf(Option.Instance().getServerPort()));
@@ -134,11 +136,13 @@ public class OptionsActivity extends BaseActivity {
 		Option.Instance().setPrevWorkerID(BaseObject.EMPTY_ID);
 		Option.Instance().setWorkerID(BaseObject.EMPTY_ID);
 		Option.Instance().setServerIP(etServerIP.getText().toString());
+		if(etPin.getText().toString().length() > 0)
+			Option.Instance().setPin(Integer.parseInt(etPin.getText().toString()));
 		Option.Instance().setServerPort(Integer.parseInt(etServerPort.getText().toString()));
 		Option.Instance().save();
 	}
 
-	private void initDialogs() {			
+	private void initDialogs() {
 		versionFragmentDialog = new InfoBaseDialog(
 			getString(R.string.menu_program_info), 
 			String.format("%s %s\n%s %s"
