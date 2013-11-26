@@ -63,8 +63,8 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	@Override
 	public void onBackPressed() {
 		showDialogLogout();
-		logOut();
 	}
+	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu){
 		if(infos.size() == 0){

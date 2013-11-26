@@ -109,9 +109,12 @@
     <string name="dialog_no_connection">Please enable internet connection</string>
     <string name="dialog_no_ip_entered">Please enter server IP address</string>
     <string name="dialog_connection_problems">Connection problems</string>
+    <string name="dialog_info">Information</string>
+    <string name="dialog_comments">Comments</string>
 
  <!-- Errors -->    
     <string name="err_no_phone">no phone</string>
     <string name="err_no_address">no address</string>
     
 </resources>
+

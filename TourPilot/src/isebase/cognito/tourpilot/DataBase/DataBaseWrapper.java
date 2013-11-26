@@ -61,7 +61,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	private static DataBaseWrapper instance;
 
 	public static synchronized DataBaseWrapper Instance() {
-		if (instance == null)
+		if (instance == null || instance.getReadableDatabase() == null)
 			instance = new DataBaseWrapper(StaticResources.getBaseContext());
 		return instance;
 	}	

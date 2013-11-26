@@ -11,6 +11,8 @@ import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Information.Information;
 import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemark;
+import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemarkManager;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
@@ -60,6 +62,8 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 
 	List<Information> infos = new ArrayList<Information>();
 
+	PatientRemark patientRemark = PatientRemarkManager.Instance().load(employment.getPatientID());
+	
 	private boolean isClickable(){
 		return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
 				&& endTask.getRealDate().equals(DateUtils.EmptyDate);
@@ -92,6 +96,10 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 	public boolean onPrepareOptionsMenu(Menu menu){
 		if(infos.size() == 0){
 			MenuItem item = menu.findItem(R.id.info);
+			item.setEnabled(false);
+		}
+		if((patientRemark != null)&&(patientRemark.getName().length() > 0)){
+			MenuItem item = menu.findItem(R.id.comments);
 			item.setEnabled(false);
 		}
 		return true;
@@ -333,8 +341,10 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 	
 	private void saveEmployment() {
 		Employment empl = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
-		empl.setIsDone(true);
-		EmploymentManager.Instance().save(empl);
+		if(empl != null){
+			empl.setIsDone(true);
+			EmploymentManager.Instance().save(empl);
+		}
 	}
 	
 	private void clearEmployment() {
@@ -391,9 +401,10 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 			startActivity(relativesActivity);
 			return true;
 		case R.id.comments:
-			Intent commentsActivity = new Intent(getApplicationContext(),
-					CommentsActivity.class);
-			startActivity(commentsActivity);
+//			Intent commentsActivity = new Intent(getApplicationContext(),
+//					CommentsActivity.class);
+//			startActivity(commentsActivity);
+			loadComments();
 			return true;
 		case R.id.diagnose:
 			showDiagnose();
@@ -454,9 +465,13 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener{
 		}
 		if(strInfos.length() > 0){
 			InformationManager.Instance().save(infos);
-			InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_diagnose),strInfos);
+			InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.dialog_info),strInfos);
 			dialog.show(getSupportFragmentManager(), "");
 		}
 	}
 
+	private void loadComments(){
+		InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.dialog_comments),patientRemark.getName());
+		dialog.show(getSupportFragmentManager(), "");
+	}
 }

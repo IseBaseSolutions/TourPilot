@@ -38,17 +38,14 @@ public final class R {
     }
     public static final class id {
         public static final int LinearLayout1=0x7f090022;
-        public static final int action_add_additional_work=0x7f09004b;
-        public static final int action_clear_database=0x7f090048;
-        public static final int action_db_backup=0x7f09004a;
-        public static final int action_settings=0x7f090046;
-        public static final int action_show_program_info=0x7f090049;
-        public static final int address=0x7f090050;
+        public static final int action_add_additional_work=0x7f090040;
+        public static final int action_clear_database=0x7f09003d;
+        public static final int action_db_backup=0x7f09003f;
+        public static final int action_settings=0x7f09003b;
+        public static final int action_show_program_info=0x7f09003e;
+        public static final int address=0x7f090045;
         public static final int btAddTasksCategoriesBack=0x7f090004;
-        public static final int btCallMobilePhone=0x7f090040;
-        public static final int btCallPhone=0x7f090038;
-        public static final int btCallPrivatePhone=0x7f09003c;
-        public static final int btChangeTaskState=0x7f090043;
+        public static final int btChangeTaskState=0x7f090038;
         public static final int btEndTask=0x7f09002b;
         public static final int btEndTour=0x7f090020;
         public static final int btLogOut=0x7f09002f;
@@ -59,23 +56,23 @@ public final class R {
         public static final int btUserRemarkSave=0x7f090013;
         public static final int button1=0x7f090007;
         public static final int button2=0x7f090008;
-        public static final int cancelAllTasks=0x7f09004c;
-        public static final int catalogs=0x7f090047;
+        public static final int cancelAllTasks=0x7f090041;
+        public static final int catalogs=0x7f09003c;
         public static final int cb_SavePin=0x7f090016;
         public static final int chbAddTask=0x7f090032;
         public static final int chbConnect=0x7f09000d;
         public static final int chbMedchanges=0x7f09000e;
         public static final int chbPflege=0x7f09000f;
-        public static final int comments=0x7f090053;
-        public static final int diagnose=0x7f090054;
-        public static final int doctors=0x7f090051;
+        public static final int comments=0x7f090048;
+        public static final int diagnose=0x7f090049;
+        public static final int doctors=0x7f090046;
         public static final int etAddTasksFilter=0x7f090000;
         public static final int etOther=0x7f090011;
         public static final int etPhoneNumber=0x7f090017;
         public static final int etPinCode=0x7f090014;
         public static final int etServerIP=0x7f09001a;
         public static final int etServerPort=0x7f09001c;
-        public static final int info=0x7f09004e;
+        public static final int info=0x7f090043;
         public static final int linearElements=0x7f09000c;
         public static final int linerButtons=0x7f090012;
         public static final int listView1=0x7f090006;
@@ -90,39 +87,31 @@ public final class R {
         public static final int lvTasksList=0x7f09002a;
         public static final int lvTours=0x7f09002e;
         public static final int lvWorkers=0x7f090031;
-        public static final int manualInput=0x7f09004f;
-        public static final int notes=0x7f09004d;
+        public static final int manualInput=0x7f090044;
+        public static final int notes=0x7f090042;
         public static final int pbClearDB=0x7f09001e;
         public static final int pbSync=0x7f090024;
-        public static final int relatives=0x7f090052;
-        public static final int tableRow12=0x7f090035;
-        public static final int tableRow22=0x7f090039;
-        public static final int tableRow32=0x7f09003d;
-        public static final int tour_info=0x7f090055;
+        public static final int relatives=0x7f090047;
+        public static final int tablePhones=0x7f090035;
+        public static final int tour_info=0x7f09004a;
         public static final int tvAddTasksCategories=0x7f090005;
         public static final int tvAddressName=0x7f090034;
         public static final int tvCurrentInfo=0x7f090021;
-        public static final int tvEmploymentName=0x7f090042;
-        public static final int tvEmploymentTime=0x7f090041;
+        public static final int tvEmploymentName=0x7f090037;
+        public static final int tvEmploymentTime=0x7f090036;
         public static final int tvEndTaskDate=0x7f09002d;
         public static final int tvEndTaskTime=0x7f09002c;
         public static final int tvFullName=0x7f090033;
-        public static final int tvMobilePhone=0x7f09003f;
         public static final int tvOther=0x7f090010;
-        public static final int tvPhone=0x7f090037;
-        public static final int tvPhoneLabel=0x7f090036;
-        public static final int tvPhoneMobileLabel=0x7f09003e;
         public static final int tvPhoneNumber=0x7f090018;
-        public static final int tvPhonePrivateLabel=0x7f09003a;
         public static final int tvPinCode=0x7f090015;
         public static final int tvPort=0x7f09001d;
-        public static final int tvPrivatePhone=0x7f09003b;
         public static final int tvProgress=0x7f090025;
         public static final int tvServer=0x7f09001b;
         public static final int tvStartTaskDate=0x7f090029;
         public static final int tvStartTaskTime=0x7f090028;
-        public static final int tvTaskName=0x7f090044;
-        public static final int tvWorkerName=0x7f090045;
+        public static final int tvTaskName=0x7f090039;
+        public static final int tvWorkerName=0x7f09003a;
     }
     public static final class layout {
         public static final int activity_add_tasks=0x7f030000;
@@ -193,7 +182,9 @@ public final class R {
         public static final int def_empty_time=0x7f060046;
         public static final int def_port=0x7f060048;
         public static final int detect_respiration=0x7f060022;
+        public static final int dialog_comments=0x7f06005a;
         public static final int dialog_connection_problems=0x7f060058;
+        public static final int dialog_info=0x7f060059;
         public static final int dialog_no_connection=0x7f060056;
         public static final int dialog_no_ip_entered=0x7f060057;
         public static final int dialog_proof_logout=0x7f060055;
@@ -205,10 +196,10 @@ public final class R {
          */
         public static final int enter_interval=0x7f060019;
         public static final int enter_pin=0x7f06002b;
-        public static final int err_no_address=0x7f06005a;
+        public static final int err_no_address=0x7f06005c;
         /**  Errors 
          */
-        public static final int err_no_phone=0x7f060059;
+        public static final int err_no_phone=0x7f06005b;
         public static final int hello_request_fail=0x7f060033;
         public static final int hello_request_ok=0x7f060032;
         public static final int input_server_ip=0x7f060016;
