@@ -5,6 +5,7 @@ import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Relative.Relative;
 import isebase.cognito.tourpilot.Data.Relative.RelativeManager;
 import isebase.cognito.tourpilot.Templates.AddressAdapter;
@@ -18,6 +19,7 @@ public class RelativesActivity extends BaseActivity {
 	
 	private List<Relative> relatives;
 	private Employment employment;
+	private AddressAdapter<Relative> adapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +41,10 @@ public class RelativesActivity extends BaseActivity {
 	}
 	
 	private void fillUp() {
-		AddressAdapter<Relative> adapter = new AddressAdapter<Relative>(this
+		adapter = new AddressAdapter<Relative>(this
 				, R.layout.row_address_template, relatives);
-		ListView doctorsListView = (ListView) findViewById(R.id.lvListRelatives);
-		doctorsListView.setAdapter(adapter);
+		ListView relativesListView = (ListView) findViewById(R.id.lvListRelatives);
+		relativesListView.setAdapter(adapter);
 	}
 	
 	private void reloadData()
@@ -50,25 +52,5 @@ public class RelativesActivity extends BaseActivity {
 		employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
 		relatives =  RelativeManager.Instance().loadAllByIDs(employment.getPatient().getStrRelativeIDs());
 	}
-	
-	public void onCallPhone(View view) {
-		Relative relative = (Relative) view.getTag();
-		Intent callIntent = new Intent(Intent.ACTION_CALL);
-		callIntent.setData(Uri.parse("tel:" + relative.address.getRealPhone()));
-		startActivity(callIntent);
-	}
-	
-	public void onCallPrivatePhone(View view){
-		Relative relative = (Relative) view.getTag();
-		Intent callIntent = new Intent(Intent.ACTION_CALL);
-		callIntent.setData(Uri.parse("tel:" + relative.address.getRealPrivatePhone()));
-		startActivity(callIntent);
-	}
-	
-	public void onCallMobilePhone(View view){
-		Relative relative = (Relative) view.getTag();
-		Intent callIntent = new Intent(Intent.ACTION_CALL);
-		callIntent.setData(Uri.parse("tel:" + relative.address.getRealMobilePhone()));
-		startActivity(callIntent);
-	}
+
 }
