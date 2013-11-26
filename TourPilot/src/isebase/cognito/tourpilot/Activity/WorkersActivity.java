@@ -57,7 +57,11 @@ public class WorkersActivity extends BaseActivity implements BaseDialogListener 
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
 				selectedWorker = (Worker) listView.getItemAtPosition(position);
-				showPinDialog();
+				if(selectedWorker.checkPIN("" + Option.Instance().getPin())){
+					logIn();
+				}
+				else
+					showPinDialog();
 			}
 		});
 	}
