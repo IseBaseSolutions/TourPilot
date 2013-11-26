@@ -105,7 +105,6 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		}
 		return true;
 	}
-
 	
 	private void checkAllIsDone(){
 		if(isAllDone()){
@@ -265,7 +264,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		dialog.show(getSupportFragmentManager(), "dialogTasks");
 		getSupportFragmentManager().executePendingTransactions();
 	}
-	
+		
 	public void onChangeState(View view) {
 		if(!isClickable())
 			return;

@@ -3,11 +3,9 @@ package isebase.cognito.tourpilot.Templates;
 import java.util.List;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Address.IAddressable;
-import isebase.cognito.tourpilot.Data.Patient.Patient;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.util.TypedValue;
@@ -17,13 +15,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -88,8 +82,7 @@ public class AddressAdapter<T extends IAddressable> extends ArrayAdapter<T> {
 
 			@Override
 			public void onClick(View v) {
-				onCallPhone(v);
-			//	System.out.println(strPhoneNumber);             
+				onCallPhone(v);           
 			}
 		};
 		int textSizeMiddle = 20;
