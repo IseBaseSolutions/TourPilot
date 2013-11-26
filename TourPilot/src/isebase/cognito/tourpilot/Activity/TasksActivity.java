@@ -62,9 +62,9 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	private Button btEndTask;
 	private Button btStartTask;
 
-	private List<Information> infos = new ArrayList<Information>();
+	private List<Information> infos;
 
-	PatientRemark patientRemark = PatientRemarkManager.Instance().load(employment.getPatientID());
+	private PatientRemark patientRemark;
 	
 	private boolean isClickable(){
 		return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
@@ -165,6 +165,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 
 	public void reloadData() {	
 		employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
+		patientRemark = PatientRemarkManager.Instance().load(employment.getPatientID());
 		tasks = TaskManager.Instance().load(Task.EmploymentIDField, Option.Instance().getEmploymentID()+"");
 		startTask = tasks.get(0);
 		int i = 1;
