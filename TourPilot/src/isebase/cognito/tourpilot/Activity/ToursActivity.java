@@ -5,6 +5,7 @@ import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Information.Information;
 import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Data.PilotTour.PilotTourComparer;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
@@ -14,6 +15,7 @@ import isebase.cognito.tourpilot.Templates.PilotToursAdapter;
 import isebase.cognito.tourpilot.Utils.DataBaseUtils;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import android.os.Bundle;
@@ -123,6 +125,7 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 
 	private void reloadData(){
 		pilotTours = PilotTourManager.Instance().loadPilotTours();
+		Collections.sort(pilotTours, new PilotTourComparer());
 	}
 	
 	private void saveSelectedTour(PilotTour pilotTour) {

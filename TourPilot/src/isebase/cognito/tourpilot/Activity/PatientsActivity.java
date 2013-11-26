@@ -14,11 +14,11 @@ import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
 import isebase.cognito.tourpilot.DataInterfaces.Job.JobComparer;
+import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import isebase.cognito.tourpilot.Templates.WorkEmploymentAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -39,11 +39,13 @@ public class PatientsActivity extends BaseActivity {
 	private List<Work> works;
 	private List<IJob> items;
 	private Work work;
-	private DialogFragment patientsDialog;
 	private String[] patientsArr;
 	private PilotTour pilotTour;
 	
 	private Button btTourEnd;
+	
+	private DialogFragment patientsDialog;
+	private InfoBaseDialog infoDialog;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +57,6 @@ public class PatientsActivity extends BaseActivity {
 			fillUpTitle();
 			fillUp();
 			initDialogs();
-
 		}catch(Exception ex){
 			ex.printStackTrace();
 			criticalClose();
@@ -85,6 +86,13 @@ public class PatientsActivity extends BaseActivity {
 	}
 	
 	public void btEndTourClick(View view){
+		for(IJob job : items)
+			if(!job.isDone()){
+				infoDialog.show(getSupportFragmentManager(), "");
+				getSupportFragmentManager().executePendingTransactions();
+				return;
+			}
+
 		Option.Instance().setPilotTourID(BaseObject.EMPTY_ID);
 		Option.Instance().save();
 		startSyncActivity();
@@ -118,7 +126,7 @@ public class PatientsActivity extends BaseActivity {
 							patientsArr[counter++] = patient.getFullName(); 
 					}
 					else						
-						patientsArr = new String[]{getString(R.string.no_any_patient)};
+						patientsArr = new String[]{getString(R.string.err_no_patients)};
 					patientsDialog.show(getSupportFragmentManager(), "patientsDialog");
 				}
 			}
@@ -143,7 +151,7 @@ public class PatientsActivity extends BaseActivity {
 			if(job.wasSent())
 				syncTaskCount++;
 		btTourEnd.setEnabled(!(syncTaskCount == taskCount 
-				|| new Date().getDate() != pilotTour.getPlanDate().getDate() ));		
+				|| !DateUtils.isToday(pilotTour.getPlanDate())));		
 	}
 	
 	private void fillUpTitle() {
@@ -160,6 +168,8 @@ public class PatientsActivity extends BaseActivity {
 	}
 	
 	private void initDialogs() {
+		infoDialog = new InfoBaseDialog(getString(R.string.attention)
+				,getString(R.string.dialog_complete_all_tasks));
 		patientsDialog = new DialogFragment() {
 			@Override
 			public Dialog onCreateDialog(Bundle savedInstanceState) {

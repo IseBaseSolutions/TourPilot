@@ -40,8 +40,8 @@ public class BlutdruckTaskDialog extends StandardTaskDialog{
 		String[] parsedData = value.split("\\:");
 		String minValue = parsedData.length > 0 ? parsedData[0] : "";
 		String maxValue = parsedData.length > 1 ? parsedData[1] : "";
-		etMinValue.setText(minValue);
 		etMaxValue.setText(maxValue);
+		etMinValue.setText(minValue);
 	}
 	
 	private BlutdruckTaskDialog(){
