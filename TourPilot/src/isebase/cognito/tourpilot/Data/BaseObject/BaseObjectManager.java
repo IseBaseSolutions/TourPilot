@@ -441,7 +441,7 @@ public abstract class BaseObjectManager<T> {
 		return strResult;
 	}
 	
-	public int getIntValue(String strSQL){
+	public int getIntValue(String strSQL) {
 		Cursor cursor = null;
 		int retVal = 0;
 		try {

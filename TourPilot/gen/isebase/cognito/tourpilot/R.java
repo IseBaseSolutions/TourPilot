@@ -223,6 +223,7 @@ public final class R {
         public static final int invitation_fail=0x7f06002e;
         public static final int invitation_ok=0x7f06002d;
         public static final int log_out=0x7f060051;
+        public static final int manual_input=0x7f060065;
         public static final int max=0x7f060049;
         public static final int medications_changed=0x7f06001b;
         public static final int menu_add_additional_work=0x7f06000f;
@@ -248,6 +249,7 @@ public final class R {
          */
         public static final int min=0x7f060048;
         public static final int no=0x7f06004e;
+        public static final int no_any_patient=0x7f060066;
         public static final int ok=0x7f06004b;
         public static final int options=0x7f060012;
         public static final int other=0x7f06001e;

@@ -15,15 +15,18 @@ import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
 import isebase.cognito.tourpilot.DataInterfaces.Job.JobComparer;
 import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
+import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Templates.WorkEmploymentAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.Menu;
@@ -33,18 +36,17 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-public class PatientsActivity extends BaseActivity {
+public class PatientsActivity extends BaseActivity implements BaseDialogListener {
 
 	private List<Employment> employments;
 	private List<Work> works;
 	private List<IJob> items;
 	private Work work;
+	private DialogFragment selectedPatientsDialog;
 	private String[] patientsArr;
 	private PilotTour pilotTour;
 	
 	private Button btTourEnd;
-	
-	private DialogFragment patientsDialog;
 	private InfoBaseDialog infoDialog;
 	
 	@Override
@@ -115,20 +117,7 @@ public class PatientsActivity extends BaseActivity {
 					startTasksActivity();
 				}
 				else
-				{
-					work = (Work) items.get(position);
-					List<Patient> patients = PatientManager.Instance().loadByIDs(work.getPatientIDs());
-					if (patients.size() > 0)
-					{
-						patientsArr = new String[patients.size()];
-						int counter = 0;
-						for (Patient patient : patients)
-							patientsArr[counter++] = patient.getFullName(); 
-					}
-					else						
-						patientsArr = new String[]{getString(R.string.err_no_patients)};
-					patientsDialog.show(getSupportFragmentManager(), "patientsDialog");
-				}
+					showPatientsDialog(position);
 			}
 		});
 	}
@@ -170,7 +159,7 @@ public class PatientsActivity extends BaseActivity {
 	private void initDialogs() {
 		infoDialog = new InfoBaseDialog(getString(R.string.attention)
 				,getString(R.string.dialog_complete_all_tasks));
-		patientsDialog = new DialogFragment() {
+		selectedPatientsDialog = new DialogFragment() {
 			@Override
 			public Dialog onCreateDialog(Bundle savedInstanceState) {
 				AlertDialog.Builder adb = new AlertDialog.Builder(getActivity())
@@ -194,4 +183,30 @@ public class PatientsActivity extends BaseActivity {
 			}
 		};
 	}
+	
+	private void showPatientsDialog(int position) {
+		work = (Work) items.get(position);
+		List<Patient> patients = PatientManager.Instance().loadByIDs(work.getPatientIDs());
+		if (patients.size() > 0)
+		{
+			patientsArr = new String[patients.size()];
+			int counter = 0;
+			for (Patient patient : patients)
+				patientsArr[counter++] = patient.getFullName(); 
+		}
+		else						
+			patientsArr = new String[]{getString(R.string.no_any_patient)};
+		selectedPatientsDialog.show(getSupportFragmentManager(), "patientsDialog");
+	}
+
+	@Override
+	public void onDialogPositiveClick(DialogFragment dialog) {
+	
+	}
+
+	@Override
+	public void onDialogNegativeClick(DialogFragment dialog) {
+
+	}
+	
 }

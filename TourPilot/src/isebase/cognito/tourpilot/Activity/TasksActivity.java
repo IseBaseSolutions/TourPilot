@@ -146,7 +146,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 	
 	private void fillUpTitle(){
-		setTitle(employment.getName() + ", " + startTask.getDayPart());
+		setTitle(employment.text() + ", " + startTask.getDayPart());
 	}
 	
 	private void fillUpTasks(){

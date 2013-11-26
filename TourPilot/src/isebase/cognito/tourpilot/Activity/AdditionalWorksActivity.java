@@ -11,15 +11,12 @@ import isebase.cognito.tourpilot.Data.Work.Work;
 import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.PatientsDialog;
+import isebase.cognito.tourpilot.Dialogs.WorkStopDialog;
+import isebase.cognito.tourpilot.Dialogs.WorkTypeDialog;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -31,8 +28,8 @@ import android.widget.ListView;
 
 public class AdditionalWorksActivity extends BaseActivity implements BaseDialogListener {
 
-	private DialogFragment addWorkInputDialog;
-	private DialogFragment stopDialog;
+	private DialogFragment workInputDialog;
+	private DialogFragment workStopDialog;
 	private PatientsDialog patientsDialog;
 
 	List<AdditionalWork> additionalWorks;
@@ -50,13 +47,13 @@ public class AdditionalWorksActivity extends BaseActivity implements BaseDialogL
 		reloadData();
 		fillUp();
 		fillUpTitle();
-		initDialogs();
 		switchTolatest();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
+		// Inflate the menu; this adds items to the action bar if it is present.
+		//getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 
@@ -71,7 +68,8 @@ public class AdditionalWorksActivity extends BaseActivity implements BaseDialogL
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
 				addWork = additionalWorks.get(position);
-				addWorkInputDialog.show(getSupportFragmentManager(), "addWorkDialog");
+				workInputDialog = new WorkTypeDialog(addWork.getName());
+				workInputDialog.show(getSupportFragmentManager(), "addWorkDialog");
 			}
 
 		});
@@ -87,75 +85,10 @@ public class AdditionalWorksActivity extends BaseActivity implements BaseDialogL
 		if (Option.Instance().getWorkID() != -1)
 			work = WorkManager.Instance().load(Option.Instance().getWorkID());
 	}
-	
-	private void startManualInputActivity() {
-		Intent manualInputActivity = new Intent(getApplicationContext(), ManualInputActivity.class);
-		manualInputActivity.putExtra("addWorkID", addWork.getID());
-		startActivity(manualInputActivity);
-	}
-	
-	private void initDialogs() {
-		addWorkInputDialog = new DialogFragment() {
-			@Override
-			public Dialog onCreateDialog(Bundle savedInstanceState) {
-				AlertDialog.Builder adb = new AlertDialog.Builder(getActivity())
-						.setTitle(addWork.getName())
-						.setPositiveButton(
-								isebase.cognito.tourpilot.R.string.start, new OnClickListener() {
 
-									@Override
-									public void onClick(DialogInterface dialog,	int which) {
-										work = new Work(new Date(), addWork.getID(), Option.Instance().getPilotTourID(), addWork.getName());
-										WorkManager.Instance().save(work);
-										Option.Instance().setWorkID(work.getID());
-										Option.Instance().save();
-										stopDialog.show(getSupportFragmentManager(), "stopDialog");
-									}
-
-								})
-						.setNegativeButton(
-								isebase.cognito.tourpilot.R.string.menu_manual_input, new OnClickListener() {
-
-									@Override
-									public void onClick(DialogInterface dialog, int which) {
-										startManualInputActivity();
-									}
-
-								});
-
-				return adb.create();
-			}
-		};
-		
-		stopDialog = new DialogFragment() {
-			@Override
-			public Dialog onCreateDialog(Bundle savedInstanceState) {
-				SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-				AlertDialog.Builder adb = new AlertDialog.Builder(getActivity())
-						.setTitle(work.getName())
-						.setMessage(String.format("%s %s", getString(R.string.started_at), format.format(work.getStartTime())))
-						.setNegativeButton(
-								isebase.cognito.tourpilot.R.string.stop, new OnClickListener() {
-
-									@Override
-									public void onClick(DialogInterface dialog, int which) {
-										work.setStopTime(new Date());
-										WorkManager.Instance().save(work);
-										patientsDialog.setTitle(work.getName());
-										patientsDialog.show(getSupportFragmentManager(), "patientsDialog");
-									}
-
-								});
-
-				return adb.create();
-			}
-		};		
-		patientsDialog = new PatientsDialog(patients, "");
-	}
-	
 	private void switchTolatest() { 
 		if (Option.Instance().getWorkID() != -1)
-			stopDialog.show(getSupportFragmentManager(), "stopDialog");
+			workStopDialog.show(getSupportFragmentManager(), "stopDialog");
 	}
 
 	@Override
@@ -169,12 +102,36 @@ public class AdditionalWorksActivity extends BaseActivity implements BaseDialogL
 			Option.Instance().save();
 			startPatientsActivity();
 		}
+		if (dialog == workInputDialog)
+		{
+			work = new Work(new Date(), addWork.getID(), Option.Instance().getPilotTourID(), addWork.getName());
+			WorkManager.Instance().save(work);
+			Option.Instance().setWorkID(work.getID());
+			Option.Instance().save();
+			workStopDialog = new WorkStopDialog(addWork.getName(), work.startTime());
+			workStopDialog.show(getSupportFragmentManager(), "stopDialog");
+		}
+		if (dialog == workStopDialog)
+		{
+			work.setStopTime(new Date());
+			WorkManager.Instance().save(work);
+			patientsDialog = new PatientsDialog(patients, work.getName());
+			patientsDialog.show(getSupportFragmentManager(), "patientsDialog");
+		}
 		
 	}
 
 	@Override
 	public void onDialogNegativeClick(DialogFragment dialog) {
-		// TODO Auto-generated method stub		
+		if (dialog == workInputDialog)
+			startManualInputActivity();
+	}
+	
+	@Override
+	protected void startManualInputActivity() {
+		Intent manualInputActivity = new Intent(getApplicationContext(), ManualInputActivity.class);
+		manualInputActivity.putExtra("addWorkID", addWork.getID());
+		startActivity(manualInputActivity);
 	}
 
 }

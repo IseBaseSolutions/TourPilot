@@ -22,21 +22,21 @@ public class WorkersActivity extends BaseActivity implements BaseDialogListener 
 	private List<Worker> workers = new ArrayList<Worker>();
 	private PinDialog pinDialog;
 	private Worker selectedWorker;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		try{
+		try {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_workers);
 			reloadData();
 			initDialogs();
 			initListWorkers();
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			ex.printStackTrace();
 			criticalClose();
 		}
 	}
-		
+
 	@Override
 	public void onBackPressed() {
 		toOptionActivity();
@@ -76,14 +76,14 @@ public class WorkersActivity extends BaseActivity implements BaseDialogListener 
 	private void initDialogs() {
 		pinDialog = new PinDialog();
 	}
-	
+
 	private void showPinDialog() {
 		pinDialog.setWorker(selectedWorker);
 		pinDialog.show(getSupportFragmentManager(), "dialogPin");
 		getSupportFragmentManager().executePendingTransactions();
 		pinDialog.getDialog().setTitle(selectedWorker.getName());
 	}
-	
+
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog) {
 		if (dialog != pinDialog)
@@ -95,13 +95,13 @@ public class WorkersActivity extends BaseActivity implements BaseDialogListener 
 	public void onDialogNegativeClick(DialogFragment dialog) {
 		return;
 	}
-	
-	private void logIn(){
+
+	private void logIn() {
 		DataBaseWrapper.Instance().clearWorkerData();
 		saveSelectedWorkerID();
 		startSyncActivity();
 	}
-	
+
 	private void saveSelectedWorkerID() {
 		Option.Instance().setPrevWorkerID(Option.Instance().getWorkerID());
 		Option.Instance().setWorkerID(selectedWorker.getID());
