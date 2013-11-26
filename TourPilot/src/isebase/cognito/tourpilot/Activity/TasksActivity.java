@@ -105,7 +105,6 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		}
 		return true;
 	}
-
 	
 	private void checkAllIsDone(){
 		if(isAllDone()){
