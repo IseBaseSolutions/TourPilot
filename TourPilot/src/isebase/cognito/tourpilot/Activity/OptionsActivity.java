@@ -26,18 +26,23 @@ public class OptionsActivity extends BaseActivity {
 	private EditText etServerIP;
 	private EditText etServerPort;
 	private EditText etPhoneNumber;
+	private EditText etPin;
 	
 	private ProgressBar pbClearDB;
 	private Button syncButton;	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		StaticResources.setBaseContext(getBaseContext());
-		setContentView(R.layout.activity_options);
-		switchToLastActivity();
-		initControls();
-		initDialogs();
+		try{
+			super.onCreate(savedInstanceState);
+			StaticResources.setBaseContext(getBaseContext());
+			setContentView(R.layout.activity_options);
+			switchToLastActivity();
+			initControls();
+			initDialogs();
+		}
+		catch(Exception ex){
+		}
 	}
 
 	@Override
@@ -56,32 +61,45 @@ public class OptionsActivity extends BaseActivity {
 		return true;
 	}
 
+	private void busy(final boolean dbBackup){
+		pbClearDB.setVisibility(View.VISIBLE);
+		syncButton.setEnabled(false);
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				try{
+					if(dbBackup)
+						DataBaseUtils.backup();
+					else
+						DataBaseWrapper.Instance().clearAllData();	
+				}
+				catch(Exception ex){
+					ex.printStackTrace();
+				}
+
+				return null;
+			}
+							
+			@Override
+			protected void onPostExecute(Void result) {
+				pbClearDB.setVisibility(View.INVISIBLE);
+				syncButton.setEnabled(true);
+			}
+		}.execute();
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_clear_database:
-			pbClearDB.setVisibility(View.VISIBLE);
-			syncButton.setEnabled(false);
-			new AsyncTask<Void, Void, Void>() {
-
-				@Override
-				protected Void doInBackground(Void... params) {
-					DataBaseWrapper.Instance().clearAllData();
-					return null;
-				}
-								
-				@Override
-				protected void onPostExecute(Void result) {
-					pbClearDB.setVisibility(View.INVISIBLE);
-					syncButton.setEnabled(true);
-				}
-			}.execute();
+			busy(false);
 			return true;
 		case R.id.action_show_program_info:
 			versionFragmentDialog.show(getSupportFragmentManager(), "dialogVersion");
 			return true;
-		case R.id.action_db_backup:
-			makeBackup();
+		case R.id.action_db_backup:		
+			busy(true);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -108,20 +126,24 @@ public class OptionsActivity extends BaseActivity {
 		etServerIP = (EditText) findViewById(R.id.etServerIP);
 		etServerPort = (EditText) findViewById(R.id.etServerPort);
 		etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
+		etPin = (EditText) findViewById(R.id.etPinCode);
 		etPhoneNumber.setText(Option.Instance().getPhoneNumber());
 		etServerIP.setText(Option.Instance().getServerIP());
 		etServerPort.setText(String.valueOf(Option.Instance().getServerPort()));
+		etPin.setText(String.valueOf(Option.Instance().getPin()));
 	}
 
 	private void saveOptions() {
 		Option.Instance().setPrevWorkerID(BaseObject.EMPTY_ID);
 		Option.Instance().setWorkerID(BaseObject.EMPTY_ID);
 		Option.Instance().setServerIP(etServerIP.getText().toString());
+		if(etPin.getText().toString().length() > 0)
+			Option.Instance().setPin(Integer.parseInt(etPin.getText().toString()));
 		Option.Instance().setServerPort(Integer.parseInt(etServerPort.getText().toString()));
 		Option.Instance().save();
 	}
 
-	private void initDialogs() {			
+	private void initDialogs() {
 		versionFragmentDialog = new InfoBaseDialog(
 			getString(R.string.menu_program_info), 
 			String.format("%s %s\n%s %s"
@@ -137,16 +159,7 @@ public class OptionsActivity extends BaseActivity {
 				getString(R.string.dialog_connection_problems),
 				getString(R.string.dialog_no_connection));
 	}
-	
-	private void makeBackup(){
-		try{
-			DataBaseUtils.backup();
-		}
-		catch(Exception ex){
-			ex.printStackTrace();
-		}
-	}
-	
+		
 	private void switchToLastActivity() {
 		if (Option.Instance().getWorkID() != -1)
 			startAdditionalWorksActivity();
@@ -156,7 +169,8 @@ public class OptionsActivity extends BaseActivity {
 			startPatientsActivity();
 		else if (Option.Instance().getWorkerID() != -1)
 			startToursActivity();
-		else
+		else if (Option.Instance().isWorkerActivity())
+			startWorkersActivity();
 			return;
 	}
 }

@@ -3,13 +3,11 @@ package isebase.cognito.tourpilot.Data.BaseObject;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.Utilizer;
-
 import java.lang.reflect.Method;
 import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;

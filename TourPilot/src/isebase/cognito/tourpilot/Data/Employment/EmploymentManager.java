@@ -1,10 +1,8 @@
 package isebase.cognito.tourpilot.Data.Employment;
 
 import java.util.List;
-
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentIntervalManager;
-import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
 import isebase.cognito.tourpilot.Data.Task.Task;

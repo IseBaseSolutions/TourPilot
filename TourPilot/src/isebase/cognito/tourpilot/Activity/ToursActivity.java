@@ -5,13 +5,17 @@ import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Information.Information;
 import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Data.PilotTour.PilotTourComparer;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
+import isebase.cognito.tourpilot.Templates.PilotToursAdapter;
+import isebase.cognito.tourpilot.Utils.DataBaseUtils;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import android.os.Bundle;
@@ -20,7 +24,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class ToursActivity extends BaseActivity implements BaseDialogListener{
@@ -51,11 +54,18 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
 		switch(item.getItemId()){
-		case R.id.tour_info:
-			loadTourInfos(true);
-			return true;
+			case R.id.tour_info:
+				loadTourInfos(true);
+				return true;
+			case R.id.action_db_backup:
+				try{
+					DataBaseUtils.backup();
+				}
+				catch(Exception ex){
+					ex.printStackTrace();
+				}
+				return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -63,8 +73,8 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	@Override
 	public void onBackPressed() {
 		showDialogLogout();
-		logOut();
 	}
+	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu){
 		if(infos.size() == 0){
@@ -76,8 +86,8 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 
 	public void fillUp() {
 		ListView listView = (ListView) findViewById(R.id.lvTours);
-		ArrayAdapter<PilotTour> adapter = new ArrayAdapter<PilotTour>(this,
-				android.R.layout.simple_list_item_1, pilotTours);
+		PilotToursAdapter adapter = new PilotToursAdapter(this,
+				R.layout.row_tour_template, pilotTours);
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -87,7 +97,6 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 				saveSelectedTour(pilotTours.get(position));
 				startPatientsActivity();
 			}
-
 		});
 	}
 
@@ -116,6 +125,7 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 
 	private void reloadData(){
 		pilotTours = PilotTourManager.Instance().loadPilotTours();
+		Collections.sort(pilotTours, new PilotTourComparer());
 	}
 	
 	private void saveSelectedTour(PilotTour pilotTour) {
@@ -154,7 +164,7 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 		}
 		if(strInfos.length() > 0){
 			InformationManager.Instance().save(infos);
-			InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_diagnose),strInfos);
+			InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.dialog_info),strInfos);
 			dialog.show(getSupportFragmentManager(), "");
 		}
 	}

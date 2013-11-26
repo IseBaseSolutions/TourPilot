@@ -13,6 +13,8 @@ import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentIntervalManag
 import isebase.cognito.tourpilot.Data.Information.Information;
 import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemark;
+import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemarkManager;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
@@ -60,8 +62,10 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	private Button btEndTask;
 	private Button btStartTask;
 
-	List<Information> infos = new ArrayList<Information>();
+	private List<Information> infos;
 
+	private PatientRemark patientRemark;
+	
 	private boolean isClickable(){
 		return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
 				&& endTask.getRealDate().equals(DateUtils.EmptyDate);
@@ -95,9 +99,12 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			MenuItem item = menu.findItem(R.id.info);
 			item.setEnabled(false);
 		}
+		if((patientRemark == null) ||(patientRemark.getName().length() == 0)){
+			MenuItem item = menu.findItem(R.id.comments);
+			item.setEnabled(false);
+		}
 		return true;
 	}
-
 	
 	private void checkAllIsDone(){
 		if(isAllDone()){
@@ -128,14 +135,14 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	private void fillUpDate(TextView tvTime, TextView tvDate, Task task){
 		tvTime.setText(task.getRealDate().equals(DateUtils.EmptyDate)
 				? getString(R.string.def_empty_time)
-				: DateUtils.HourMinutesFormat.format(startTask.getManualDate().equals(DateUtils.EmptyDate) 
-						? startTask.getRealDate() 
-						: startTask.getManualDate()));
+				: DateUtils.HourMinutesFormat.format(task.getManualDate().equals(DateUtils.EmptyDate) 
+						? task.getRealDate() 
+						: task.getManualDate()));
 		tvDate.setText(task.getRealDate().equals(DateUtils.EmptyDate)
 				? getString(R.string.def_empty_date)
-				: DateUtils.DateFormat.format(startTask.getManualDate().equals(DateUtils.EmptyDate) 
-						? startTask.getRealDate() 
-						: startTask.getManualDate()));
+				: DateUtils.DateFormat.format(task.getManualDate().equals(DateUtils.EmptyDate) 
+						? task.getRealDate() 
+						: task.getManualDate()));
 	}
 	
 	private void fillUpTitle(){
@@ -155,9 +162,11 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}	
 
 
-	public void reloadData() {	
+	public void reloadData() {
 		employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
+		patientRemark = PatientRemarkManager.Instance().load(employment.getPatientID());
 		tasks = TaskManager.Instance().load(Task.EmploymentIDField, Option.Instance().getEmploymentID()+"");
+		patientRemark = PatientRemarkManager.Instance().load(employment.getPatientID());
 		startTask = tasks.get(0);
 		int i = 1;
 		while(endTask == null){
@@ -255,7 +264,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		dialog.show(getSupportFragmentManager(), "dialogTasks");
 		getSupportFragmentManager().executePendingTransactions();
 	}
-	
+		
 	public void onChangeState(View view) {
 		if(!isClickable())
 			return;
@@ -357,6 +366,10 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		empl.setIsDone(true);
 		EmploymentIntervalManager.Instance().save(new EmploymentInterval(empl.getID(), empl.getStartTime(), empl.getStopTime()));
 		EmploymentManager.Instance().save(empl);
+		if(empl != null){
+			empl.setIsDone(true);
+			EmploymentManager.Instance().save(empl);
+		}
 	}
 	
 	private void clearEmployment() {
@@ -413,9 +426,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			startActivity(relativesActivity);
 			return true;
 		case R.id.comments:
-			Intent commentsActivity = new Intent(getApplicationContext(),
-					CommentsActivity.class);
-			startActivity(commentsActivity);
+			loadComments();
 			return true;
 		case R.id.diagnose:
 			showDiagnose();
@@ -476,9 +487,13 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		}
 		if(strInfos.length() > 0){
 			InformationManager.Instance().save(infos);
-			InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_diagnose),strInfos);
+			InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.dialog_info),strInfos);
 			dialog.show(getSupportFragmentManager(), "");
 		}
 	}
 
+	private void loadComments(){
+		InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.dialog_comments),patientRemark.getName());
+		dialog.show(getSupportFragmentManager(), "");
+	}
 }

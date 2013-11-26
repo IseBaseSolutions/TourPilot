@@ -39,7 +39,11 @@ public class WorkersActivity extends BaseActivity implements BaseDialogListener 
 		
 	@Override
 	public void onBackPressed() {
-		startOptionsActivity();
+		toOptionActivity();
+	}
+	
+	public void btOptionsClick(View view) {
+		toOptionActivity();
 	}
 
 	public void initListWorkers() {
@@ -52,18 +56,21 @@ public class WorkersActivity extends BaseActivity implements BaseDialogListener 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
+
 				selectedWorker = (Worker) listView.getItemAtPosition(position);
-				showPinDialog();
+				if(selectedWorker.checkPIN(String.valueOf(Option.Instance().getPin()))){
+					logIn();
+				}
+				else
+					showPinDialog();
 			}
 		});
 	}
 
-	public void btOptionsClick(View view) {
-		startOptionsActivity();
-	}
-
 	public void reloadData() {
 		workers = WorkerManager.Instance().load(null, null, BaseObject.NameField);
+		Option.Instance().setWorkerActivity(true);
+		Option.Instance().save();
 	}
 
 	private void initDialogs() {
@@ -101,4 +108,10 @@ public class WorkersActivity extends BaseActivity implements BaseDialogListener 
 		Option.Instance().save();
 	}
 
+	private void toOptionActivity(){
+		Option.Instance().setWorkerActivity(false);
+		Option.Instance().save();
+		startOptionsActivity();
+	}
+	
 }

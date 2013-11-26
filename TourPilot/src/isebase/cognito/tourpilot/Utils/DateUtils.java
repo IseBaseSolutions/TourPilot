@@ -91,4 +91,8 @@ public class DateUtils {
     	return df.format(date);
     }
     
+    public static boolean isToday(Date date){
+    	return new Date().getDate() == date.getDate();
+    }
+    
 }

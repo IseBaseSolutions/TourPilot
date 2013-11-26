@@ -78,7 +78,7 @@ public class AdditionalWorksActivity extends BaseActivity implements BaseDialogL
 	}
 
 	private void fillUpTitle() {
-		setTitle(R.string.additional_work);
+		setTitle(R.string.menu_additional_work);
 	}
 
 	private void reloadData() {
@@ -114,7 +114,7 @@ public class AdditionalWorksActivity extends BaseActivity implements BaseDialogL
 
 								})
 						.setNegativeButton(
-								isebase.cognito.tourpilot.R.string.manual_input, new OnClickListener() {
+								isebase.cognito.tourpilot.R.string.menu_manual_input, new OnClickListener() {
 
 									@Override
 									public void onClick(DialogInterface dialog, int which) {

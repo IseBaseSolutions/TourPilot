@@ -140,13 +140,12 @@ public class Work extends BaseObject implements IJob {
     {
         setStartTime(startDate);
         setStopTime(stopDate);
-        setManualTime(stopDate);
+        setManualTime(manualtime);
         setAdditionalWorkID(addWorkID);
         setPilotTourID(pilotTourID);
         setName(name);
     }
-    
-    
+        
     //W;358;1385194841000;1385196041000;2;1002012;;1385227538953
 	@Override
 	public String forServer() {

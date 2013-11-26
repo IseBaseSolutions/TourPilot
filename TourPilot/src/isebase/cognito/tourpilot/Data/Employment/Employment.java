@@ -213,10 +213,10 @@ public class Employment extends BaseObject implements IJob {
 	@Override
 	public String timeInterval() {
 		return String.format("%s-%s", (getStartTime().equals(DateUtils.EmptyDate) 
-				? StaticResources.getBaseContext().getString(R.string.empty_time) 
+				? StaticResources.getBaseContext().getString(R.string.def_empty_time) 
 						: DateUtils.HourMinutesFormat.format(getStartTime())), 
 				(getStopTime().equals(DateUtils.EmptyDate) 
-						? StaticResources.getBaseContext().getString(R.string.empty_time)
+						? StaticResources.getBaseContext().getString(R.string.def_empty_time)
 								: DateUtils.HourMinutesFormat.format(getStopTime())));
 	}
 

@@ -4,8 +4,6 @@ import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
-import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentInterval;
-import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentIntervalManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
@@ -16,25 +14,23 @@ import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
 import isebase.cognito.tourpilot.DataInterfaces.Job.JobComparer;
+import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import isebase.cognito.tourpilot.Templates.WorkEmploymentAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
-import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 public class PatientsActivity extends BaseActivity {
@@ -43,19 +39,24 @@ public class PatientsActivity extends BaseActivity {
 	private List<Work> works;
 	private List<IJob> items;
 	private Work work;
-	private DialogFragment patientsDialog;
 	private String[] patientsArr;
+	private PilotTour pilotTour;
+	
+	private Button btTourEnd;
+	
+	private DialogFragment patientsDialog;
+	private InfoBaseDialog infoDialog;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		try{
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_patients);
+			init();
 			reloadData();
 			fillUpTitle();
 			fillUp();
 			initDialogs();
-
 		}catch(Exception ex){
 			ex.printStackTrace();
 			criticalClose();
@@ -85,10 +86,23 @@ public class PatientsActivity extends BaseActivity {
 	}
 	
 	public void btEndTourClick(View view){
+		for(IJob job : items)
+			if(!job.isDone()){
+				infoDialog.show(getSupportFragmentManager(), "");
+				getSupportFragmentManager().executePendingTransactions();
+				return;
+			}
+
+		Option.Instance().setPilotTourID(BaseObject.EMPTY_ID);
+		Option.Instance().save();
 		startSyncActivity();
 	}
 
-	public void fillUp() {
+	private void init(){
+		btTourEnd = (Button) findViewById(R.id.btEndTour);
+	}
+	
+	private void fillUp() {
 		WorkEmploymentAdapter adapter = new WorkEmploymentAdapter(this,R.layout.row_work_employment_template, items);
 		ListView lvEmployments = (ListView) findViewById(R.id.lvEmployments);
 		lvEmployments.setAdapter(adapter);
@@ -112,30 +126,40 @@ public class PatientsActivity extends BaseActivity {
 							patientsArr[counter++] = patient.getFullName(); 
 					}
 					else						
-						patientsArr = new String[]{getString(R.string.no_any_patient)};
+						patientsArr = new String[]{getString(R.string.err_no_patients)};
 					patientsDialog.show(getSupportFragmentManager(), "patientsDialog");
 				}
 			}
 		});
 	}
 
-	public void reloadData() {
+	private void reloadData() {
 		employments = EmploymentManager.Instance().load(Employment.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID()));
 		works = WorkManager.Instance().loadAll(Work.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID()));
-		List<EmploymentInterval> s = EmploymentIntervalManager.Instance().load();
+		pilotTour = PilotTourManager.Instance().loadPilotTour(Option.Instance().getPilotTourID());
 		items = new ArrayList<IJob>();
 		items.addAll(employments);
 		items.addAll(works);
 		Collections.sort(items, new JobComparer());
+		checkTourEndButton();
+	}
+	
+	private void checkTourEndButton(){
+		int taskCount = items.size();
+		int syncTaskCount = 0;
+		for(IJob job : items)
+			if(job.wasSent())
+				syncTaskCount++;
+		btTourEnd.setEnabled(!(syncTaskCount == taskCount 
+				|| !DateUtils.isToday(pilotTour.getPlanDate())));		
 	}
 	
 	private void fillUpTitle() {
-		PilotTour pt = PilotTourManager.Instance().loadPilotTour(Option.Instance().getPilotTourID());
 		Worker worker = Option.Instance().getWorker();
 		setTitle(String.format("%1$s, %2$s - %3$s"
 				, worker.getName()
-				, pt.getName()
-				, DateUtils.WeekDateFormat.format(pt.getPlanDate())));
+				, pilotTour.getName()
+				, DateUtils.WeekDateFormat.format(pilotTour.getPlanDate())));
 	}
 	
 	private void saveSelectedEmploymentID(int emplID) {
@@ -144,6 +168,8 @@ public class PatientsActivity extends BaseActivity {
 	}
 	
 	private void initDialogs() {
+		infoDialog = new InfoBaseDialog(getString(R.string.attention)
+				,getString(R.string.dialog_complete_all_tasks));
 		patientsDialog = new DialogFragment() {
 			@Override
 			public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -167,6 +193,5 @@ public class PatientsActivity extends BaseActivity {
 				return adb.create();
 			}
 		};
-		
 	}
 }
