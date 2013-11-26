@@ -26,7 +26,7 @@
     <string name="pin_code">PIN :</string>
     <string name="save_pin_code">PIN speichern</string>
     <string name="server_ip">Server:</string>
-    <string name="input_server_ip">Server IP hier eintragen</string>
+    <string name="input_server_ip">Server IP</string>
     <string name="server_port">Port:</string>
     <string name="phone_number">TelefonNr:</string>
     

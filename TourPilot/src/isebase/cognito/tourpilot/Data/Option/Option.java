@@ -20,6 +20,7 @@ public class Option {
 	public static final String ServerPortField = "server_port";
 	public static final String IsAutoField = "is_auto";
 	public static final String IsWorkerActivityField = "is_worker_activity";
+	public static final String PinField = "pin";
 
 	public static boolean testMode = false;
 	private Worker worker;
@@ -36,10 +37,21 @@ public class Option {
 	private int workID;
 	private int serverPort;
 	private int id;
+	private int pin;
 
 	private boolean isAuto;
 	private boolean isWorkerActivity;
 
+	@MapField(DatabaseField = PinField)
+	public int getPin() {
+		return pin;
+	}
+
+	@MapField(DatabaseField = PinField)
+	public void setPin(int pin) {
+		this.pin = pin;
+	}
+	
 	@MapField(DatabaseField = IsWorkerActivityField)
 	public boolean isWorkerActivity() {
 		return isWorkerActivity;
