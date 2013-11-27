@@ -3,11 +3,13 @@ package isebase.cognito.tourpilot.Activity;
 import java.util.Date;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemark;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
@@ -74,6 +76,31 @@ public class UserRemarksActivity extends BaseActivity {
 	public void btUserRemarkSaveClick(View view){
 		pickUp();
 		save();
-		startTasksActivity();
+		
+		Integer type_save = -1;
+		Intent intentSave = getIntent();
+		Bundle b = intentSave.getExtras();
+		 if(b!=null){
+			 type_save = (Integer)b.get("mode");
+			 switch(type_save){
+			 case 0:
+				 startTasksActivity();
+				 break;
+			 case 1:
+				 clearEmployment();
+				 startSyncActivity();
+				 break;
+			 case 2:
+				 clearEmployment();
+				 startPatientsActivity();
+				 break;
+			 }
+		 }
+		
 	}
+	private void clearEmployment() {
+		Option.Instance().setEmploymentID(BaseObject.EMPTY_ID);
+		Option.Instance().save();
+	}
+
 }

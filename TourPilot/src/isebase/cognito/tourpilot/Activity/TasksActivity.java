@@ -197,16 +197,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 	
 	public void btEndTaskTimerClick(View view) {
-		endTask.setRealDate(new Date());
-		endTask.setState(eTaskState.Done);
-		TaskManager.Instance().save(endTask);
-		fillUpEndTask();
-		saveEmployment();
-		clearEmployment();
-		if (Option.Instance().getIsAuto())
-			startSyncActivity();
-		else
-			startPatientsActivity();
+		checkLeavingState();
 	}
 	
 	@Override
@@ -394,17 +385,14 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		case R.id.cancelAllTasks:
 			if(isAllDone())
 				return false;
-			checkAllTasksAndFillUp(eTaskState.UnDone);
-			saveEmployment();
-			clearEmployment();
-			if (Option.Instance().getIsAuto())
-				startSyncActivity();
-			else
-				startPatientsActivity();
+
+			checkLeavingState();
+			
 			return true;
 		case R.id.notes:
 			Intent notesActivity = new Intent(getApplicationContext(),
 					UserRemarksActivity.class);
+			notesActivity.putExtra("mode", 0);
 			startActivity(notesActivity);
 			return true;
 		case R.id.info:
@@ -462,7 +450,15 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			clearEmployment();
 			startPatientsActivity();
 		}
-		else{
+		else if(dialog.getTag().equals("dialogLeavingPatient")){
+			saveData(true);
+			if (Option.Instance().getIsAuto())
+				startSyncActivity();
+			else
+				startPatientsActivity();
+		}
+			
+		else {
 			StandardTaskDialog taskDialog = (StandardTaskDialog)dialog;
 			Task task = taskDialog.getTask();
 			String value = taskDialog.getValue();
@@ -473,6 +469,13 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 
 	@Override
 	public void onDialogNegativeClick(DialogFragment dialog) {
+		if(dialog.getTag().equals("dialogLeavingPatient")){
+			saveData(false);
+			if (Option.Instance().getIsAuto())
+				startUserRemarksActivity(1);
+			else
+				startUserRemarksActivity(2);
+		}
 		return;
 	}
 
@@ -501,4 +504,31 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.dialog_comments),patientRemark.getName());
 		dialog.show(getSupportFragmentManager(), "");
 	}
+
+	private void checkLeavingState(){
+		BaseDialog dialogLeavingState = new BaseDialog(getString(R.string.dialog_leaving_patient));
+		dialogLeavingState.show(getSupportFragmentManager(), "dialogLeavingPatient");
+		getSupportFragmentManager().executePendingTransactions();
+	}
+
+	private void saveData(boolean is_clear){
+		if(isClickable()){
+			endTask.setRealDate(new Date());
+			endTask.setState(eTaskState.Done);
+			TaskManager.Instance().save(endTask);
+			fillUpEndTask();
+		}else
+			checkAllTasksAndFillUp(eTaskState.UnDone);
+		saveEmployment();
+		if(is_clear)
+			clearEmployment();
+	}
+	
+
+	protected void startUserRemarksActivity(Integer mode) {
+		Intent userRemarksActivity = new Intent(getApplicationContext(), UserRemarksActivity.class);
+		userRemarksActivity.putExtra("mode", mode);
+		startActivity(userRemarksActivity);
+	}
+	
 }
