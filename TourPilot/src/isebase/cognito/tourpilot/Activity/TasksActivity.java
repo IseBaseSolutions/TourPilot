@@ -96,25 +96,36 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu){
+		MenuItem manualInputMenu = menu.findItem(R.id.manualInput);
+		MenuItem undoneTasksMenu = menu.findItem(R.id.cancelAllTasks);
+		MenuItem catalogsMenu = menu.findItem(R.id.catalogs);
+		MenuItem infoMenu = menu.findItem(R.id.info);
+		MenuItem commentsMenu = menu.findItem(R.id.comments);
+		MenuItem diagnoseMenu = menu.findItem(R.id.diagnose);
+		MenuItem addresseMenu = menu.findItem(R.id.address);
+		MenuItem doctorsMenu = menu.findItem(R.id.doctors);
+		MenuItem relativesMenu = menu.findItem(R.id.relatives);
+		
 		if(infos.size() == 0){
-			MenuItem infoMenu = menu.findItem(R.id.info);
 			infoMenu.setEnabled(false);
 		}
-		if((patientRemark == null) ||(patientRemark.getName().length() == 0)){
-			MenuItem commentsMenu = menu.findItem(R.id.comments);
+		if(patientRemark == null ||patientRemark.getName().length() == 0){
 			commentsMenu.setEnabled(false);
 		}
-		if((diagnose == null) || (diagnose.getName().length() == 0)){
-			MenuItem diagnoseMenu = menu.findItem(R.id.diagnose);
+		if(diagnose == null || diagnose.getName().length() == 0){
 			diagnoseMenu.setEnabled(false);
 		}
 		if(isAllDone()){
-			MenuItem manualInputMenu = menu.findItem(R.id.manualInput);
-			MenuItem undoneTasksMenu = menu.findItem(R.id.cancelAllTasks);
-			MenuItem catalogsMenu = menu.findItem(R.id.catalogs);
 			manualInputMenu.setEnabled(false);
 			undoneTasksMenu.setEnabled(false);
 			catalogsMenu.setEnabled(false);
+		}
+		if(employment.isAdditionalWork()){
+			catalogsMenu.setEnabled(false);
+			diagnoseMenu.setEnabled(false);
+			addresseMenu.setEnabled(false);
+			doctorsMenu.setEnabled(false);
+			relativesMenu.setEnabled(false);
 		}
 		
 		return true;

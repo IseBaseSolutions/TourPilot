@@ -113,7 +113,6 @@ public class Employment extends BaseObject implements IJob {
 		this.stopTime = stopTime;
 	}
 
-
 	public List<Task> getTasks() {
 		return tasks;
 	}
@@ -224,9 +223,13 @@ public class Employment extends BaseObject implements IJob {
 		return getIsDone();
 	}
 
+	public boolean isAdditionalWork(){
+		return getPatientID() > Patient.AdditionalWorkCode;
+	}
+	
 	@Override
 	public String text() {
-		return (getPatientID() < 999900 ? getName() : getName().replace(", ", ""));
+		return isAdditionalWork() ? getName().replace(", ", "") : getName();
 	}
 
 	@Override

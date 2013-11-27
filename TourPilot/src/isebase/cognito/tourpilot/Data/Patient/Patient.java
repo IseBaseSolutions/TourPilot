@@ -23,6 +23,8 @@ public class Patient extends BaseObject implements IAddressable {
 	public static final String CatalogSATypeField = "catalog_sa_type";
 	public static final String CatalogPRTypeField = "catalog_pr_type";
 
+	public static final int AdditionalWorkCode = 999900;
+	
 	public Address address;
 	private int addressID;
 	
@@ -138,6 +140,10 @@ public class Patient extends BaseObject implements IAddressable {
 		this.btyp_pr = btyp_pr;
 	}
 	
+	public boolean isAdditionalWork(){
+		return getID() > AdditionalWorkCode;
+	}
+	
 	public Patient() {
 		clear();
 	}
@@ -219,7 +225,6 @@ public class Patient extends BaseObject implements IAddressable {
 
 	@Override
 	public Address getAddress() {
-		// TODO Auto-generated method stub
 		return address;
 	}
 }
