@@ -16,10 +16,12 @@ public class PinDialog extends BaseDialog {
 
 	private EditText etPin;
 	private Worker worker;
-	public void setWorker(Worker worker){
+
+	public void setWorker(Worker worker) {
 		this.worker = worker;
-	}	
-	public String getPin(){
+	}
+
+	public String getPin() {
 		return etPin.getText().toString();
 	}
 
@@ -29,7 +31,7 @@ public class PinDialog extends BaseDialog {
 		etPin = new EditText(StaticResources.getBaseContext());
 		etPin.setTextColor(Color.BLACK);
 		etPin.setHint(isebase.cognito.tourpilot.R.string.enter_pin);
-		etPin.setInputType(InputType.TYPE_CLASS_NUMBER 
+		etPin.setInputType(InputType.TYPE_CLASS_NUMBER
 				| InputType.TYPE_NUMBER_VARIATION_PASSWORD);
 		adb.setView(etPin);
 		adb.setIcon(isebase.cognito.tourpilot.R.drawable.ic_action_screen_locked_to_landscape);
@@ -38,7 +40,7 @@ public class PinDialog extends BaseDialog {
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
-
+						listener.onDialogPositiveClick(PinDialog.this);
 					}
 				});
 		adb.setNegativeButton(isebase.cognito.tourpilot.R.string.cancel,
@@ -49,25 +51,21 @@ public class PinDialog extends BaseDialog {
 				});
 		return adb.create();
 	}
-	
+
 	@Override
-	public void onStart()
-	{
-	    super.onStart();
-	    AlertDialog dialog = (AlertDialog)getDialog();
-	    if(dialog != null)
-	    {
-	        Button positiveButton = (Button) dialog.getButton(Dialog.BUTTON_POSITIVE);
-	        positiveButton.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-					if(worker.checkPIN(getPin())){
+	public void onStart() {
+		super.onStart();
+		AlertDialog dialog = (AlertDialog) getDialog();
+		if (dialog != null) {
+			Button positiveButton = (Button) dialog
+					.getButton(Dialog.BUTTON_POSITIVE);
+			positiveButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (worker.checkPIN(getPin())) {
 						dismiss();
 						listener.onDialogPositiveClick(PinDialog.this);
-					}	                   
-					else{
+					} else {
 						etPin.setText("");
 						etPin.setHintTextColor(Color.RED);
 					}

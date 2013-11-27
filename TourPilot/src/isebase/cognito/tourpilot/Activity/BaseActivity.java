@@ -95,4 +95,9 @@ public class BaseActivity extends FragmentActivity{
 		Intent optionsActivity = new Intent(getApplicationContext(), OptionsActivity.class);
 		startActivity(optionsActivity);
 	}
+	
+	protected void startManualInputActivity() {
+		Intent manualInputActivity = new Intent(getApplicationContext(), ManualInputActivity.class);
+		startActivity(manualInputActivity);
+	}
 }

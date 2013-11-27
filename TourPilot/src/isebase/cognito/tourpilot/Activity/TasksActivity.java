@@ -47,6 +47,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 
 	private TaskAdapter taskAdapter;
 	private Employment employment;
+	private Diagnose diagnose;
 	
 	private Task startTask;
 	private List<Task> tasks;
@@ -103,6 +104,10 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			MenuItem item = menu.findItem(R.id.comments);
 			item.setEnabled(false);
 		}
+		if((diagnose == null) || (diagnose.getName().length() == 0)){
+			MenuItem item = menu.findItem(R.id.diagnose);
+			item.setEnabled(false);
+		}
 		return true;
 	}
 	
@@ -146,7 +151,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 	
 	private void fillUpTitle(){
-		setTitle(employment.getName() + ", " + startTask.getDayPart());
+		setTitle(employment.text() + ", " + startTask.getDayPart());
 	}
 	
 	private void fillUpTasks(){
@@ -166,6 +171,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		patientRemark = PatientRemarkManager.Instance().load(employment.getPatientID());
 		tasks = TaskManager.Instance().load(Task.EmploymentIDField, Option.Instance().getEmploymentID()+"");
 		patientRemark = PatientRemarkManager.Instance().load(employment.getPatientID());
+		diagnose = DiagnoseManager.Instance().load(employment.getPatientID());
 		startTask = tasks.get(0);
 		int i = 1;
 		while(endTask == null){
@@ -436,7 +442,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 	
 	private void showDiagnose(){
-		Diagnose diagnose = DiagnoseManager.Instance().load(employment.getPatientID());
+		
 		InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_diagnose),diagnose.getName());
 		dialog.show(getSupportFragmentManager(), "");
 		getSupportFragmentManager().executePendingTransactions();

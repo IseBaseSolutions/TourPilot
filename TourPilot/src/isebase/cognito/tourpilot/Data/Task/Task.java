@@ -379,5 +379,9 @@ public class Task extends BaseObject {
     	if (strArr.length == 0 && !leistungs.contains("Anfang") && !leistungs.contains("Ende"))
     		return pilotTourID;
     	return Integer.parseInt(strArr[1]);
-    }    
+    }
+    
+    public boolean isFirstTask() {
+    	return getLeistungs().contains("Anfang");
+    }
 }
