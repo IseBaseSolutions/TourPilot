@@ -103,13 +103,14 @@
     <string name="save">Speichern</string>
     <string name="start_time">Start time</string>
     <string name="stop_time">Stop time</string>
-    <string name="tour_end">Tour ende</string>
+    <string name="tour_end">Tourende</string>
     <string name="stop">Stop</string>
     <string name="start">Start</string>
     <string name="started_at">Gestartet um</string>
     <string name="attention">Achtung!</string>
     
  <!-- Dialogs -->   
+    <string name="dialog_task_proof_undone">Möchten Sie diesen Einsatz als ausgefallen markieren?</string>
     <string name="dialog_task_proof_back">Möchten Sie wirklich die Zeiten verwerfen? Wenn Sie diese Medlung mit OK bestätigen, werden die Zeiten gelöscht.</string>
     <string name="dialog_no_connection">Bitte, die Internet Verbindung zulassen</string>
     <string name="dialog_complete_all_tasks">Es fehlen noch Daten, die Sie für diese Tour noch nicht eingegeben haben. Bitte nehmen Sie die Eingabe jetzt vor.</string>

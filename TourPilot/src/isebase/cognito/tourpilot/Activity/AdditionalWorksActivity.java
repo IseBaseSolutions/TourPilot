@@ -32,22 +32,28 @@ public class AdditionalWorksActivity extends BaseActivity implements BaseDialogL
 	private DialogFragment workStopDialog;
 	private PatientsDialog patientsDialog;
 
-	List<AdditionalWork> additionalWorks;
-	List<Patient> patients;
+	private List<AdditionalWork> additionalWorks;
+	private List<Patient> patients;
 	String[] patientNames;
 	boolean[] selectedPatients;
 	
-	AdditionalWork addWork;
-	Work work;
+	private AdditionalWork addWork;
+	private Work work;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_additional_works);
-		reloadData();
-		fillUp();
-		fillUpTitle();
-		switchTolatest();
+		try{
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_additional_works);
+			reloadData();
+			fillUp();
+			fillUpTitle();
+			switchTolatest();
+		}
+		catch(Exception ex){
+			ex.printStackTrace();
+			criticalClose();
+		}
 	}
 
 	@Override

@@ -197,33 +197,34 @@ public final class R {
         public static final int def_empty_time=0x7f060045;
         public static final int def_port=0x7f060047;
         public static final int detect_respiration=0x7f060022;
-        public static final int dialog_comments=0x7f060061;
-        public static final int dialog_complete_all_tasks=0x7f06005c;
-        public static final int dialog_connection_problems=0x7f06005e;
-        public static final int dialog_info=0x7f060060;
-        public static final int dialog_no_connection=0x7f06005b;
-        public static final int dialog_no_ip_entered=0x7f06005d;
-        public static final int dialog_proof_logout=0x7f06005f;
+        public static final int dialog_comments=0x7f060062;
+        public static final int dialog_complete_all_tasks=0x7f06005d;
+        public static final int dialog_connection_problems=0x7f06005f;
+        public static final int dialog_info=0x7f060061;
+        public static final int dialog_no_connection=0x7f06005c;
+        public static final int dialog_no_ip_entered=0x7f06005e;
+        public static final int dialog_proof_logout=0x7f060060;
+        public static final int dialog_task_proof_back=0x7f06005b;
         /**  Dialogs 
          */
-        public static final int dialog_task_proof_back=0x7f06005a;
+        public static final int dialog_task_proof_undone=0x7f06005a;
         public static final int end_task=0x7f060020;
         /**  Notes 
          */
         public static final int enter_interval=0x7f060019;
         public static final int enter_pin=0x7f06002a;
-        public static final int err_no_address=0x7f060063;
-        public static final int err_no_patients=0x7f060064;
+        public static final int err_no_address=0x7f060064;
+        public static final int err_no_patients=0x7f060065;
         /**  Errors 
          */
-        public static final int err_no_phone=0x7f060062;
+        public static final int err_no_phone=0x7f060063;
         public static final int hello_request_fail=0x7f060032;
         public static final int hello_request_ok=0x7f060031;
         public static final int input_server_ip=0x7f060016;
         public static final int invitation_fail=0x7f06002e;
         public static final int invitation_ok=0x7f06002d;
         public static final int log_out=0x7f060051;
-        public static final int manual_input=0x7f060065;
+        public static final int manual_input=0x7f060066;
         public static final int max=0x7f060049;
         public static final int medications_changed=0x7f06001b;
         public static final int menu_add_additional_work=0x7f06000f;
@@ -249,7 +250,7 @@ public final class R {
          */
         public static final int min=0x7f060048;
         public static final int no=0x7f06004e;
-        public static final int no_any_patient=0x7f060066;
+        public static final int no_any_patient=0x7f060067;
         public static final int ok=0x7f06004b;
         public static final int options=0x7f060012;
         public static final int other=0x7f06001e;

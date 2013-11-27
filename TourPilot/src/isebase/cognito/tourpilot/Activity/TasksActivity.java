@@ -97,17 +97,26 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu){
 		if(infos.size() == 0){
-			MenuItem item = menu.findItem(R.id.info);
-			item.setEnabled(false);
+			MenuItem infoMenu = menu.findItem(R.id.info);
+			infoMenu.setEnabled(false);
 		}
 		if((patientRemark == null) ||(patientRemark.getName().length() == 0)){
-			MenuItem item = menu.findItem(R.id.comments);
-			item.setEnabled(false);
+			MenuItem commentsMenu = menu.findItem(R.id.comments);
+			commentsMenu.setEnabled(false);
 		}
 		if((diagnose == null) || (diagnose.getName().length() == 0)){
-			MenuItem item = menu.findItem(R.id.diagnose);
-			item.setEnabled(false);
+			MenuItem diagnoseMenu = menu.findItem(R.id.diagnose);
+			diagnoseMenu.setEnabled(false);
 		}
+		if(isAllDone()){
+			MenuItem manualInputMenu = menu.findItem(R.id.manualInput);
+			MenuItem undoneTasksMenu = menu.findItem(R.id.cancelAllTasks);
+			MenuItem catalogsMenu = menu.findItem(R.id.catalogs);
+			manualInputMenu.setEnabled(false);
+			undoneTasksMenu.setEnabled(false);
+			catalogsMenu.setEnabled(false);
+		}
+		
 		return true;
 	}
 	
@@ -225,7 +234,9 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	@Override
 	public void onBackPressed() {
 		if(isClickable()){
-			BaseDialog dialog = new BaseDialog(getString(R.string.dialog_task_proof_back));
+			BaseDialog dialog = new BaseDialog(
+					getString(R.string.attention),
+					getString(R.string.dialog_task_proof_back));
 			dialog.show(getSupportFragmentManager(), "dialogBack");
 			getSupportFragmentManager().executePendingTransactions();
 		}
@@ -394,13 +405,11 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		case R.id.cancelAllTasks:
 			if(isAllDone())
 				return false;
-			checkAllTasksAndFillUp(eTaskState.UnDone);
-			saveEmployment();
-			clearEmployment();
-			if (Option.Instance().getIsAuto())
-				startSyncActivity();
-			else
-				startPatientsActivity();
+			BaseDialog dialog = new BaseDialog(
+					getString(R.string.attention),
+					getString(R.string.dialog_task_proof_undone));
+			dialog.show(getSupportFragmentManager(), "dialogUndone");
+			getSupportFragmentManager().executePendingTransactions();
 			return true;
 		case R.id.notes:
 			Intent notesActivity = new Intent(getApplicationContext(),
@@ -441,8 +450,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		}
 	}
 	
-	private void showDiagnose(){
-		
+	private void showDiagnose(){		
 		InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_diagnose),diagnose.getName());
 		dialog.show(getSupportFragmentManager(), "");
 		getSupportFragmentManager().executePendingTransactions();
@@ -461,6 +469,15 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			removeAdditionalTasks();
 			clearEmployment();
 			startPatientsActivity();
+		}
+		else if (dialog.getTag().equals("dialogUndone")){
+			checkAllTasksAndFillUp(eTaskState.UnDone);
+			saveEmployment();
+			clearEmployment();
+			if (Option.Instance().getIsAuto())
+				startSyncActivity();
+			else
+				startPatientsActivity();
 		}
 		else{
 			StandardTaskDialog taskDialog = (StandardTaskDialog)dialog;
