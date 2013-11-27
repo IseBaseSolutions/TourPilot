@@ -430,7 +430,7 @@ public abstract class BaseObjectManager<T> {
 	}
 
 	public String forServer() {
-		String strResult = new String();
+		String strResult = "";
 		List<T> elements = load();
 		for (T element : elements) {
 			String forServer = ((BaseObject) element).forServer();

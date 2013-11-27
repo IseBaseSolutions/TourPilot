@@ -10,20 +10,30 @@ import android.support.v4.app.DialogFragment;
 public class BaseDialog extends DialogFragment{
 
 	private String title;
+	private String message;
+	
 	protected BaseDialogListener listener;
 	
-	public BaseDialog(){}
+	public BaseDialog(){
+		this("");
+	}
 	
 	public BaseDialog(String title){
-		this.title = title;
+		this("","");
 	}
+	
+	public BaseDialog(String title, String message){
+		this.title = title;
+		this.message = message;
+	}	
 	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
 		adb.setTitle(title);
+		adb.setMessage(message);
 		adb.setPositiveButton(isebase.cognito.tourpilot.R.string.ok,
-					new DialogInterface.OnClickListener() {
+				new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int id) {
 							listener.onDialogPositiveClick(BaseDialog.this);
 						}

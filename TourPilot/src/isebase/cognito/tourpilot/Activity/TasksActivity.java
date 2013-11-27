@@ -220,7 +220,9 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	@Override
 	public void onBackPressed() {
 		if(isClickable()){
-			BaseDialog dialog = new BaseDialog(getString(R.string.dialog_task_proof_back));
+			BaseDialog dialog = new BaseDialog(
+					getString(R.string.attention)
+					,getString(R.string.dialog_task_proof_back));
 			dialog.show(getSupportFragmentManager(), "dialogBack");
 			getSupportFragmentManager().executePendingTransactions();
 		}
