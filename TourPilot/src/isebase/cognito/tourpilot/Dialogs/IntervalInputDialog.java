@@ -48,13 +48,10 @@ public class IntervalInputDialog extends BaseDialog  {
 			
 			@Override
 			public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-		        if (hourOfDay < minHour || hourOfDay == minHour && minute < minMinute
-		        		|| hourOfDay > maxHour || hourOfDay == maxHour && minute > maxMinute)
-		        {
-		        	updateStartTime();
-		        	return;
-		        }
-		        updateStartTime(hourOfDay, minute);
+				if (hourOfDay < minHour || hourOfDay > maxHour || hourOfDay > tpStopTime.getCurrentHour())
+					tpStartTime.setCurrentHour(minHour);
+				if (hourOfDay == minHour && minute < minMinute || hourOfDay == tpStopTime.getCurrentHour() && minute > tpStopTime.getCurrentMinute())
+					tpStartTime.setCurrentMinute(minMinute);
 			}
 		});
 	    
@@ -66,13 +63,10 @@ public class IntervalInputDialog extends BaseDialog  {
 			
 			@Override
 			public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-		        if (hourOfDay < minHour || hourOfDay == minHour && minute < minMinute
-		        		|| hourOfDay > maxHour || hourOfDay == maxHour && minute > maxMinute)
-		        {
-		        	updateStopTime();
-		        	return;
-		        }
-		        updateStopTime(hourOfDay, minute);
+				if (hourOfDay < minHour || hourOfDay > maxHour || hourOfDay < tpStartTime.getCurrentHour())
+					tpStopTime.setCurrentHour(maxHour);
+				if (hourOfDay == maxHour && minute > maxMinute || hourOfDay == tpStartTime.getCurrentHour() && minute < tpStartTime.getCurrentMinute())
+					tpStopTime.setCurrentMinute(maxMinute);
 			}
 		});
 	    
@@ -94,24 +88,6 @@ public class IntervalInputDialog extends BaseDialog  {
 		
 		maxMinute = selectedPeriod.getStopTime().getMinutes();
 		maxHour = selectedPeriod.getStopTime().getHours();
-	}
-	
-	private void updateStartTime() {
-		updateStartTime(minHour, minMinute);
-	}
-	
-	private void updateStopTime() {
-		updateStopTime(maxHour, maxMinute);
-	}
-	
-	private void updateStartTime(int hourOfDay, int minute) {
-        tpStartTime.setCurrentHour(hourOfDay);
-        tpStartTime.setCurrentMinute(minute);
-	}
-	
-	private void updateStopTime(int hourOfDay, int minute) {
-        tpStopTime.setCurrentHour(hourOfDay);
-        tpStopTime.setCurrentMinute(minute);
 	}
 	
     public Date getStartDate() {

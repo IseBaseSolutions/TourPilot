@@ -26,12 +26,12 @@ public class WorkStopDialog extends BaseDialog {
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity())
 				.setTitle(title)
 				.setMessage(String.format("%s %s", getString(R.string.started_at), format.format(startTime)))
-				.setNegativeButton(
+				.setPositiveButton(
 						isebase.cognito.tourpilot.R.string.stop, new OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
-								listener.onDialogNegativeClick(WorkStopDialog.this);
+								listener.onDialogPositiveClick(WorkStopDialog.this);
 							}
 
 						});

@@ -96,18 +96,38 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu){
+		MenuItem manualInputMenu = menu.findItem(R.id.manualInput);
+		MenuItem undoneTasksMenu = menu.findItem(R.id.cancelAllTasks);
+		MenuItem catalogsMenu = menu.findItem(R.id.catalogs);
+		MenuItem infoMenu = menu.findItem(R.id.info);
+		MenuItem commentsMenu = menu.findItem(R.id.comments);
+		MenuItem diagnoseMenu = menu.findItem(R.id.diagnose);
+		MenuItem addresseMenu = menu.findItem(R.id.address);
+		MenuItem doctorsMenu = menu.findItem(R.id.doctors);
+		MenuItem relativesMenu = menu.findItem(R.id.relatives);
+		
 		if(infos.size() == 0){
-			MenuItem item = menu.findItem(R.id.info);
-			item.setEnabled(false);
+			infoMenu.setEnabled(false);
 		}
-		if((patientRemark == null) ||(patientRemark.getName().length() == 0)){
-			MenuItem item = menu.findItem(R.id.comments);
-			item.setEnabled(false);
+		if(patientRemark == null ||patientRemark.getName().length() == 0){
+			commentsMenu.setEnabled(false);
 		}
-		if((diagnose == null) || (diagnose.getName().length() == 0)){
-			MenuItem item = menu.findItem(R.id.diagnose);
-			item.setEnabled(false);
+		if(diagnose == null || diagnose.getName().length() == 0){
+			diagnoseMenu.setEnabled(false);
 		}
+		if(isAllDone()){
+			manualInputMenu.setEnabled(false);
+			undoneTasksMenu.setEnabled(false);
+			catalogsMenu.setEnabled(false);
+		}
+		if(employment.isAdditionalWork()){
+			catalogsMenu.setEnabled(false);
+			diagnoseMenu.setEnabled(false);
+			addresseMenu.setEnabled(false);
+			doctorsMenu.setEnabled(false);
+			relativesMenu.setEnabled(false);
+		}
+		
 		return true;
 	}
 	
@@ -225,7 +245,9 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	@Override
 	public void onBackPressed() {
 		if(isClickable()){
-			BaseDialog dialog = new BaseDialog(getString(R.string.dialog_task_proof_back));
+			BaseDialog dialog = new BaseDialog(
+					getString(R.string.attention),
+					getString(R.string.dialog_task_proof_back));
 			dialog.show(getSupportFragmentManager(), "dialogBack");
 			getSupportFragmentManager().executePendingTransactions();
 		}
@@ -394,13 +416,11 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		case R.id.cancelAllTasks:
 			if(isAllDone())
 				return false;
-			checkAllTasksAndFillUp(eTaskState.UnDone);
-			saveEmployment();
-			clearEmployment();
-			if (Option.Instance().getIsAuto())
-				startSyncActivity();
-			else
-				startPatientsActivity();
+			BaseDialog dialog = new BaseDialog(
+					getString(R.string.attention),
+					getString(R.string.dialog_task_proof_undone));
+			dialog.show(getSupportFragmentManager(), "dialogUndone");
+			getSupportFragmentManager().executePendingTransactions();
 			return true;
 		case R.id.notes:
 			Intent notesActivity = new Intent(getApplicationContext(),
@@ -431,7 +451,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			startActivity(relativesActivity);
 			return true;
 		case R.id.comments:
-			loadComments();
+			showComments();
 			return true;
 		case R.id.diagnose:
 			showDiagnose();
@@ -442,7 +462,6 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 	
 	private void showDiagnose(){
-		
 		InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_diagnose),diagnose.getName());
 		dialog.show(getSupportFragmentManager(), "");
 		getSupportFragmentManager().executePendingTransactions();
@@ -461,6 +480,15 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			removeAdditionalTasks();
 			clearEmployment();
 			startPatientsActivity();
+		}
+		else if (dialog.getTag().equals("dialogUndone")){
+			checkAllTasksAndFillUp(eTaskState.UnDone);
+			saveEmployment();
+			clearEmployment();
+			if (Option.Instance().getIsAuto())
+				startSyncActivity();
+			else
+				startPatientsActivity();
 		}
 		else{
 			StandardTaskDialog taskDialog = (StandardTaskDialog)dialog;
@@ -482,7 +510,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		Date today = new Date();
 
 		for(Information info : infos){
-			if((DateUtils.getDateOnly(today).getTime() != DateUtils.getDateOnly(info.getReadTime()).getTime()) || is_from_menu)
+			if(!DateUtils.isToday(info.getReadTime()) || is_from_menu)
 				if((today.getTime() >= info.getFromDate().getTime()) && (today.getTime() <= info.getTillDate().getTime())){
 					if(strInfos != "")
 						strInfos += "\n";
@@ -492,13 +520,15 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		}
 		if(strInfos.length() > 0){
 			InformationManager.Instance().save(infos);
-			InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.dialog_info),strInfos);
+			InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_info),strInfos);
 			dialog.show(getSupportFragmentManager(), "");
 		}
 	}
 
-	private void loadComments(){
-		InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.dialog_comments),patientRemark.getName());
+	private void showComments(){
+		InfoBaseDialog dialog = new InfoBaseDialog(
+				getString(R.string.dialog_comments)
+				, patientRemark.getName());
 		dialog.show(getSupportFragmentManager(), "");
 	}
 }

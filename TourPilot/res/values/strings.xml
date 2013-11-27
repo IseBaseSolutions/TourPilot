@@ -3,7 +3,7 @@
     
  <!-- Menus -->
     <string name="menu_undone_all_tasks">Einsatz ausgefallen</string>
-    <string name="menu_catalogs">Catalogs</string>
+    <string name="menu_catalogs">Zusätzliche Leistungen</string>
     <string name="menu_notes">Besuchsvermerke</string>
     <string name="menu_info">Info</string>
     <string name="menu_manual_input">Manuelle Eingabe</string>
@@ -17,21 +17,21 @@
     <string name="menu_clear_darabase">Daten leeren</string>
     <string name="menu_program_info">Programm Info</string>
     <string name="menu_settings">Einstellungen</string>
-    <string name="menu_add_additional_work">Zusätzlichen Einsatz hinzufügen</string>
+    <string name="menu_add_additional_work">Zusätzliche Einsätze</string>
     <string name="menu_diagnose">Diagnosen</string>
     
  <!-- Option -->
     <string name="program_options">Programmoptionen</string>
     <string name="options">Optionen</string>
-    <string name="pin_code">PIN :</string>
+    <string name="pin_code">PIN:</string>
     <string name="save_pin_code">PIN speichern</string>
     <string name="server_ip">Server:</string>
     <string name="input_server_ip">Server IP</string>
     <string name="server_port">Port:</string>
-    <string name="phone_number">TelefonNr:</string>
+    <string name="phone_number">Telefon-Nr:</string>
     
  <!-- Notes -->    
-    <string name="enter_interval">Enter interval</string>
+    <string name="enter_interval">Intervall eingeben</string>
     <string name="connect_with">Kontaktaufnahme mit mir ist nötig.</string>
     <string name="medications_changed">Medikation hat sich geändert.</string>
     <string name="aubrplanmäbige_pflege">Außerplanmäßige Pflege-Visite sind erforderlich.</string>
@@ -50,24 +50,24 @@
     <string name="pulse">Puls</string>
     
  <!-- Synchronization -->
-    <string name="synchronization">Synchronisation</string>
-    <string name="waitng_sockets_to_close">Waiting open sockets to automatically close...</string>
+    <string name="synchronization">Datanabgleich</string>
+    <string name="waitng_sockets_to_close">Warten auf den Socketsabschluss...</string>
     <string name="enter_pin">Geben Sie bitte Ihre PIN hier...</string>
     <string name="connection_try">Verbindung herstellen</string>
     <string name="connection_ok">Verbindung OK. Invintation empfangen...</string>
-    <string name="invitation_ok">Invitation OK. Synchronisierung...</string>
+    <string name="invitation_ok">Invitation OK. Synchronisation...</string>
     <string name="invitation_fail">Invitation fehlgeschlagen</string>
-    <string name="sycnhronizing_ok">Synchronisierung OK. Hallo Meldung senden...</string>
-    <string name="sycnhronizing_fail">Synchronisierung fehlgeschlagen</string>
-    <string name="hello_request_ok">Hallo Meldung OK. Checksummen Kalkulation...</string>
-    <string name="hello_request_fail">Hallo Meldung fehlgeschlagen</string>
-    <string name="checksum_ok">Checksummen OK. Processing data...</string>
-    <string name="checksum_fail">Checksummen fehlgeschlagen</string>
-    <string name="processing_data_ok">Processing data OK</string>
-    <string name="processing_data_fail">Processing data fehlgeschlagen</string>
+    <string name="sycnhronizing_ok">Synchronisation OK. Initialisierung...</string>
+    <string name="sycnhronizing_fail">Synchronisation fehlgeschlagen</string>
+    <string name="hello_request_ok">Initialisierung OK. Kalkulation der Prüfsummen...</string>
+    <string name="hello_request_fail">Initialisierung fehlgeschlagen</string>
+    <string name="checksum_ok">Prüfsummen OK. Datenbearbeitung...</string>
+    <string name="checksum_fail">Prüfsummen fehlgeschlagen</string>
+    <string name="processing_data_ok">Datenbearbeitung OK</string>
+    <string name="processing_data_fail">Datenbearbeitung fehlgeschlagen</string>
     <string name="data_to_download">Daten herunterladen</string>
-    <string name="connection_close_ok">Verbindung Schließen OK</string>
-    <string name="connection_close_fail">Verbindung Schließen fehlgeschlagen</string>
+    <string name="connection_close_ok">Verbindungsschluß OK</string>
+    <string name="connection_close_fail">Verbindungsschluß fehlgeschlagen</string>
 
  <!-- Programm info -->
     <string name="app_name">TourPilot</string>
@@ -80,7 +80,7 @@
     <string name="street">Strasse:</string>
     <string name="zip">PLZ:</string>
     <string name="city">Ort:</string>
-    <string name="phone">TelefonNr.:</string>
+    <string name="phone">Telefon-Nr.:</string>
     <string name="phone_private">Privat Tel.-Nr.:</string>
     <string name="phone_mobile">Handy Nr.:</string>    
     
@@ -98,34 +98,32 @@
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
     <string name="close">Schließen</string>
-    <string name="search">Suchen.</string>
+    <string name="search">Suchen</string>
     <string name="log_out">Abmelden</string>
     <string name="save">Speichern</string>
-    <string name="start_time">Start time</string>
-    <string name="stop_time">Stop time</string>
-    <string name="tour_end">Tour ende</string>
+    <string name="start_time">Einsatzbeginn</string>
+    <string name="stop_time">Einsatzende</string>
+    <string name="tour_end">Tourende</string>
     <string name="stop">Stop</string>
     <string name="start">Start</string>
     <string name="started_at">Gestartet um</string>
     <string name="attention">Achtung!</string>
     
  <!-- Dialogs -->   
+    <string name="dialog_task_proof_undone">Möchten Sie diesen Einsatz als ausgefallen markieren?</string>
     <string name="dialog_task_proof_back">Möchten Sie wirklich die Zeiten verwerfen? Wenn Sie diese Medlung mit OK bestätigen, werden die Zeiten gelöscht.</string>
     <string name="dialog_no_connection">Bitte, die Internet Verbindung zulassen</string>
     <string name="dialog_complete_all_tasks">Es fehlen noch Daten, die Sie für diese Tour noch nicht eingegeben haben. Bitte nehmen Sie die Eingabe jetzt vor.</string>
     <string name="dialog_no_ip_entered">Tragen Sie bitte die Server IP ein</string>
     <string name="dialog_connection_problems">Verbindungsstörungen</string>
     <string name="dialog_proof_logout">Möchten Sie wirklich abmelden?</string>
-    <string name="dialog_info">Information</string>
-    <string name="dialog_comments">Comments</string>
+    <string name="dialog_comments">Bemerkungen</string>
+    
  <!-- Errors -->    
-    <string name="err_no_phone">Keine TelefonNr.</string>
+    <string name="err_no_phone">Keine Telefon-Nr.</string>
     <string name="err_no_address">Keine Adresse</string>
     <string name="err_no_patients">Keine Patienten</string>
-    
-    <string name="manual_input">Manual input</string>
-    <string name="no_any_patient">There is no any patient selected</string>
-    
+    <string name="no_any_patient">Keine Patienten ausgewählt</string>    
     
 </resources>
 

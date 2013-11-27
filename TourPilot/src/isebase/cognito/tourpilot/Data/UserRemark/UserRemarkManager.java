@@ -42,20 +42,5 @@ public class UserRemarkManager extends BaseObjectManager<UserRemark>{
 			return items.get(0);
 		return new UserRemark(workerID, patientID, false, false, false, false, "");
 	}
-
-	public String getDone(){
-    	List<UserRemark> userRemarks = load();
-    	if (userRemarks.size() == 0)
-    		return "";  
-    	String strEmpls = "";
-    	for (UserRemark userRemark : userRemarks)
-    		if (!userRemark.getWasSent())
-    		{
-    			strEmpls += userRemark.getDone();
-    			userRemark.setWasSent(true);
-    			save(userRemark);
-    		}
-    	return strEmpls;
-	}
 	
 }
