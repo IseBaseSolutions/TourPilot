@@ -27,7 +27,7 @@ public class WorkTypeDialog extends BaseDialog {
 
 					})					
 			.setNegativeButton(
-					isebase.cognito.tourpilot.R.string.manual_input, new OnClickListener() {
+					isebase.cognito.tourpilot.R.string.menu_manual_input, new OnClickListener() {
 
 						@Override
 						public void onClick(DialogInterface dialog, int which) {

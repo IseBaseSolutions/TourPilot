@@ -12,7 +12,6 @@ import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Utils.DateUtils;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;

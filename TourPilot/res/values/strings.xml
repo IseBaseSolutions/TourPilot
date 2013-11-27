@@ -31,7 +31,6 @@
     <string name="phone_number">TelefonNr:</string>
     
  <!-- Notes -->    
-    <string name="enter_interval">Enter interval</string>
     <string name="connect_with">Kontaktaufnahme mit mir ist nötig.</string>
     <string name="medications_changed">Medikation hat sich geändert.</string>
     <string name="aubrplanmäbige_pflege">Außerplanmäßige Pflege-Visite sind erforderlich.</string>
@@ -123,10 +122,7 @@
     <string name="err_no_phone">Keine TelefonNr.</string>
     <string name="err_no_address">Keine Adresse</string>
     <string name="err_no_patients">Keine Patienten</string>
-    
-    <string name="manual_input">Manual input</string>
     <string name="no_any_patient">There is no any patient selected</string>
-    
     
 </resources>
 
