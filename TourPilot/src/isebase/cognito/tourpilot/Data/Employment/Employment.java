@@ -12,7 +12,6 @@ import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Utils.DateUtils;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -113,7 +112,6 @@ public class Employment extends BaseObject implements IJob {
 	public void setStopTime(Date stopTime) {
 		this.stopTime = stopTime;
 	}
-
 
 	public List<Task> getTasks() {
 		return tasks;
@@ -225,9 +223,13 @@ public class Employment extends BaseObject implements IJob {
 		return getIsDone();
 	}
 
+	public boolean isAdditionalWork(){
+		return getPatientID() > Patient.AdditionalWorkCode;
+	}
+	
 	@Override
 	public String text() {
-		return (getPatientID() < 999900 ? getName() : getName().replace(", ", ""));
+		return isAdditionalWork() ? getName().replace(", ", "") : getName();
 	}
 
 	@Override

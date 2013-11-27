@@ -1,7 +1,6 @@
 package isebase.cognito.tourpilot.Activity;
 
 import java.util.Date;
-
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Employment.Employment;

@@ -13,10 +13,8 @@ import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.PatientsDialog;
 import isebase.cognito.tourpilot.Dialogs.WorkStopDialog;
 import isebase.cognito.tourpilot.Dialogs.WorkTypeDialog;
-
 import java.util.Date;
 import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -32,22 +30,28 @@ public class AdditionalWorksActivity extends BaseActivity implements BaseDialogL
 	private DialogFragment workStopDialog;
 	private PatientsDialog patientsDialog;
 
-	List<AdditionalWork> additionalWorks;
-	List<Patient> patients;
+	private List<AdditionalWork> additionalWorks;
+	private List<Patient> patients;
 	String[] patientNames;
 	boolean[] selectedPatients;
 	
-	AdditionalWork addWork;
-	Work work;
+	private AdditionalWork addWork;
+	private Work work;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_additional_works);
-		reloadData();
-		fillUp();
-		fillUpTitle();
-		switchTolatest();
+		try{
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_additional_works);
+			reloadData();
+			fillUp();
+			fillUpTitle();
+			switchTolatest();
+		}
+		catch(Exception ex){
+			ex.printStackTrace();
+			criticalClose();
+		}
 	}
 
 	@Override
@@ -88,7 +92,10 @@ public class AdditionalWorksActivity extends BaseActivity implements BaseDialogL
 
 	private void switchTolatest() { 
 		if (Option.Instance().getWorkID() != -1)
+		{
+			workStopDialog = new WorkStopDialog(work.getName(), work.startTime());
 			workStopDialog.show(getSupportFragmentManager(), "stopDialog");
+		}
 	}
 
 	@Override

@@ -8,10 +8,7 @@ import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Templates.AddressAdapter;
-import android.net.Uri;
 import android.os.Bundle;
-import android.content.Intent;
-import android.view.View;
 import android.widget.ListView;
 
 public class DoctorsActivity extends BaseActivity {
