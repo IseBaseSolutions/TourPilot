@@ -510,7 +510,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		Date today = new Date();
 
 		for(Information info : infos){
-			if(DateUtils.isToday(info.getReadTime()) || is_from_menu)
+			if(!DateUtils.isToday(info.getReadTime()) || is_from_menu)
 				if((today.getTime() >= info.getFromDate().getTime()) && (today.getTime() <= info.getTillDate().getTime())){
 					if(strInfos != "")
 						strInfos += "\n";
@@ -526,7 +526,9 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 
 	private void showComments(){
-		InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.dialog_comments),patientRemark.getName());
+		InfoBaseDialog dialog = new InfoBaseDialog(
+				getString(R.string.dialog_comments)
+				, patientRemark.getName());
 		dialog.show(getSupportFragmentManager(), "");
 	}
 }
