@@ -151,7 +151,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 	
 	private void fillUpTitle(){
-		setTitle(employment.getName() + ", " + startTask.getDayPart());
+		setTitle(employment.text() + ", " + startTask.getDayPart());
 	}
 	
 	private void fillUpTasks(){
@@ -165,7 +165,6 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		fillUpStartTask();
 		fillUpEndTask();
 	}	
-
 
 	public void reloadData() {
 		employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
