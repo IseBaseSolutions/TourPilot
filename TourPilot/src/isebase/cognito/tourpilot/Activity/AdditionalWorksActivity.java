@@ -92,7 +92,10 @@ public class AdditionalWorksActivity extends BaseActivity implements BaseDialogL
 
 	private void switchTolatest() { 
 		if (Option.Instance().getWorkID() != -1)
+		{
+			workStopDialog = new WorkStopDialog(work.getName(), work.startTime());
 			workStopDialog.show(getSupportFragmentManager(), "stopDialog");
+		}
 	}
 
 	@Override
