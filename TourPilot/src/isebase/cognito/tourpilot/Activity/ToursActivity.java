@@ -109,7 +109,9 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	}
 
 	private void showDialogLogout(){
-		BaseDialog dialog = new BaseDialog(getString(R.string.dialog_proof_logout));
+		BaseDialog dialog = new BaseDialog(
+				getString(R.string.attention)
+				,getString(R.string.dialog_proof_logout));
 		dialog.show(getSupportFragmentManager(), "dialogBack");
 		getSupportFragmentManager().executePendingTransactions();
 	}

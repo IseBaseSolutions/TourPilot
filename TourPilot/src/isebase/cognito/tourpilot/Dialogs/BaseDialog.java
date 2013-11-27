@@ -21,11 +21,11 @@ public class BaseDialog extends DialogFragment{
 	public BaseDialog(String title){
 		this(title,"");
 	}
-	
+		
 	public BaseDialog(String title, String message){
 		this.title = title;
 		this.message = message;
-	}
+	}	
 	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -33,7 +33,7 @@ public class BaseDialog extends DialogFragment{
 		adb.setTitle(title);
 		adb.setMessage(message);
 		adb.setPositiveButton(isebase.cognito.tourpilot.R.string.ok,
-					new DialogInterface.OnClickListener() {
+				new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int id) {
 							listener.onDialogPositiveClick(BaseDialog.this);
 						}

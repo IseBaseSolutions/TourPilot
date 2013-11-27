@@ -1,6 +1,8 @@
 package isebase.cognito.tourpilot.Data.Employment;
 
 import java.util.List;
+
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentIntervalManager;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
@@ -89,17 +91,11 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
 	
     public String getDone()
     {
-    	List<Employment> employments = loadAll();
-    	if (employments.size() == 0)
-    		return "";  
+    	List<Employment> employments = loadAll(BaseObject.WasSentField, "0 AND is_done = 1");
     	String strEmpls = "";
     	for (Employment employment : employments)
-    		if (employment.getIsDone() && !employment.getWasSent())
-    		{
-    			strEmpls += employment.getDone();
-    			employment.setWasSent(true);
-    			save(employment);
-    		}
+			strEmpls += employment.getDone();
+    	execSQL("update Relatives set was_sent = 1 where was_sent = 0 and is_done = 1");
     	return strEmpls;
     }
 }
