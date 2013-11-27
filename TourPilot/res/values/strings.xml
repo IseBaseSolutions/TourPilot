@@ -116,7 +116,7 @@
     <string name="dialog_complete_all_tasks">Es fehlen noch Daten, die Sie für diese Tour noch nicht eingegeben haben. Bitte nehmen Sie die Eingabe jetzt vor.</string>
     <string name="dialog_no_ip_entered">Tragen Sie bitte die Server IP ein</string>
     <string name="dialog_connection_problems">Verbindungsstörungen</string>
-    <string name="dialog_leaving_patient">Leaving patient</string>
+    <string name="dialog_leaving_patient">Pflege OK?</string>
     <string name="dialog_proof_logout">Möchten Sie wirklich abmelden?</string>
     <string name="dialog_comments">Bemerkungen</string>
     
