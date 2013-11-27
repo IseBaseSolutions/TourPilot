@@ -151,12 +151,11 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	}
 
 	private void loadTourInfos(boolean is_from_menu){
-		infos = InformationManager.Instance().load(Information.EmploymentCodeField, BaseObject.EMPTY_ID +"");
+		infos = InformationManager.Instance().load(Information.EmploymentCodeField, BaseObject.EMPTY_ID);
 		String strInfos = "";
-		
 		Date today = new Date();
 		for(Information info : infos){
-			if((DateUtils.getDateOnly(today).getTime() != DateUtils.getDateOnly(info.getReadTime()).getTime()) || is_from_menu)
+			if(!DateUtils.isToday(info.getReadTime()) || is_from_menu)
 				if((today.getTime() >= info.getFromDate().getTime()) && (today.getTime() <= info.getTillDate().getTime())){
 					if(strInfos != "" )
 						strInfos += "\n";
@@ -166,7 +165,7 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 		}
 		if(strInfos.length() > 0){
 			InformationManager.Instance().save(infos);
-			InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.dialog_info),strInfos);
+			InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_info),strInfos);
 			dialog.show(getSupportFragmentManager(), "");
 		}
 	}

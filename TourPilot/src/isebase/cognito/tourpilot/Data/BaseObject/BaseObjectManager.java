@@ -113,6 +113,10 @@ public abstract class BaseObjectManager<T> {
 	public List<T> load(String whereField, String whereClouse){
 		return loadWhere(whereField, whereClouse, "", false);
 	}
+	
+	public List<T> load(String whereField, int whereClouse){
+		return loadWhere(whereField, String.valueOf(whereClouse), "", false);
+	}
 		
 	private List<T> loadWhere(String whereField, String whereClouse,String orderBy, boolean withAll) {
 		List<T> items = new ArrayList<T>();

@@ -440,7 +440,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			startActivity(relativesActivity);
 			return true;
 		case R.id.comments:
-			loadComments();
+			showComments();
 			return true;
 		case R.id.diagnose:
 			showDiagnose();
@@ -450,7 +450,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		}
 	}
 	
-	private void showDiagnose(){		
+	private void showDiagnose(){
 		InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_diagnose),diagnose.getName());
 		dialog.show(getSupportFragmentManager(), "");
 		getSupportFragmentManager().executePendingTransactions();
@@ -499,7 +499,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		Date today = new Date();
 
 		for(Information info : infos){
-			if((DateUtils.getDateOnly(today).getTime() != DateUtils.getDateOnly(info.getReadTime()).getTime()) || is_from_menu)
+			if(DateUtils.isToday(info.getReadTime()) || is_from_menu)
 				if((today.getTime() >= info.getFromDate().getTime()) && (today.getTime() <= info.getTillDate().getTime())){
 					if(strInfos != "")
 						strInfos += "\n";
@@ -509,12 +509,12 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		}
 		if(strInfos.length() > 0){
 			InformationManager.Instance().save(infos);
-			InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.dialog_info),strInfos);
+			InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_info),strInfos);
 			dialog.show(getSupportFragmentManager(), "");
 		}
 	}
 
-	private void loadComments(){
+	private void showComments(){
 		InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.dialog_comments),patientRemark.getName());
 		dialog.show(getSupportFragmentManager(), "");
 	}
