@@ -226,6 +226,8 @@ public final class R {
         public static final int enter_pin=0x7f06002f;
         public static final int err_no_address=0x7f06006a;
         public static final int err_no_patients=0x7f06006b;
+        /**  Errors 
+         */
         public static final int err_no_phone=0x7f060069;
         public static final int hello_request_fail=0x7f060037;
         public static final int hello_request_ok=0x7f060036;
