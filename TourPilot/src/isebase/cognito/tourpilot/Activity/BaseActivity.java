@@ -101,8 +101,10 @@ public class BaseActivity extends FragmentActivity{
 		startActivity(manualInputActivity);
 	}
 	
+
 	protected void startUserRemarksActivity() {
 		Intent userRemarksActivity = new Intent(getApplicationContext(), UserRemarksActivity.class);
 		startActivity(userRemarksActivity);
 	}
+
 }

@@ -1,5 +1,6 @@
 package isebase.cognito.tourpilot.Connection;
 
+import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWork;
@@ -27,6 +28,7 @@ import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
+import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
 public class ServerCommandParser {
 
@@ -87,7 +89,7 @@ public class ServerCommandParser {
 
 		switch (commandType) {
 		case END:
-			syncHandler.onProgressUpdate("Done");
+			syncHandler.onProgressUpdate(StaticResources.getBaseContext().getString(R.string.done));
 			break;
 		case TIME:
 			if (commandLine.indexOf(SERVER_CURRENT_VERSION) == 0)

@@ -28,6 +28,7 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.graphics.BitmapFactory.Options;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -85,6 +87,21 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 		case R.id.action_add_additional_work:
 			startAdditionalWorksActivity();
 			return true;
+		case R.id.action_add_patient_to_illness:
+			startAdditionalPatientsActivity(0);
+			return true;
+		case R.id.action_remove_patient_from_illness:
+			startAdditionalPatientsActivity(1);
+			return true;
+		case R.id.action_add_patient_to_common:
+			startAdditionalPatientsActivity(2);
+			return true;
+		case R.id.action_remove_patient_from_common:
+			startAdditionalPatientsActivity(3);
+			return true;
+		case R.id.action_show_all_patients:
+			startAdditionalPatientsActivity(4);
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -123,10 +140,10 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 	}
 	
 	private void fillUp() {
-		WorkEmploymentAdapter adapter = new WorkEmploymentAdapter(this,R.layout.row_work_employment_template, items);
+		WorkEmploymentAdapter adapter = new WorkEmploymentAdapter(this, R.layout.row_work_employment_template, items);
 		ListView lvEmployments = (ListView) findViewById(R.id.lvEmployments);
 		lvEmployments.setAdapter(adapter);
-		lvEmployments.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		lvEmployments.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 				if (items.get(position) instanceof Employment)
@@ -226,6 +243,12 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 	@Override
 	public void onDialogNegativeClick(DialogFragment dialog) {
 
+	}
+	
+	private void startAdditionalPatientsActivity(int mode) {
+		Intent additionalPatientsActivity = new Intent(getApplicationContext(), AdditionalEmploymentsActivity.class);
+		additionalPatientsActivity.putExtra("Mode", mode);
+		startActivity(additionalPatientsActivity);
 	}
 	
 	private void showTourInfos(boolean isFromMenu) {		

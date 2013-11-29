@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -108,6 +109,9 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		case ConnectionStatus.CLOSE_CONNECTION:
 			conStatus.isFinished = true;
 			conStatus.lastExecuteOK = closeConnection();
+			break;
+		case ConnectionStatus.ADDITONAL_PATIENTS_SYNC:
+			conStatus.lastExecuteOK = additionalPatientsSync();
 			break;
 		default:
 			conStatus.isFinished = true;
@@ -478,6 +482,27 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 			stringBuffer.append((char) zis.read());
 		}
 		return stringBuffer.toString();
+	}
+	
+	private boolean additionalPatientsSync() {
+		writeToStream(conStatus.OS, conStatus.getRequestMessage());
+		try {
+			conStatus.OS.flush();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		if (!conStatus.getRequestMessage().toLowerCase().startsWith("get") 
+				&& !conStatus.getRequestMessage().toLowerCase().startsWith("sel"))
+			return true;
+		String answerFromServer = "";
+		try {
+			answerFromServer = readPack(conStatus.IS);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		conStatus.setAnswerFromServer(answerFromServer);
+		return true;
+
 	}
 
 }
