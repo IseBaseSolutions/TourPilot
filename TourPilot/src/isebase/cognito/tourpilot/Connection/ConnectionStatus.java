@@ -16,6 +16,7 @@ public class ConnectionStatus {
 	public static final int COMPARE_CHECKSUMS = 4;
 	public static final int PARSE_DATA = 5;
 	public static final int CLOSE_CONNECTION = 6;
+	public static final int ADDITONAL_PATIENTS_SYNC = 8;
 	
 	public int CurrentState;
 
@@ -33,7 +34,10 @@ public class ConnectionStatus {
 		
 	private String currMessage = "" ;	
 	private String currProgressMessage = "" ;	
-	private int currProgress;	
+	private String requestForServer = "";
+	private String answerFromServer = "";
+
+	private int currProgress;
 	
 	public String getProgressMessage(){
 		return currProgressMessage;
@@ -59,6 +63,22 @@ public class ConnectionStatus {
 
 	public void setMessage(String currMessage) {
 		this.currMessage = currMessage;
+	}
+	
+	public String getRequestMessage() {
+		return requestForServer;
+	}
+
+	public void setRequestForServer(String requestForServer) {
+		this.requestForServer = requestForServer;
+	}
+	
+	public String getAnswerFromServer() {
+		return answerFromServer;
+	}
+
+	public void setAnswerFromServer(String answerFromServer) {
+		this.answerFromServer = answerFromServer;
 	}
 
 	public boolean lastExecuteOK = true;

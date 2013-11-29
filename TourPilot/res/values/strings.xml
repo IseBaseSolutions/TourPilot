@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
- <!-- Menus -->
+
+    <!-- Menus -->
     <string name="menu_undone_all_tasks">Einsatz ausgefallen</string>
     <string name="menu_catalogs">Zusätzliche Leistungen</string>
     <string name="menu_notes">Besuchsvermerke</string>
@@ -10,8 +10,8 @@
     <string name="menu_address">Adressen</string>
     <string name="menu_relatives">Angehörige</string>
     <string name="menu_doctors">Ärzte</string>
-    <string name="menu_comments">Bemerkungen</string>    
-    <string name="menu_add_tasks">Leistungen hinzufügen</string>        
+    <string name="menu_comments">Bemerkungen</string>
+    <string name="menu_add_tasks">Leistungen hinzufügen</string>
     <string name="menu_additional_work">Zusätzlicher Einsatz</string>
     <string name="menu_db_backup">DB Backup</string>
     <string name="menu_clear_darabase">Daten leeren</string>
@@ -19,8 +19,13 @@
     <string name="menu_settings">Einstellungen</string>
     <string name="menu_add_additional_work">Zusätzliche Einsätze</string>
     <string name="menu_diagnose">Diagnosen</string>
-    
- <!-- Option -->
+    <string name="menu_illness_tours">Illness tours</string>
+    <string name="menu_common_tours">Common tours</string>
+    <string name="menu_add_patient">Add patient</string>
+    <string name="menu_remove_patient">Remove patient</string>
+    <string name="menu_all_patients">All patients</string>
+
+    <!-- Option -->
     <string name="program_options">Programmoptionen</string>
     <string name="options">Optionen</string>
     <string name="pin_code">PIN:</string>
@@ -29,16 +34,16 @@
     <string name="input_server_ip">Server IP</string>
     <string name="server_port">Port:</string>
     <string name="phone_number">Telefon-Nr:</string>
-    
- <!-- Notes -->    
+
+    <!-- Notes -->
     <string name="enter_interval">Intervall eingeben</string>
     <string name="connect_with">Kontaktaufnahme mit mir ist nötig.</string>
     <string name="medications_changed">Medikation hat sich geändert.</string>
     <string name="aubrplanmäbige_pflege">Außerplanmäßige Pflege-Visite sind erforderlich.</string>
     <string name="visit_notes">Besuchsvermerke</string>
     <string name="other">Sonstiges: (bitte eintragen)</string>
-    
- <!-- Tasks -->    
+
+    <!-- Tasks -->
     <string name="start_task">Einsatzbeginn</string>
     <string name="end_task">Einsatzende</string>
     <string name="weight">Gewicht</string>
@@ -48,8 +53,8 @@
     <string name="temperature">Temperatur</string>
     <string name="blood_pressure">Blutdruck</string>
     <string name="pulse">Puls</string>
-    
- <!-- Synchronization -->
+
+    <!-- Synchronization -->
     <string name="synchronization">Datanabgleich</string>
     <string name="waitng_sockets_to_close">Warten auf den Socketsabschluss...</string>
     <string name="enter_pin">Geben Sie bitte Ihre PIN hier...</string>
@@ -68,33 +73,34 @@
     <string name="data_to_download">Daten herunterladen</string>
     <string name="connection_close_ok">Verbindungsschluß OK</string>
     <string name="connection_close_fail">Verbindungsschluß fehlgeschlagen</string>
+    <string name="done">Fertig</string>
 
- <!-- Programm info -->
+    <!-- Programm info -->
     <string name="app_name">TourPilot</string>
     <string name="program_version">Programm Version:</string>
     <string name="data_base_version">Datenbank Version:</string>
     <string name="version">Version</string>
     <string name="title_activity_main">MainActivity</string>
-    
- <!-- Address -->   
+
+    <!-- Address -->
     <string name="street">Strasse:</string>
     <string name="zip">PLZ:</string>
     <string name="city">Ort:</string>
     <string name="phone">Telefon-Nr.:</string>
     <string name="phone_private">Privat Tel.-Nr.:</string>
-    <string name="phone_mobile">Handy Nr.:</string>    
-    
- <!-- Defaults -->
+    <string name="phone_mobile">Handy Nr.:</string>
+
+    <!-- Defaults -->
     <string name="def_empty_time">00:00</string>
     <string name="def_empty_date">xx.xx.xxxx</string>
     <string name="def_port">4448</string>
-    
- <!-- Trivial -->  
+
+    <!-- Trivial -->
     <string name="min">diast.</string>
     <string name="max">syst.</string>
     <string name="back">Zurück</string>
     <string name="ok">OK</string>
-    <string name="cancel">Abbruch</string>    
+    <string name="cancel">Abbruch</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
     <string name="close">Schließen</string>
@@ -108,8 +114,8 @@
     <string name="start">Start</string>
     <string name="started_at">Gestartet um</string>
     <string name="attention">Achtung!</string>
-    
- <!-- Dialogs -->   
+
+    <!-- Dialogs -->
     <string name="dialog_task_proof_undone">Möchten Sie diesen Einsatz als ausgefallen markieren?</string>
     <string name="dialog_task_proof_back">Möchten Sie wirklich die Zeiten verwerfen? Wenn Sie diese Medlung mit OK bestätigen, werden die Zeiten gelöscht.</string>
     <string name="dialog_no_connection">Bitte, die Internet Verbindung zulassen</string>
@@ -118,12 +124,11 @@
     <string name="dialog_connection_problems">Verbindungsstörungen</string>
     <string name="dialog_proof_logout">Möchten Sie wirklich abmelden?</string>
     <string name="dialog_comments">Bemerkungen</string>
-    
- <!-- Errors -->    
+
+    <!-- Errors -->
     <string name="err_no_phone">Keine Telefon-Nr.</string>
     <string name="err_no_address">Keine Adresse</string>
     <string name="err_no_patients">Keine Patienten</string>
-    <string name="no_any_patient">Keine Patienten ausgewählt</string>    
-    
-</resources>
+    <string name="no_any_patient">Keine Patienten ausgewählt</string>
 
+</resources>
