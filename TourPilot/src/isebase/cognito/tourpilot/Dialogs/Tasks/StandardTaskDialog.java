@@ -1,5 +1,6 @@
 package isebase.cognito.tourpilot.Dialogs.Tasks;
 
+import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 public class StandardTaskDialog extends DialogFragment{
 	
 	private String title;
+	private String hint;
 	private boolean isViewMode;
 	
 	protected Task task;
@@ -30,15 +32,16 @@ public class StandardTaskDialog extends DialogFragment{
 	private EditText etValue;
 	private BaseDialogListener listener;
 		
-	public StandardTaskDialog(Task task, String title){
+	public StandardTaskDialog(Task task, String title, String hint){
 		this();
 		this.task = task;
 		this.title = title;
+		this.hint = hint;
 		this.isViewMode = false;
 	}
 	
-	public StandardTaskDialog(Task task, String title, String value){
-		this(task, title);
+	public StandardTaskDialog(Task task, String title, String value, String hint){
+		this(task, title, hint);
 		this.isViewMode = true;
 		etValue.setText(value);
 	}
@@ -52,7 +55,7 @@ public class StandardTaskDialog extends DialogFragment{
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
 		adb.setTitle(title);
 		etValue.setTextColor(Color.BLACK);
-		etValue.setHint(title);
+		etValue.setHint(hint);
 		etValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
 		etValue.setEnabled(!isViewMode);
 		adb.setView(etValue);

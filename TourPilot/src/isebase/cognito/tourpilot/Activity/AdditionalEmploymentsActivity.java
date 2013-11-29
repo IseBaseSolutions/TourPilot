@@ -10,7 +10,12 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
+import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
+import isebase.cognito.tourpilot.Dialogs.BaseDialog;
+import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
+import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
+import isebase.cognito.tourpilot.Utils.DataBaseUtils;
 import isebase.cognito.tourpilot.Utils.StringParser;
 
 import java.util.ArrayList;
@@ -19,15 +24,19 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
-public class AdditionalEmploymentsActivity extends BaseActivity {
+public class AdditionalEmploymentsActivity extends BaseActivity implements BaseDialogListener {
 
 	private enum eAdditionalPatientsMode { getIP, removeIP, getCP, removeCP, getAP }
 	private eAdditionalPatientsMode additionalEmploymentsMode;
@@ -39,6 +48,9 @@ public class AdditionalEmploymentsActivity extends BaseActivity {
 	ListView listView;
 	List<AdditionalEmployment> addEmployments = new ArrayList<AdditionalEmployment>();
 	List<Employment> employments;
+	ProgressBar pbSync;
+	Button btOK;
+	DialogFragment noPatientsDialog;
 	//List<Patient> patients;
 	//Hashtable<String, Integer> items = new Hashtable<String, Integer>();
 	
@@ -50,53 +62,35 @@ public class AdditionalEmploymentsActivity extends BaseActivity {
  			
  			@Override
 			public void onSynchronizedFinished(boolean isOK, String text) {
-//				if(!text.equals("")){
-//					adapter.insert(dateFormat.format(new Date()) + " " + text, 0);	
-//					if(!isOK){
-//						progressText.setText(text);
-//					}
-//				}
-//				if(isOK) {		
-//					if(Option.Instance().getWorkerID() != -1)
-//						EmploymentManager.Instance().createEmployments();
-//
-//					Intent nextActivity = (Option.Instance().getPilotTourID() != -1) 
-//							? new Intent(getApplicationContext(), PatientsActivity.class) 
-//							: (Option.Instance().getWorkerID() != -1)
-//									? new Intent(getApplicationContext(), ToursActivity.class)
-//									: new Intent(getApplicationContext(), WorkersActivity.class);
-//					startActivity(nextActivity);					
-//				}
  			}
  			
  			@Override
  			public void onItemSynchronized(String text) {
-//				adapter.insert(dateFormat.format(new Date()) + " " + text, 0);	
  				nextStage();
 				connectionTask = new ConnectionAsyncTask(connectionStatus);
 				connectionTask.execute();
-				if (connectionStatus.CurrentState == 6 && (additionalEmploymentsMode == eAdditionalPatientsMode.removeIP 
-						|| additionalEmploymentsMode == eAdditionalPatientsMode.removeCP))
+				if (isGetSyncEnded() || isRemoveSyncEnded())
+				{
 					startSyncActivity();
-				else if (connectionStatus.getAnswerFromServer().startsWith("OK") && (additionalEmploymentsMode == eAdditionalPatientsMode.getIP 
-						|| additionalEmploymentsMode == eAdditionalPatientsMode.getCP))
-					startSyncActivity();
+					pbSync.setVisibility(View.INVISIBLE);
+					btOK.setEnabled(true);
+				}
 				else if (connectionStatus.CurrentState == 6)
 					getPatientStr();
  			}
  			
  			@Override
  			public void onProgressUpdate(String text, int progress){
-// 				progressBar.setProgress(progress);
-// 				progressText.setText(text);
+ 				
  			}
 
 			@Override
 			public void onProgressUpdate(String text) {
-//				progressBar.setMax(connectionStatus.getTotalProgress());				
+				
 			}				
  		};
- 		
+ 		initControls();
+ 		initDialogs();
 		setMode();
  		if (additionalEmploymentsMode == eAdditionalPatientsMode.removeIP 
  				|| additionalEmploymentsMode == eAdditionalPatientsMode.removeCP)
@@ -105,17 +99,23 @@ public class AdditionalEmploymentsActivity extends BaseActivity {
  			fillUp();
  		}
  		else
- 	 		sendFillRequest();
+ 			sendFillRequest();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		//getMenuInflater().inflate(R.menu., menu);
 		return true;
 	}
 	
 	private void fillUp() {
+		pbSync.setVisibility(View.INVISIBLE);
+		if (addEmployments.size() == 0)
+		{
+			noPatientsDialog.show(getSupportFragmentManager(), "noPatientsDialog");
+			getSupportFragmentManager().executePendingTransactions();
+			return;
+		}
+		btOK.setEnabled(true);
 		listView = (ListView) findViewById(R.id.lvAddEmployments);
 		switch(additionalEmploymentsMode) {
 		case getAP:
@@ -148,6 +148,8 @@ public class AdditionalEmploymentsActivity extends BaseActivity {
 	}
 	
 	private void sendFillRequest() {
+		pbSync.setVisibility(View.VISIBLE);
+		btOK.setEnabled(false);
 		connectionStatus = new ConnectionStatus(syncHandler);
 		connectionStatus.CurrentState = 0;
 		connectionTask = new ConnectionAsyncTask(connectionStatus);
@@ -165,7 +167,7 @@ public class AdditionalEmploymentsActivity extends BaseActivity {
 		default:
 			break;
 		}
-		requestForServer += PilotTourManager.Instance().load(Option.Instance().getPilotTourID()).getTourID() + ";" + Option.Instance().getVersion();
+		requestForServer += PilotTourManager.Instance().loadPilotTour(Option.Instance().getPilotTourID()).getTourID() + ";" + Option.Instance().getVersion();
 		connectionStatus.setRequestForServer(requestForServer);
 		connectionTask.execute();
 	}
@@ -175,7 +177,7 @@ public class AdditionalEmploymentsActivity extends BaseActivity {
 		connectionStatus.CurrentState = 0;
 		connectionTask = new ConnectionAsyncTask(connectionStatus);
 		String requestForServer = "";
-		String tourID = PilotTourManager.Instance().load(Option.Instance().getPilotTourID()).getTourID() + ";";
+		String tourID = PilotTourManager.Instance().loadPilotTour(Option.Instance().getPilotTourID()).getTourID() + ";";
 		switch(additionalEmploymentsMode) {
 		case getIP:
 			requestForServer = "SEL_WIP;";
@@ -217,6 +219,8 @@ public class AdditionalEmploymentsActivity extends BaseActivity {
 	}
 	
 	public void btOkClick(View view) {
+		pbSync.setVisibility(View.VISIBLE);
+		btOK.setEnabled(false);
 		sendExecuteRequest();
 	}
 	
@@ -251,5 +255,35 @@ public class AdditionalEmploymentsActivity extends BaseActivity {
 		String name = arr[2] + " " + arr[3].split(" ")[0];
 		return name;
 	}
+	
+	private void initControls() {
+		pbSync = (ProgressBar) findViewById(R.id.pbSync);
+		btOK = (Button) findViewById(R.id.btOK);
+	}
 
+	private void initDialogs() {
+		noPatientsDialog = new BaseInfoDialog(getString(R.string.dialog_empty_tour), getString(R.string.dialog_no_patients));
+	}
+
+	@Override
+	public void onDialogPositiveClick(DialogFragment dialog) {
+		startPatientsActivity();		
+	}
+
+	@Override
+	public void onDialogNegativeClick(DialogFragment dialog) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	private boolean isRemoveSyncEnded() {
+		return connectionStatus.CurrentState == 6 && (additionalEmploymentsMode == eAdditionalPatientsMode.removeIP 
+				|| additionalEmploymentsMode == eAdditionalPatientsMode.removeCP);
+	}
+	
+	private boolean isGetSyncEnded() {
+		return connectionStatus.getAnswerFromServer().startsWith("OK") && (additionalEmploymentsMode == eAdditionalPatientsMode.getIP 
+				|| additionalEmploymentsMode == eAdditionalPatientsMode.getCP);
+	}
+	
 }

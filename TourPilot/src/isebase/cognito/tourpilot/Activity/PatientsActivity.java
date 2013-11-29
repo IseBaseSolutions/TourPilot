@@ -68,7 +68,14 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.patients_menu, menu);
+		getMenuInflater().inflate(R.menu.patients_menu, menu);		
+		return true;
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu){
+		MenuItem commonTourMenu = menu.findItem(R.id.action_common_tours);		
+		commonTourMenu.setEnabled(pilotTour.getIsCommonTour());
 		return true;
 	}
 	

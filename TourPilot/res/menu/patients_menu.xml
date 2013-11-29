@@ -13,7 +13,7 @@
 		</menu>
 	</item>
 	<item
-		android:id="@+id/action_additional_tours"
+		android:id="@+id/action_common_tours"
 		android:title="@string/menu_common_tours">
 		<menu>
 			<item android:id="@+id/action_add_patient_to_common"
