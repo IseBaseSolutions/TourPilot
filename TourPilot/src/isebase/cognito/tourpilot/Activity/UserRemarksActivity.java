@@ -87,7 +87,8 @@ public class UserRemarksActivity extends BaseActivity {
 			 type_save = (Integer)b.get("mode");
 			 switch(type_save){
 			 case 0:
-				 startTasksActivity();
+			//	 startTasksActivity();
+				 finish();
 				 break;
 			 case 1:
 				 clearEmployment();

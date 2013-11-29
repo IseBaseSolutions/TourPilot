@@ -37,18 +37,18 @@ public class Option {
 	private int workID;
 	private int serverPort;
 	private int id;
-	private int pin;
+	private String pin;
 
 	private boolean isAuto;
 	private boolean isWorkerActivity;
 
 	@MapField(DatabaseField = PinField)
-	public int getPin() {
+	public String getPin() {
 		return pin;
 	}
 
 	@MapField(DatabaseField = PinField)
-	public void setPin(int pin) {
+	public void setPin(String pin) {
 		this.pin = pin;
 	}
 	
@@ -166,7 +166,7 @@ public class Option {
 		setPilotTourID(BaseObject.EMPTY_ID);
 		setEmploymentID(BaseObject.EMPTY_ID);	
 		setServerPort(4448);		
-		setServerIP("192.168.0.138");
+		setServerIP("");
 		clearSelected();
 	}
 

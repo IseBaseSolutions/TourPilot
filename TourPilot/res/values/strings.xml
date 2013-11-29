@@ -125,8 +125,9 @@
     <string name="dialog_leaving_patient">Pflege OK?</string>
     <string name="dialog_proof_logout">Möchten Sie wirklich abmelden?</string>
     <string name="dialog_comments">Bemerkungen</string>
+    <string name="dialog_clear_database">Daten leeren ?</string>
     
-     <!-- Errors -->    
+ <!-- Errors -->
     <string name="err_no_phone">Keine Telefon-Nr.</string>
     <string name="err_no_address">Keine Adresse</string>
     <string name="err_no_patients">Keine Patienten</string>
