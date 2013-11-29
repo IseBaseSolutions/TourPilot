@@ -95,7 +95,8 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
     	String strEmpls = "";
     	for (Employment employment : employments)
 			strEmpls += employment.getDone();
-    	execSQL("update Relatives set was_sent = 1 where was_sent = 0 and is_done = 1");
+    	execSQL(String.format("update %1$s set was_sent = 1 where was_sent = 0 and is_done = 1"
+    			, getRecTableName()));
     	return strEmpls;
     }
 }

@@ -2,15 +2,19 @@ package isebase.cognito.tourpilot.Activity;
 
 import java.util.Date;
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemark;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class UserRemarksActivity extends BaseActivity {
 		
@@ -27,8 +31,10 @@ public class UserRemarksActivity extends BaseActivity {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_notes);
 			initElements();
+			setWriteAble();
 			reloadData();
 			fillUp();
+			
 		}
 		catch(Exception ex){
 			ex.printStackTrace();
@@ -73,6 +79,56 @@ public class UserRemarksActivity extends BaseActivity {
 	public void btUserRemarkSaveClick(View view){
 		pickUp();
 		save();
-		startTasksActivity();
+		
+		Integer type_save = -1;
+		Intent intentSave = getIntent();
+		Bundle b = intentSave.getExtras();
+		 if(b!=null){
+			 type_save = (Integer)b.get("mode");
+			 switch(type_save){
+			 case 0:
+				 startTasksActivity();
+				 break;
+			 case 1:
+				 clearEmployment();
+				 startSyncActivity();
+				 break;
+			 case 2:
+				 clearEmployment();
+				 startPatientsActivity();
+				 break;
+			 }
+		 }
+		
+	}
+	
+	private void clearEmployment() {
+		Option.Instance().setEmploymentID(BaseObject.EMPTY_ID);
+		Option.Instance().save();
+	}
+	
+	private void setWriteAble(){
+		Intent intentSave = getIntent();
+		Bundle bundle = intentSave.getExtras();
+		Boolean viewMode = false;
+		if(bundle != null){
+			viewMode = !bundle.getBoolean("viewMode");
+			CheckBox chbConnect = (CheckBox)findViewById(R.id.chbConnect);
+			CheckBox chbMedchanges = (CheckBox)findViewById(R.id.chbMedchanges);
+			CheckBox chbPflege = (CheckBox)findViewById(R.id.chbPflege);
+			TextView tvOther = (TextView)findViewById(R.id.tvOther);
+			EditText etOther = (EditText)findViewById(R.id.etOther);
+			Button btUserRemarkSave = (Button)findViewById(R.id.btUserRemarkSave);
+			
+			chbConnect.setClickable(viewMode);
+			chbMedchanges.setClickable(viewMode);
+			chbPflege.setClickable(viewMode);
+			tvOther.setClickable(viewMode);
+			etOther.setFocusable(viewMode);
+			btUserRemarkSave.setEnabled(viewMode);
+		}
 	}
 }
+
+
+

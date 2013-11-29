@@ -29,6 +29,8 @@ import isebase.cognito.tourpilot.Utils.DateUtils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import android.R.bool;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -67,6 +69,11 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 
 	private PatientRemark patientRemark;
 	
+	private final static Integer SIMPLE_MODE = 0;
+	private final static Integer SYNC_MODE = 1;
+	private final static Integer NO_SYNC_MODE = 2;
+	private boolean IS_DONE_ALL_TASKS = false;
+
 	private boolean isClickable(){
 		return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
 				&& endTask.getRealDate().equals(DateUtils.EmptyDate);
@@ -88,6 +95,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			fillUpTasks();
 			checkAllIsDone();
 			loadPatientInfos(false);
+			IS_DONE_ALL_TASKS = isAllDone();
 		}catch(Exception ex){
 			ex.printStackTrace();
 			criticalClose();
@@ -217,16 +225,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 	
 	public void btEndTaskTimerClick(View view) {
-		endTask.setRealDate(new Date());
-		endTask.setState(eTaskState.Done);
-		TaskManager.Instance().save(endTask);
-		fillUpEndTask();
-		saveEmployment();
-		clearEmployment();
-		if (Option.Instance().getIsAuto())
-			startSyncActivity();
-		else
-			startPatientsActivity();
+		checkLeavingState();
 	}
 	
 	@Override
@@ -408,7 +407,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.catalogs:			
-			if(isAllDone())
+			if(IS_DONE_ALL_TASKS)
 				return false;
 			Intent catalogsActivity = new Intent(getApplicationContext(), CatalogsActivity.class);
 			startActivity(catalogsActivity);
@@ -416,6 +415,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		case R.id.cancelAllTasks:
 			if(isAllDone())
 				return false;
+			
 			BaseDialog dialog = new BaseDialog(
 					getString(R.string.attention),
 					getString(R.string.dialog_task_proof_undone));
@@ -425,6 +425,8 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		case R.id.notes:
 			Intent notesActivity = new Intent(getApplicationContext(),
 					UserRemarksActivity.class);
+			notesActivity.putExtra("mode", SIMPLE_MODE);
+			notesActivity.putExtra("viewMode", IS_DONE_ALL_TASKS);
 			startActivity(notesActivity);
 			return true;
 		case R.id.info:
@@ -484,13 +486,22 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		else if (dialog.getTag().equals("dialogUndone")){
 			checkAllTasksAndFillUp(eTaskState.UnDone);
 			saveEmployment();
-			clearEmployment();
+			checkLeavingState();
+//			clearEmployment();
+//			if (Option.Instance().getIsAuto())
+//				startSyncActivity();
+//			else
+//				startPatientsActivity();
+		}
+		else if(dialog.getTag().equals("dialogLeavingPatient")){
+			saveData(true);
 			if (Option.Instance().getIsAuto())
 				startSyncActivity();
 			else
 				startPatientsActivity();
 		}
-		else{
+			
+		else {
 			StandardTaskDialog taskDialog = (StandardTaskDialog)dialog;
 			Task task = taskDialog.getTask();
 			String value = taskDialog.getValue();
@@ -501,16 +512,23 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 
 	@Override
 	public void onDialogNegativeClick(DialogFragment dialog) {
+		if(dialog.getTag().equals("dialogLeavingPatient")){
+			saveData(false);
+			if (Option.Instance().getIsAuto())
+				startUserRemarksActivity(SYNC_MODE);
+			else
+				startUserRemarksActivity(NO_SYNC_MODE);
+		}
 		return;
 	}
 
-	private void loadPatientInfos(boolean is_from_menu){
+	private void loadPatientInfos(boolean isFromMenu){
 		infos = InformationManager.Instance().load(Information.EmploymentCodeField, String.valueOf(employment.getID()));
 		String strInfos = "";
 		Date today = new Date();
 
 		for(Information info : infos){
-			if(DateUtils.isToday(info.getReadTime()) || is_from_menu)
+			if(!DateUtils.isToday(info.getReadTime()) || isFromMenu)
 				if((today.getTime() >= info.getFromDate().getTime()) && (today.getTime() <= info.getTillDate().getTime())){
 					if(strInfos != "")
 						strInfos += "\n";
@@ -526,7 +544,36 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 
 	private void showComments(){
-		InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.dialog_comments),patientRemark.getName());
+		InfoBaseDialog dialog = new InfoBaseDialog(
+				getString(R.string.dialog_comments)
+				, patientRemark.getName());
 		dialog.show(getSupportFragmentManager(), "");
+	}
+
+	private void checkLeavingState(){
+		BaseDialog dialogLeavingState = new BaseDialog(getString(R.string.dialog_leaving_patient));
+		dialogLeavingState.show(getSupportFragmentManager(), "dialogLeavingPatient");
+		getSupportFragmentManager().executePendingTransactions();
+	}
+
+	private void saveData(Boolean clearEmployment){
+		if(isClickable()){
+			endTask.setRealDate(new Date());
+			endTask.setState(eTaskState.Done);
+			TaskManager.Instance().save(endTask);
+			fillUpEndTask();
+		} else
+			checkAllTasksAndFillUp(eTaskState.UnDone);
+		saveEmployment();
+		if(clearEmployment)
+			clearEmployment();
+	}
+	
+
+	protected void startUserRemarksActivity(Integer mode) {
+		Intent userRemarksActivity = new Intent(getApplicationContext(), UserRemarksActivity.class);
+		userRemarksActivity.putExtra("mode", mode);
+		userRemarksActivity.putExtra("viewMode", IS_DONE_ALL_TASKS);
+		startActivity(userRemarksActivity);
 	}
 }
