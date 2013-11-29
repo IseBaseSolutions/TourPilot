@@ -139,7 +139,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Option.ServerPortField + " INTEGER, "
 			+ Option.IsAutoField + " INTEGER, "
 			+ Option.IsWorkerActivityField + " INTEGER, "
-			+ Option.PinField + " INTEGER "
+			+ Option.PinField + " TEXT "
 			+ ");";
 
 	private static final String TASKS_TABLE_CREATE = 

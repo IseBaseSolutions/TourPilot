@@ -4,6 +4,8 @@ import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
+import isebase.cognito.tourpilot.Data.Information.Information;
+import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
@@ -20,6 +22,7 @@ import isebase.cognito.tourpilot.Templates.WorkEmploymentAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -27,6 +30,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.graphics.BitmapFactory.Options;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.Menu;
@@ -42,6 +46,7 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 	private List<Employment> employments;
 	private List<Work> works;
 	private List<IJob> items;
+	private List<Information> infos = new ArrayList<Information>();
 	private Work work;
 	private DialogFragment selectedPatientsDialog;
 	private String[] patientsArr;
@@ -60,6 +65,7 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 			fillUpTitle();
 			fillUp();
 			initDialogs();
+			showTourInfos(false);
 		}catch(Exception ex){
 			ex.printStackTrace();
 			criticalClose();
@@ -74,14 +80,19 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu){
-		MenuItem commonTourMenu = menu.findItem(R.id.action_common_tours);		
+		MenuItem commonTourMenu = menu.findItem(R.id.action_common_tours);
+		MenuItem tourInfoMenu = menu.findItem(R.id.tour_info);
 		commonTourMenu.setEnabled(pilotTour.getIsCommonTour());
+		tourInfoMenu.setEnabled(infos.size() != 0);
 		return true;
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case R.id.tour_info:
+			showTourInfos(true);
+			return true;
 		case R.id.action_add_additional_work:
 			startAdditionalWorksActivity();
 			return true;
@@ -103,7 +114,7 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}
+	}	
 	
 	@Override
 	public void onBackPressed() {
@@ -153,6 +164,7 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 		items.addAll(employments);
 		items.addAll(works);
 		Collections.sort(items, new JobComparer());
+		infos = InformationManager.Instance().load(Information.EmploymentCodeField, BaseObject.EMPTY_ID);
 		checkTourEndButton();
 	}
 	
@@ -238,4 +250,21 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 		startActivity(additionalPatientsActivity);
 	}
 	
+	private void showTourInfos(boolean isFromMenu) {		
+		String strInfos = "";
+		Date tourDay = pilotTour.getPlanDate();
+		for(Information info : infos) {
+			if(DateUtils.isToday(info.getReadTime()) && !isFromMenu)
+				continue;
+			if(tourDay.getTime() >= info.getFromDate().getTime() && tourDay.getTime() <= info.getTillDate().getTime()) {
+				strInfos += (strInfos.equals("") ? "" : "\n") + info.getName();
+				info.setReadTime(new Date());
+			}
+		}
+		if(!strInfos.equals("")) {
+			InformationManager.Instance().save(infos);
+			InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_info), strInfos);
+			dialog.show(getSupportFragmentManager(), "informationDialog");
+		}
+	}
 }
