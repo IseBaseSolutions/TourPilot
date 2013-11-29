@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
@@ -29,7 +30,8 @@ public class OptionsActivity extends BaseActivity {
 	private EditText etPin;
 	
 	private ProgressBar pbClearDB;
-	private Button syncButton;	
+	private Button syncButton;
+	private CheckBox cbSavePin;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +129,7 @@ public class OptionsActivity extends BaseActivity {
 		etServerPort = (EditText) findViewById(R.id.etServerPort);
 		etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
 		etPin = (EditText) findViewById(R.id.etPinCode);
+		cbSavePin = (CheckBox)findViewById(R.id.cb_SavePin);
 		etPhoneNumber.setText(Option.Instance().getPhoneNumber());
 		etServerIP.setText(Option.Instance().getServerIP());
 		etServerPort.setText(String.valueOf(Option.Instance().getServerPort()));
@@ -137,10 +140,11 @@ public class OptionsActivity extends BaseActivity {
 		Option.Instance().setPrevWorkerID(BaseObject.EMPTY_ID);
 		Option.Instance().setWorkerID(BaseObject.EMPTY_ID);
 		Option.Instance().setServerIP(etServerIP.getText().toString());
-		if(etPin.getText().toString().length() > 0)
-			Option.Instance().setPin(Integer.parseInt(etPin.getText().toString()));
 		Option.Instance().setServerPort(Integer.parseInt(etServerPort.getText().toString()));
 		Option.Instance().save();
+		Option.Instance().setPin(etPin.getText().toString());
+		if(cbSavePin.isChecked())
+			Option.Instance().save();
 	}
 
 	private void initDialogs() {
@@ -173,4 +177,5 @@ public class OptionsActivity extends BaseActivity {
 			startWorkersActivity();
 			return;
 	}
+
 }

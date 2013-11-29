@@ -39,11 +39,12 @@ public final class R {
     public static final class id {
         public static final int LinearLayout1=0x7f090022;
         public static final int action_add_additional_work=0x7f09004a;
+        public static final int action_clear_darabase=0x7f090055;
         public static final int action_clear_database=0x7f090047;
         public static final int action_db_backup=0x7f090049;
         public static final int action_settings=0x7f090045;
         public static final int action_show_program_info=0x7f090048;
-        public static final int address=0x7f09004b;
+        public static final int address=0x7f09004c;
         public static final int btAddTasksCategoriesBack=0x7f090004;
         public static final int btChangeTaskState=0x7f09003d;
         public static final int btEndTask=0x7f09002b;
@@ -54,23 +55,23 @@ public final class R {
         public static final int btStartTask=0x7f090027;
         public static final int btSynchronization=0x7f090016;
         public static final int btUserRemarkSave=0x7f090012;
-        public static final int cancelAllTasks=0x7f09004f;
+        public static final int cancelAllTasks=0x7f090050;
         public static final int catalogs=0x7f090046;
         public static final int cb_SavePin=0x7f090015;
         public static final int chbAddTask=0x7f090036;
         public static final int chbConnect=0x7f09000c;
         public static final int chbMedchanges=0x7f09000d;
         public static final int chbPflege=0x7f09000e;
-        public static final int comments=0x7f090053;
-        public static final int diagnose=0x7f09004e;
-        public static final int doctors=0x7f09004c;
+        public static final int comments=0x7f090054;
+        public static final int diagnose=0x7f09004f;
+        public static final int doctors=0x7f09004d;
         public static final int etAddTasksFilter=0x7f090000;
         public static final int etOther=0x7f090010;
         public static final int etPhoneNumber=0x7f090019;
         public static final int etPinCode=0x7f090013;
         public static final int etServerIP=0x7f09001b;
         public static final int etServerPort=0x7f09001e;
-        public static final int info=0x7f090051;
+        public static final int info=0x7f090052;
         public static final int linearElements=0x7f09000b;
         public static final int linearLayout1=0x7f090018;
         public static final int linearLayout2=0x7f09001c;
@@ -88,13 +89,13 @@ public final class R {
         public static final int lvTasksList=0x7f09002a;
         public static final int lvTours=0x7f09002e;
         public static final int lvWorkers=0x7f090031;
-        public static final int manualInput=0x7f090052;
-        public static final int notes=0x7f090050;
+        public static final int manualInput=0x7f090053;
+        public static final int notes=0x7f090051;
         public static final int pbClearDB=0x7f090017;
         public static final int pbSync=0x7f090024;
-        public static final int relatives=0x7f09004d;
+        public static final int relatives=0x7f09004e;
         public static final int tablePhones=0x7f090039;
-        public static final int tour_info=0x7f090054;
+        public static final int tour_info=0x7f09004b;
         public static final int tpStartTime=0x7f090033;
         public static final int tpStopTime=0x7f090035;
         public static final int tvAddTasksCategories=0x7f090005;
@@ -197,6 +198,7 @@ public final class R {
         public static final int def_empty_time=0x7f060045;
         public static final int def_port=0x7f060047;
         public static final int detect_respiration=0x7f060022;
+        public static final int dialog_clear_database=0x7f060063;
         public static final int dialog_comments=0x7f060062;
         public static final int dialog_complete_all_tasks=0x7f06005d;
         public static final int dialog_connection_problems=0x7f06005f;
@@ -213,11 +215,11 @@ public final class R {
          */
         public static final int enter_interval=0x7f060019;
         public static final int enter_pin=0x7f06002a;
-        public static final int err_no_address=0x7f060064;
-        public static final int err_no_patients=0x7f060065;
+        public static final int err_no_address=0x7f060065;
+        public static final int err_no_patients=0x7f060066;
         /**  Errors 
          */
-        public static final int err_no_phone=0x7f060063;
+        public static final int err_no_phone=0x7f060064;
         public static final int hello_request_fail=0x7f060032;
         public static final int hello_request_ok=0x7f060031;
         public static final int input_server_ip=0x7f060016;
@@ -249,7 +251,7 @@ public final class R {
          */
         public static final int min=0x7f060048;
         public static final int no=0x7f06004e;
-        public static final int no_any_patient=0x7f060066;
+        public static final int no_any_patient=0x7f060067;
         public static final int ok=0x7f06004b;
         public static final int options=0x7f060012;
         public static final int other=0x7f06001e;

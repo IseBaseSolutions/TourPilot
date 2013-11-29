@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import android.R.bool;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -427,7 +426,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 					UserRemarksActivity.class);
 			notesActivity.putExtra("mode", SIMPLE_MODE);
 			notesActivity.putExtra("viewMode", IS_DONE_ALL_TASKS);
-			startActivity(notesActivity);
+			startActivityForResult(notesActivity,-1);
 			return true;
 		case R.id.info:
 			loadPatientInfos(true);
