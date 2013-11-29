@@ -10,7 +10,10 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
+import android.widget.Button;
 import android.widget.EditText;
 
 public class StandardTaskDialog extends DialogFragment{
@@ -29,7 +32,8 @@ public class StandardTaskDialog extends DialogFragment{
 	
 	private EditText etValue;
 	private BaseDialogListener listener;
-		
+	
+	
 	public StandardTaskDialog(Task task, String title){
 		this();
 		this.task = task;
@@ -63,7 +67,7 @@ public class StandardTaskDialog extends DialogFragment{
 							listener.onDialogPositiveClick(StandardTaskDialog.this);
 						}
 					});
-		adb.setNegativeButton(isebase.cognito.tourpilot.R.string.cancel,
+			adb.setNegativeButton(isebase.cognito.tourpilot.R.string.cancel,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						listener.onDialogNegativeClick(StandardTaskDialog.this);

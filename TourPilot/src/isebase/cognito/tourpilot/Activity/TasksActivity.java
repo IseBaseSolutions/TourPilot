@@ -30,6 +30,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -53,6 +56,8 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	private Task startTask;
 	private List<Task> tasks;
 	private Task endTask;
+	
+	private View clickedCheckBox;
 	
 	private ListView lvTasks;
 	
@@ -95,6 +100,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			checkAllIsDone();
 			loadPatientInfos(false);
 			IS_DONE_ALL_TASKS = isAllDone();
+			
 		}catch(Exception ex){
 			ex.printStackTrace();
 			criticalClose();
@@ -294,6 +300,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		if(!isClickable())
 			return;
 		Task task = (Task) view.getTag();
+		clickedCheckBox = view;
 		task.setRealDate(new Date());
 		if (startTask.getManualDate().equals(DateUtils.EmptyDate))
 			task.setManualDate(DateUtils.getAverageDate(startTask.getManualDate(), endTask.getManualDate()));
@@ -315,6 +322,8 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	
 	private void openDialogForAdditionalTask(Task task){
 		DialogFragment dialog = null;
+		if(task.getState() != eTaskState.Done)
+			return;
 		switch(task.getQuality()){
 			case AdditionalTask.WEIGHT:
 				dialog = new StandardTaskDialog(task, getString(R.string.weight));
@@ -341,7 +350,9 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 				return;
 		}
 		dialog.show(getSupportFragmentManager(), "dialogTasks");
+		dialog.setCancelable(false);
 		getSupportFragmentManager().executePendingTransactions();
+		
 	}
 
 	private void initControls() {
@@ -499,7 +510,9 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			else
 				startPatientsActivity();
 		}
-			
+		else if(dialog.getTag().equals("dialogTasks")){
+			return;
+		}
 		else {
 			StandardTaskDialog taskDialog = (StandardTaskDialog)dialog;
 			Task task = taskDialog.getTask();
@@ -517,6 +530,20 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 				startUserRemarksActivity(SYNC_MODE);
 			else
 				startUserRemarksActivity(NO_SYNC_MODE);
+		}
+		if(dialog.getTag().equals("dialogTasks")){
+//			clickedTask.setState(eTaskState.UnDone);
+			Task task = (Task) clickedCheckBox.getTag();
+			task.setState(eTaskState.UnDone) ;
+			try {
+				((ImageView) clickedCheckBox).setImageDrawable(StaticResources.getBaseContext()
+					.getResources().getDrawable(R.drawable.ic_action_cancel));
+				TaskManager.Instance().save(task);
+				fillUpEndButtonEnabling();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 		}
 		return;
 	}
@@ -575,4 +602,5 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		userRemarksActivity.putExtra("viewMode", IS_DONE_ALL_TASKS);
 		startActivity(userRemarksActivity);
 	}
+
 }
