@@ -57,8 +57,7 @@ public class PinDialog extends BaseDialog {
 		super.onStart();
 		AlertDialog dialog = (AlertDialog) getDialog();
 		if (dialog != null) {
-			Button positiveButton = (Button) dialog
-					.getButton(Dialog.BUTTON_POSITIVE);
+			Button positiveButton = (Button) dialog.getButton(Dialog.BUTTON_POSITIVE);
 			positiveButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {

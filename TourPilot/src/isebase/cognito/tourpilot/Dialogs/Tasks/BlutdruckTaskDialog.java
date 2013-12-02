@@ -11,6 +11,8 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -92,6 +94,27 @@ public class BlutdruckTaskDialog extends StandardTaskDialog{
 			listener = (BaseDialogListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString() + " must implement BaseDialogListener");
+		}
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		AlertDialog dialog = (AlertDialog) getDialog();
+		if (dialog != null) {
+			Button positiveButton = (Button) dialog.getButton(Dialog.BUTTON_POSITIVE);
+			positiveButton.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					if(etMaxValue.getText().length() > 0 && etMinValue.getText().length() > 0){
+						dismiss();
+						listener.onDialogPositiveClick(BlutdruckTaskDialog.this);
+					}
+				}
+				
+			});
 		}
 	}
 }

@@ -130,11 +130,16 @@
     <string name="dialog_connection_problems">Verbindungsstörungen</string>
     <string name="dialog_leaving_patient">Pflege OK?</string>
     <string name="dialog_proof_logout">Möchten Sie wirklich abmelden?</string>
+<<<<<<< HEAD
     <string name="dialog_comments">Bemerkungen</string>
     <string name="dialog_no_patients">Keine Patienten vorhanden</string>
     <string name="dialog_empty_tour">Die Tour ist leer</string>
     <string name="dialog_clear_database">Clear database?</string>
     
+=======
+    <string name="dialog_comments">Bemerkungen</string>
+    <string name="dialog_clear_database">Daten leeren?</string>
+>>>>>>> refs/heads/VladimirsBranch
     
  <!-- Errors -->
     <string name="err_no_phone">Keine Telefon-Nr.</string>
