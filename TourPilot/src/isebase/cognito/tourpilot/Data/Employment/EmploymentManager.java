@@ -1,10 +1,13 @@
 package isebase.cognito.tourpilot.Data.Employment;
 
+import java.util.Date;
 import java.util.List;
 
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentIntervalManager;
+import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
 import isebase.cognito.tourpilot.Data.Task.Task;
@@ -43,7 +46,7 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
 		clearTable();
 		String strSQL = String.format("INSERT INTO %3$s" +
 				"(_id, patient_id, name, was_sent, checksum, is_server_time" +
-				", pilot_tour_id, date, tour_id, is_done, start_time, stop_time) SELECT " +
+				", pilot_tour_id, date, tour_id, is_done, start_time, stop_time, day_part) SELECT " +
 				"t1.employment_id as _id, " +
 				"t1.patient_id as patient_id, " +
 				"(t2.surname || ', ' || t2.name) as name, " +
@@ -55,7 +58,8 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
 				"t1.tour_id as tour_id, " +
 				"t1.task_state as is_done, " +
 				"t3.start_time as start_time, " +
-				"t3.stop_time as stop_time " +
+				"t3.stop_time as stop_time, " +
+				"t1.name as day_part " +
 				"FROM %1$s t1 " +
 				"INNER JOIN %2$s t2 on t1.patient_id = t2._id " +
 				"LEFT JOIN %4$s t3 on t1.employment_id = t3.employment_id " +
@@ -99,4 +103,25 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
     			, getRecTableName()));
     	return strEmpls;
     }
+    
+    public static Employment createEmployment(Patient patient) {
+    	int id = 0;
+    	while (EmploymentManager.Instance().load(id) != null)
+    		id++;
+    	Employment employment = new Employment();
+    	employment.setID(id);
+    	employment.setPatientID(Option.Instance().getSelectedAdditionalPatient().getID());
+    	employment.setName(String.format("%s, %s", patient.getSurname(), patient.getName()));
+    	employment.setPilotTourID(Option.Instance().getPilotTourID());
+    	employment.setDate(new Date());
+    	employment.setTourID(PilotTourManager.Instance().loadPilotTour(Option.Instance().getPilotTourID()).getTourID());
+    	employment.setDayPart("");
+    	EmploymentManager.Instance().save(employment);
+    	Task firstTask = new Task(Option.Instance().getSelectedAdditionalPatient(), employment.getID(), employment.getTourID(), true);
+    	TaskManager.Instance().save(firstTask);
+    	Task endtTask = new Task(Option.Instance().getSelectedAdditionalPatient(), employment.getID(), employment.getTourID(), false);
+    	TaskManager.Instance().save(endtTask);
+    	return employment;
+    }
+    
 }

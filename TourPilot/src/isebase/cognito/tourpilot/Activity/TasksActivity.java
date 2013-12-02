@@ -182,7 +182,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 	
 	private void fillUpTitle(){
-		setTitle(employment.text() + ", " + startTask.getDayPart());
+		setTitle(employment.text() + (startTask.getDayPart().equals("") ? "" : (", " + startTask.getDayPart())));
 	}
 	
 	private void fillUpTasks(){
@@ -491,25 +491,24 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			clearEmployment();
 			startPatientsActivity();
 		}
-		else if (dialog.getTag().equals("dialogUndone")){
+		else if (dialog.getTag().equals("dialogUndone")) {
 			checkAllTasksAndFillUp(eTaskState.UnDone);
 			saveEmployment();
 			checkLeavingState();
-//			clearEmployment();
-//			if (Option.Instance().getIsAuto())
-//				startSyncActivity();
-//			else
-//				startPatientsActivity();
 		}
-		else if(dialog.getTag().equals("dialogLeavingPatient")){
+		else if(dialog.getTag().equals("dialogLeavingPatient")) {
 			saveData(true);
 			if (Option.Instance().getIsAuto())
 				startSyncActivity();
 			else
 				startPatientsActivity();
 		}
-		else if(dialog.getTag().equals("dialogTasks")){
-			return;
+		else if(dialog.getTag().equals("dialogTasks")) {
+			StandardTaskDialog taskDialog = (StandardTaskDialog)dialog;
+			Task task = taskDialog.getTask();
+			String value = taskDialog.getValue();
+			task.setQualityResult(value);
+			TaskManager.Instance().save(task);
 		}
 		else {
 			StandardTaskDialog taskDialog = (StandardTaskDialog)dialog;
@@ -529,8 +528,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			else
 				startUserRemarksActivity(NO_SYNC_MODE);
 		}
-		if(dialog.getTag().equals("dialogTasks")){
-//			clickedTask.setState(eTaskState.UnDone);
+		if(dialog.getTag().equals("dialogTasks")) {
 			Task task = (Task) clickedCheckBox.getTag();
 			task.setState(eTaskState.UnDone) ;
 			try {
@@ -575,7 +573,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 
 	private void checkLeavingState(){
-		BaseDialog dialogLeavingState = new BaseDialog(getString(R.string.dialog_leaving_patient));
+		BaseDialog dialogLeavingState = new BaseDialog(employment.getName(), getString(R.string.dialog_leaving_patient));
 		dialogLeavingState.show(getSupportFragmentManager(), "dialogLeavingPatient");
 		getSupportFragmentManager().executePendingTransactions();
 	}

@@ -7,6 +7,7 @@ import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
 import isebase.cognito.tourpilot.DataBase.MapField;
@@ -36,7 +37,7 @@ public class Task extends BaseObject {
 	public static final String CatalogField = "catalog";
 
 	public String getDayPart(){
-		return getName().substring(15,getName().length()-1);
+		return getName().substring(15, getName().length()-1);
 	}
 	
 	public enum eTaskState {
@@ -236,6 +237,20 @@ public class Task extends BaseObject {
 
 	public Task() {
 		clear();
+	}
+	
+	public Task(Patient patient, int employmentID, int tourID, boolean isFirst) {
+		clear();
+		setName(String.format("[Einsatz%s %s]", isFirst ? "beginn" : "ende", patient.FullClearName()));
+		setPlanDate(new Date());
+		setWorkerID(Option.Instance().getWorkerID());
+		setPilotTourID(Option.Instance().getPilotTourID());
+		setEmploymentID(employmentID);
+		setTourID(tourID);
+		setPatientID(patient.getID());
+		setLeistungs(isFirst ? String.format("Anfang-%d-%d-%d", tourID, employmentID, 0) : String.format("Ende-%d-%d-%d", tourID, employmentID, 0));
+		setState(eTaskState.Empty);
+		setIsServerTime(false);
 	}
 
 	public Task(AdditionalTask additionalTask){

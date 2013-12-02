@@ -151,8 +151,6 @@ public class Patient extends BaseObject implements IAddressable {
 	public Patient(String initString) {
 		address = new Address();
 		NCryptor ncryptor = new NCryptor();
-		setIsAdditional(initString.contains("^"));
-		initString = initString.replace("^", "");
 		StringParser parsingString = new StringParser(initString);
 		parsingString.next(";");
 		setID(Integer.parseInt(parsingString.next(";")));
@@ -205,6 +203,16 @@ public class Patient extends BaseObject implements IAddressable {
 			return EMPTY_ID;
 		return Integer.parseInt(strVal);	
 	}
+	
+    public String FullClearName() 
+    {	
+    	String arr[] = getName().split(" ");
+    	String fullClearName = new String();
+    	for (String str : arr)
+    		if (!str.contains("("))
+    			fullClearName += fullClearName.equals(new String()) ? str : " " + str;
+    	return fullClearName; 
+    }
 
 	@Override
 	protected void clear() {

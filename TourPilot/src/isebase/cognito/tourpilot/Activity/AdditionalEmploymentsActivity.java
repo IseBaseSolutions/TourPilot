@@ -1,6 +1,7 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Activity.AdditionalTasks.CatalogsActivity;
 import isebase.cognito.tourpilot.Connection.ConnectionAsyncTask;
 import isebase.cognito.tourpilot.Connection.ConnectionStatus;
 import isebase.cognito.tourpilot.Data.AdditionalEmployment.AdditionalEmployment;
@@ -8,30 +9,23 @@ import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
-import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
+import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
-import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
-import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
-import isebase.cognito.tourpilot.Utils.DataBaseUtils;
+import isebase.cognito.tourpilot.Templates.AdditionalEmploymentAdapter;
+import isebase.cognito.tourpilot.Templates.AdditionalPatientAdapter;
 import isebase.cognito.tourpilot.Utils.StringParser;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
-import android.app.Activity;
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.Menu;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -47,10 +41,13 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 	
 	ListView listView;
 	List<AdditionalEmployment> addEmployments = new ArrayList<AdditionalEmployment>();
+	List<Patient> addPatients = new ArrayList<Patient>();
 	List<Employment> employments;
 	ProgressBar pbSync;
 	Button btOK;
 	DialogFragment noPatientsDialog;
+	AdditionalEmploymentAdapter employmentAdapter;
+	AdditionalPatientAdapter patientAdapter;
 	//List<Patient> patients;
 	//Hashtable<String, Integer> items = new Hashtable<String, Integer>();
 	
@@ -109,7 +106,7 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 	
 	private void fillUp() {
 		pbSync.setVisibility(View.INVISIBLE);
-		if (addEmployments.size() == 0)
+		if ((additionalEmploymentsMode != eAdditionalPatientsMode.getAP && addEmployments.size() == 0) || (additionalEmploymentsMode == eAdditionalPatientsMode.getAP && addPatients.size() == 0))
 		{
 			noPatientsDialog.show(getSupportFragmentManager(), "noPatientsDialog");
 			getSupportFragmentManager().executePendingTransactions();
@@ -119,28 +116,14 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 		listView = (ListView) findViewById(R.id.lvAddEmployments);
 		switch(additionalEmploymentsMode) {
 		case getAP:
-//			ArrayAdapter<Patient> patAdapter = new ArrayAdapter<Patient>(this,
-//					android.R.layout.select_dialog_singlechoice, patients);
-//			listView.setAdapter(patAdapter);
-//			listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+			patientAdapter = new AdditionalPatientAdapter(this, R.layout.row_single_additional_employment_emplate, addPatients);
+			listView.setAdapter(patientAdapter);
 			break;
 		default:
-			ArrayAdapter<AdditionalEmployment> adapter = new ArrayAdapter<AdditionalEmployment>(this,
-					android.R.layout.select_dialog_multichoice, addEmployments);
-			
-			listView.setAdapter(adapter);
-			listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+			employmentAdapter = new AdditionalEmploymentAdapter(this, R.layout.row_multi_additional_employment_template, addEmployments);
+			listView.setAdapter(employmentAdapter);
 			break;
 		}
-		listView.setOnItemClickListener( new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-
-			}
-			
-		});
 	}
 	
 	private void setMode() {
@@ -192,8 +175,9 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 			requestForServer = "REMOVE_CTP;";
 			break;
 		case getAP:
-			requestForServer = "GET_ALL;";
-			break;
+			//requestForServer = "GET_ALL;";
+			//break;
+			return;
 		}
 		requestForServer += tourID + getPatientsStr() + ";";
 		connectionStatus.setRequestForServer(requestForServer);
@@ -215,19 +199,37 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 	private void reloadData() {
 		employments = EmploymentManager.Instance().load(Employment.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID()));
 		for (Employment employment : employments)
-			addEmployments.add(new AdditionalEmployment(employment.getID(), String.format("%s %s", employment.getName(), employment.getTime())));
+			addEmployments.add(new AdditionalEmployment(employment.getID(), String.format("%s %s\n%s", employment.getTime(), employment.getName(), employment.getDayPart())));
 	}
 	
 	public void btOkClick(View view) {
-		pbSync.setVisibility(View.VISIBLE);
-		btOK.setEnabled(false);
-		sendExecuteRequest();
+		if (additionalEmploymentsMode != eAdditionalPatientsMode.getAP)
+		{
+			pbSync.setVisibility(View.VISIBLE);
+			btOK.setEnabled(false);
+			sendExecuteRequest();
+		}
+		else
+		{
+			Patient patient = PatientManager.Instance().load(patientAdapter.getSelectedAdditionalPatient().getID());
+			if (patient == null)
+			{
+				patient = patientAdapter.getSelectedAdditionalPatient();
+				patient.setIsAdditional(true);
+				PatientManager.Instance().save(patient);
+			}
+			Option.Instance().setSelectedAdditionalPatient(patient);
+			Employment employment = EmploymentManager.createEmployment(Option.Instance().getSelectedAdditionalPatient());
+			Option.Instance().setEmploymentID(employment.getID());
+			Option.Instance().save();
+			startCatalogsActivity();
+		}
 	}
 	
 	private String getPatientsStr() {
 		String str = "";
-		for (int i = 0; i < listView.getCheckedItemPositions().size(); i++)
-			str += (str.equals("") ? "" : ",") + addEmployments.get(listView.getCheckedItemPositions().keyAt(i)).getID();
+		for (AdditionalEmployment additionalEmployment : employmentAdapter.getSelectedAdditionalEmployments())
+			str += (str.equals("") ? "" : ",") + additionalEmployment.getID();
 		return str;
 	}
 	
@@ -244,16 +246,9 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 			return false;
 		if (additionalEmploymentsMode != eAdditionalPatientsMode.getAP)
 			addEmployments.add(new AdditionalEmployment(Integer.parseInt(strElement.split("@")[1]), strElement.split("@")[0]));
-		else		
-			addEmployments.add(new AdditionalEmployment(Integer.parseInt(strElement.split("@")[1]), getNameFromPatientInitStr(strElement)));
+		else
+			addPatients.add(new Patient(strElement));
 		return true;
-	}
-	
-	private String getNameFromPatientInitStr(String str)
-	{
-		String[] arr = str.split(";");
-		String name = arr[2] + " " + arr[3].split(" ")[0];
-		return name;
 	}
 	
 	private void initControls() {
@@ -284,6 +279,11 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 	private boolean isGetSyncEnded() {
 		return connectionStatus.getAnswerFromServer().startsWith("OK") && (additionalEmploymentsMode == eAdditionalPatientsMode.getIP 
 				|| additionalEmploymentsMode == eAdditionalPatientsMode.getCP);
+	}
+	
+	private void startCatalogsActivity() {
+		Intent catalogsActivity = new Intent(getApplicationContext(), CatalogsActivity.class);
+		startActivity(catalogsActivity);
 	}
 	
 }

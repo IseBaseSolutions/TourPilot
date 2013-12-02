@@ -1,6 +1,7 @@
 package isebase.cognito.tourpilot.Data.Option;
 
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataBase.MapField;
@@ -41,6 +42,8 @@ public class Option {
 
 	private boolean isAuto;
 	private boolean isWorkerActivity;
+
+	private Patient selectedAdditionalPatient;	
 
 	@MapField(DatabaseField = PinField)
 	public String getPin() {
@@ -151,6 +154,15 @@ public class Option {
 	public void setID(int id) {
 		this.id = id;
 	}
+	
+	public Patient getSelectedAdditionalPatient() {
+		return selectedAdditionalPatient;
+	}
+
+	public void setSelectedAdditionalPatient(Patient selectedAdditionalPatient) {
+		this.selectedAdditionalPatient = selectedAdditionalPatient;
+	}
+
 
 	public Worker getWorker() {
 		if (worker != null && worker.getID() == getWorkerID())
@@ -160,13 +172,10 @@ public class Option {
 	}
 
 	protected void clear() {
-		setID(BaseObject.EMPTY_ID);
-		setWorkerID(BaseObject.EMPTY_ID);
-		setWorkID(BaseObject.EMPTY_ID);
-		setPilotTourID(BaseObject.EMPTY_ID);
-		setEmploymentID(BaseObject.EMPTY_ID);	
+		setID(BaseObject.EMPTY_ID);	
 		setServerPort(4448);		
 		setServerIP("");
+		setPin("");
 		clearSelected();
 	}
 

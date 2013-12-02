@@ -64,7 +64,7 @@ public class StandardTaskDialog extends DialogFragment{
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int id) {
 							listener.onDialogPositiveClick(StandardTaskDialog.this);
-						}
+ 						}
 					});
 			adb.setNegativeButton(isebase.cognito.tourpilot.R.string.cancel,
 				new DialogInterface.OnClickListener() {

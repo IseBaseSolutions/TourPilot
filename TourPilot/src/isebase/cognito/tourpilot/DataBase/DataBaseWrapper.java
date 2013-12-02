@@ -277,6 +277,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Employment.DateField + " INTEGER, "
 			+ Employment.TourIDField + " INTEGER, "
 			+ Employment.IsDoneField + " INTEGER, "
+			+ Employment.DayPartField + " TEXT, "
 			+ Employment.StartTimeField + " INTEGER, "
 			+ Employment.StopTimeField + " INTEGER "
 			+ ");";	

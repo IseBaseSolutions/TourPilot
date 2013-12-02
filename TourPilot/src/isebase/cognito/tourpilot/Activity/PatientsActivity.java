@@ -57,7 +57,7 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		try{
+		try {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_patients);
 			init();
@@ -66,7 +66,7 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 			fillUp();
 			initDialogs();
 			showTourInfos(false);
-		}catch(Exception ex){
+		} catch(Exception ex) {
 			ex.printStackTrace();
 			criticalClose();
 		}
@@ -79,7 +79,7 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 	}
 	
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu){
+	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem commonTourMenu = menu.findItem(R.id.action_common_tours);
 		MenuItem tourInfoMenu = menu.findItem(R.id.tour_info);
 		commonTourMenu.setEnabled(pilotTour.getIsCommonTour());

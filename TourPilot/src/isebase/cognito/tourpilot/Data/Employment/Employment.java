@@ -26,6 +26,7 @@ public class Employment extends BaseObject implements IJob {
 	public static final String IsDoneField = "is_done";
 	public static final String StartTimeField = "start_time";
 	public static final String StopTimeField = "stop_time";
+	public static final String DayPartField = "day_part";
 	
 	private boolean isDone;
 	
@@ -41,7 +42,10 @@ public class Employment extends BaseObject implements IJob {
 	private List<Task> tasks =  new ArrayList<Task>();
 	
 	private Patient patient;
+
 	private PilotTour pilotTour;
+	
+	private String dayPart;
 
 	@MapField(DatabaseField = IsDoneField)
 	public boolean getIsDone() {
@@ -135,7 +139,17 @@ public class Employment extends BaseObject implements IJob {
 
 	public void setPilotTour(PilotTour pilotTour) {
 		this.pilotTour = pilotTour;
-	}	
+	}
+	
+	@MapField(DatabaseField = DayPartField)
+	public String getDayPart() {
+		return dayPart.contains("Einsatzende") ? dayPart = dayPart.replace("Einsatzende ", "") : dayPart;
+	}
+
+	@MapField(DatabaseField = DayPartField)
+	public void setDayPart(String dayPart) {
+		this.dayPart = dayPart;
+	}
 	
 	public Employment() {
 		
