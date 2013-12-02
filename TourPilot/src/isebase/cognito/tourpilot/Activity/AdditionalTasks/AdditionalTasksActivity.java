@@ -7,6 +7,7 @@ import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Data.AdditionalTask.Catalog;
 import isebase.cognito.tourpilot.Data.AdditionalTask.Catalog.eCatalogType;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectCompare;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
@@ -14,6 +15,8 @@ import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Templates.AdditionalTaskAdapter;
+
+import java.util.Collections;
 import java.util.List;
 import android.os.Bundle;
 import android.text.Editable;
@@ -92,7 +95,8 @@ public class AdditionalTasksActivity extends BaseActivity {
 			case btyp_sa:			
 				additionalTasks = AdditionalTaskManager.Instance().loadByCatalog(patient.getSA());
 				break;
-		}		
+		}
+		sortAdditinalTasks();
 	}
 
 	private void fillUp(){
@@ -108,5 +112,10 @@ public class AdditionalTasksActivity extends BaseActivity {
 	public void onSaveAddTasks(View view) {
 		TaskManager.Instance().createTasks(adapter.getSelectedTasks());
 		startTasksActivity();
+	}
+
+	private void sortAdditinalTasks() {
+
+		Collections.sort(additionalTasks,new BaseObjectCompare());
 	}
 }

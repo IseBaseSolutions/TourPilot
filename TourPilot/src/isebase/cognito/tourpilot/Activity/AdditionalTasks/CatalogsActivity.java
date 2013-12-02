@@ -1,12 +1,14 @@
 package isebase.cognito.tourpilot.Activity.AdditionalTasks;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivity;
 import isebase.cognito.tourpilot.Data.AdditionalTask.Catalog;
 import isebase.cognito.tourpilot.Data.AdditionalTask.Catalog.eCatalogType;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectCompare;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;

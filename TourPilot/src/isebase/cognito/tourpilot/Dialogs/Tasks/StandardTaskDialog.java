@@ -2,6 +2,7 @@ package isebase.cognito.tourpilot.Dialogs.Tasks;
 
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
+import isebase.cognito.tourpilot.Dialogs.PinDialog;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,6 +14,7 @@ import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -31,20 +33,24 @@ public class StandardTaskDialog extends DialogFragment{
 	}
 	
 	private EditText etValue;
+
 	private BaseDialogListener listener;
+
+	private int typeInput;
 	
-	
-	public StandardTaskDialog(Task task, String title){
+	public StandardTaskDialog(Task task, String title,int typeInput){
 		this();
 		this.task = task;
 		this.title = title;
 		this.isViewMode = false;
+		this.typeInput = typeInput;
 	}
 	
-	public StandardTaskDialog(Task task, String title, String value){
-		this(task, title);
+	public StandardTaskDialog(Task task, String title, String value,int typeInput){
+		this(task, title,typeInput);
 		this.isViewMode = true;
 		etValue.setText(value);
+//		this.typeInput = typeInput;
 	}
 	
 	protected StandardTaskDialog(){
@@ -57,7 +63,8 @@ public class StandardTaskDialog extends DialogFragment{
 		adb.setTitle(title);
 		etValue.setTextColor(Color.BLACK);
 		etValue.setHint(title);
-		etValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
+		etValue.setInputType(typeInput);
+//		etValue.setInputType(typeInput);
 		etValue.setEnabled(!isViewMode);
 		adb.setView(etValue);
 		if(!isViewMode)
@@ -69,6 +76,7 @@ public class StandardTaskDialog extends DialogFragment{
 					});
 			adb.setNegativeButton(isebase.cognito.tourpilot.R.string.cancel,
 				new DialogInterface.OnClickListener() {
+				
 					public void onClick(DialogInterface dialog, int id) {
 						listener.onDialogNegativeClick(StandardTaskDialog.this);
 					}
@@ -84,6 +92,26 @@ public class StandardTaskDialog extends DialogFragment{
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement BaseDialogListener");
+		}
+	}
+	@Override
+	public void onStart() {
+		super.onStart();
+		AlertDialog dialog = (AlertDialog) getDialog();
+		if (dialog != null) {
+			Button positiveButton = (Button) dialog.getButton(Dialog.BUTTON_POSITIVE);
+			positiveButton.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					if(etValue.getText().length() > 0){
+						dismiss();
+						listener.onDialogPositiveClick(StandardTaskDialog.this);
+					}
+				}
+				
+			});
 		}
 	}
 }

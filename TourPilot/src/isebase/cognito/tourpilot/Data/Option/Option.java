@@ -167,6 +167,7 @@ public class Option {
 		setEmploymentID(BaseObject.EMPTY_ID);	
 		setServerPort(4448);		
 		setServerIP("");
+		setPin("");
 		clearSelected();
 	}
 
