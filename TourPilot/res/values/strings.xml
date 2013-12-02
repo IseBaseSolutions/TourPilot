@@ -133,8 +133,7 @@
     <string name="dialog_comments">Bemerkungen</string>
     <string name="dialog_no_patients">Keine Patienten vorhanden</string>
     <string name="dialog_empty_tour">Die Tour ist leer</string>
-    <string name="dialog_clear_database">Clear database?</string>
-    
+    <string name="dialog_clear_database">Daten leeren?</string>
     
  <!-- Errors -->
     <string name="err_no_phone">Keine Telefon-Nr.</string>
