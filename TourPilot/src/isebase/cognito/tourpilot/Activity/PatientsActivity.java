@@ -235,7 +235,7 @@ public class PatientsActivity extends BaseActivity {
 	}
 	
 	private void showTourInfos(boolean isFromMenu) {
-		infos = InformationManager.Instance().load(Information.PatientIDField, BaseObject.EMPTY_ID);
+		infos = InformationManager.Instance().load(Information.EmploymentIDField, BaseObject.EMPTY_ID);
 		String strInfos = InformationManager.getInfoStr(infos, pilotTour.getPlanDate(), isFromMenu);
 		if (strInfos.equals(""))
 			return;
