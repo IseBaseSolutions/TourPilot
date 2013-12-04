@@ -65,6 +65,12 @@ public class PatientManager extends BaseObjectManager<Patient> {
 		item.setAddressID(item.address.getID());
 	}
 	
+	@Override
+	public long getCheckSumByRequest() {
+		return getLongValue(String.format("SELECT SUM(checksum) " +
+				"FROM %1$s WHERE was_sent = 0 AND is_additional = 0", getRecTableName()));
+	}
+	
 	public List<Patient> loadByPilotTourID(int tourPilotID) {
 		String strSQL = String.format("SELECT t1.* " +
 				"FROM %1$s as t1 " +

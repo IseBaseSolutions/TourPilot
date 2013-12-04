@@ -35,7 +35,7 @@ public class OptionsActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		try{
+		try {
 			super.onCreate(savedInstanceState);
 			StaticResources.setBaseContext(getBaseContext());
 			setContentView(R.layout.activity_options);

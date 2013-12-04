@@ -470,8 +470,8 @@ public abstract class BaseObjectManager<T> {
 	}
 	
 	public long getCheckSumByRequest(){
-		return getLongValue(String.format("select sum(checksum) " +
-				"from %1$s where was_sent = 0", getRecTableName()));
+		return getLongValue(String.format("SELECT SUM(checksum) " +
+				"FROM %1$s WHERE was_sent = 0", getRecTableName()));
 	}
 	
 	public long getLongValue(String strSQL){
