@@ -25,19 +25,22 @@ public class UserRemarksActivity extends BaseActivity {
 	
 	private UserRemark userRemark;
 	
+	public final static Integer SIMPLE_MODE = 0;
+	public final static Integer SYNC_MODE = 1;
+	public final static Integer NO_SYNC_MODE = 2;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		try{
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_notes);
+			reloadData();
 			initElements();
 			setWriteAble();
-			reloadData();
-			fillUp();
-			
+			fillUp();			
 		}
-		catch(Exception ex){
-			ex.printStackTrace();
+		catch(Exception e){
+			e.printStackTrace();
 			criticalClose();
 		}
 	}
@@ -47,18 +50,18 @@ public class UserRemarksActivity extends BaseActivity {
 		chbMedchanges = (CheckBox)findViewById(R.id.chbMedchanges);
 		chbPflege = (CheckBox)findViewById(R.id.chbPflege);
 		etOther = (EditText)findViewById(R.id.etOther);
+		chbConnect.setChecked((userRemark.getCheckboxes() & 1) == 1);
+		chbMedchanges.setChecked((userRemark.getCheckboxes() & 2) == 2);
+		chbPflege.setChecked((userRemark.getCheckboxes() & 4) == 4);
 	}
 	
-	private void reloadData(){
+	private void reloadData() {
 		Employment empl = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
 		userRemark = UserRemarkManager.Instance().loadByWorkerPatient(
 				Option.Instance().getWorkerID(), empl.getPatientID());		
 	}
 	
-	private void fillUp(){
-		chbConnect.setChecked((userRemark.getCheckboxes() & 1) == 1);
-		chbMedchanges.setChecked((userRemark.getCheckboxes() & 2) == 2);
-		chbPflege.setChecked((userRemark.getCheckboxes() & 4) == 4);
+	private void fillUp() {
 		etOther.setText(userRemark.getName());
 	}
 	
@@ -78,29 +81,24 @@ public class UserRemarksActivity extends BaseActivity {
 	
 	public void btUserRemarkSaveClick(View view){
 		pickUp();
-		save();
-		
-		Integer type_save = -1;
-		Intent intentSave = getIntent();
-		Bundle b = intentSave.getExtras();
-		 if(b!=null){
-			 type_save = (Integer)b.get("mode");
-			 switch(type_save){
-			 case 0:
-			//	 startTasksActivity();
-				 finish();
-				 break;
-			 case 1:
-				 clearEmployment();
-				 startSyncActivity();
-				 break;
-			 case 2:
-				 clearEmployment();
-				 startPatientsActivity();
-				 break;
-			 }
-		 }
-		
+		save();		
+		Intent intent = getIntent();
+		Bundle bundle = intent.getExtras();
+		if(bundle == null)
+			return;
+		Integer mode = (Integer) bundle.get("Mode");
+		if (SIMPLE_MODE == mode)
+			finish();
+		else if (SYNC_MODE == mode)
+		{
+			clearEmployment();
+			startSyncActivity();
+		}
+		else if (NO_SYNC_MODE == mode)
+		{
+			clearEmployment();
+			startPatientsActivity();
+		}		
 	}
 	
 	private void clearEmployment() {
@@ -113,7 +111,7 @@ public class UserRemarksActivity extends BaseActivity {
 		Bundle bundle = intentSave.getExtras();
 		Boolean viewMode = false;
 		if(bundle != null){
-			viewMode = !bundle.getBoolean("viewMode");
+			viewMode = bundle.getBoolean("ViewMode");
 			CheckBox chbConnect = (CheckBox)findViewById(R.id.chbConnect);
 			CheckBox chbMedchanges = (CheckBox)findViewById(R.id.chbMedchanges);
 			CheckBox chbPflege = (CheckBox)findViewById(R.id.chbPflege);
@@ -121,12 +119,12 @@ public class UserRemarksActivity extends BaseActivity {
 			EditText etOther = (EditText)findViewById(R.id.etOther);
 			Button btUserRemarkSave = (Button)findViewById(R.id.btUserRemarkSave);
 			
-			chbConnect.setClickable(viewMode);
-			chbMedchanges.setClickable(viewMode);
-			chbPflege.setClickable(viewMode);
-			tvOther.setClickable(viewMode);
-			etOther.setFocusable(viewMode);
-			btUserRemarkSave.setEnabled(viewMode);
+			chbConnect.setClickable(!viewMode);
+			chbMedchanges.setClickable(!viewMode);
+			chbPflege.setClickable(!viewMode);
+			tvOther.setClickable(!viewMode);
+			etOther.setFocusable(!viewMode);
+			btUserRemarkSave.setEnabled(!viewMode);
 		}
 	}
 }

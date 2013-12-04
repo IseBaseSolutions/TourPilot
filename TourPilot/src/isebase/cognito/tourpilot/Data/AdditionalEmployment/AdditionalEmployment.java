@@ -19,6 +19,11 @@ public class AdditionalEmployment {
 		this.name = name;
 	}
 	
+	public AdditionalEmployment(String strElement) {
+		this.id = Integer.parseInt(strElement.split("@")[1]);
+		this.name = strElement.split("@")[0];
+	}
+	
 	public AdditionalEmployment(int id, String name) {
 		this.id = id;
 		this.name = name;

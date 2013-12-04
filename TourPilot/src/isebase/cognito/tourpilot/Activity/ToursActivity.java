@@ -2,23 +2,20 @@ package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.Data.Information.Information;
-import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourComparer;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
-import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
-import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import isebase.cognito.tourpilot.Templates.PilotToursAdapter;
 import isebase.cognito.tourpilot.Utils.DataBaseUtils;
-import isebase.cognito.tourpilot.Utils.DateUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
+
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.Menu;
@@ -34,15 +31,14 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		try{
+		try {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_tours);
 			reloadData();		
 			fillUpTitle();
-			fillUp();
-			
-		}catch(Exception ex){
-			ex.printStackTrace();
+			fillUp();			
+		} catch(Exception e) {
+			e.printStackTrace();
 			criticalClose();
 		}
 	}
@@ -57,10 +53,9 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()){
 			case R.id.action_db_backup:
-				try{
+				try {
 					DataBaseUtils.backup();
-				}
-				catch(Exception ex){
+				} catch(Exception ex) {
 					ex.printStackTrace();
 				}
 				return true;
@@ -135,26 +130,23 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog) {
-		if(dialog.getTag().equals("dialogBack")){
+		if(dialog.getTag().equals("dialogBack"))
 			logOut();
-		}else if(dialog.getTag().equals("clearDatabase")){
-			if(DataBaseWrapper.Instance().clearWorkerData()){
-				reloadData();
-				fillUp();
-			}
+		else if (dialog.getTag().equals("clearDatabase") && DataBaseWrapper.Instance().clearWorkerData()) {
+			reloadData();
+			fillUp();
 		}
 	}
 
 	@Override
 	public void onDialogNegativeClick(DialogFragment dialog) {
+		
 	}
 
 	private void clearDatabase(){
-		BaseDialog dialog = new BaseDialog(
-				getString(R.string.attention)
-				,getString(R.string.dialog_clear_database));
+		BaseDialog dialog = new BaseDialog(getString(R.string.attention), 
+				getString(R.string.dialog_clear_database));
 		dialog.show(getSupportFragmentManager(), "clearDatabase");
 		getSupportFragmentManager().executePendingTransactions();
-
 	}
 }

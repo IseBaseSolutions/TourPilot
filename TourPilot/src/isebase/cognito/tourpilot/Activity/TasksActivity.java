@@ -23,6 +23,7 @@ import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.BlutdruckTaskDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.StandardTaskDialog;
+import isebase.cognito.tourpilot.Dialogs.Tasks.TaskDialogTypes;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Templates.TaskAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
@@ -34,7 +35,6 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -70,32 +70,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 
 	private List<Information> infos;
 
-	private PatientRemark patientRemark;
-	
-	private final static Integer SIMPLE_MODE = 0;
-	private final static Integer SYNC_MODE = 1;
-	private final static Integer NO_SYNC_MODE = 2;
-	private boolean IS_DONE_ALL_TASKS = false;
-	
-	private int weightTypeInput = InputType.TYPE_CLASS_NUMBER;
-	private int respirationTypeInput = InputType.TYPE_CLASS_NUMBER;
-	private int balanceTypeInput = InputType.TYPE_CLASS_NUMBER;
-	private int blutzuckerTypeInput = InputType.TYPE_CLASS_NUMBER;
-	private int temperatureTypeInput = InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL;
-	private int pulsTypeInput = InputType.TYPE_CLASS_NUMBER;
-	
-	
-
-	private boolean isClickable(){
-		return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
-				&& endTask.getRealDate().equals(DateUtils.EmptyDate);
-	}
-	
-	private boolean isAllDone(){
-		return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
-				&& !endTask.getRealDate().equals(DateUtils.EmptyDate)
-				|| DateUtils.getTodayDateOnly().getTime() < DateUtils.getDateOnly(startTask.getPlanDate()).getTime();
-	}
+	private PatientRemark patientRemark;	
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -105,19 +80,17 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			initControls();	
 			reloadData();	
 			fillUpTasks();
-			checkAllIsDone();
-			loadPatientInfos(false);
+			checkEmploymentIsDone();
+			showPatientInfo(false);
 			
-			IS_DONE_ALL_TASKS = isAllDone();
-			
-		}catch(Exception ex){
-			ex.printStackTrace();
+		}catch(Exception e){
+			e.printStackTrace();
 			criticalClose();
 		}
 	}
 
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu){
+	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem manualInputMenu = menu.findItem(R.id.manualInput);
 		MenuItem undoneTasksMenu = menu.findItem(R.id.cancelAllTasks);
 		MenuItem catalogsMenu = menu.findItem(R.id.catalogs);
@@ -128,16 +101,10 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		MenuItem doctorsMenu = menu.findItem(R.id.doctors);
 		MenuItem relativesMenu = menu.findItem(R.id.relatives);
 		
-		if(infos.size() == 0){
-			infoMenu.setEnabled(false);
-		}
-		if(patientRemark == null ||patientRemark.getName().length() == 0){
-			commentsMenu.setEnabled(false);
-		}
-		if(diagnose == null || diagnose.getName().length() == 0){
-			diagnoseMenu.setEnabled(false);
-		}
-		if(isAllDone()){
+		infoMenu.setEnabled(infos.size() != 0);
+		commentsMenu.setEnabled(!(patientRemark == null || patientRemark.getName().length() == 0));
+		diagnoseMenu.setEnabled(!(diagnose == null || diagnose.getName().length() == 0));
+		if(isEmploymentDone()) {
 			manualInputMenu.setEnabled(false);
 			undoneTasksMenu.setEnabled(false);
 			catalogsMenu.setEnabled(false);
@@ -153,8 +120,8 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		return true;
 	}
 	
-	private void checkAllIsDone(){
-		if(isAllDone()){
+	private void checkEmploymentIsDone(){
+		if(isEmploymentDone()){
 			btStartTask.setEnabled(false);
 			btEndTask.setEnabled(false);
 		}
@@ -192,15 +159,15 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 						: task.getManualDate()));
 	}
 	
-	private void fillUpTitle(){
+	private void fillUpTitle() {
 		setTitle(employment.text() + (startTask.getDayPart().equals("") ? "" : (", " + startTask.getDayPart())));
 	}
 	
-	private void fillUpTasks(){		
-		List<Task> tasksWithoutFirstAndLast = new ArrayList<Task>(tasks);
-		tasksWithoutFirstAndLast.remove(startTask);
-		tasksWithoutFirstAndLast.remove(endTask);
-		taskAdapter = new TaskAdapter(this, R.layout.row_task_template, tasksWithoutFirstAndLast);
+	private void fillUpTasks() {		
+		List<Task> tasksExceptFirstAndLast = new ArrayList<Task>(tasks);
+		tasksExceptFirstAndLast.remove(startTask);
+		tasksExceptFirstAndLast.remove(endTask);
+		taskAdapter = new TaskAdapter(this, R.layout.row_task_template, tasksExceptFirstAndLast);
 		lvTasks.setAdapter(taskAdapter);
 		fillUpTitle();
 		fillUpEndButtonEnabling();
@@ -211,18 +178,9 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	public void reloadData() {
 		employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
 		patientRemark = PatientRemarkManager.Instance().load(employment.getPatientID());
-		tasks = TaskManager.Instance().load(Task.EmploymentIDField, Option.Instance().getEmploymentID()+"");
-		patientRemark = PatientRemarkManager.Instance().load(employment.getPatientID());
+		tasks = TaskManager.Instance().load(Task.EmploymentIDField, String.valueOf(Option.Instance().getEmploymentID()));
 		diagnose = DiagnoseManager.Instance().load(employment.getPatientID());
-		startTask = tasks.get(0);
-		int i = 1;
-		while(endTask == null){
-			Task task = tasks.get(tasks.size() - i++);
-			if(!task.getIsAdditionalTask())
-				endTask = task;
-		}
-		startTask.setState(eTaskState.Done);
-		endTask.setState(eTaskState.Done);		
+		initHeadTasks();		
 	}
 	
 	public void btStartTaskTimerClick(View view) {
@@ -278,25 +236,25 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		DialogFragment dialog = null;
 		switch(task.getQuality()){
 			case AdditionalTask.WEIGHT:
-				dialog = new StandardTaskDialog(task, getString(R.string.weight), task.getQualityResult(), getString(R.string.gewicht_value), weightTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.weight), task.getQualityResult(), getString(R.string.gewicht_value), TaskDialogTypes.weightTypeInput);
 				break;
 			case AdditionalTask.DETECT_RESPIRATION:
-				dialog = new StandardTaskDialog(task, getString(R.string.detect_respiration), task.getQualityResult(), getString(R.string.atemzüge_value),respirationTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.detect_respiration), task.getQualityResult(), getString(R.string.atemzüge_value), TaskDialogTypes.respirationTypeInput);
 				break;
 			case AdditionalTask.BALANCE:
-				dialog = new StandardTaskDialog(task, getString(R.string.balance), task.getQualityResult(), getString(R.string.ml),balanceTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.balance), task.getQualityResult(), getString(R.string.ml), TaskDialogTypes.balanceTypeInput);
 				break;
 			case AdditionalTask.BLUTZUCKER:
-				dialog = new StandardTaskDialog(task, getString(R.string.blood_sugar), task.getQualityResult(), getString(R.string.blutzucker_value),blutzuckerTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.blood_sugar), task.getQualityResult(), getString(R.string.blutzucker_value), TaskDialogTypes.blutzuckerTypeInput);
 				break;
 			case AdditionalTask.TEMPERATURE:
-				dialog = new StandardTaskDialog(task, getString(R.string.temperature), task.getQualityResult(), getString(R.string.temperature_value),temperatureTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.temperature), task.getQualityResult(), getString(R.string.temperature_value), TaskDialogTypes.temperatureTypeInput);
 				break;
 			case AdditionalTask.BLUTDRUCK:
 				dialog = new BlutdruckTaskDialog(task, task.getQualityResult());
 				break;
 			case AdditionalTask.PULS:
-				dialog = new StandardTaskDialog(task, getString(R.string.pulse), task.getQualityResult(),pulsTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.pulse), task.getQualityResult(), TaskDialogTypes.pulsTypeInput);
 				break;
 			default:
 				return;
@@ -335,25 +293,25 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			return;
 		switch(task.getQuality()){
 			case AdditionalTask.WEIGHT:
-				dialog = new StandardTaskDialog(task, getString(R.string.weight), getString(R.string.gewicht_value), weightTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.weight), getString(R.string.gewicht_value), TaskDialogTypes.weightTypeInput);
 				break;
 			case AdditionalTask.DETECT_RESPIRATION:
-				dialog = new StandardTaskDialog(task, getString(R.string.detect_respiration), getString(R.string.atemzüge_value), respirationTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.detect_respiration), getString(R.string.atemzüge_value), TaskDialogTypes.respirationTypeInput);
 				break;
 			case AdditionalTask.BALANCE:
-				dialog = new StandardTaskDialog(task, getString(R.string.balance), getString(R.string.ml), balanceTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.balance), getString(R.string.ml), TaskDialogTypes.balanceTypeInput);
 				break;
 			case AdditionalTask.BLUTZUCKER:
-				dialog = new StandardTaskDialog(task, getString(R.string.blood_sugar), getString(R.string.blutzucker_value), blutzuckerTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.blood_sugar), getString(R.string.blutzucker_value), TaskDialogTypes.blutzuckerTypeInput);
 				break;
 			case AdditionalTask.TEMPERATURE:
-				dialog = new StandardTaskDialog(task, getString(R.string.temperature), getString(R.string.temperature_value), temperatureTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.temperature), getString(R.string.temperature_value), TaskDialogTypes.temperatureTypeInput);
 				break;
 			case AdditionalTask.BLUTDRUCK:
 				dialog = new BlutdruckTaskDialog(task);
 				break;
 			case AdditionalTask.PULS:
-				dialog = new StandardTaskDialog(task, getString(R.string.pulse), getString(R.string.puls_value), pulsTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.pulse), getString(R.string.puls_value), TaskDialogTypes.pulsTypeInput);
 				break;
 			default:
 				return;
@@ -366,6 +324,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 
 	private void initControls() {
 		lvTasks = (ListView) findViewById(R.id.lvTasksList);
+		
 		btEndTask = (Button) findViewById(R.id.btEndTask);
 		btStartTask = (Button) findViewById(R.id.btStartTask);
 		
@@ -426,50 +385,32 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.catalogs:			
-			if(IS_DONE_ALL_TASKS)
+			if(isEmploymentDone())
 				return false;
-			Intent catalogsActivity = new Intent(getApplicationContext(), CatalogsActivity.class);
-			startActivity(catalogsActivity);
+			startCatalogsActivity();
 			return true;
 		case R.id.cancelAllTasks:
-			if(isAllDone())
+			if(isEmploymentDone())
 				return false;
-			
-			BaseDialog dialog = new BaseDialog(
-					getString(R.string.attention),
-					getString(R.string.dialog_task_proof_undone));
-			dialog.show(getSupportFragmentManager(), "dialogUndone");
-			getSupportFragmentManager().executePendingTransactions();
+			showUndoneDialog();
 			return true;
 		case R.id.notes:
-			Intent notesActivity = new Intent(getApplicationContext(),
-					UserRemarksActivity.class);
-			notesActivity.putExtra("mode", SIMPLE_MODE);
-			notesActivity.putExtra("viewMode", IS_DONE_ALL_TASKS);
-			startActivityForResult(notesActivity,-1);
+			startNotesActivity();
 			return true;
 		case R.id.info:
-			loadPatientInfos(true);
+			showPatientInfo(true);
 			return true;
 		case R.id.manualInput:
-			Intent manualInputActivity = new Intent(getApplicationContext(),
-					ManualInputActivity.class);
-			startActivity(manualInputActivity);
+			startManualInputActivity();
 			return true;
 		case R.id.address:
-			Intent addressActivity = new Intent(getApplicationContext(),
-					AddressPatientActivity.class);
-			startActivity(addressActivity);
+			startAddressActivity();
 			return true;
 		case R.id.doctors:
-			Intent doctorsActivity = new Intent(getApplicationContext(),
-					DoctorsActivity.class);
-			startActivity(doctorsActivity);
+			startDoctorsActivity();
 			return true;
 		case R.id.relatives:
-			Intent relativesActivity = new Intent(getApplicationContext(),
-					RelativesActivity.class);
-			startActivity(relativesActivity);
+			startRelativesActivity();
 			return true;
 		case R.id.comments:
 			showComments();
@@ -482,16 +423,16 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		}
 	}
 	
-	private void showDiagnose(){
-		InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_diagnose),diagnose.getName());
+	private void showDiagnose() {
+		InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_diagnose), diagnose.getName());
 		dialog.show(getSupportFragmentManager(), "");
 		getSupportFragmentManager().executePendingTransactions();
 	}
 	
-	private void removeAdditionalTasks(){
-		for(Task t : tasks)
-			if(t.getIsAdditionalTask())
-				TaskManager.Instance().delete(t.getID());
+	private void removeAdditionalTasks() {
+		for(Task task : tasks)
+			if(task.getIsAdditionalTask())
+				TaskManager.Instance().delete(task.getID());
 	}
 	
 	@Override
@@ -515,13 +456,12 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 				startPatientsActivity();
 		}
 		else if (dialog.getTag().equals("dialogTasks")) {
-			StandardTaskDialog taskDialog = (StandardTaskDialog)dialog;
+			StandardTaskDialog taskDialog = (StandardTaskDialog) dialog;
 			Task task = taskDialog.getTask();
 			String value = taskDialog.getValue();
 			task.setQualityResult(value);
 			TaskManager.Instance().save(task);
 		}
-
 	}
 
 	@Override
@@ -529,13 +469,13 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		if(dialog.getTag().equals("dialogLeavingPatient")){
 			saveData(false);
 			if (Option.Instance().getIsAuto())
-				startUserRemarksActivity(SYNC_MODE);
+				startUserRemarksActivity(UserRemarksActivity.SYNC_MODE);
 			else
-				startUserRemarksActivity(NO_SYNC_MODE);
+				startUserRemarksActivity(UserRemarksActivity.NO_SYNC_MODE);
 		}
 		if(dialog.getTag().equals("dialogTasks")) {
 			Task task = (Task) clickedCheckBox.getTag();
-			task.setState(eTaskState.UnDone) ;
+			task.setState(eTaskState.UnDone);
 			try {
 				((ImageView) clickedCheckBox).setImageDrawable(StaticResources.getBaseContext()
 					.getResources().getDrawable(R.drawable.ic_action_cancel));
@@ -544,36 +484,23 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
 		}
 		return;
 	}
 
-	private void loadPatientInfos(boolean isFromMenu){
-		infos = InformationManager.Instance().load(Information.EmploymentCodeField, String.valueOf(employment.getID()));
-		String strInfos = "";
-		Date today = new Date();
-
-		for(Information info : infos){
-			if(!DateUtils.isToday(info.getReadTime()) || isFromMenu)
-				if((today.getTime() >= info.getFromDate().getTime()) && (today.getTime() <= info.getTillDate().getTime())){
-					if(strInfos != "")
-						strInfos += "\n";
-					strInfos += info.getName();
-					info.setReadTime(today);
-				}
-		}
-		if(strInfos.length() > 0){
-			InformationManager.Instance().save(infos);
-			InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_info),strInfos);
-			dialog.show(getSupportFragmentManager(), "");
-		}
+	private void showPatientInfo(boolean isFromMenu){
+		infos = InformationManager.Instance().load(Information.PatientIDField, String.valueOf(employment.getPatientID()));
+		String strInfos = InformationManager.getInfoStr(infos, new Date(), isFromMenu);
+		if (strInfos.equals(""))
+			return;
+		InformationManager.Instance().save(infos);
+		InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_info), strInfos);
+		dialog.show(getSupportFragmentManager(), "");
 	}
 
 	private void showComments(){
-		InfoBaseDialog dialog = new InfoBaseDialog(
-				getString(R.string.dialog_comments)
-				, patientRemark.getName());
+		InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.dialog_comments), 
+				patientRemark.getName());
 		dialog.show(getSupportFragmentManager(), "");
 	}
 
@@ -584,7 +511,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 
 	private void saveData(Boolean clearEmployment){
-		if(isClickable()){
+		if(isClickable()) {
 			endTask.setRealDate(new Date());
 			endTask.setState(eTaskState.Done);
 			TaskManager.Instance().save(endTask);
@@ -596,12 +523,69 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			clearEmployment();
 	}
 	
+	private void initHeadTasks() {
+		startTask = tasks.get(0);
+		int i = 1;
+		while(endTask == null) {
+			Task task = tasks.get(tasks.size() - i++);
+			if(!task.getIsAdditionalTask())
+				endTask = task;
+		}
+		startTask.setState(eTaskState.Done);
+		endTask.setState(eTaskState.Done);
+	}
+	
 
 	protected void startUserRemarksActivity(Integer mode) {
 		Intent userRemarksActivity = new Intent(getApplicationContext(), UserRemarksActivity.class);
-		userRemarksActivity.putExtra("mode", mode);
-		userRemarksActivity.putExtra("viewMode", IS_DONE_ALL_TASKS);
+		userRemarksActivity.putExtra("Mode", mode);
+		userRemarksActivity.putExtra("ViewMode", false);
 		startActivity(userRemarksActivity);
+	}
+	
+	private void startCatalogsActivity() {
+		Intent catalogsActivity = new Intent(getApplicationContext(), CatalogsActivity.class);
+		startActivity(catalogsActivity);
+	}
+	
+	private void startNotesActivity() {
+		Intent notesActivity = new Intent(getApplicationContext(), UserRemarksActivity.class);
+		notesActivity.putExtra("Mode", UserRemarksActivity.SIMPLE_MODE);
+		notesActivity.putExtra("ViewMode", isEmploymentDone());
+		startActivityForResult(notesActivity, -1);
+	}
+	
+	private void startAddressActivity() {
+		Intent addressActivity = new Intent(getApplicationContext(), AddressPatientActivity.class);
+		startActivity(addressActivity);
+	}
+	
+	private void startDoctorsActivity() {
+		Intent doctorsActivity = new Intent(getApplicationContext(), DoctorsActivity.class);
+		startActivity(doctorsActivity);
+	}
+	
+	private void startRelativesActivity() {
+		Intent relativesActivity = new Intent(getApplicationContext(), RelativesActivity.class);
+		startActivity(relativesActivity);
+	}
+		
+	private void showUndoneDialog() {
+		BaseDialog dialog = new BaseDialog(getString(R.string.attention),
+				getString(R.string.dialog_task_proof_undone));
+		dialog.show(getSupportFragmentManager(), "dialogUndone");
+		getSupportFragmentManager().executePendingTransactions();
+	}
+	
+	private boolean isClickable(){
+		return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
+				&& endTask.getRealDate().equals(DateUtils.EmptyDate);
+	}
+	
+	private boolean isEmploymentDone(){
+		return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
+				&& !endTask.getRealDate().equals(DateUtils.EmptyDate)
+				|| DateUtils.getTodayDateOnly().getTime() < DateUtils.getDateOnly(startTask.getPlanDate()).getTime();
 	}
 
 }

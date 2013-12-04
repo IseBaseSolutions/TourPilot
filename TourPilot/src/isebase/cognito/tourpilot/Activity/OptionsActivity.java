@@ -43,7 +43,8 @@ public class OptionsActivity extends BaseActivity {
 			initControls();
 			initDialogs();
 		}
-		catch(Exception ex){
+		catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -76,8 +77,8 @@ public class OptionsActivity extends BaseActivity {
 					else
 						DataBaseWrapper.Instance().clearAllData();	
 				}
-				catch(Exception ex){
-					ex.printStackTrace();
+				catch(Exception e){
+					e.printStackTrace();
 				}
 
 				return null;

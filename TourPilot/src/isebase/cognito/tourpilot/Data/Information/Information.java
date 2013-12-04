@@ -11,26 +11,26 @@ import java.util.Date;
 
 public class Information extends BaseObject {
 
-	public static final String EmploymentCodeField = "employment_code";
+	public static final String PatientIDField = "patient_id";
 	public static final String FromDateField = "from_date";
 	public static final String TilldateField = "till_date";
 	public static final String ReadTimeField = "read_time";
 	public static final String IsFromServerField = "is_from_server";
 
-	private long employmentCode;
+	private int patientID;
 	private Date fromDate;
 	private Date tillDate;
 	private Date readTime;
 	private boolean isFromServer;
 
-	@MapField(DatabaseField = EmploymentCodeField)
-	public long getEmploymentCode() {
-		return employmentCode;
+	@MapField(DatabaseField = PatientIDField)
+	public int getPatientID() {
+		return patientID;
 	}
 
-	@MapField(DatabaseField = EmploymentCodeField)
-	public void setEmploymentCode(long employmentCode) {
-		this.employmentCode = employmentCode;
+	@MapField(DatabaseField = PatientIDField)
+	public void setPatientID(int patientID) {
+		this.patientID = patientID;
 	}
 
 	@MapField(DatabaseField = FromDateField)
@@ -82,7 +82,7 @@ public class Information extends BaseObject {
 		parsingString.next(";");
 		setIsFromServer(true);
 		setID(Integer.parseInt(parsingString.next(";")));
-		setEmploymentCode(Long.parseLong(parsingString.next(";")));
+		setPatientID(Integer.parseInt(parsingString.next(";")));
 		SimpleDateFormat format = new SimpleDateFormat("ddMMyyyyHHmm");
 		try {
 			setFromDate(format.parse(parsingString.next(";") + "0000"));
@@ -97,7 +97,7 @@ public class Information extends BaseObject {
 	@Override
 	public String forServer() {
 		String strValue = new String(ServerCommandParser.INFORMATION + ";");
-		strValue += String.format("%d;%d", getID(), getEmploymentCode()) + ";";
+		strValue += String.format("%d;%d", getID(), getPatientID()) + ";";
 		strValue += getCheckSum();
 		return strValue;
 	}
@@ -105,12 +105,17 @@ public class Information extends BaseObject {
 	@Override
 	protected void clear() {
 		super.clear();
-		setEmploymentCode(EMPTY_ID);
+		setPatientID(EMPTY_ID);
 		setFromDate(DateUtils.EmptyDate);
 		setTillDate(DateUtils.EmptyDate);
 		setReadTime(DateUtils.EmptyDate);
 		setIsFromServer(false);
 		
+	}
+	
+	public boolean isActualInfo(Date date) {
+		return date.getTime() >= getFromDate().getTime() 
+				&& date.getTime() <= getTillDate().getTime();		
 	}
 	
 }

@@ -10,11 +10,9 @@ import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.PinDialog;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -37,8 +35,8 @@ public class WorkersActivity extends BaseActivity implements BaseDialogListener 
 			reloadData();
 			initDialogs();
 			initListWorkers();
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 			criticalClose();
 		}
 	}
@@ -53,10 +51,7 @@ public class WorkersActivity extends BaseActivity implements BaseDialogListener 
 	}
 
 	public void initListWorkers() {
-		final ListView listView = (ListView) findViewById(R.id.lvWorkers);
-		
-		
-		
+		final ListView listView = (ListView) findViewById(R.id.lvWorkers);		
 		ArrayAdapter<Worker> adapter = new ArrayAdapter<Worker>(this,
 				android.R.layout.simple_list_item_1, workers);
 		listView.setAdapter(adapter);
@@ -67,9 +62,8 @@ public class WorkersActivity extends BaseActivity implements BaseDialogListener 
 					int position, long arg3) {
 
 				selectedWorker = (Worker) listView.getItemAtPosition(position);
-				if(selectedWorker.checkPIN(String.valueOf(Option.Instance().getPin()))){
+				if (selectedWorker.checkPIN(String.valueOf(Option.Instance().getPin())))
 					logIn();
-				}
 				else
 					showPinDialog();
 			}
@@ -78,7 +72,7 @@ public class WorkersActivity extends BaseActivity implements BaseDialogListener 
 
 	public void reloadData() {
 		workers = WorkerManager.Instance().load(null, null, BaseObject.NameField);
-		sortWorkers();
+		Collections.sort(workers,new BaseObjectCompare());
 		Option.Instance().setWorkerActivity(true);
 		Option.Instance().save();
 	}
@@ -122,10 +116,5 @@ public class WorkersActivity extends BaseActivity implements BaseDialogListener 
 		Option.Instance().setWorkerActivity(false);
 		Option.Instance().save();
 		startOptionsActivity();
-	}
-	
-	private void sortWorkers() {
-
-		Collections.sort(workers,new BaseObjectCompare());
 	}
 }

@@ -43,8 +43,6 @@ public class Option {
 	private boolean isAuto;
 	private boolean isWorkerActivity;
 
-	private Patient selectedAdditionalPatient;	
-
 	@MapField(DatabaseField = PinField)
 	public String getPin() {
 		return pin;
@@ -154,15 +152,6 @@ public class Option {
 	public void setID(int id) {
 		this.id = id;
 	}
-	
-	public Patient getSelectedAdditionalPatient() {
-		return selectedAdditionalPatient;
-	}
-
-	public void setSelectedAdditionalPatient(Patient selectedAdditionalPatient) {
-		this.selectedAdditionalPatient = selectedAdditionalPatient;
-	}
-
 
 	public Worker getWorker() {
 		if (worker != null && worker.getID() == getWorkerID())

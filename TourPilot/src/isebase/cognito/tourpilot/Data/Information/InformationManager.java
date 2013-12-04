@@ -1,7 +1,12 @@
 package isebase.cognito.tourpilot.Data.Information;
 
-import android.database.sqlite.SQLiteDatabase;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
+import isebase.cognito.tourpilot.Utils.DateUtils;
+
+import java.util.Date;
+import java.util.List;
+
+import android.database.sqlite.SQLiteDatabase;
 
 public class InformationManager extends BaseObjectManager<Information>{
 	
@@ -29,6 +34,21 @@ public class InformationManager extends BaseObjectManager<Information>{
 	@Override
 	public void onUpgrade(SQLiteDatabase db) {
 			
+	}
+	
+	public static String getInfoStr(List<Information> infos, Date date, boolean isFromMenu) {
+		String strInfos = "";
+		Date tourDate = date;
+		for(Information info : infos) {
+			if(DateUtils.isToday(info.getReadTime()) && !isFromMenu || !info.isActualInfo(tourDate))
+				continue;
+			strInfos += (strInfos.equals("") ? "" : "\n") + info.getName();
+			info.setReadTime(new Date());
+		}
+		if(strInfos.equals(""))
+			return "";
+		InformationManager.Instance().save(infos);
+		return strInfos;
 	}
 
 }

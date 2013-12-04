@@ -110,16 +110,16 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
     		id++;
     	Employment employment = new Employment();
     	employment.setID(id);
-    	employment.setPatientID(Option.Instance().getSelectedAdditionalPatient().getID());
+    	employment.setPatientID(patient.getID());
     	employment.setName(String.format("%s, %s", patient.getSurname(), patient.getName()));
     	employment.setPilotTourID(Option.Instance().getPilotTourID());
     	employment.setDate(new Date());
     	employment.setTourID(PilotTourManager.Instance().loadPilotTour(Option.Instance().getPilotTourID()).getTourID());
     	employment.setDayPart("");
     	EmploymentManager.Instance().save(employment);
-    	Task firstTask = new Task(Option.Instance().getSelectedAdditionalPatient(), employment.getID(), employment.getTourID(), true);
+    	Task firstTask = new Task(patient, employment.getID(), employment.getTourID(), true);
     	TaskManager.Instance().save(firstTask);
-    	Task endtTask = new Task(Option.Instance().getSelectedAdditionalPatient(), employment.getID(), employment.getTourID(), false);
+    	Task endtTask = new Task(patient, employment.getID(), employment.getTourID(), false);
     	TaskManager.Instance().save(endtTask);
     	return employment;
     }

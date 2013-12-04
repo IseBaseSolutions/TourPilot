@@ -40,63 +40,33 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 	private ConnectionAsyncTask connectionTask;
 	
 	ListView listView;
+	
 	List<AdditionalEmployment> addEmployments = new ArrayList<AdditionalEmployment>();
 	List<Patient> addPatients = new ArrayList<Patient>();
 	List<Employment> employments;
-	ProgressBar pbSync;
-	Button btOK;
+	
 	DialogFragment noPatientsDialog;
+	ProgressBar pbSync;
+	Button btOK;	
+	
 	AdditionalEmploymentAdapter employmentAdapter;
 	AdditionalPatientAdapter patientAdapter;
-	//List<Patient> patients;
-	//Hashtable<String, Integer> items = new Hashtable<String, Integer>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_additional_employments);
- 		syncHandler = new SynchronizationHandler() {
- 			
- 			@Override
-			public void onSynchronizedFinished(boolean isOK, String text) {
- 			}
- 			
- 			@Override
- 			public void onItemSynchronized(String text) {
- 				nextStage();
-				connectionTask = new ConnectionAsyncTask(connectionStatus);
-				connectionTask.execute();
-				if (isGetSyncEnded() || isRemoveSyncEnded())
-				{
-					startSyncActivity();
-					pbSync.setVisibility(View.INVISIBLE);
-					btOK.setEnabled(true);
-				}
-				else if (connectionStatus.CurrentState == 6)
-					getPatientStr();
- 			}
- 			
- 			@Override
- 			public void onProgressUpdate(String text, int progress){
- 				
- 			}
-
-			@Override
-			public void onProgressUpdate(String text) {
-				
-			}				
- 		};
+		initSyncHandler();
  		initControls();
  		initDialogs();
 		setMode();
- 		if (additionalEmploymentsMode == eAdditionalPatientsMode.removeIP 
- 				|| additionalEmploymentsMode == eAdditionalPatientsMode.removeCP)
+ 		if (!isRemovingPatients())
  		{
- 			reloadData();
- 			fillUp();
- 		}
- 		else
  			sendFillRequest();
+ 			return;
+ 		}
+		reloadData();
+		fillUp();
 	}
 
 	@Override
@@ -106,13 +76,13 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 	
 	private void fillUp() {
 		pbSync.setVisibility(View.INVISIBLE);
-		if ((additionalEmploymentsMode != eAdditionalPatientsMode.getAP && addEmployments.size() == 0) || (additionalEmploymentsMode == eAdditionalPatientsMode.getAP && addPatients.size() == 0))
+		if (isNoPatients())
 		{
-			noPatientsDialog.show(getSupportFragmentManager(), "noPatientsDialog");
+			noPatientsDialog.show(getSupportFragmentManager(), "noPatientsDialog");			
 			getSupportFragmentManager().executePendingTransactions();
 			return;
 		}
-		btOK.setEnabled(true);
+		
 		listView = (ListView) findViewById(R.id.lvAddEmployments);
 		switch(additionalEmploymentsMode) {
 		case getAP:
@@ -120,6 +90,7 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 			listView.setAdapter(patientAdapter);
 			break;
 		default:
+			btOK.setEnabled(true);
 			employmentAdapter = new AdditionalEmploymentAdapter(this, R.layout.row_multi_additional_employment_template, addEmployments);
 			listView.setAdapter(employmentAdapter);
 			break;
@@ -199,31 +170,20 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 	private void reloadData() {
 		employments = EmploymentManager.Instance().load(Employment.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID()));
 		for (Employment employment : employments)
-			addEmployments.add(new AdditionalEmployment(employment.getID(), String.format("%s %s\n%s", employment.getTime(), employment.getName(), employment.getDayPart())));
+			if (!employment.isDone())
+				addEmployments.add(new AdditionalEmployment(employment.getID(), String.format("%s %s\n%s", employment.getTime(), employment.getName(), employment.getDayPart())));
 	}
 	
 	public void btOkClick(View view) {
-		if (additionalEmploymentsMode != eAdditionalPatientsMode.getAP)
+		if (additionalEmploymentsMode == eAdditionalPatientsMode.getAP)
 		{
-			pbSync.setVisibility(View.VISIBLE);
-			btOK.setEnabled(false);
-			sendExecuteRequest();
-		}
-		else
-		{
-			Patient patient = PatientManager.Instance().load(patientAdapter.getSelectedAdditionalPatient().getID());
-			if (patient == null)
-			{
-				patient = patientAdapter.getSelectedAdditionalPatient();
-				patient.setIsAdditional(true);
-				PatientManager.Instance().save(patient);
-			}
-			Option.Instance().setSelectedAdditionalPatient(patient);
-			Employment employment = EmploymentManager.createEmployment(Option.Instance().getSelectedAdditionalPatient());
-			Option.Instance().setEmploymentID(employment.getID());
-			Option.Instance().save();
+			createAdditionalEmployment();
 			startCatalogsActivity();
+			return;
 		}
+		pbSync.setVisibility(View.VISIBLE);
+		btOK.setEnabled(false);
+		sendExecuteRequest();
 	}
 	
 	private String getPatientsStr() {
@@ -245,10 +205,44 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 		if (strElement.equals("."))
 			return false;
 		if (additionalEmploymentsMode != eAdditionalPatientsMode.getAP)
-			addEmployments.add(new AdditionalEmployment(Integer.parseInt(strElement.split("@")[1]), strElement.split("@")[0]));
+			addEmployments.add(new AdditionalEmployment(strElement));
 		else
 			addPatients.add(new Patient(strElement));
 		return true;
+	}
+	
+	private void initSyncHandler(){
+ 		syncHandler = new SynchronizationHandler() {
+ 			
+ 			@Override
+			public void onSynchronizedFinished(boolean isOK, String text) {
+ 			}
+ 			
+ 			@Override
+ 			public void onItemSynchronized(String text) {
+ 				nextStage();
+				connectionTask = new ConnectionAsyncTask(connectionStatus);
+				connectionTask.execute();
+				if (isGetSyncEnded() || isRemoveSyncEnded())
+				{
+					startSyncActivity();
+					pbSync.setVisibility(View.INVISIBLE);
+					btOK.setEnabled(true);
+				}
+				else if (isFinishSync())
+					getPatientStr();
+ 			}
+ 			
+ 			@Override
+ 			public void onProgressUpdate(String text, int progress){
+ 				
+ 			}
+
+			@Override
+			public void onProgressUpdate(String text) {
+				
+			}				
+ 		};
 	}
 	
 	private void initControls() {
@@ -258,8 +252,9 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 
 	private void initDialogs() {
 		noPatientsDialog = new BaseInfoDialog(getString(R.string.dialog_empty_tour), getString(R.string.dialog_no_patients));
+		noPatientsDialog.setCancelable(false);
 	}
-
+	
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog) {
 		startPatientsActivity();		
@@ -267,8 +262,7 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 
 	@Override
 	public void onDialogNegativeClick(DialogFragment dialog) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 	
 	private boolean isRemoveSyncEnded() {
@@ -279,6 +273,33 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 	private boolean isGetSyncEnded() {
 		return connectionStatus.getAnswerFromServer().startsWith("OK") && (additionalEmploymentsMode == eAdditionalPatientsMode.getIP 
 				|| additionalEmploymentsMode == eAdditionalPatientsMode.getCP);
+	}
+	
+	private boolean isFinishSync() {
+		return connectionStatus.CurrentState == 6;
+	}
+	
+	private boolean isNoPatients() {
+		return (additionalEmploymentsMode != eAdditionalPatientsMode.getAP && addEmployments.size() == 0) 
+				|| (additionalEmploymentsMode == eAdditionalPatientsMode.getAP && addPatients.size() == 0);
+	}
+	
+	private boolean isRemovingPatients() {
+		return additionalEmploymentsMode == eAdditionalPatientsMode.removeIP 
+ 				|| additionalEmploymentsMode == eAdditionalPatientsMode.removeCP;
+	}
+	
+	private void createAdditionalEmployment() {
+		Patient patient = PatientManager.Instance().load(patientAdapter.getSelectedAdditionalPatient().getID());
+		if (patient == null)
+		{
+			patient = patientAdapter.getSelectedAdditionalPatient();
+			patient.setIsAdditional(true);
+			PatientManager.Instance().save(patient);
+		}
+		Employment employment = EmploymentManager.createEmployment(patient);
+		Option.Instance().setEmploymentID(employment.getID());
+		Option.Instance().save();
 	}
 	
 	private void startCatalogsActivity() {

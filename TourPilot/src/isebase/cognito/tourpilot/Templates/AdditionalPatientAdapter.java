@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RadioButton;
@@ -42,19 +43,24 @@ public class AdditionalPatientAdapter extends ArrayAdapter<Patient>{
 		additionalPatientHolder.rdbAdditionalPatient.setTag(additionalPatientHolder);
 		additionalPatientHolder.rdbAdditionalPatient.setOnCheckedChangeListener(onCheckboxCheckedListener);
 		additionalPatientHolder.rdbAdditionalPatient.setText(additionalPatientHolder.additionalPatient.getFullName());
-		additionalPatientHolder.rdbAdditionalPatient.setChecked(additionalPatientHolder == lastCheckedAdditionalPatientHolder);		
+		additionalPatientHolder.rdbAdditionalPatient.setChecked(additionalPatientHolder == lastCheckedAdditionalPatientHolder);
 		return row;
 	}
 	
 	OnCheckedChangeListener onCheckboxCheckedListener = new OnCheckedChangeListener() {
 		@Override
 		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-			if (lastCheckedAdditionalPatientHolder != null)
+			if (lastCheckedAdditionalPatientHolder == null) 
+			{
+				Button button = (Button) ((Activity) context).findViewById(R.id.btOK);
+				button.setEnabled(true);
+			}
+			else
 				lastCheckedAdditionalPatientHolder.rdbAdditionalPatient.setChecked(false);
 			lastCheckedAdditionalPatientHolder = (AdditionalPatientHolder) buttonView.getTag();
 			lastCheckedAdditionalPatientHolder.rdbAdditionalPatient.setChecked(isChecked);
 		}
-	};
+	};	
 	
 	public class AdditionalPatientHolder {
 		public Patient additionalPatient;
