@@ -23,8 +23,6 @@ import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
-import isebase.cognito.tourpilot.Data.Work.Work;
-import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
@@ -67,8 +65,8 @@ public class ServerCommandParser {
 	private SynchronizationHandler syncHandler;
 
 	private String strVerlink;
-	private boolean needShowVersion;
-	private static long timeDiff = 0;
+//	private boolean needShowVersion;
+//	private static long timeDiff = 0;
 
 	public ServerCommandParser(SynchronizationHandler sh) {
 		syncHandler = sh;

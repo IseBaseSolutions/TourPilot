@@ -489,7 +489,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 
 	private void showPatientInfo(boolean isFromMenu){
-		infos = InformationManager.Instance().load(Information.PatientIDField, String.valueOf(employment.getPatientID()));
+		infos = InformationManager.Instance().load(Information.EmploymentIDField, String.valueOf(employment.getID()));
 		String strInfos = InformationManager.getInfoStr(infos, new Date(), isFromMenu);
 		if (strInfos.equals(""))
 			return;

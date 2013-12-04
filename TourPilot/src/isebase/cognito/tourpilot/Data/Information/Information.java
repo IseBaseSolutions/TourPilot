@@ -2,6 +2,9 @@ package isebase.cognito.tourpilot.Data.Information;
 
 import isebase.cognito.tourpilot.Connection.ServerCommandParser;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.Employment.Employment;
+import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
+import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 import isebase.cognito.tourpilot.Utils.StringParser;
@@ -11,17 +14,29 @@ import java.util.Date;
 
 public class Information extends BaseObject {
 
+	public static final String EmploymentIDField = "employment_id";
 	public static final String PatientIDField = "patient_id";
 	public static final String FromDateField = "from_date";
 	public static final String TilldateField = "till_date";
 	public static final String ReadTimeField = "read_time";
 	public static final String IsFromServerField = "is_from_server";
 
+	private long employmentID;
 	private int patientID;
 	private Date fromDate;
 	private Date tillDate;
 	private Date readTime;
 	private boolean isFromServer;
+	
+	@MapField(DatabaseField = EmploymentIDField)
+	public long getEmploymentID() {
+		return employmentID;
+	}
+
+	@MapField(DatabaseField = EmploymentIDField)
+	public void setEmploymentID(long employmentID) {
+		this.employmentID = employmentID;
+	}
 
 	@MapField(DatabaseField = PatientIDField)
 	public int getPatientID() {
@@ -82,7 +97,7 @@ public class Information extends BaseObject {
 		parsingString.next(";");
 		setIsFromServer(true);
 		setID(Integer.parseInt(parsingString.next(";")));
-		setPatientID(Integer.parseInt(parsingString.next(";")));
+		setEmploymentID(Long.parseLong(parsingString.next(";")));
 		SimpleDateFormat format = new SimpleDateFormat("ddMMyyyyHHmm");
 		try {
 			setFromDate(format.parse(parsingString.next(";") + "0000"));
@@ -97,7 +112,7 @@ public class Information extends BaseObject {
 	@Override
 	public String forServer() {
 		String strValue = new String(ServerCommandParser.INFORMATION + ";");
-		strValue += String.format("%d;%d", getID(), getPatientID()) + ";";
+		strValue += String.format("%d;%d", getID(), getEmploymentID()) + ";";
 		strValue += getCheckSum();
 		return strValue;
 	}
