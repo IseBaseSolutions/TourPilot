@@ -5,6 +5,7 @@ import isebase.cognito.tourpilot.Data.Address.IAddressable;
 import isebase.cognito.tourpilot.Data.Doctor.Doctor;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Relative.Relative;
+import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
 import java.util.List;
 
@@ -57,29 +58,35 @@ public class AddressAdapter<T extends IAddressable> extends ArrayAdapter<T> {
 		if (!(addressHolder.address instanceof Patient))
 			additionalInfo = addressHolder.address instanceof Relative ? ((Relative)addressHolder.address).getFamilyState() : ((Doctor)addressHolder.address).getSpeciality();
 		addressHolder.tvFullname = (TextView) row.findViewById(R.id.tvFullName);		
-		addressHolder.tvFullname.setText(addressHolder.address.getFullName() + (additionalInfo.equals("") ? "" : (" (" + additionalInfo +")")));
+		addressHolder.tvFullname.setText(String.format("%s%s", addressHolder.address.getFullName(), (additionalInfo.equals("") ? "" : String.format(" (%s)", additionalInfo))));
 		
 		addressHolder.tvAddressName = (TextView) row.findViewById(R.id.tvAddressName);		
 		addressHolder.tvAddressName.setText(addressHolder.address.getAddress().getAddressData());
 
 		
 		TableLayout tablePhones = (TableLayout)row.findViewById(R.id.tablePhones);
-		if(addressHolder.address.getAddress().getRealPhone().length() > 0){
+		if (addressHolder.address instanceof Doctor && !((Doctor)addressHolder.address).getNote().equals(""))
+		{
+			TextView tvNote = new TextView(context);
+			tvNote.setText(String.format("%s %s\n", context.getString(R.string.note), ((Doctor)addressHolder.address).getNote()));
+			tvNote.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+			tablePhones.addView(tvNote);
+		}
+		if(addressHolder.address.getAddress().getRealPhone().length() > 0) {
 			
 			TableRow rowPhone = showPhone(R.string.phone, addressHolder.address.getAddress().getPhone(), addressHolder.address.getAddress().getRealPhone(), tablePhones);
 			tablePhones.addView(rowPhone);
 		}
-		if(addressHolder.address.getAddress().getRealPrivatePhone().length() > 0){
+		if(addressHolder.address.getAddress().getRealPrivatePhone().length() > 0) {
 			
 			TableRow rowPrivatePhone = showPhone(R.string.phone_private, addressHolder.address.getAddress().getPrivatePhone(), addressHolder.address.getAddress().getRealPrivatePhone(), tablePhones);
 			tablePhones.addView(rowPrivatePhone);
 		}
-		if(addressHolder.address.getAddress().getRealMobilePhone().length() > 0){
+		if(addressHolder.address.getAddress().getRealMobilePhone().length() > 0) {
 			
 			TableRow rowMobilePhone = showPhone(R.string.phone_mobile, addressHolder.address.getAddress().getMobilePhone(), addressHolder.address.getAddress().getRealMobilePhone(), tablePhones);
 			tablePhones.addView(rowMobilePhone);
-		}
-		
+		}		
 		return row;
 	}
 	

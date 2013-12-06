@@ -42,6 +42,7 @@
     <string name="aubrplanmäbige_pflege">Außerplanmäßige Pflege-Visite sind erforderlich.</string>
     <string name="visit_notes">Besuchsvermerke</string>
     <string name="other">Sonstiges: (bitte eintragen)</string>
+    <string name="note">Note:</string>
 
     <!-- Tasks -->
     <string name="start_task">Einsatzbeginn</string>

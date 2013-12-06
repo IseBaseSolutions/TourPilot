@@ -30,11 +30,14 @@ import isebase.cognito.tourpilot.Templates.TaskAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.DialogFragment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -275,6 +278,8 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		}
 		Task task = (Task) view.getTag();
 		clickedCheckBox = view;
+		Date date = new Date(SystemClock.elapsedRealtime());
+		
 		task.setRealDate(new Date());
 		if (startTask.getManualDate().equals(DateUtils.EmptyDate))
 			task.setManualDate(DateUtils.getAverageDate(startTask.getManualDate(), endTask.getManualDate()));
