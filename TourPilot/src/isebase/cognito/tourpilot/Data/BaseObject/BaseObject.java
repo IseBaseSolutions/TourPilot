@@ -94,7 +94,9 @@ public abstract class BaseObject {
 		isServerTime = false;
 	}
 	
-	public abstract String forServer();
+	public String forServer() {
+		return "";
+	}
 	
 	public String getDone() {
 		return "";

@@ -54,10 +54,5 @@ public class EmploymentInterval extends BaseObject {
 	public void setStopTime(Date stopTime) {
 		this.stopTime = stopTime;
 	}
-	
-	@Override
-	public String forServer() {
-		return null;
-	}
 
 }

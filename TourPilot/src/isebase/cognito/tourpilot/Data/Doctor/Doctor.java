@@ -12,9 +12,14 @@ public class Doctor extends BaseObject implements IAddressable {
 
 	public static final String SurnameField = "surname";
 	public static final String AddressIDField = "address_id";
+	public static final String SpecialityField = "speciality";
+	public static final String NoteField = "note";
 	
 	public Address address;
 	private int addressID;
+	private String surname;
+	private String speciality;
+	private String note;
 
 	@MapField(DatabaseField = AddressIDField)
 	public int getAddressID() {
@@ -25,8 +30,6 @@ public class Doctor extends BaseObject implements IAddressable {
 	public void setAddressID(int addressID) {
 		this.addressID = addressID;
 	}
-
-	private String surname;
 	
 	@MapField(DatabaseField = SurnameField)
 	public String getSurname() {
@@ -36,6 +39,26 @@ public class Doctor extends BaseObject implements IAddressable {
 	@MapField(DatabaseField = SurnameField)
 	public void setSurname(String surname) {
 		this.surname = surname;
+	}
+	
+	@MapField(DatabaseField = SpecialityField)
+	public String getSpeciality() {
+		return speciality;
+	}
+
+	@MapField(DatabaseField = SpecialityField)
+	public void setSpeciality(String speciality) {
+		this.speciality = speciality;
+	}
+
+	@MapField(DatabaseField = NoteField)
+	public String getNote() {
+		return note;
+	}
+	
+	@MapField(DatabaseField = NoteField)
+	public void setNote(String note) {
+		this.note = note;
 	}
 
 	public Doctor(){
@@ -54,7 +77,9 @@ public class Doctor extends BaseObject implements IAddressable {
 		address.setCity(parsingString.next(";"));
 		address.setPhone(parsingString.next(";"));
 		address.setPrivatePhone(parsingString.next(";"));
-		address.setMobilePhone(parsingString.next("~"));
+		address.setMobilePhone(parsingString.next(";"));
+		setSpeciality(parsingString.next(";"));
+		setNote(parsingString.next("~"));
 		setCheckSum(Long.parseLong(parsingString.next()));
 	}
 	
@@ -64,7 +89,7 @@ public class Doctor extends BaseObject implements IAddressable {
 	
 	@Override
 	public String toString(){
-		return String.format("%s\n%s\n%s,%s\n",getFullName(),address.getStreet(),address.getZip(),address.getCity());
+		return String.format("%s\n%s\n%s,%s\n", getFullName(), address.getStreet(), address.getZip(), address.getCity());
 	}
 
 	@Override

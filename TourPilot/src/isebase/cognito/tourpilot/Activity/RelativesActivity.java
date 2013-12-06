@@ -46,7 +46,7 @@ public class RelativesActivity extends BaseActivity {
 	private void reloadData()
 	{
 		employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
-		relatives =  RelativeManager.Instance().loadAllByIDs(employment.getPatient().getStrRelativeIDs());
+		relatives =  RelativeManager.Instance().sortByStrIDs(RelativeManager.Instance().loadAllByIDs(employment.getPatient().getStrRelativeIDs()), employment.getPatient().getStrRelativeIDs());
 	}
 
 }

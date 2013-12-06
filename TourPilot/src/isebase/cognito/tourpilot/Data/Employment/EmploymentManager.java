@@ -44,6 +44,7 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
 	
 	public void createEmployments() {
 		clearTable();
+		String firstStr = "'%beginn%'";
 		String strSQL = String.format("INSERT INTO %3$s" +
 				"(_id, patient_id, name, was_sent, checksum, is_server_time" +
 				", pilot_tour_id, date, tour_id, is_done, start_time, stop_time, day_part) SELECT " +
@@ -63,11 +64,12 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
 				"FROM %1$s t1 " +
 				"INNER JOIN %2$s t2 on t1.patient_id = t2._id " +
 				"LEFT JOIN %4$s t3 on t1.employment_id = t3.employment_id " +
-				"GROUP BY t1.employment_id"
+				"WHERE t1.name like %5$s GROUP BY t1.employment_id"
 				, TaskManager.TableName
 				, PatientManager.TableName
 				, EmploymentManager.TableName
-				, EmploymentIntervalManager.TableName);
+				, EmploymentIntervalManager.TableName
+				, firstStr);
 		execSQL(strSQL);
 	}
 	

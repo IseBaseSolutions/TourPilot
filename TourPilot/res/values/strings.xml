@@ -55,7 +55,7 @@
     <string name="pulse">Puls</string>
 
     <!-- Synchronization -->
-    <string name="synchronization">Datanabgleich</string>
+    <string name="synchronization">Datenabgleich</string>
     <string name="waitng_sockets_to_close">Warten auf den Socketsabschluss...</string>
     <string name="enter_pin">Geben Sie bitte Ihre PIN hier...</string>
     <string name="connection_try">Verbindung herstellen</string>
@@ -123,7 +123,7 @@
 
     <!-- Dialogs -->
     <string name="dialog_task_proof_undone">Möchten Sie diesen Einsatz als ausgefallen markieren?</string>
-    <string name="dialog_task_proof_back">Möchten Sie wirklich die Zeiten verwerfen? Wenn Sie diese Medlung mit OK bestätigen, werden die Zeiten gelöscht.</string>
+    <string name="dialog_task_proof_back">Möchten Sie wirklich die Zeiten verwerfen? Wenn Sie diese Meldung mit OK bestätigen, werden die Zeiten gelöscht.</string>
     <string name="dialog_no_connection">Bitte, die Internet Verbindung zulassen</string>
     <string name="dialog_complete_all_tasks">Es fehlen noch Daten, die Sie für diese Tour noch nicht eingegeben haben. Bitte nehmen Sie die Eingabe jetzt vor.</string>
     <string name="dialog_no_ip_entered">Tragen Sie bitte die Server IP ein</string>
@@ -134,8 +134,10 @@
     <string name="dialog_no_patients">Keine Patienten vorhanden</string>
     <string name="dialog_empty_tour">Die Tour ist leer</string>
     <string name="dialog_clear_database">Daten leeren?</string>
+    <string name="dialog_employment_not_started">Employment didnt started</string>
+    <string name="dialog_start_employment">Bitte erst Einsatzbeginn antippen</string>
     
- <!-- Errors -->
+ 	<!-- Errors -->
     <string name="err_no_phone">Keine Telefon-Nr.</string>
     <string name="err_no_address">Keine Adresse</string>
     <string name="err_no_patients">Keine Patienten</string>

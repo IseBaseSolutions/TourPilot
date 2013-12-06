@@ -41,7 +41,7 @@ public class DoctorsActivity extends BaseActivity {
 	
 	public void reloadData() {
 		employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
-		addressable = DoctorManager.Instance().loadAllByIDs(employment.getPatient().getStrDoctorsIDs());
+		addressable = DoctorManager.Instance().sortByStrIDs(DoctorManager.Instance().loadAllByIDs(employment.getPatient().getStrDoctorsIDs()),employment.getPatient().getStrDoctorsIDs());
 	}
 
 	private void fillUpTitle(){

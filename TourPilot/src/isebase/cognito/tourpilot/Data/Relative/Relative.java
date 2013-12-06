@@ -13,12 +13,14 @@ public class Relative extends BaseObject implements IAddressable {
 	public static final String SurnameField = "surname";
 	public static final String ShipField = "ship";
 	public static final String AddressIDField = "address_id";
+	public static final String FamilyStateField = "family_state";
 	
 	public Address address;
 	private int addressID;
 	
 	private String surname;
 	private String ship;
+	private String familyState;
 
 	@MapField(DatabaseField = AddressIDField)
 	public int getAddressID() {
@@ -50,6 +52,16 @@ public class Relative extends BaseObject implements IAddressable {
 		this.ship = ship;
 	}
 	
+	@MapField(DatabaseField = FamilyStateField)
+	public String getFamilyState() {
+		return familyState;
+	}
+
+	@MapField(DatabaseField = FamilyStateField)
+	public void setFamilyState(String familyState) {
+		this.familyState = familyState;
+	}
+	
 	public Relative(){
 		clear();
 	}
@@ -67,7 +79,8 @@ public class Relative extends BaseObject implements IAddressable {
 		address.setPhone(parsingString.next(";"));
 		address.setPrivatePhone(parsingString.next(";"));
 		address.setMobilePhone(parsingString.next(";"));
-		setShip(parsingString.next("~"));
+		setShip(parsingString.next(";"));
+		setFamilyState(parsingString.next("~"));
 		setCheckSum(Long.parseLong(parsingString.next()));
 	}
 

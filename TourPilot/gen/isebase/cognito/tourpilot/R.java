@@ -220,12 +220,14 @@ public final class R {
         public static final int dialog_comments=0x7f06006e;
         public static final int dialog_complete_all_tasks=0x7f060069;
         public static final int dialog_connection_problems=0x7f06006b;
+        public static final int dialog_employment_not_started=0x7f060072;
         public static final int dialog_empty_tour=0x7f060070;
         public static final int dialog_leaving_patient=0x7f06006c;
         public static final int dialog_no_connection=0x7f060068;
         public static final int dialog_no_ip_entered=0x7f06006a;
         public static final int dialog_no_patients=0x7f06006f;
         public static final int dialog_proof_logout=0x7f06006d;
+        public static final int dialog_start_employment=0x7f060073;
         public static final int dialog_task_proof_back=0x7f060067;
         /**  Dialogs 
          */
@@ -236,11 +238,11 @@ public final class R {
          */
         public static final int enter_interval=0x7f06001e;
         public static final int enter_pin=0x7f06002f;
-        public static final int err_no_address=0x7f060073;
-        public static final int err_no_patients=0x7f060074;
+        public static final int err_no_address=0x7f060075;
+        public static final int err_no_patients=0x7f060076;
         /**  Errors 
          */
-        public static final int err_no_phone=0x7f060072;
+        public static final int err_no_phone=0x7f060074;
         public static final int gewicht_value=0x7f060050;
         public static final int hello_request_fail=0x7f060037;
         public static final int hello_request_ok=0x7f060036;
@@ -277,7 +279,7 @@ public final class R {
         public static final int min=0x7f060054;
         public static final int ml=0x7f060053;
         public static final int no=0x7f06005a;
-        public static final int no_any_patient=0x7f060075;
+        public static final int no_any_patient=0x7f060077;
         public static final int ok=0x7f060057;
         public static final int options=0x7f060017;
         public static final int other=0x7f060023;

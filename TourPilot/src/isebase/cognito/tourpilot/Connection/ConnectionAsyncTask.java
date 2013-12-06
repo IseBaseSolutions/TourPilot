@@ -7,6 +7,8 @@ import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Diagnose.DiagnoseManager;
 import isebase.cognito.tourpilot.Data.Doctor.DoctorManager;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
+import isebase.cognito.tourpilot.Data.EmploymentVerification.EmploymentVerification;
+import isebase.cognito.tourpilot.Data.EmploymentVerification.EmploymentVerificationManager;
 import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
@@ -18,6 +20,7 @@ import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
 import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
+import isebase.cognito.tourpilot.Utils.StringParser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -199,10 +202,19 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 				// License is over
 				retVal = false;
 			}
-			else if(recievedStatus.startsWith("OK")){
-				char lastSymbol = recievedStatus.charAt(
-						recievedStatus.length() - 2);
-				Option.Instance().setIsAuto(lastSymbol == '1');
+			else if(recievedStatus.startsWith("OK")) {
+				StringParser stringParser = new StringParser(recievedStatus);
+				String msg = stringParser.next("\0");
+				Option.Instance().setIsAuto(msg.contains("1"));
+				msg.contains("skippflegeok");
+				if (stringParser.contains(ServerCommandParser.SERVER_CURRENT_VERSION))
+					conStatus.serverCommandParser.parseElement(stringParser.next("\0"), false);
+				else
+					Option.Instance().setPalmVersion(null);
+				if (stringParser.contains(ServerCommandParser.SERVER_VERSION_LINK))
+					conStatus.serverCommandParser.parseElement(stringParser.next("\0"), false);
+				else
+					Option.Instance().setVersionLink(null);
 			}
 						
 		} catch (Exception ex) {
@@ -360,6 +372,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		// strDone += CLogs.Instance().GetDone();
 		//
 		strDone += UserRemarkManager.Instance().getDone();
+		strDone += EmploymentVerificationManager.Instance().getDone();
 		//
 		// strDone += CMergedEmploymentTimes.Instance().GetDone(); // Andrew
 		//

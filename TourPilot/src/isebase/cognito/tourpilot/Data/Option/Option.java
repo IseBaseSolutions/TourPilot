@@ -1,7 +1,6 @@
 package isebase.cognito.tourpilot.Data.Option;
 
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataBase.MapField;
@@ -22,7 +21,6 @@ public class Option {
 	public static final String IsAutoField = "is_auto";
 	public static final String IsWorkerActivityField = "is_worker_activity";
 	public static final String PinField = "pin";
-
 	public static boolean testMode = false;
 	private Worker worker;
 	private TelephonyManager phoneManager = StaticResources.phoneManager;
@@ -39,6 +37,9 @@ public class Option {
 	private int serverPort;
 	private int id;
 	private String pin;
+	
+	private String palmVersion;
+	private String versionLink;
 
 	private boolean isAuto;
 	private boolean isWorkerActivity;
@@ -152,6 +153,22 @@ public class Option {
 	public void setID(int id) {
 		this.id = id;
 	}
+	
+	public String getPalmVersion() {
+		return palmVersion;
+	}
+
+	public void setPalmVersion(String palmVersion) {
+		this.palmVersion = palmVersion;
+	}
+
+	public String getVersionLink() {
+		return versionLink;
+	}
+
+	public void setVersionLink(String versionLink) {
+		this.versionLink = versionLink;
+	}
 
 	public Worker getWorker() {
 		if (worker != null && worker.getID() == getWorkerID())
@@ -178,12 +195,8 @@ public class Option {
 
 	public String getVersion() {
 		try {
-			return StaticResources
-					.getBaseContext()
-					.getPackageManager()
-					.getPackageInfo(
-							StaticResources.getBaseContext().getPackageName(),
-							0).versionName;
+			return StaticResources.getBaseContext().getPackageManager().
+					getPackageInfo(StaticResources.getBaseContext().getPackageName(), 0).versionName;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
