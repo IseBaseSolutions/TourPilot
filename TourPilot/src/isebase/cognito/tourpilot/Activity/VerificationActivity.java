@@ -60,14 +60,14 @@ public class VerificationActivity extends BaseActivity {
 		taskResult += "<b>" + getTime(DateFormat.getTimeInstance().format(tasks.get(tasks.size()-1).getManualDate().equals(DateUtils.EmptyDate) ? tasks.get(tasks.size()-1).getRealDate() : tasks.get(tasks.size()-1).getManualDate())) + "</b>";
 		taskResult += "bei einer Dauer von ";
 		taskResult += "<b>" + getInterval(tasks.get(0).getManualDate().equals(DateUtils.EmptyDate) ? tasks.get(0).getRealDate() : tasks.get(0).getManualDate(),tasks.get(tasks.size()-1).getManualDate().equals(DateUtils.EmptyDate) ? tasks.get(tasks.size()-1).getRealDate() : tasks.get(tasks.size()-1).getManualDate()) + "</b>";
-		taskResult += getString(R.string.minuten_einen) + " ";
+		taskResult += getString(R.string.minuten_einen) + "<br \\><br \\>";
 		
 		String[] arrayResultTask = getTasks();
 		int doneTasks = 0;
 		int undoneTasks = 1;
-		taskResult += "<br \\><br \\>" + getString(R.string.done_tasks) + " : " + "<br \\><b>" + arrayResultTask[doneTasks] + "</b>";
-		taskResult += "<br \\><br \\>" + getString(R.string.undone_tasks) + " : " + "<br \\><b>" + arrayResultTask[undoneTasks] + "</b>";
-		taskResult += "<br \\>" + getFlege();
+		taskResult += getString(R.string.done_tasks) + " : <br \\>" + ((arrayResultTask[doneTasks].equals("")) ? "<b>" + getString(R.string.there_are_no_done_tasks) + "</b>" : "<b>" + arrayResultTask[doneTasks] + "</b>") + "<br \\>";
+		taskResult += "<br \\>" + getString(R.string.undone_tasks) + " : <br \\>" + ((arrayResultTask[undoneTasks].equals("")) ? "<b>" + getString(R.string.there_are_no_undone_tasks) + "</b>" : "<b>" + arrayResultTask[undoneTasks] + "</b>") + "<br \\>";
+		taskResult += getFlege();
 		
 		tvVerification.setText(Html.fromHtml(taskResult));
 		answerInent = new Intent();
@@ -91,8 +91,8 @@ public class VerificationActivity extends BaseActivity {
 	}
 
 	private String getWorker(Worker worker) {
-		String workerName = worker.getName() + " ";
-		return workerName;
+		String[] workerName = worker.getName().split(" ");
+		return String.format("%s %s ",workerName[0], workerName[1]);
 	}
 	
 	private String getDate(String date) {
@@ -101,7 +101,8 @@ public class VerificationActivity extends BaseActivity {
 	}
 
 	private String getPatient(String patient) {
-		return patient + " "; 
+		String[] patientName = patient.split(" ") ;
+		return String.format("%s %s", patientName[0],patientName[1]); 
 	}
 
 	private String getTime(String time) {
@@ -144,6 +145,7 @@ public class VerificationActivity extends BaseActivity {
 				String connect = new Boolean((userRemark.getCheckboxes() & 1) == 1).toString();
 				String medChanges = new Boolean((userRemark.getCheckboxes() & 2) == 2).toString();
 				String pflege = new Boolean((userRemark.getCheckboxes() & 4) == 4).toString();
+				flege += getString(R.string.note) + " : <br \\>";
 				if(!connect.equals("false"))
 					flege += getString(R.string.enter_interval) + " : + <br \\>";
 				if(!medChanges.equals("false"))
@@ -151,7 +153,7 @@ public class VerificationActivity extends BaseActivity {
 				if(!pflege.equals("false"))
 					flege += getString(R.string.aubrplanmabige_pflege) + " : + <br \\>";
 				if(!userRemark.getName().equals(""))
-					flege += getString(R.string.other) + "\n" + userRemark.getName() + "\n";
+					flege += getString(R.string.other) + " : " + userRemark.getName();
 			}
 		}
 		return flege;
