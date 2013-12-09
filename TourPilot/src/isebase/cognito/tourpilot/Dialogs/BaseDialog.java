@@ -1,5 +1,7 @@
 package isebase.cognito.tourpilot.Dialogs;
 
+import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -11,6 +13,9 @@ public class BaseDialog extends DialogFragment{
 
 	private String title;
 	private String message;
+	
+	private String positiveName;
+	private String negativeName;
 	
 	protected BaseDialogListener listener;
 	
@@ -25,20 +30,27 @@ public class BaseDialog extends DialogFragment{
 	public BaseDialog(String title, String message){
 		this.title = title;
 		this.message = message;
+		this.positiveName = StaticResources.getBaseContext().getString( R.string.ok);
+		this.negativeName = StaticResources.getBaseContext().getString( R.string.cancel);
+		
 	}	
-	
+	public BaseDialog(String title, String message, String positiveName, String negativeName){
+		this(title, message);
+		this.positiveName = positiveName;
+		this.negativeName = negativeName;
+	}
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
 		adb.setTitle(title);
 		adb.setMessage(message);
-		adb.setPositiveButton(isebase.cognito.tourpilot.R.string.ok,
+		adb.setPositiveButton(positiveName,
 				new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int id) {
 							listener.onDialogPositiveClick(BaseDialog.this);
 						}
 					});
-		adb.setNegativeButton(isebase.cognito.tourpilot.R.string.cancel,
+		adb.setNegativeButton(negativeName,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						listener.onDialogNegativeClick(BaseDialog.this);

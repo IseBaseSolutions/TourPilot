@@ -71,7 +71,14 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		
 	private Button btEndTask;
 	private Button btStartTask;
-
+	
+	public final static int ACTIVITY_USERREMARKS_CODE = 0;
+	public final static int ACTIVITY_VERIFICATION_CODE = 1;
+	
+	public static String timeEndTasks;
+	
+	public static boolean IS_FLEGE_OK = true;
+	
 	private List<Information> infos;
 
 	private PatientRemark patientRemark;
@@ -127,6 +134,33 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		return true;
 	}
 	
+	@Override
+	public void onActivityResult(int activityCode, int resultCode, Intent data) {
+		super.onActivityResult(activityCode, resultCode, data);
+
+		switch(activityCode) {
+		case ACTIVITY_USERREMARKS_CODE:
+			if(resultCode == RESULT_OK) {
+				startVerificationActivity(ACTIVITY_VERIFICATION_CODE,!IS_FLEGE_OK);
+			}
+			break;
+		case ACTIVITY_VERIFICATION_CODE:
+			if(resultCode == RESULT_OK) {
+				saveData(true);
+				employment.setIsDone(true);
+				if(data.getIntExtra("Mode", 0) == UserRemarksActivity.SYNC_MODE)
+					startSyncActivity();
+				else
+					startPatientsActivity();
+			}else {
+				endTask.setRealDate(DateUtils.EmptyDate);
+				endTask.setState(eTaskState.UnDone);
+				fillUpTasks();
+			}
+			break;
+		}
+	}
+
 	private void checkEmploymentIsDone(){
 		if(isEmploymentDone()){
 			btStartTask.setEnabled(false);
@@ -195,7 +229,6 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		startTask.setRealDate(new Date());
 		startTask.setState(eTaskState.Done);
 		endTask.setRealDate(DateUtils.EmptyDate);
-
 		TaskManager.Instance().save(startTask);
 		TaskManager.Instance().save(endTask);
 		fillUpStartTask();
@@ -204,6 +237,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 	
 	public void btEndTaskTimerClick(View view) {
+		saveData(false);
 		checkLeavingState();
 	}
 	
@@ -222,7 +256,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 
 	@Override
 	public void onBackPressed() {
-		if(isClickable()){
+		if(!employment.isDone()||isClickable()) {
 			BaseDialog dialog = new BaseDialog(
 					getString(R.string.attention),
 					getString(R.string.dialog_task_proof_back));
@@ -273,12 +307,12 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	public void onChangeState(View view) {
 		if(!isClickable())
 		{
+			if (employment.isDone())
+				return;
 			startEmploymentDialog.show(getSupportFragmentManager(), "");
-			return;
 		}
 		Task task = (Task) view.getTag();
 		clickedCheckBox = view;
-		Date date = new Date(SystemClock.elapsedRealtime());
 		
 		task.setRealDate(new Date());
 		if (startTask.getManualDate().equals(DateUtils.EmptyDate))
@@ -386,10 +420,6 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		empl.setIsDone(true);
 		EmploymentIntervalManager.Instance().save(new EmploymentInterval(empl.getID(), empl.getStartTime(), empl.getStopTime()));
 		EmploymentManager.Instance().save(empl);
-		if(empl != null){
-			empl.setIsDone(true);
-			EmploymentManager.Instance().save(empl);
-		}
 	}
 	
 	private void clearEmployment() {
@@ -411,7 +441,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			showUndoneDialog();
 			return true;
 		case R.id.notes:
-			startUserRemarksActivity(UserRemarksActivity.SIMPLE_MODE);
+			startUserRemarksActivity(UserRemarksActivity.SIMPLE_MODE, ACTIVITY_USERREMARKS_CODE);
 			return true;
 		case R.id.info:
 			showPatientInfo(true);
@@ -464,12 +494,8 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			saveEmployment();
 			checkLeavingState();
 		}
-		else if (dialog.getTag().equals("dialogLeavingPatient")) {
-			saveData(true);
-			if (Option.Instance().getIsAuto())
-				startSyncActivity();
-			else
-				startPatientsActivity();
+		else if (dialog.getTag().equals("dialogCheckLeavingState")) {
+			startVerificationActivity(ACTIVITY_VERIFICATION_CODE, IS_FLEGE_OK);
 		}
 		else if (dialog.getTag().equals("dialogTasks")) {
 			StandardTaskDialog taskDialog = (StandardTaskDialog) dialog;
@@ -482,12 +508,11 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 
 	@Override
 	public void onDialogNegativeClick(DialogFragment dialog) {
-		if(dialog.getTag().equals("dialogLeavingPatient")){
-			saveData(false);
+		if(dialog.getTag().equals("dialogCheckLeavingState")){
 			if (Option.Instance().getIsAuto())
-				startUserRemarksActivity(UserRemarksActivity.SYNC_MODE);
+				startUserRemarksActivity(UserRemarksActivity.SYNC_MODE, ACTIVITY_USERREMARKS_CODE);
 			else
-				startUserRemarksActivity(UserRemarksActivity.NO_SYNC_MODE);
+				startUserRemarksActivity(UserRemarksActivity.NO_SYNC_MODE, ACTIVITY_USERREMARKS_CODE);
 		}
 		if(dialog.getTag().equals("dialogTasks")) {
 			Task task = (Task) clickedCheckBox.getTag();
@@ -520,23 +545,24 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		dialog.show(getSupportFragmentManager(), "");
 	}
 
-	private void checkLeavingState(){
-		BaseDialog dialogLeavingState = new BaseDialog(employment.getName(), getString(R.string.dialog_leaving_patient));
-		dialogLeavingState.show(getSupportFragmentManager(), "dialogLeavingPatient");
+	private void checkLeavingState() {		
+		BaseDialog dialogLeavingState = new BaseDialog(employment.getName(), getString(R.string.dialog_leaving_patient), getString(R.string.yes), getString(R.string.no));
+		dialogLeavingState.show(getSupportFragmentManager(), "dialogCheckLeavingState");
 		getSupportFragmentManager().executePendingTransactions();
 	}
 
 	private void saveData(Boolean clearEmployment){
-		if(isClickable()) {
+		if(!isEmploymentDone()) {
 			endTask.setRealDate(new Date());
 			endTask.setState(eTaskState.Done);
 			TaskManager.Instance().save(endTask);
-			fillUpEndTask();
-		} else
-			checkAllTasksAndFillUp(eTaskState.UnDone);
-		saveEmployment();
+			fillUpEndTask();			
+		}
 		if(clearEmployment)
+		{
+			saveEmployment();
 			clearEmployment();
+		}
 	}
 	
 	private void initHeadTasks() {
@@ -552,11 +578,14 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 	
 
-	protected void startUserRemarksActivity(Integer mode) {
+	protected void startUserRemarksActivity(Integer mode,int activityCode) {
 		Intent userRemarksActivity = new Intent(getApplicationContext(), UserRemarksActivity.class);
 		userRemarksActivity.putExtra("Mode", mode);
-		userRemarksActivity.putExtra("ViewMode", false);
-		startActivity(userRemarksActivity);
+		userRemarksActivity.putExtra("ViewMode",isEmploymentDone());
+		if(mode == UserRemarksActivity.SIMPLE_MODE)
+			startActivity(userRemarksActivity);
+		else
+			startActivityForResult(userRemarksActivity, activityCode);
 	}
 	
 	private void startCatalogsActivity() {
@@ -592,9 +621,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 	
 	private boolean isEmploymentDone(){
-		return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
-				&& !endTask.getRealDate().equals(DateUtils.EmptyDate)
-				|| DateUtils.getTodayDateOnly().getTime() < DateUtils.getDateOnly(startTask.getPlanDate()).getTime();
+		return employment.isDone();
 	}
 
 }
