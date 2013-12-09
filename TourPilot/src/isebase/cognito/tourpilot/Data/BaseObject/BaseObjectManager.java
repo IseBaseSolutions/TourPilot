@@ -517,6 +517,16 @@ public abstract class BaseObjectManager<T> {
 		return strDone;	
 	}
 	
+	public List<T> sortByStrIDs(List<T> items, String strIDs) {
+		List<T> sortedItems = new ArrayList<T>();
+		String[] arr = strIDs.contains(" ") ? strIDs.split(", ") : strIDs.split(",");
+		for(int i = 0; i < arr.length; i++)
+			for (T item : items)
+				if (Integer.parseInt(arr[i]) == ((BaseObject)item).getID())
+					sortedItems.add(item);
+		return sortedItems;
+	}
+	
 	public void updateNotSent(){
 		execSQL(String.format("update %1$s set was_sent = 1 where was_sent = 0",
 				getRecTableName()));

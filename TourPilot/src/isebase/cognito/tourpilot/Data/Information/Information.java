@@ -15,14 +15,14 @@ import java.util.Date;
 public class Information extends BaseObject {
 
 	public static final String EmploymentIDField = "employment_id";
-	public static final String PatientIDField = "patient_id";
+	public static final String InformationIDField = "information_id";
 	public static final String FromDateField = "from_date";
 	public static final String TilldateField = "till_date";
 	public static final String ReadTimeField = "read_time";
 	public static final String IsFromServerField = "is_from_server";
 
 	private long employmentID;
-	private int patientID;
+	private int informationID;
 	private Date fromDate;
 	private Date tillDate;
 	private Date readTime;
@@ -38,14 +38,14 @@ public class Information extends BaseObject {
 		this.employmentID = employmentID;
 	}
 
-	@MapField(DatabaseField = PatientIDField)
-	public int getPatientID() {
-		return patientID;
+	@MapField(DatabaseField = InformationIDField)
+	public int getInformationID() {
+		return informationID;
 	}
 
-	@MapField(DatabaseField = PatientIDField)
-	public void setPatientID(int patientID) {
-		this.patientID = patientID;
+	@MapField(DatabaseField = InformationIDField)
+	public void setInformationID(int informationID) {
+		this.informationID = informationID;
 	}
 
 	@MapField(DatabaseField = FromDateField)
@@ -96,7 +96,7 @@ public class Information extends BaseObject {
 		StringParser parsingString = new StringParser(initString);
 		parsingString.next(";");
 		setIsFromServer(true);
-		setID(Integer.parseInt(parsingString.next(";")));
+		setInformationID(Integer.parseInt(parsingString.next(";")));
 		setEmploymentID(Long.parseLong(parsingString.next(";")));
 		SimpleDateFormat format = new SimpleDateFormat("ddMMyyyyHHmm");
 		try {
@@ -120,7 +120,7 @@ public class Information extends BaseObject {
 	@Override
 	protected void clear() {
 		super.clear();
-		setPatientID(EMPTY_ID);
+		setInformationID(EMPTY_ID);
 		setFromDate(DateUtils.EmptyDate);
 		setTillDate(DateUtils.EmptyDate);
 		setReadTime(DateUtils.EmptyDate);

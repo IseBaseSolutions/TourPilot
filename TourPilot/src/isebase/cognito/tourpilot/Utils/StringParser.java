@@ -8,7 +8,7 @@ final public class StringParser {
 
     public StringParser(String initString)
     {
-        fldInitString=initString;
+        fldInitString = initString;
     }
 
     public String next(String token)
@@ -24,6 +24,10 @@ final public class StringParser {
     public String next()
     {
         return fldInitString.substring(pos1);
+    }
+    
+    public boolean contains(String string) {
+    	return fldInitString.contains(string);
     }
 
 }

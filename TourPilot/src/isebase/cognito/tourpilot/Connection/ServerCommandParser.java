@@ -13,6 +13,7 @@ import isebase.cognito.tourpilot.Data.Doctor.Doctor;
 import isebase.cognito.tourpilot.Data.Doctor.DoctorManager;
 import isebase.cognito.tourpilot.Data.Information.Information;
 import isebase.cognito.tourpilot.Data.Information.InformationManager;
+import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemark;
@@ -64,10 +65,6 @@ public class ServerCommandParser {
 
 	private SynchronizationHandler syncHandler;
 
-	private String strVerlink;
-//	private boolean needShowVersion;
-//	private static long timeDiff = 0;
-
 	public ServerCommandParser(SynchronizationHandler sh) {
 		syncHandler = sh;
 	}
@@ -91,14 +88,14 @@ public class ServerCommandParser {
 			break;
 		case TIME:
 			if (commandLine.indexOf(SERVER_CURRENT_VERSION) == 0)
-				// TODO Check version
-				// CheckVersion(commandLine.substring(SERVER_CURRENT_VERSION.length()));
+				Option.Instance().setPalmVersion(commandLine.substring(SERVER_CURRENT_VERSION.length()));
 			if (commandLine.indexOf(SERVER_VERSION_LINK) == 0)
-				strVerlink = commandLine.substring(SERVER_VERSION_LINK.length());
+				Option.Instance().setVersionLink(commandLine.substring(SERVER_VERSION_LINK.length()));
 			if (commandLine.indexOf(SERVER_SET_TIME_KEY) == 0)
 				// TODO Set time
 				// SetTime(commandLine.substring(SERVER_SET_TIME_KEY.length()));
-				break;
+				Option.Instance().save();
+			break;
 		case WORKER:
 			if (commandActionType == NEED_TO_ADD) {
 				Worker item = new Worker(commandLine);

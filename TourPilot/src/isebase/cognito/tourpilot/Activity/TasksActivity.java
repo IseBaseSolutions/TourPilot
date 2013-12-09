@@ -20,6 +20,7 @@ import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
+import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
 import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.BlutdruckTaskDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.StandardTaskDialog;
@@ -29,11 +30,14 @@ import isebase.cognito.tourpilot.Templates.TaskAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.DialogFragment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -70,14 +74,17 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 
 	private List<Information> infos;
 
-	private PatientRemark patientRemark;	
+	private PatientRemark patientRemark;
+	
+	private DialogFragment startEmploymentDialog;
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		try{
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_tasks);
-			initControls();	
+			initControls();
+			initDialogs();	
 			reloadData();	
 			fillUpTasks();
 			checkEmploymentIsDone();
@@ -265,9 +272,14 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		
 	public void onChangeState(View view) {
 		if(!isClickable())
+		{
+			startEmploymentDialog.show(getSupportFragmentManager(), "");
 			return;
+		}
 		Task task = (Task) view.getTag();
 		clickedCheckBox = view;
+		Date date = new Date(SystemClock.elapsedRealtime());
+		
 		task.setRealDate(new Date());
 		if (startTask.getManualDate().equals(DateUtils.EmptyDate))
 			task.setManualDate(DateUtils.getAverageDate(startTask.getManualDate(), endTask.getManualDate()));
@@ -334,6 +346,10 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		tvEndTaskTime = (TextView) findViewById(R.id.tvEndTaskTime);
 		tvEndTaskDate = (TextView) findViewById(R.id.tvEndTaskDate);
 	}
+	
+	private void initDialogs() {
+		startEmploymentDialog = new BaseInfoDialog(getString(R.string.dialog_employment_not_started), getString(R.string.dialog_start_employment));
+	}
 
 	private void checkAllTasks(eTaskState state){
 		checkAllTasks(state, new Date());
@@ -395,7 +411,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			showUndoneDialog();
 			return true;
 		case R.id.notes:
-			startNotesActivity();
+			startUserRemarksActivity(UserRemarksActivity.SIMPLE_MODE);
 			return true;
 		case R.id.info:
 			showPatientInfo(true);
@@ -546,13 +562,6 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	private void startCatalogsActivity() {
 		Intent catalogsActivity = new Intent(getApplicationContext(), CatalogsActivity.class);
 		startActivity(catalogsActivity);
-	}
-	
-	private void startNotesActivity() {
-		Intent notesActivity = new Intent(getApplicationContext(), UserRemarksActivity.class);
-		notesActivity.putExtra("Mode", UserRemarksActivity.SIMPLE_MODE);
-		notesActivity.putExtra("ViewMode", isEmploymentDone());
-		startActivityForResult(notesActivity, -1);
 	}
 	
 	private void startAddressActivity() {

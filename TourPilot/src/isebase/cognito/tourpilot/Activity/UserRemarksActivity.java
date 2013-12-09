@@ -25,9 +25,9 @@ public class UserRemarksActivity extends BaseActivity {
 	
 	private UserRemark userRemark;
 	
-	public final static Integer SIMPLE_MODE = 0;
-	public final static Integer SYNC_MODE = 1;
-	public final static Integer NO_SYNC_MODE = 2;
+	public final static int SIMPLE_MODE = 0;
+	public final static int SYNC_MODE = 1;
+	public final static int NO_SYNC_MODE = 2;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,18 +87,20 @@ public class UserRemarksActivity extends BaseActivity {
 		if(bundle == null)
 			return;
 		Integer mode = (Integer) bundle.get("Mode");
-		if (SIMPLE_MODE == mode)
-			finish();
-		else if (SYNC_MODE == mode)
+		switch(mode)
 		{
-			clearEmployment();
-			startSyncActivity();
-		}
-		else if (NO_SYNC_MODE == mode)
-		{
-			clearEmployment();
-			startPatientsActivity();
-		}		
+			case SIMPLE_MODE:
+				finish();
+				break;
+			case SYNC_MODE:
+				clearEmployment();
+				startSyncActivity();
+				break;
+			case NO_SYNC_MODE:
+				clearEmployment();
+				startPatientsActivity();
+				break;
+		}	
 	}
 	
 	private void clearEmployment() {
