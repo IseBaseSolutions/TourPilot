@@ -10,6 +10,8 @@ import java.util.TimeZone;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
+import isebase.cognito.tourpilot.Data.EmploymentVerification.EmploymentVerification;
+import isebase.cognito.tourpilot.Data.EmploymentVerification.EmploymentVerificationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
@@ -33,7 +35,7 @@ public class VerificationActivity extends BaseActivity {
 	private List<Task> tasks;
 	private TextView tvVerification;
 
-	private String taskResult;
+	private String taskVerification;
 
 	private Employment employment;
 	
@@ -46,30 +48,30 @@ public class VerificationActivity extends BaseActivity {
 		employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
 		tasks = TaskManager.Instance().load(Task.EmploymentIDField, String.valueOf(Option.Instance().getEmploymentID()));
 		
-		taskResult = "";
+		taskVerification = "";
 
-		taskResult += "<b>" + getWorker(Option.Instance().getWorker()) + "</b>";
-		taskResult += "hat am ";
+		taskVerification += "<b>" + getWorker(Option.Instance().getWorker()) + "</b>";
+		taskVerification += "hat am ";
 		
-		taskResult += "<b>" + getDate(DateUtils.DateFormat.format(employment.getDate())) + "</b>";
-		taskResult += "bei Patient ";
-		taskResult += "<b>" + getPatient(employment.getName()) + "</b>";
-		taskResult += "in der Zeit von: ";
-		taskResult += "<b>" + getTime(DateFormat.getTimeInstance().format(tasks.get(0).getManualDate().equals(DateUtils.EmptyDate) ? tasks.get(0).getRealDate() : tasks.get(0).getManualDate())) + "</b>";
-		taskResult += "bis ";
-		taskResult += "<b>" + getTime(DateFormat.getTimeInstance().format(tasks.get(tasks.size()-1).getManualDate().equals(DateUtils.EmptyDate) ? tasks.get(tasks.size()-1).getRealDate() : tasks.get(tasks.size()-1).getManualDate())) + "</b>";
-		taskResult += "bei einer Dauer von ";
-		taskResult += "<b>" + getInterval(tasks.get(0).getManualDate().equals(DateUtils.EmptyDate) ? tasks.get(0).getRealDate() : tasks.get(0).getManualDate(),tasks.get(tasks.size()-1).getManualDate().equals(DateUtils.EmptyDate) ? tasks.get(tasks.size()-1).getRealDate() : tasks.get(tasks.size()-1).getManualDate()) + "</b>";
-		taskResult += getString(R.string.minuten_einen) + "<br \\><br \\>";
+		taskVerification += "<b>" + getDate(DateUtils.DateFormat.format(employment.getDate())) + "</b>";
+		taskVerification += "bei Patient ";
+		taskVerification += "<b>" + getPatient(employment.getName()) + "</b>";
+		taskVerification += "in der Zeit von: ";
+		taskVerification += "<b>" + getTime(DateFormat.getTimeInstance().format(tasks.get(0).getManualDate().equals(DateUtils.EmptyDate) ? tasks.get(0).getRealDate() : tasks.get(0).getManualDate())) + "</b>";
+		taskVerification += "bis ";
+		taskVerification += "<b>" + getTime(DateFormat.getTimeInstance().format(tasks.get(tasks.size()-1).getManualDate().equals(DateUtils.EmptyDate) ? tasks.get(tasks.size()-1).getRealDate() : tasks.get(tasks.size()-1).getManualDate())) + "</b>";
+		taskVerification += "bei einer Dauer von ";
+		taskVerification += "<b>" + getInterval(tasks.get(0).getManualDate().equals(DateUtils.EmptyDate) ? tasks.get(0).getRealDate() : tasks.get(0).getManualDate(),tasks.get(tasks.size()-1).getManualDate().equals(DateUtils.EmptyDate) ? tasks.get(tasks.size()-1).getRealDate() : tasks.get(tasks.size()-1).getManualDate()) + "</b>";
+		taskVerification += getString(R.string.minuten_einen) + "<br \\><br \\>";
 		
 		String[] arrayResultTask = getTasks();
 		int doneTasks = 0;
 		int undoneTasks = 1;
-		taskResult += getString(R.string.done_tasks) + " : <br \\>" + ((arrayResultTask[doneTasks].equals("")) ? "<b>" + getString(R.string.there_are_no_done_tasks) + "</b>" : "<b>" + arrayResultTask[doneTasks] + "</b>") + "<br \\>";
-		taskResult += "<br \\>" + getString(R.string.undone_tasks) + " : <br \\>" + ((arrayResultTask[undoneTasks].equals("")) ? "<b>" + getString(R.string.there_are_no_undone_tasks) + "</b>" : "<b>" + arrayResultTask[undoneTasks] + "</b>") + "<br \\>";
-		taskResult += getFlege();
+		taskVerification += getString(R.string.done_tasks) + " : <br \\>" + ((arrayResultTask[doneTasks].equals("")) ? "<b>" + getString(R.string.there_are_no_done_tasks) + "</b>" : "<b>" + arrayResultTask[doneTasks] + "</b>") + "<br \\>";
+		taskVerification += "<br \\>" + getString(R.string.undone_tasks) + " : <br \\>" + ((arrayResultTask[undoneTasks].equals("")) ? "<b>" + getString(R.string.there_are_no_undone_tasks) + "</b>" : "<b>" + arrayResultTask[undoneTasks] + "</b>") + "<br \\>";
+		taskVerification += getFlege();
 		
-		tvVerification.setText(Html.fromHtml(taskResult));
+		tvVerification.setText(Html.fromHtml(taskVerification));
 		answerInent = new Intent();
 	}
 
@@ -81,6 +83,7 @@ public class VerificationActivity extends BaseActivity {
 	}
 
 	public void onClickButtonOk(View view) {
+		EmploymentVerificationManager.Instance().save(new EmploymentVerification(Option.Instance().getEmploymentID(), taskVerification));
 		setResult(VerificationActivity.RESULT_OK, answerInent);
 		finish();
 	}

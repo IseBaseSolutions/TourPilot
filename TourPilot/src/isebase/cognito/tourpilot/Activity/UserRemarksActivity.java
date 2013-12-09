@@ -5,6 +5,8 @@ import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
+import isebase.cognito.tourpilot.Data.EmploymentVerification.EmploymentVerification;
+import isebase.cognito.tourpilot.Data.EmploymentVerification.EmploymentVerificationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemark;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
@@ -81,28 +83,12 @@ public class UserRemarksActivity extends BaseActivity {
 	
 	public void btUserRemarkSaveClick(View view){
 		pickUp();
-		save();		
+		save();
 		Intent intent = getIntent();
 		Bundle bundle = intent.getExtras();
 		
 		if(bundle == null)
 			return;
-		Integer mode = (Integer) bundle.get("Mode");
-//		switch(mode)
-//		{
-//			case SIMPLE_MODE:
-//				finish();
-//				break;
-//			case SYNC_MODE:
-//				clearEmployment();
-//				startSyncActivity();
-//				break;
-//			case NO_SYNC_MODE:
-//				clearEmployment();
-//				startPatientsActivity();
-//				break;
-//		}
-
 		setResult(UserRemarksActivity.RESULT_OK,intent);
 		finish();
 		
