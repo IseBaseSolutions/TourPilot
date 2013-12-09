@@ -88,20 +88,21 @@ public class UserRemarksActivity extends BaseActivity {
 		if(bundle == null)
 			return;
 		Integer mode = (Integer) bundle.get("Mode");
-		switch(mode)
-		{
-			case SIMPLE_MODE:
-				finish();
-				break;
-			case SYNC_MODE:
-				clearEmployment();
-				startSyncActivity();
-				break;
-			case NO_SYNC_MODE:
-				clearEmployment();
-				startPatientsActivity();
-				break;
-		}
+//		switch(mode)
+//		{
+//			case SIMPLE_MODE:
+//				finish();
+//				break;
+//			case SYNC_MODE:
+//				clearEmployment();
+//				startSyncActivity();
+//				break;
+//			case NO_SYNC_MODE:
+//				clearEmployment();
+//				startPatientsActivity();
+//				break;
+//		}
+
 		setResult(UserRemarksActivity.RESULT_OK,intent);
 		finish();
 		

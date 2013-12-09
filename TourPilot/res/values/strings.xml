@@ -41,8 +41,7 @@
     <string name="medications_changed">Medikation hat sich geändert.</string>
     <string name="aubrplanmabige_pflege">Außerplanmäßige Pflege-Visite sind erforderlich.</string>
     <string name="visit_notes">Besuchsvermerke</string>
-    <string name="other">Sonstiges: (bitte eintragen)</string>
-    <string name="note">Note:</string>
+    <string name="note">Note</string>
 
     <!-- Tasks -->
     <string name="start_task">Einsatzbeginn</string>
@@ -151,5 +150,8 @@
     <string name="minuten_einen">Minuten einen Einsatz durchgeführt. Folgende Daten werden übermittelt:</string>
     <string name="done_tasks">durchgeführt wurde</string>
     <string name="undone_tasks">NICHT DURCHGEFÜHRT WURDE</string>
+    <string name="there_are_no_done_tasks">There are no done task</string>
+    <string name="there_are_no_undone_tasks">There are no undone task</string>
+    <string name="other">Sonstiges</string>
 
 </resources>
