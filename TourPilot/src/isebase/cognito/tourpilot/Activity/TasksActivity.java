@@ -275,7 +275,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		if(task.getQualityResult().isEmpty())
 			return;
 		DialogFragment dialog = null;
-		switch(task.getQuality()){
+		switch(task.getQuality()) {
 			case AdditionalTask.WEIGHT:
 				dialog = new StandardTaskDialog(task, getString(R.string.weight), task.getQualityResult(), getString(R.string.gewicht_value), TaskDialogTypes.weightTypeInput);
 				break;
@@ -313,7 +313,6 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		}
 		Task task = (Task) view.getTag();
 		clickedCheckBox = view;
-		
 		task.setRealDate(new Date());
 		if (startTask.getManualDate().equals(DateUtils.EmptyDate))
 			task.setManualDate(DateUtils.getAverageDate(startTask.getManualDate(), endTask.getManualDate()));
