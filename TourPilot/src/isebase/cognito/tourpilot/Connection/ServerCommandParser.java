@@ -1,5 +1,7 @@
 package isebase.cognito.tourpilot.Connection;
 
+import java.util.Date;
+
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
@@ -28,6 +30,7 @@ import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
+import isebase.cognito.tourpilot.Utils.StringParser;
 
 public class ServerCommandParser {
 
@@ -77,7 +80,7 @@ public class ServerCommandParser {
 		boolean blnRes = true;
 		if (commandLine.length() > 1)
 			commandActionType = commandLine.charAt(1);
-		if (commandLine.equals(END)) // pos_start = strData.length();
+		if (commandLine.equals(END))
 			blnRes = false;
 		if (commandLine.equals(""))
 			return false;
@@ -92,9 +95,12 @@ public class ServerCommandParser {
 			if (commandLine.indexOf(SERVER_VERSION_LINK) == 0)
 				Option.Instance().setVersionLink(commandLine.substring(SERVER_VERSION_LINK.length()));
 			if (commandLine.indexOf(SERVER_SET_TIME_KEY) == 0)
-				// TODO Set time
-				// SetTime(commandLine.substring(SERVER_SET_TIME_KEY.length()));
+			{
+				String s = commandLine.substring(SERVER_SET_TIME_KEY.length());
+				Long time = Long.parseLong(s.substring(0, s.length() - 1));
+				Option.Instance().setServerTime(time);
 				Option.Instance().save();
+			}
 			break;
 		case WORKER:
 			if (commandActionType == NEED_TO_ADD) {

@@ -21,6 +21,7 @@ public class Option {
 	public static final String IsAutoField = "is_auto";
 	public static final String IsWorkerActivityField = "is_worker_activity";
 	public static final String PinField = "pin";
+	public static final String ServerTimeField = "server_time";
 	public static boolean testMode = false;
 	private Worker worker;
 	private TelephonyManager phoneManager = StaticResources.phoneManager;
@@ -36,6 +37,7 @@ public class Option {
 	private int workID;
 	private int serverPort;
 	private int id;
+	private long serverTime;
 	private String pin;
 	
 	private String palmVersion;
@@ -152,6 +154,16 @@ public class Option {
 	@MapField(DatabaseField = BaseObject.IDField)
 	public void setID(int id) {
 		this.id = id;
+	}
+	
+	@MapField(DatabaseField = ServerTimeField)
+	public long getServerTime() {
+		return serverTime;
+	}
+	
+	@MapField(DatabaseField = ServerTimeField)
+	public void setServerTime(long serverTime) {
+		this.serverTime = serverTime;
 	}
 	
 	public String getPalmVersion() {
