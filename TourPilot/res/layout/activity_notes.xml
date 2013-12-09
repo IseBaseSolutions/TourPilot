@@ -28,7 +28,7 @@
         android:id="@+id/chbPflege"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/aubrplanmäbige_pflege"
+        android:text="@string/aubrplanmabige_pflege"
         android:textSize="@dimen/text_size_middle" />
 
     <TextView

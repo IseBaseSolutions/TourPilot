@@ -84,27 +84,33 @@ public class UserRemarksActivity extends BaseActivity {
 		save();		
 		Intent intent = getIntent();
 		Bundle bundle = intent.getExtras();
+		
 		if(bundle == null)
 			return;
-		Integer mode = (Integer) bundle.get("Mode");
-		if (SIMPLE_MODE == mode)
-			finish();
-		else if (SYNC_MODE == mode)
-		{
-			clearEmployment();
-			startSyncActivity();
-		}
-		else if (NO_SYNC_MODE == mode)
-		{
-			clearEmployment();
-			startPatientsActivity();
-		}		
+//		Integer mode = (Integer) bundle.get("Mode");
+		setResult(UserRemarksActivity.RESULT_OK,intent);
+		finish();
+//		if (SIMPLE_MODE == mode)
+//			finish();
+//		else if (SYNC_MODE == mode)
+//		{
+//			clearEmployment();
+//			startSyncActivity();
+//		}
+//		else if (NO_SYNC_MODE == mode)
+//		{
+//			clearEmployment();
+//			startPatientsActivity();
+//		}
+		
 	}
 	
-	private void clearEmployment() {
-		Option.Instance().setEmploymentID(BaseObject.EMPTY_ID);
-		Option.Instance().save();
+	@Override
+	public void onBackPressed() {
+		setResult(UserRemarksActivity.RESULT_CANCELED);
+		finish();
 	}
+	
 	
 	private void setWriteAble(){
 		Intent intentSave = getIntent();
@@ -118,13 +124,16 @@ public class UserRemarksActivity extends BaseActivity {
 			TextView tvOther = (TextView)findViewById(R.id.tvOther);
 			EditText etOther = (EditText)findViewById(R.id.etOther);
 			Button btUserRemarkSave = (Button)findViewById(R.id.btUserRemarkSave);
-			
-			chbConnect.setClickable(!viewMode);
-			chbMedchanges.setClickable(!viewMode);
-			chbPflege.setClickable(!viewMode);
-			tvOther.setClickable(!viewMode);
-			etOther.setFocusable(!viewMode);
-			btUserRemarkSave.setEnabled(!viewMode);
+			try {
+				chbConnect.setClickable(!viewMode);
+				chbMedchanges.setClickable(!viewMode);
+				chbPflege.setClickable(!viewMode);
+				tvOther.setClickable(!viewMode);
+				etOther.setFocusable(!viewMode);
+				btUserRemarkSave.setEnabled(!viewMode);
+			} catch(Exception er) {
+				er.printStackTrace();
+			}
 		}
 	}
 }

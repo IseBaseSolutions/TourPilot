@@ -83,6 +83,9 @@
         <activity
             android:name="isebase.cognito.tourpilot.Activity.AdditionalEmploymentsActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.VerificationActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

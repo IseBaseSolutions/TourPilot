@@ -39,7 +39,7 @@
     <string name="enter_interval">Intervall eingeben</string>
     <string name="connect_with">Kontaktaufnahme mit mir ist nötig.</string>
     <string name="medications_changed">Medikation hat sich geändert.</string>
-    <string name="aubrplanmäbige_pflege">Außerplanmäßige Pflege-Visite sind erforderlich.</string>
+    <string name="aubrplanmabige_pflege">Außerplanmäßige Pflege-Visite sind erforderlich.</string>
     <string name="visit_notes">Besuchsvermerke</string>
     <string name="other">Sonstiges: (bitte eintragen)</string>
 
@@ -134,11 +134,19 @@
     <string name="dialog_no_patients">Keine Patienten vorhanden</string>
     <string name="dialog_empty_tour">Die Tour ist leer</string>
     <string name="dialog_clear_database">Daten leeren?</string>
-    
- <!-- Errors -->
+
+    <!-- Errors -->
     <string name="err_no_phone">Keine Telefon-Nr.</string>
     <string name="err_no_address">Keine Adresse</string>
     <string name="err_no_patients">Keine Patienten</string>
-    <string name="no_any_patient">Keine Patienten ausgewählt</string>    
+    <string name="no_any_patient">Keine Patienten ausgewählt</string>
+    <string name="title_activity_verification">VerificationActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    
+    <!-- Verification -->
+    <string name="minuten_einen">Minuten einen Einsatz durchgeführt. Folgende Daten werden übermittelt:</string>
+    <string name="done_tasks">durchgeführt wurde</string>
+    <string name="undone_tasks">NICHT DURCHGEFÜHRT WURDE</string>
 
 </resources>
