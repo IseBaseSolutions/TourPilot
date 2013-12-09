@@ -310,6 +310,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			if (employment.isDone())
 				return;
 			startEmploymentDialog.show(getSupportFragmentManager(), "");
+			return;
 		}
 		Task task = (Task) view.getTag();
 		clickedCheckBox = view;

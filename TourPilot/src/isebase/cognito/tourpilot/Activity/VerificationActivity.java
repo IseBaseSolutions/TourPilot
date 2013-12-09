@@ -65,8 +65,8 @@ public class VerificationActivity extends BaseActivity {
 		String[] arrayResultTask = getTasks();
 		int doneTasks = 0;
 		int undoneTasks = 1;
-		taskResult += "<br \\><br \\>" + getString(R.string.done_tasks) + " : " + "<b>" + arrayResultTask[doneTasks] + "</b>";
-		taskResult += "<br \\><br \\>" + getString(R.string.undone_tasks) + " : " + "<b>" + arrayResultTask[undoneTasks] + "</b>";
+		taskResult += "<br \\><br \\>" + getString(R.string.done_tasks) + " : " + "<br \\><b>" + arrayResultTask[doneTasks] + "</b>";
+		taskResult += "<br \\><br \\>" + getString(R.string.undone_tasks) + " : " + "<br \\><b>" + arrayResultTask[undoneTasks] + "</b>";
 		taskResult += "<br \\>" + getFlege();
 		
 		tvVerification.setText(Html.fromHtml(taskResult));
@@ -122,10 +122,10 @@ public class VerificationActivity extends BaseActivity {
 		tasksExceptFirstAndLast.remove(tasksExceptFirstAndLast.size() - 1);
 		for(Task task : tasksExceptFirstAndLast) { 
 			if(task.getState() == eTaskState.Done) {
-				sTasks[0] += task.getName() + (task.getQualityResult().equals("") ? "" : (" (" + task.getQualityResult()) + "), ");
+				sTasks[0] +=  " - " + task.getName() + (task.getQualityResult().equals("") ? "" : (" (" + task.getQualityResult()) + ")") + "<br \\>";
 			}
 			else
-				sTasks[1] += task.getName() + ", ";
+				sTasks[1] += " - " + task.getName() + "<br \\>";
 		}
 		return sTasks;
 	}
