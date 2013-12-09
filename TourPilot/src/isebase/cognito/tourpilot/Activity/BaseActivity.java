@@ -107,4 +107,10 @@ public class BaseActivity extends FragmentActivity{
 		startActivity(userRemarksActivity);
 	}
 
+	protected void startVerificationActivity(Integer requestCode,boolean isFlegeOK) {
+		Intent VerificationActivity = new Intent(getApplicationContext(), VerificationActivity.class);
+		VerificationActivity.putExtra("isFlegeOK", isFlegeOK);
+		startActivityForResult(VerificationActivity, requestCode);
+	}
+	
 }
