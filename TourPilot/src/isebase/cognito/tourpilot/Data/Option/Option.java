@@ -1,10 +1,16 @@
 package isebase.cognito.tourpilot.Data.Option;
 
+import java.util.Date;
+
+import isebase.cognito.tourpilot.Connection.ConnectionAsyncTask;
+import isebase.cognito.tourpilot.Connection.ConnectionStatus;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataBase.MapField;
+import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
+import isebase.cognito.tourpilot.Utils.DateUtils;
 import android.telephony.TelephonyManager;
 
 public class Option {
@@ -21,7 +27,7 @@ public class Option {
 	public static final String IsAutoField = "is_auto";
 	public static final String IsWorkerActivityField = "is_worker_activity";
 	public static final String PinField = "pin";
-	public static final String ServerTimeField = "server_time";
+	public static final String ServerTimeDifferenceField = "server_time_difference";
 	public static boolean testMode = false;
 	private Worker worker;
 	private TelephonyManager phoneManager = StaticResources.phoneManager;
@@ -37,7 +43,7 @@ public class Option {
 	private int workID;
 	private int serverPort;
 	private int id;
-	private long serverTime;
+	private long serverTimeDifference;
 	private String pin;
 	
 	private String palmVersion;
@@ -156,14 +162,14 @@ public class Option {
 		this.id = id;
 	}
 	
-	@MapField(DatabaseField = ServerTimeField)
-	public long getServerTime() {
-		return serverTime;
+	@MapField(DatabaseField = ServerTimeDifferenceField)
+	public long getServerTimeDifference() {
+		return serverTimeDifference;
 	}
 	
-	@MapField(DatabaseField = ServerTimeField)
-	public void setServerTime(long serverTime) {
-		this.serverTime = serverTime;
+	@MapField(DatabaseField = ServerTimeDifferenceField)
+	public void setServerTimeDifference(long serverTimeDifference) {
+		this.serverTimeDifference = serverTimeDifference;
 	}
 	
 	public String getPalmVersion() {
@@ -242,5 +248,5 @@ public class Option {
 	public void save() {
 		optionManager.save(Option.Instance());
 	}
-
+	
 }

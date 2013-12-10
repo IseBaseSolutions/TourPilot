@@ -65,8 +65,8 @@ public class VerificationActivity extends BaseActivity {
 		String[] arrayResultTask = getTasks();
 		int doneTasks = 0;
 		int undoneTasks = 1;
-		taskResult += getString(R.string.done_tasks) + " : <br \\>" + ((arrayResultTask[doneTasks].equals("")) ? "<b>" + getString(R.string.there_are_no_done_tasks) + "</b>" : "<b>" + arrayResultTask[doneTasks] + "</b>") + "<br \\>";
-		taskResult += "<br \\>" + getString(R.string.undone_tasks) + " : <br \\>" + ((arrayResultTask[undoneTasks].equals("")) ? "<b>" + getString(R.string.there_are_no_undone_tasks) + "</b>" : "<b>" + arrayResultTask[undoneTasks] + "</b>") + "<br \\>";
+		taskResult += "<b>" + getString(R.string.done_tasks) + "</b> : <br \\>" + ((arrayResultTask[doneTasks].equals("")) ? "<b>" + getString(R.string.there_are_no_done_tasks) + "</b>" : arrayResultTask[doneTasks]) + "<br \\>";
+		taskResult += "<br \\><b>" + getString(R.string.undone_tasks) + "</b> : <br \\>" + ((arrayResultTask[undoneTasks].equals("")) ? "<b>" + getString(R.string.there_are_no_undone_tasks) + "</b>" : arrayResultTask[undoneTasks]) + "<br \\>";
 		taskResult += getFlege();
 		
 		tvVerification.setText(Html.fromHtml(taskResult));

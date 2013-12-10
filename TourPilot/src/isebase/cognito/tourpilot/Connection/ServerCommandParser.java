@@ -97,8 +97,8 @@ public class ServerCommandParser {
 			if (commandLine.indexOf(SERVER_SET_TIME_KEY) == 0)
 			{
 				String s = commandLine.substring(SERVER_SET_TIME_KEY.length());
-				Long time = Long.parseLong(s.substring(0, s.length() - 1));
-				Option.Instance().setServerTime(time);
+				Long serverTime = Long.parseLong(s.substring(0, s.length() - 1));
+				Option.Instance().setServerTimeDifference(serverTime - (new Date()).getTime());
 				Option.Instance().save();
 			}
 			break;
