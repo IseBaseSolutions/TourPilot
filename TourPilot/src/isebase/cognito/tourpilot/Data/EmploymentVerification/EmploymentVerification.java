@@ -1,5 +1,7 @@
 package isebase.cognito.tourpilot.Data.EmploymentVerification;
 
+import java.util.Date;
+
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.DataBase.MapField;
 
@@ -10,6 +12,15 @@ public class EmploymentVerification extends BaseObject {
 	
 	private long employmentID;
 	private String verificationInfo;
+	
+	private long workerID;
+	private long patientID;
+	private String dateBegin;
+	private String dateEnd;
+	private String additionalWorksIDs;
+	private String doneTasksIDs;
+	private String undoneTasksIDs;
+	private String userRemarksMarks;
 	
 	@MapField(DatabaseField = EmploymentIDField)
 	public long getEmploymentID() {
@@ -31,8 +42,15 @@ public class EmploymentVerification extends BaseObject {
 		this.verificationInfo = verificationInfo;
 	}
 	
-	public EmploymentVerification() {
-		
+	public EmploymentVerification(long workerID, long patientID, String dateBegin, String dateEnd, String additionalWorksIDs, String doneTasksIDs, String undoneTasksIDs, String userRemarksMarks) {
+		this.workerID = workerID;
+		this.patientID = patientID;
+		this.dateBegin = dateBegin;
+		this.dateEnd = dateEnd;
+		this.additionalWorksIDs = additionalWorksIDs;
+		this.doneTasksIDs = doneTasksIDs;
+		this.undoneTasksIDs = undoneTasksIDs;
+		this.userRemarksMarks = userRemarksMarks;
 	}
 	
 	public EmploymentVerification(long employmentID, String verificationInfo) {
@@ -40,6 +58,9 @@ public class EmploymentVerification extends BaseObject {
 		this.verificationInfo = verificationInfo;
 	}
 	
+	public EmploymentVerification() {
+		
+	}
 	@Override
 	public String getDone() {
 		return "S;" + getEmploymentID() + ";" + getVerificationInfo();
