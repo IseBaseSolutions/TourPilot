@@ -193,9 +193,8 @@ public class VerificationActivity extends BaseActivity {
 		}
 		String userRemarks = getFlegeMarks();
 		
-		EmploymentVerificationManager.Instance().save(new EmploymentVerification(workerID, patientID, dateBegin, dateEnd, additionalyTasksIDs, doneTasksIDs, undoneTasksIDs, userRemarks));
-		
-		EmploymentVerificationManager.Instance().save(new EmploymentVerification(Option.Instance().getEmploymentID(), taskVerification));
+		EmploymentVerificationManager.Instance().save(new EmploymentVerification(workerID, patientID, dateBegin, 
+				dateEnd, additionalyTasksIDs, doneTasksIDs, undoneTasksIDs, userRemarks));
 	}
 
 	private String getFlegeMarks() {

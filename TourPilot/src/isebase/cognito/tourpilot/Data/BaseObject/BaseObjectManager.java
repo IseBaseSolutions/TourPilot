@@ -1,5 +1,6 @@
 package isebase.cognito.tourpilot.Data.BaseObject;
 
+import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.Utilizer;
@@ -513,7 +514,6 @@ public abstract class BaseObjectManager<T> {
 		String strDone = "";
 		for (T element : elements)
 			strDone += ((BaseObject)element).getDone() + "\0";
-		updateNotSent();
 		return strDone;	
 	}
 	

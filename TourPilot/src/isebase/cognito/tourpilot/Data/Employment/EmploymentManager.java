@@ -3,6 +3,7 @@ package isebase.cognito.tourpilot.Data.Employment;
 import java.util.Date;
 import java.util.List;
 
+import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentIntervalManager;
@@ -101,10 +102,13 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
     	String strEmpls = "";
     	for (Employment employment : employments)
 			strEmpls += employment.getDone();
-    	execSQL(String.format("update %1$s set was_sent = 1 where was_sent = 0 and is_done = 1"
-    			, getRecTableName()));
     	return strEmpls;
     }
+    
+//    public void setWasSent() {
+//    	execSQL(String.format("update %1$s set was_sent = 1 where was_sent = 0 and is_done = 1"
+//		, getRecTableName()));
+//    }
     
     public static Employment createEmployment(Patient patient) {
     	int id = 0;

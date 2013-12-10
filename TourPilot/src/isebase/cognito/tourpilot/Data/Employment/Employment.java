@@ -1,6 +1,7 @@
 package isebase.cognito.tourpilot.Data.Employment;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
@@ -194,9 +195,10 @@ public class Employment extends BaseObject implements IJob {
             strTask += DateUtils.toDateTime(task.getRealDate());
             strTask += "\0";
             strValue += strTask;
-            task.setWasSent(true);            
+            SentObjectVerification.Instance().sentTasks.add(task);
         }
         TaskManager.Instance().save(tasks);
+        SentObjectVerification.Instance().sentEmployments.add(this);
         return strValue;
     }
     
