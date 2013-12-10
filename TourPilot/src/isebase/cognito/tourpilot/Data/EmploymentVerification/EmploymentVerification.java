@@ -124,10 +124,6 @@ public class EmploymentVerification extends BaseObject {
 
 	@Override
 	public String getDone() {
-<<<<<<< HEAD
-		SentObjectVerification.Instance().sentEmploymentVerifications.add(this);
-		return "S;" + getEmploymentID() + ";" + getVerificationInfo();
-=======
 		String strValue = "";
 		strValue += "S;";
 		strValue += workerID + ";";
@@ -139,8 +135,6 @@ public class EmploymentVerification extends BaseObject {
 		strValue += userRemarksMarks;
 		setWasSent(true);
 		return strValue;
-
->>>>>>> refs/heads/VladimirsBranch2
 	}
 
 }
