@@ -32,14 +32,11 @@ import isebase.cognito.tourpilot.Templates.TaskAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.DialogFragment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -144,7 +141,13 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		case ACTIVITY_USERREMARKS_CODE:
 			if(resultCode == RESULT_OK) {
 				startVerificationActivity(ACTIVITY_VERIFICATION_CODE,!IS_FLEGE_OK);
+			} else {
+				endTask.setRealDate(DateUtils.EmptyDate);
+				endTask.setState(eTaskState.UnDone);
+				fillUpTasks();
+
 			}
+			
 			break;
 		case ACTIVITY_VERIFICATION_CODE:
 			if(resultCode == RESULT_OK) {
@@ -258,7 +261,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 
 	@Override
 	public void onBackPressed() {
-		if(!employment.isDone()||isClickable()) {
+		if(!employment.isDone() && isClickable()) {
 			BaseDialog dialog = new BaseDialog(
 					getString(R.string.attention),
 					getString(R.string.dialog_task_proof_back));
