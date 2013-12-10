@@ -6,6 +6,7 @@
     <string name="menu_catalogs">Zusätzliche Leistungen</string>
     <string name="menu_notes">Besuchsvermerke</string>
     <string name="menu_info">Info</string>
+    <string name="menu_gps">Gps</string>
     <string name="menu_manual_input">Manuelle Eingabe</string>
     <string name="menu_address">Adressen</string>
     <string name="menu_relatives">Angehörige</string>

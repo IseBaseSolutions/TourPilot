@@ -4,6 +4,7 @@ import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWorkManager;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 import isebase.cognito.tourpilot.Data.Diagnose.DiagnoseManager;
 import isebase.cognito.tourpilot.Data.Doctor.DoctorManager;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
@@ -203,6 +204,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 				retVal = false;
 			}
 			else if(recievedStatus.startsWith("OK")) {
+				SentObjectVerification.Instance().setWasSent();
 				StringParser stringParser = new StringParser(recievedStatus);
 				String msg = stringParser.next("\0");
 				Option.Instance().setIsAuto(msg.contains("1"));

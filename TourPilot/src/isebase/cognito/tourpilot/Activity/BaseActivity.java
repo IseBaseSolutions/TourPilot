@@ -1,9 +1,12 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Connection.ConnectionAsyncTask;
+import isebase.cognito.tourpilot.Connection.ConnectionStatus;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
+import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -14,6 +17,8 @@ import android.view.MenuItem;
 public class BaseActivity extends FragmentActivity{
 
 	protected DialogFragment versionFragmentDialog;
+	private ConnectionStatus connectionStatus;
+	private ConnectionAsyncTask connectionTask;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +43,43 @@ public class BaseActivity extends FragmentActivity{
 		Option.Instance().save();
 		Intent optionActivity =  new Intent(getApplicationContext(), OptionsActivity.class);
 		startActivity(optionActivity);
+	}
+	
+	@Override
+	protected void onResume() {
+
+		SynchronizationHandler syncHandler = new SynchronizationHandler() {
+ 			
+ 			@Override
+			public void onSynchronizedFinished(boolean isOK, String text) {
+				if(!text.equals("")){
+
+				}
+ 			}
+ 			
+ 			@Override
+ 			public void onItemSynchronized(String text) {
+ 				if (connectionStatus.CurrentState == 2)
+ 					connectionStatus.CurrentState = 6;
+ 				else 
+ 					connectionStatus.nextState();
+				connectionTask = new ConnectionAsyncTask(connectionStatus);
+				connectionTask.execute(); 
+ 			}
+ 			
+ 			@Override
+ 			public void onProgressUpdate(String text, int progress){
+ 			}
+
+			@Override
+			public void onProgressUpdate(String text) {			
+			}				
+ 		};	
+	
+		connectionStatus = new ConnectionStatus(syncHandler);
+		connectionTask = new ConnectionAsyncTask(connectionStatus);
+		connectionTask.execute();
+		super.onResume();
 	}
 	
 	@Override

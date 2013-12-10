@@ -2,6 +2,7 @@ package isebase.cognito.tourpilot.Data.EmploymentVerification;
 
 import java.util.Date;
 
+import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.DataBase.MapField;
 
@@ -134,7 +135,6 @@ public class EmploymentVerification extends BaseObject {
 		strValue += userRemarksMarks;
 		setWasSent(true);
 		return strValue;
-
 	}
 
 }

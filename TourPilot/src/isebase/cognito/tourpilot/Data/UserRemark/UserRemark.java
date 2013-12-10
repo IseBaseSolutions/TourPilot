@@ -1,6 +1,8 @@
 package isebase.cognito.tourpilot.Data.UserRemark;
 
 import java.util.Date;
+
+import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.DateUtils;
@@ -99,6 +101,7 @@ public class UserRemark extends BaseObject {
         strValue += DateUtils.getLocalTime(getDate()) + ";";
         strValue += getCheckboxes() + ";";
         strValue += getName();
+        SentObjectVerification.Instance().sentUserRemarks.add(this);
         return strValue;
     }
     

@@ -1,5 +1,7 @@
 package isebase.cognito.tourpilot.Utils;
 
+import isebase.cognito.tourpilot.Data.Option.Option;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -55,6 +57,10 @@ public class DateUtils {
         return value.getTime() + (Calendar.getInstance().get(Calendar.ZONE_OFFSET)
         						+ Calendar.getInstance().get(Calendar.DST_OFFSET));
     }
+    
+	public static Date getSynchronizedTime() {
+		return getLocalDate(Option.Instance().getServerTimeDifference() + (new Date()).getTime());
+	}
     
     public static String toDateTime(Date data)
     {

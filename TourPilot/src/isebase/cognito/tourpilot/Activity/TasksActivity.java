@@ -13,6 +13,7 @@ import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentIntervalManag
 import isebase.cognito.tourpilot.Data.Information.Information;
 import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemark;
 import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemarkManager;
 import isebase.cognito.tourpilot.Data.Task.Task;
@@ -25,6 +26,7 @@ import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.BlutdruckTaskDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.StandardTaskDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.TaskDialogTypes;
+import isebase.cognito.tourpilot.Gps.Gps;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Templates.TaskAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
@@ -229,7 +231,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	
 	public void btStartTaskTimerClick(View view) {
 		checkAllTasksAndFillUp(eTaskState.Empty);
-		startTask.setRealDate(new Date());
+		startTask.setRealDate(DateUtils.getSynchronizedTime());
 		startTask.setState(eTaskState.Done);
 		endTask.setRealDate(DateUtils.EmptyDate);
 		TaskManager.Instance().save(startTask);
@@ -317,7 +319,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		}
 		Task task = (Task) view.getTag();
 		clickedCheckBox = view;
-		task.setRealDate(new Date());
+		task.setRealDate(DateUtils.getSynchronizedTime());
 		if (startTask.getManualDate().equals(DateUtils.EmptyDate))
 			task.setManualDate(DateUtils.getAverageDate(startTask.getManualDate(), endTask.getManualDate()));
 		task.setState((task.getState() == eTaskState.Done) 
@@ -389,7 +391,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 
 	private void checkAllTasks(eTaskState state){
-		checkAllTasks(state, new Date());
+		checkAllTasks(state, DateUtils.getSynchronizedTime());
 	}
 	
 	private void checkAllTasks(eTaskState state, Date date){
@@ -448,6 +450,9 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			return true;
 		case R.id.info:
 			showPatientInfo(true);
+			return true;
+		case R.id.gps:
+			Gps.startGpsNavigation(PatientManager.Instance().loadAll(employment.getPatientID()).getAddress());
 			return true;
 		case R.id.manualInput:
 			startManualInputActivity();
@@ -534,7 +539,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 
 	private void showPatientInfo(boolean isFromMenu){
 		infos = InformationManager.Instance().load(Information.EmploymentIDField, String.valueOf(employment.getID()));
-		String strInfos = InformationManager.getInfoStr(infos, new Date(), isFromMenu);
+		String strInfos = InformationManager.getInfoStr(infos, DateUtils.getSynchronizedTime(), isFromMenu);
 		if (strInfos.equals(""))
 			return;
 		InformationManager.Instance().save(infos);
@@ -556,7 +561,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 
 	private void saveData(Boolean clearEmployment){
 		if(!isEmploymentDone()) {
-			endTask.setRealDate(new Date());
+			endTask.setRealDate(DateUtils.getSynchronizedTime());
 			endTask.setState(eTaskState.Done);
 			TaskManager.Instance().save(endTask);
 			fillUpEndTask();			

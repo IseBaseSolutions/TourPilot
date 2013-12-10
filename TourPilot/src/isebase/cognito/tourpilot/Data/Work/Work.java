@@ -1,5 +1,6 @@
 package isebase.cognito.tourpilot.Data.Work;
 
+import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.Connection.ServerCommandParser;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWork;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
@@ -166,6 +167,7 @@ public class Work extends BaseObject implements IJob {
 	}
 	
 	public String getDone() {
+		SentObjectVerification.Instance().sentWorks.add(this);
 		return forServer();
 	}
 	

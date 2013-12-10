@@ -189,7 +189,6 @@ public class VerificationActivity extends BaseActivity {
 				undoneTasksIDs += (undoneTasksIDs.equals("") ? "" : ",") + tasks.get(i).getID();
 		}
 		String userRemarks = getFlegeMarks();
-		
 		EmploymentVerificationManager.Instance().save(new EmploymentVerification(workerID, patientID, dateBegin, dateEnd, doneTasksIDs, undoneTasksIDs, userRemarks));
 	}
 

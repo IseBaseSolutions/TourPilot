@@ -57,17 +57,24 @@
         android:orderInCategory="3" />
     
     <item
+        android:id="@+id/gps"
+        android:title="@string/menu_gps"
+        android:menuCategory="container"
+        android:showAsAction="never"
+        android:orderInCategory="4" />
+    
+    <item
         android:id="@+id/manualInput"
         android:title="@string/menu_manual_input"
         android:menuCategory="container"
         android:showAsAction="never"
-        android:orderInCategory="4" />
+        android:orderInCategory="5" />
 
     <item
         android:id="@+id/comments"
         android:title="@string/menu_comments" 
         android:menuCategory="container"
         android:showAsAction="never"
-        android:orderInCategory="5"/>
+        android:orderInCategory="6"/>
 
 </menu>
