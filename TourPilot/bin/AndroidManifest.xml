@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="isebase.cognito.tourpilot"
+    android:versionCode="1"
+    android:versionName="1035" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="17" />
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.SET_TIME" />    
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_medic"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.DeviceDefault.Light.DarkActionBar" >
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.OptionsActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.TasksActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.AdditionalTasks.CatalogsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.AdditionalTasks.AdditionalTasksActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.UserRemarksActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.InfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.ManualPatientsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.AddressPatientActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.DoctorsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.RelativesActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.CommentsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.SynchronizationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.ToursActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.WorkersActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.BaseActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.PatientsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.ManualInputActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.AdditionalWorksActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.AdditionalEmploymentsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.VerificationActivity"
+            android:screenOrientation="portrait" />
+    </application>
+
+</manifest>
