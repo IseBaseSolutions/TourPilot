@@ -5,6 +5,7 @@ import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
+import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentInterval;
 import isebase.cognito.tourpilot.Data.EmploymentVerification.EmploymentVerification;
 import isebase.cognito.tourpilot.Data.EmploymentVerification.EmploymentVerificationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
@@ -58,9 +59,10 @@ public class UserRemarksActivity extends BaseActivity {
 	}
 	
 	private void reloadData() {
-		Employment empl = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
-		userRemark = UserRemarkManager.Instance().loadByWorkerPatient(
-				Option.Instance().getWorkerID(), empl.getPatientID());		
+		Employment employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
+		userRemark = UserRemarkManager.Instance().load(Option.Instance().getEmploymentID());
+		if (userRemark == null)
+			userRemark = new UserRemark(Option.Instance().getEmploymentID(), Option.Instance().getWorkerID(), employment.getPatientID(), false, false, false, false, "");
 	}
 	
 	private void fillUp() {
@@ -68,13 +70,13 @@ public class UserRemarksActivity extends BaseActivity {
 	}
 	
 	private void pickUp(){
+		userRemark.setID(Option.Instance().getEmploymentID());
 		userRemark.setName(etOther.getText().toString());
 		userRemark.setCheckboxes(chbConnect.isChecked()
 				, chbMedchanges.isChecked()
 				, chbPflege.isChecked()
 				, !etOther.getText().toString().isEmpty());
 		userRemark.setDate(new Date());
-		userRemark.setWasSent(false);
 	}
 	
 	private void save(){
@@ -89,7 +91,7 @@ public class UserRemarksActivity extends BaseActivity {
 		
 		if(bundle == null)
 			return;
-		setResult(UserRemarksActivity.RESULT_OK,intent);
+		setResult(UserRemarksActivity.RESULT_OK, intent);
 		finish();
 		
 	}
@@ -124,10 +126,6 @@ public class UserRemarksActivity extends BaseActivity {
 				er.printStackTrace();
 			}
 		}
-	}
-	private void clearEmployment() {
-		Option.Instance().setEmploymentID(BaseObject.EMPTY_ID);
-		Option.Instance().save();
 	}
 
 }

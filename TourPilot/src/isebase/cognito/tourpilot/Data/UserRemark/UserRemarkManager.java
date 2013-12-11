@@ -35,12 +35,4 @@ public class UserRemarkManager extends BaseObjectManager<UserRemark>{
 		
 	}
 	
-	public UserRemark loadByWorkerPatient(int workerID, int patientID){
-		List<UserRemark> items = loadAll(UserRemark.IDField, workerID + " AND " 
-					+ UserRemark.PatientIDField + " = " + patientID);
-		if(items.size() > 0)
-			return items.get(0);
-		return new UserRemark(workerID, patientID, false, false, false, false, "");
-	}
-	
 }

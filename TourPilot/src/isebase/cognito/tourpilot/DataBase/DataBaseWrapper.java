@@ -84,7 +84,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ BaseObject.CheckSumField + " INTEGER, "
 			+ BaseObject.WasSentField + " INTEGER, "
 			+ BaseObject.IsServerTimeField + " INTEGER, "
-			+ UserRemark.PatientIDField + " INTEGER, " 
+			+ UserRemark.PatientIDField + " INTEGER, "
+			+ UserRemark.WorkerIDField + " INTEGER, " 
 			+ UserRemark.DateField + " INTEGER, " 
 			+ UserRemark.CheckboxField + " INTEGER " 
 			+ ");";

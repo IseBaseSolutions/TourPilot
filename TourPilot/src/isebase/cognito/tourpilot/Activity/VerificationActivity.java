@@ -1,12 +1,5 @@
 package isebase.cognito.tourpilot.Activity;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
-
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
@@ -15,15 +8,21 @@ import isebase.cognito.tourpilot.Data.EmploymentVerification.EmploymentVerificat
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.Task.Task;
-import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
+import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemark;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Utils.DateUtils;
-import android.os.Bundle;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
+
 import android.content.Intent;
-import android.graphics.BitmapFactory.Options;
+import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
 import android.view.View;
@@ -31,9 +30,6 @@ import android.widget.TextView;
 
 public class VerificationActivity extends BaseActivity {
 
-	private Intent answerInent;
-
-	
 	private List<Task> tasks;
 	private TextView tvVerification;
 
@@ -76,7 +72,6 @@ public class VerificationActivity extends BaseActivity {
 		taskVerification += getFlege();
 		
 		tvVerification.setText(Html.fromHtml(taskVerification));
-		answerInent = new Intent();
 	}
 
 	@Override
@@ -147,8 +142,10 @@ public class VerificationActivity extends BaseActivity {
 			isFlegeOK = bundle.getBoolean("isFlegeOK");
 			if(isFlegeOK){
 				flege += "Flege is OK <br />";
-			}else {
-				userRemark = UserRemarkManager.Instance().loadByWorkerPatient(Option.Instance().getWorkerID(), employment.getPatientID());
+			} else {
+				userRemark = UserRemarkManager.Instance().load(employment.getID());
+				if(userRemark == null)
+					return flege;	
 				flege += "<b>" + getString(R.string.note) + ":</b> <br />";
 				if((userRemark.getCheckboxes() & 1) == 1)
 					flege += getString(R.string.connect_with) + ": " + "<b>" + getString(R.string.yes) + "</b>" + " <br />";
@@ -196,7 +193,6 @@ public class VerificationActivity extends BaseActivity {
 		if(userRemark == null)
 				flegeMarks += "";				
 		else {
-			UserRemark userRemark = UserRemarkManager.Instance().loadByWorkerPatient(Option.Instance().getWorkerID(), employment.getPatientID());
 			if((userRemark.getCheckboxes() & 1) == 1)
 				flegeMarks += "+,";
 			else
