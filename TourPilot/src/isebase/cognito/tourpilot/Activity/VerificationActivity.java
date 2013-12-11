@@ -23,6 +23,7 @@ import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 import android.os.Bundle;
 import android.content.Intent;
+import android.graphics.BitmapFactory.Options;
 import android.text.Html;
 import android.view.Menu;
 import android.view.View;
@@ -173,6 +174,8 @@ public class VerificationActivity extends BaseActivity {
 	}
 	
 	private void saveVerification() {
+		long employmentID = Option.Instance().getEmploymentID();
+		
 		long workerID = Option.Instance().getWorkerID();
 		
 		long patientID = PatientManager.Instance().load(employment.getPatientID()).getID();
@@ -189,7 +192,7 @@ public class VerificationActivity extends BaseActivity {
 				undoneTasksIDs += (undoneTasksIDs.equals("") ? "" : ",") + tasks.get(i).getID();
 		}
 		String userRemarks = getFlegeMarks();
-		EmploymentVerificationManager.Instance().save(new EmploymentVerification(workerID, patientID, dateBegin, dateEnd, doneTasksIDs, undoneTasksIDs, userRemarks));
+		EmploymentVerificationManager.Instance().save(new EmploymentVerification(employmentID, workerID, patientID, dateBegin, dateEnd, doneTasksIDs, undoneTasksIDs, userRemarks));
 	}
 
 	private String getFlegeMarks() {
