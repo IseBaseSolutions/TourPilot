@@ -100,7 +100,6 @@ public class UserRemarksActivity extends BaseActivity {
 		finish();
 	}
 	
-	
 	private void setWriteAble(){
 		Intent intentSave = getIntent();
 		Bundle bundle = intentSave.getExtras();
@@ -125,11 +124,6 @@ public class UserRemarksActivity extends BaseActivity {
 			}
 		}
 	}
-	private void clearEmployment() {
-		Option.Instance().setEmploymentID(BaseObject.EMPTY_ID);
-		Option.Instance().save();
-	}
-
 }
 
 

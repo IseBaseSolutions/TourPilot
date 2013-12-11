@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:onClick="onClickButtonCancel"
-            android:text="@string/no" />
+            android:text="@string/verification_cancel" />
 
         <Button
             android:id="@+id/btVerificationCancel"
@@ -55,7 +55,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.5"
             android:onClick="onClickButtonOk"
-            android:text="@string/yes" />
+            android:text="@string/verification_ok" />
     </LinearLayout>
 
 </RelativeLayout>
