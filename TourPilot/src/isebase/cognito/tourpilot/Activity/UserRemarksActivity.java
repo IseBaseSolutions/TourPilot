@@ -102,7 +102,6 @@ public class UserRemarksActivity extends BaseActivity {
 		finish();
 	}
 	
-	
 	private void setWriteAble(){
 		Intent intentSave = getIntent();
 		Bundle bundle = intentSave.getExtras();
@@ -127,7 +126,10 @@ public class UserRemarksActivity extends BaseActivity {
 			}
 		}
 	}
+<<<<<<< HEAD
 
+=======
+>>>>>>> refs/heads/VladimirsBranch2
 }
 
 

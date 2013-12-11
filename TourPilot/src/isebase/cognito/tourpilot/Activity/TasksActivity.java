@@ -19,6 +19,7 @@ import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemarkManager;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
+import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
@@ -430,6 +431,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	private void clearEmployment() {
 		Option.Instance().setEmploymentID(BaseObject.EMPTY_ID);
 		Option.Instance().save();
+		UserRemarkManager.Instance().delete(Option.Instance().getEmploymentID());
 	}
 
 	@Override

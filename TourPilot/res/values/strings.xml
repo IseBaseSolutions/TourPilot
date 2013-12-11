@@ -154,5 +154,7 @@
     <string name="there_are_no_done_tasks">There are no done task</string>
     <string name="there_are_no_undone_tasks">There are no undone task</string>
     <string name="other">Sonstiges</string>
+    <string name="verification_ok">Senden</string>
+    <string name="verification_cancel">Bearbeiten</string>
 
 </resources>
