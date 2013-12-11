@@ -61,7 +61,7 @@ public class EmploymentVerification extends BaseObject {
 		return dateBegin.getTime();
 	}
 
-	@MapField(DatabaseField = DateBeginField)
+	@MapField(DatabaseField = DateEndField)
 	public void setDateBegin(Date dateBegin) {
 		this.dateBegin = dateBegin;
 	}
@@ -71,7 +71,7 @@ public class EmploymentVerification extends BaseObject {
 		return dateEnd.getTime();
 	}
 
-	@MapField(DatabaseField = DateBeginField)
+	@MapField(DatabaseField = DateEndField)
 	public void setDateEnd(Date dateEnd) {
 		this.dateEnd = dateEnd;
 	}
@@ -86,12 +86,12 @@ public class EmploymentVerification extends BaseObject {
 		this.doneTasksIDs = doneTasksIDs;
 	}
 
-	@MapField(DatabaseField = DoneTasksIDsField)
+	@MapField(DatabaseField = UnDoneTasksIDsField)
 	public String getUnDoneTasksIDs() {
 		return undoneTasksIDs;
 	}
 
-	@MapField(DatabaseField = DoneTasksIDsField)
+	@MapField(DatabaseField = UnDoneTasksIDsField)
 	public void setUnDoneTasksIDs(String undoneTasksIDs) {
 		this.undoneTasksIDs = undoneTasksIDs;
 	}
@@ -106,9 +106,10 @@ public class EmploymentVerification extends BaseObject {
 		this.userRemarksMarks = userRemarksMarks;
 	}
 
-	public EmploymentVerification(long workerID, long patientID,
+	public EmploymentVerification(long employmentID, long workerID, long patientID,
 			Date dateBegin, Date dateEnd,
 			String doneTasksIDs, String undoneTasksIDs, String userRemarksMarks) {
+		setEmploymentID(employmentID);
 		setWorkerID(workerID);
 		setPatientID(patientID);
 		setDateBegin(dateBegin);
@@ -126,6 +127,7 @@ public class EmploymentVerification extends BaseObject {
 	public String getDone() {
 		String strValue = "";
 		strValue += "S;";
+		strValue += employmentID + ";";
 		strValue += workerID + ";";
 		strValue += patientID + ";";
 		strValue += dateBegin.getTime() + ";";
