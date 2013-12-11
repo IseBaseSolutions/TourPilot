@@ -93,6 +93,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			initDialogs();	
 			reloadData();	
 			fillUpTasks();
+			checkAllIsDone();
 			checkEmploymentIsDone();
 			showPatientInfo(false);
 			
@@ -631,5 +632,15 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	private boolean isEmploymentDone(){
 		return employment.isDone();
 	}
-
+	private boolean isAllDone(){
+		  return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
+		    && !endTask.getRealDate().equals(DateUtils.EmptyDate)
+		    || DateUtils.getTodayDateOnly().getTime() < DateUtils.getDateOnly(startTask.getPlanDate()).getTime();
+	}
+	private void checkAllIsDone(){
+		  if(isAllDone()){
+		   btStartTask.setEnabled(false);
+		   btEndTask.setEnabled(false);
+		  }
+		 }
 }
