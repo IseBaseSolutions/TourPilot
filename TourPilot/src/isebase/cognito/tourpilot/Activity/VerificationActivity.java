@@ -23,6 +23,7 @@ import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 import android.os.Bundle;
 import android.content.Intent;
+import android.graphics.BitmapFactory.Options;
 import android.text.Html;
 import android.view.Menu;
 import android.view.View;
@@ -173,28 +174,25 @@ public class VerificationActivity extends BaseActivity {
 	}
 	
 	private void saveVerification() {
+		long employmentID = Option.Instance().getEmploymentID();
+		
 		long workerID = Option.Instance().getWorkerID();
 		
 		long patientID = PatientManager.Instance().load(employment.getPatientID()).getID();
 		
-		String dateBegin = DateUtils.HourMinutesFormat.format(tasks.get(0).getManualDate().equals(DateUtils.EmptyDate) ? tasks.get(0).getRealDate() : tasks.get(0).getManualDate());
-		String dateEnd = DateUtils.HourMinutesFormat.format(tasks.get(tasks.size()-1).getManualDate().equals(DateUtils.EmptyDate) ? tasks.get(tasks.size()-1).getRealDate() : tasks.get(tasks.size()-1).getManualDate());
+		Date dateBegin = tasks.get(0).getManualDate().equals(DateUtils.EmptyDate) ? tasks.get(0).getRealDate() : tasks.get(0).getManualDate();
+		Date dateEnd = tasks.get(tasks.size()-1).getManualDate().equals(DateUtils.EmptyDate) ? tasks.get(tasks.size()-1).getRealDate() : tasks.get(tasks.size()-1).getManualDate();
 		
-		String additionalyTasksIDs = "";
 		String doneTasksIDs = "", undoneTasksIDs = "";
 		
 		for(int i = 1;i < tasks.size() - 1;i++) {
-			additionalyTasksIDs += tasks.get(i).getAditionalTaskID() + ",";
 			if(tasks.get(i).getState().equals(eTaskState.Done))
-				doneTasksIDs += tasks.get(i).getID() + ",";
+				doneTasksIDs += (doneTasksIDs.equals("") ? "" : ",") + tasks.get(i).getID();
 			else
-				undoneTasksIDs += tasks.get(i).getID() + ",";
-				
+				undoneTasksIDs += (undoneTasksIDs.equals("") ? "" : ",") + tasks.get(i).getID();
 		}
 		String userRemarks = getFlegeMarks();
-		
-		EmploymentVerificationManager.Instance().save(new EmploymentVerification(workerID, patientID, dateBegin, 
-				dateEnd, additionalyTasksIDs, doneTasksIDs, undoneTasksIDs, userRemarks));
+		EmploymentVerificationManager.Instance().save(new EmploymentVerification(employmentID, workerID, patientID, dateBegin, dateEnd, doneTasksIDs, undoneTasksIDs, userRemarks));
 	}
 
 	private String getFlegeMarks() {

@@ -9,20 +9,23 @@ import isebase.cognito.tourpilot.DataBase.MapField;
 public class EmploymentVerification extends BaseObject {
 
 	public static final String EmploymentIDField = "employment_id";
-	public static final String VerificationInfoField = "verification_info";
-	
+	public static final String WorkerIDField = "worker_id";
+	public static final String PatientIDField = "patient_id";
+	public static final String DateBeginField = "date_begin";
+	public static final String DateEndField = "date_end";
+	public static final String DoneTasksIDsField = "done_tasks_ids";
+	public static final String UnDoneTasksIDsField = "undone_tasks_ids";
+	public static final String UserRemarksMarksField = "user_remarks_marks";
+
 	private long employmentID;
-	private String verificationInfo;
-	
 	private long workerID;
 	private long patientID;
-	private String dateBegin;
-	private String dateEnd;
-	private String additionalWorksIDs;
+	private Date dateBegin;
+	private Date dateEnd;
 	private String doneTasksIDs;
 	private String undoneTasksIDs;
 	private String userRemarksMarks;
-	
+
 	@MapField(DatabaseField = EmploymentIDField)
 	public long getEmploymentID() {
 		return employmentID;
@@ -33,39 +36,107 @@ public class EmploymentVerification extends BaseObject {
 		this.employmentID = employmentID;
 	}
 
-	@MapField(DatabaseField = VerificationInfoField)
-	public String getVerificationInfo() {
-		return verificationInfo;
+	@MapField(DatabaseField = WorkerIDField)
+	public long getWorkerID() {
+		return workerID;
 	}
 
-	@MapField(DatabaseField = VerificationInfoField)
-	public void setVerificationInfo(String verificationInfo) {
-		this.verificationInfo = verificationInfo;
-	}
-	
-	public EmploymentVerification(long workerID, long patientID, String dateBegin, String dateEnd, String additionalWorksIDs, String doneTasksIDs, String undoneTasksIDs, String userRemarksMarks) {
+	@MapField(DatabaseField = WorkerIDField)
+	public void setWorkerID(long workerID) {
 		this.workerID = workerID;
+	}
+
+	@MapField(DatabaseField = PatientIDField)
+	public long getPatientID() {
+		return patientID;
+	}
+
+	@MapField(DatabaseField = PatientIDField)
+	public void setPatientID(long patientID) {
 		this.patientID = patientID;
+	}
+
+	@MapField(DatabaseField = DateBeginField)
+	public long getDateBegin() {
+		return dateBegin.getTime();
+	}
+
+	@MapField(DatabaseField = DateEndField)
+	public void setDateBegin(Date dateBegin) {
 		this.dateBegin = dateBegin;
+	}
+
+	@MapField(DatabaseField = DateEndField)
+	public long getDateEnd() {
+		return dateEnd.getTime();
+	}
+
+	@MapField(DatabaseField = DateEndField)
+	public void setDateEnd(Date dateEnd) {
 		this.dateEnd = dateEnd;
-		this.additionalWorksIDs = additionalWorksIDs;
+	}
+
+	@MapField(DatabaseField = DoneTasksIDsField)
+	public String getDoneTasksIDs() {
+		return doneTasksIDs;
+	}
+
+	@MapField(DatabaseField = DoneTasksIDsField)
+	public void setDoneTasksIDs(String doneTasksIDs) {
 		this.doneTasksIDs = doneTasksIDs;
+	}
+
+	@MapField(DatabaseField = UnDoneTasksIDsField)
+	public String getUnDoneTasksIDs() {
+		return undoneTasksIDs;
+	}
+
+	@MapField(DatabaseField = UnDoneTasksIDsField)
+	public void setUnDoneTasksIDs(String undoneTasksIDs) {
 		this.undoneTasksIDs = undoneTasksIDs;
+	}
+
+	@MapField(DatabaseField = UserRemarksMarksField)
+	public String getUserRemarksMarks() {
+		return userRemarksMarks;
+	}
+
+	@MapField(DatabaseField = UserRemarksMarksField)
+	public void setUserRemarksMarks(String userRemarksMarks) {
 		this.userRemarksMarks = userRemarksMarks;
 	}
-	
-	public EmploymentVerification(long employmentID, String verificationInfo) {
-		this.employmentID = employmentID;
-		this.verificationInfo = verificationInfo;
+
+	public EmploymentVerification(long employmentID, long workerID, long patientID,
+			Date dateBegin, Date dateEnd,
+			String doneTasksIDs, String undoneTasksIDs, String userRemarksMarks) {
+		setEmploymentID(employmentID);
+		setWorkerID(workerID);
+		setPatientID(patientID);
+		setDateBegin(dateBegin);
+		setDateEnd(dateEnd);
+		setDoneTasksIDs(doneTasksIDs);
+		setUnDoneTasksIDs(undoneTasksIDs);
+		setUserRemarksMarks(userRemarksMarks);
 	}
-	
+
 	public EmploymentVerification() {
-		
+
 	}
+
 	@Override
 	public String getDone() {
-		SentObjectVerification.Instance().sentEmploymentVerifications.add(this);
-		return "S;" + getEmploymentID() + ";" + getVerificationInfo();
+		String strValue = "";
+		strValue += "S;";
+		strValue += employmentID + ";";
+		strValue += workerID + ";";
+		strValue += patientID + ";";
+		strValue += dateBegin.getTime() + ";";
+		strValue += dateEnd.getTime() + ";";
+		strValue += doneTasksIDs + ";";
+		strValue += undoneTasksIDs + ";";
+		strValue += userRemarksMarks;
+		setWasSent(true);
+		return strValue;
 	}
 
 }
