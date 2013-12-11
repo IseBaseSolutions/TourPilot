@@ -433,6 +433,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	private void clearEmployment() {
 		Option.Instance().setEmploymentID(BaseObject.EMPTY_ID);
 		Option.Instance().save();
+		UserRemarkManager.Instance().delete(Option.Instance().getEmploymentID());
 	}
 
 	@Override

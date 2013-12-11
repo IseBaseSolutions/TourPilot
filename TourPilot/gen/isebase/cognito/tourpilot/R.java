@@ -341,6 +341,8 @@ public final class R {
         public static final int title_activity_verification=0x7f060079;
         public static final int tour_end=0x7f060062;
         public static final int undone_tasks=0x7f06007e;
+        public static final int verification_cancel=0x7f060083;
+        public static final int verification_ok=0x7f060082;
         public static final int version=0x7f060044;
         public static final int visit_notes=0x7f060023;
         public static final int waitng_sockets_to_close=0x7f06002f;
