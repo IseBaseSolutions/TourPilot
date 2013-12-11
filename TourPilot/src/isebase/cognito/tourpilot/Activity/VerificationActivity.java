@@ -141,28 +141,26 @@ public class VerificationActivity extends BaseActivity {
 		if(bundle != null){
 			isFlegeOK = bundle.getBoolean("isFlegeOK");
 			if(isFlegeOK){
-				flege += "Flege is OK <br />";
+				flege += "Flege is OK <br /><br />";
 			}
-			//else {
-				userRemark = UserRemarkManager.Instance().load(employment.getID());
-				if(userRemark == null)
-					return flege;	
-				flege += "<br /><b>" + getString(R.string.note) + ":</b> <br />";
-				if((userRemark.getCheckboxes() & 1) == 1)
-					flege += getString(R.string.connect_with) + ": " + "<b>" + getString(R.string.yes) + "</b>" + " <br />";
-				else
-					flege += getString(R.string.connect_with) + ": " + "<b>" + getString(R.string.no) + "</b>" + " <br />";
-				if((userRemark.getCheckboxes() & 2) == 2)
-					flege += getString(R.string.medications_changed) + ": " + "<b>" + getString(R.string.yes) + "</b>" + " <br />";
-				else
-					flege += getString(R.string.medications_changed) + ": " + "<b>" + getString(R.string.no) + "</b>" + " <br />";
-				if((userRemark.getCheckboxes() & 4) == 4)
-					flege += getString(R.string.aubrplanmabige_pflege) + ": " + "<b>" + getString(R.string.yes) + "</b>" + " <br />";
-				else
-					flege += getString(R.string.aubrplanmabige_pflege) + ": " + "<b>" + getString(R.string.no) + "</b>" + " <br />";
-				if(!userRemark.getName().equals(""))
-					flege += "<b>" + getString(R.string.other) + ":</b> " + userRemark.getName() + "<br />";
-//			}
+			userRemark = UserRemarkManager.Instance().load(employment.getID());
+			if(userRemark == null)
+				return flege;	
+			flege += "<b>" + getString(R.string.note) + ":</b> <br />";
+			if((userRemark.getCheckboxes() & 1) == 1)
+				flege += getString(R.string.connect_with) + ": " + "<b>" + getString(R.string.yes) + "</b>" + " <br />";
+			else
+				flege += getString(R.string.connect_with) + ": " + "<b>" + getString(R.string.no) + "</b>" + " <br />";
+			if((userRemark.getCheckboxes() & 2) == 2)
+				flege += getString(R.string.medications_changed) + ": " + "<b>" + getString(R.string.yes) + "</b>" + " <br />";
+			else
+				flege += getString(R.string.medications_changed) + ": " + "<b>" + getString(R.string.no) + "</b>" + " <br />";
+			if((userRemark.getCheckboxes() & 4) == 4)
+				flege += getString(R.string.aubrplanmabige_pflege) + ": " + "<b>" + getString(R.string.yes) + "</b>" + " <br />";
+			else
+				flege += getString(R.string.aubrplanmabige_pflege) + ": " + "<b>" + getString(R.string.no) + "</b>" + " <br />";
+			if(!userRemark.getName().equals(""))
+				flege += "<b>" + getString(R.string.other) + ":</b> " + userRemark.getName() + "<br />";
 		}
 		return flege + "<br />";
 	}
