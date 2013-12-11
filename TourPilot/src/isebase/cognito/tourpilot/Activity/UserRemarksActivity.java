@@ -126,11 +126,6 @@ public class UserRemarksActivity extends BaseActivity {
 			}
 		}
 	}
-<<<<<<< HEAD
-
-=======
->>>>>>> refs/heads/VladimirsBranch2
 }
-
 
 
