@@ -145,7 +145,6 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 				endTask.setRealDate(DateUtils.EmptyDate);
 				endTask.setState(eTaskState.UnDone);
 				fillUpTasks();
-
 			}
 			
 			break;
@@ -153,11 +152,11 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			if(resultCode == RESULT_OK) {
 				saveData(true);
 				employment.setIsDone(true);
-				if(data.getIntExtra("Mode", 0) == UserRemarksActivity.SYNC_MODE)
+				if(Option.Instance().getIsAuto())
 					startSyncActivity();
 				else
 					startPatientsActivity();
-			}else {
+			} else {
 				endTask.setRealDate(DateUtils.EmptyDate);
 				endTask.setState(eTaskState.UnDone);
 				fillUpTasks();
@@ -586,11 +585,11 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 	
 
-	protected void startUserRemarksActivity(Integer mode,int activityCode) {
+	protected void startUserRemarksActivity(Integer mode, int activityCode) {
 		Intent userRemarksActivity = new Intent(getApplicationContext(), UserRemarksActivity.class);
 		userRemarksActivity.putExtra("Mode", mode);
-		userRemarksActivity.putExtra("ViewMode",isEmploymentDone());
-		if(mode == UserRemarksActivity.SIMPLE_MODE)
+		userRemarksActivity.putExtra("ViewMode", isEmploymentDone());
+		if (mode == UserRemarksActivity.SIMPLE_MODE)
 			startActivity(userRemarksActivity);
 		else
 			startActivityForResult(userRemarksActivity, activityCode);

@@ -38,9 +38,9 @@
 
     <!-- Notes -->
     <string name="enter_interval">Intervall eingeben</string>
-    <string name="connect_with">Kontaktaufnahme mit mir ist nötig.</string>
-    <string name="medications_changed">Medikation hat sich geändert.</string>
-    <string name="aubrplanmabige_pflege">Außerplanmäßige Pflege-Visite sind erforderlich.</string>
+    <string name="connect_with">Kontaktaufnahme mit mir ist nötig</string>
+    <string name="medications_changed">Medikation hat sich geändert</string>
+    <string name="aubrplanmabige_pflege">Außerplanmäßige Pflege-Visite sind erforderlich</string>
     <string name="visit_notes">Besuchsvermerke</string>
     <string name="note">Note</string>
 

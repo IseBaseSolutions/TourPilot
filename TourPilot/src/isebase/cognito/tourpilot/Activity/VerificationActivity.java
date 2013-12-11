@@ -86,15 +86,14 @@ public class VerificationActivity extends BaseActivity {
 		return true;
 	}
 
-	public void onClickButtonOk(View view) {
-		
+	public void onClickButtonOk(View view) {		
 		saveVerification();
-		setResult(VerificationActivity.RESULT_OK, answerInent);
+		setResult(VerificationActivity.RESULT_OK);
 		finish();
 	}
 
 	public void onClickButtonCancel(View view) {
-		setResult(VerificationActivity.RESULT_CANCELED, answerInent);
+		setResult(VerificationActivity.RESULT_CANCELED);
 		finish();
 	}
 
@@ -150,22 +149,19 @@ public class VerificationActivity extends BaseActivity {
 				flege += "Flege is OK <br />";
 			}else {
 				userRemark = UserRemarkManager.Instance().loadByWorkerPatient(Option.Instance().getWorkerID(), employment.getPatientID());
-				String connect = new Boolean((userRemark.getCheckboxes() & 1) == 1).toString();
-				String medChanges = new Boolean((userRemark.getCheckboxes() & 2) == 2).toString();
-				String pflege = new Boolean((userRemark.getCheckboxes() & 4) == 4).toString();
 				flege += "<b>" + getString(R.string.note) + ":</b> <br />";
-				if(!connect.equals("false"))
-					flege += getString(R.string.enter_interval) + ": + <br />";
+				if((userRemark.getCheckboxes() & 1) == 1)
+					flege += getString(R.string.connect_with) + ": " + "<b>" + getString(R.string.yes) + "</b>" + " <br />";
 				else
-					flege += getString(R.string.enter_interval) + ": - <br />";
-				if(!medChanges.equals("false"))
-					flege += getString(R.string.medications_changed) + ": + <br />";
+					flege += getString(R.string.connect_with) + ": " + "<b>" + getString(R.string.no) + "</b>" + " <br />";
+				if((userRemark.getCheckboxes() & 2) == 2)
+					flege += getString(R.string.medications_changed) + ": " + "<b>" + getString(R.string.yes) + "</b>" + " <br />";
 				else
-					flege += getString(R.string.medications_changed) + ": - <br />";
-				if(!pflege.equals("false"))
-					flege += getString(R.string.aubrplanmabige_pflege) + ": + <br />";
+					flege += getString(R.string.medications_changed) + ": " + "<b>" + getString(R.string.no) + "</b>" + " <br />";
+				if((userRemark.getCheckboxes() & 4) == 4)
+					flege += getString(R.string.aubrplanmabige_pflege) + ": " + "<b>" + getString(R.string.yes) + "</b>" + " <br />";
 				else
-					flege += getString(R.string.aubrplanmabige_pflege) + ": - <br />";
+					flege += getString(R.string.aubrplanmabige_pflege) + ": " + "<b>" + getString(R.string.no) + "</b>" + " <br />";
 				if(!userRemark.getName().equals(""))
 					flege += "<b>" + getString(R.string.other) + ":</b> " + userRemark.getName() + "<br />";
 			}
@@ -201,18 +197,15 @@ public class VerificationActivity extends BaseActivity {
 				flegeMarks += "";				
 		else {
 			UserRemark userRemark = UserRemarkManager.Instance().loadByWorkerPatient(Option.Instance().getWorkerID(), employment.getPatientID());
-			String connect = new Boolean((userRemark.getCheckboxes() & 1) == 1).toString();
-			String medChanges = new Boolean((userRemark.getCheckboxes() & 2) == 2).toString();
-			String pflege = new Boolean((userRemark.getCheckboxes() & 4) == 4).toString();
-			if(!connect.equals("false"))
+			if((userRemark.getCheckboxes() & 1) == 1)
 				flegeMarks += "+,";
 			else
 				flegeMarks += "-,";
-			if(!medChanges.equals("false"))
+			if((userRemark.getCheckboxes() & 2) == 2)
 				flegeMarks += "+,";
 			else
 				flegeMarks += "-,";
-			if(!pflege.equals("false"))
+			if((userRemark.getCheckboxes() & 4) == 4)
 				flegeMarks += "+,";
 			else
 				flegeMarks += "-,";

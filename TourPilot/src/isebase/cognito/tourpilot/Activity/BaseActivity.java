@@ -59,7 +59,9 @@ public class BaseActivity extends FragmentActivity{
  			
  			@Override
  			public void onItemSynchronized(String text) {
- 				if (connectionStatus.CurrentState == 2)
+ 				if (connectionStatus.CurrentState == 1)
+ 					connectionStatus.CurrentState = 9;
+ 				else if (connectionStatus.CurrentState == 9)
  					connectionStatus.CurrentState = 6;
  				else 
  					connectionStatus.nextState();

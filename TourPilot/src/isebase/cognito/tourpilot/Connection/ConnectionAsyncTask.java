@@ -118,6 +118,9 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		case ConnectionStatus.ADDITONAL_PATIENTS_SYNC:
 			conStatus.lastExecuteOK = additionalPatientsSync();
 			break;
+		case ConnectionStatus.TIME_SYNC:
+			conStatus.lastExecuteOK = getTimeSync();
+			break;
 		default:
 			conStatus.isFinished = true;
 			break;
@@ -519,6 +522,29 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		conStatus.setAnswerFromServer(answerFromServer);
 		return true;
 
+	}
+	
+	private boolean getTimeSync() {
+		boolean retVal = true;
+
+		try {
+			writeToStream(conStatus.OS, "GETTIME_CLOSE");
+			conStatus.OS.flush();
+			String recievedDate = readFromStream(conStatus.IS);
+			conStatus.serverCommandParser.parseElement(recievedDate, true);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			retVal = false;
+		} finally {
+			if (retVal)
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.sycnhronizing_ok));
+			else
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.sycnhronizing_fail));
+		}
+
+		return retVal;
 	}
 
 }

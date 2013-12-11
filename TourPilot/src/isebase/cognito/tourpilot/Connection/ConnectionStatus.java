@@ -17,6 +17,7 @@ public class ConnectionStatus {
 	public static final int PARSE_DATA = 5;
 	public static final int CLOSE_CONNECTION = 6;
 	public static final int ADDITONAL_PATIENTS_SYNC = 8;
+	public static final int TIME_SYNC = 9;
 	
 	public int CurrentState;
 

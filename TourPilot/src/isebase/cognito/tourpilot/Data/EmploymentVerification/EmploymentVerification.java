@@ -135,7 +135,7 @@ public class EmploymentVerification extends BaseObject {
 		strValue += doneTasksIDs + ";";
 		strValue += undoneTasksIDs + ";";
 		strValue += userRemarksMarks;
-		setWasSent(true);
+		SentObjectVerification.Instance().sentEmploymentVerifications.add(this);
 		return strValue;
 	}
 
