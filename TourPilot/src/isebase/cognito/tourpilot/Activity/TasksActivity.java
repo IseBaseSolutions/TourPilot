@@ -19,6 +19,7 @@ import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemarkManager;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
+import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
@@ -114,10 +115,11 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		MenuItem addresseMenu = menu.findItem(R.id.address);
 		MenuItem doctorsMenu = menu.findItem(R.id.doctors);
 		MenuItem relativesMenu = menu.findItem(R.id.relatives);
-		
+		MenuItem notesMenu = menu.findItem(R.id.notes);
 		infoMenu.setEnabled(infos.size() != 0);
 		commentsMenu.setEnabled(!(patientRemark == null || patientRemark.getName().length() == 0));
 		diagnoseMenu.setEnabled(!(diagnose == null || diagnose.getName().length() == 0));
+		notesMenu.setEnabled(isClickable());
 		if(isEmploymentDone()) {
 			manualInputMenu.setEnabled(false);
 			undoneTasksMenu.setEnabled(false);
@@ -153,6 +155,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			if(resultCode == RESULT_OK) {
 				saveData(true);
 				employment.setIsDone(true);
+				EmploymentManager.Instance().save(employment);
 				if(Option.Instance().getIsAuto())
 					startSyncActivity();
 				else
@@ -494,6 +497,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		if(dialog.getTag().equals("dialogBack")){
 			checkAllTasks(eTaskState.Empty, DateUtils.EmptyDate);
 			removeAdditionalTasks();
+			UserRemarkManager.Instance().delete(Option.Instance().getEmploymentID());
 			clearEmployment();
 			startPatientsActivity();
 		}
@@ -637,9 +641,9 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		    || DateUtils.getTodayDateOnly().getTime() < DateUtils.getDateOnly(startTask.getPlanDate()).getTime();
 	}
 	private void checkAllIsDone(){
-		  if(isAllDone()){
-		   btStartTask.setEnabled(false);
-		   btEndTask.setEnabled(false);
-		  }
-		 }
+		if(isAllDone()){
+			btStartTask.setEnabled(false);
+			btEndTask.setEnabled(false);
+		}
+	}
 }
