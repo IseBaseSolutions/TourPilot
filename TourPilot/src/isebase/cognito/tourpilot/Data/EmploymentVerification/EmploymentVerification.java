@@ -5,6 +5,7 @@ import java.util.Date;
 import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.DataBase.MapField;
+import isebase.cognito.tourpilot.Utils.DateUtils;
 
 public class EmploymentVerification extends BaseObject {
 
@@ -61,7 +62,7 @@ public class EmploymentVerification extends BaseObject {
 		return dateBegin.getTime();
 	}
 
-	@MapField(DatabaseField = DateEndField)
+	@MapField(DatabaseField = DateBeginField)
 	public void setDateBegin(Date dateBegin) {
 		this.dateBegin = dateBegin;
 	}
@@ -130,8 +131,10 @@ public class EmploymentVerification extends BaseObject {
 		strValue += employmentID + ";";
 		strValue += workerID + ";";
 		strValue += patientID + ";";
-		strValue += dateBegin.getTime() + ";";
-		strValue += dateEnd.getTime() + ";";
+//		strValue += dateBegin.getTime() + ";";
+//		strValue += dateEnd.getTime() + ";";
+		strValue += DateUtils.DateFormat.format(dateBegin) + " " + DateUtils.HourMinutesFormat.format(dateBegin) + ";";
+		strValue += DateUtils.DateFormat.format(dateEnd) + " " + DateUtils.HourMinutesFormat.format(dateEnd) + ";";
 		strValue += doneTasksIDs + ";";
 		strValue += undoneTasksIDs + ";";
 		strValue += userRemarksMarks;
