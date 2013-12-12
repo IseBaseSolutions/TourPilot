@@ -145,10 +145,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			if(resultCode == RESULT_OK) {
 				startVerificationActivity(ACTIVITY_VERIFICATION_CODE,!IS_FLEGE_OK);
 			} else {
-				endTask.setManualDate(DateUtils.EmptyDate);
-				endTask.setRealDate(DateUtils.EmptyDate);
-				endTask.setState(eTaskState.UnDone);
-				TaskManager.Instance().save(endTask);
+				clearEndTask();
 				fillUpTasks();
 			}
 			
@@ -163,10 +160,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 				else
 					startPatientsActivity();
 			} else {
-				endTask.setManualDate(DateUtils.EmptyDate);
-				endTask.setRealDate(DateUtils.EmptyDate);
-				endTask.setState(eTaskState.UnDone);
-				TaskManager.Instance().save(endTask);
+				clearEndTask();
 				fillUpTasks();
 			}
 			break;
@@ -649,5 +643,12 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			btStartTask.setEnabled(false);
 			btEndTask.setEnabled(false);
 		}
+	}
+	
+	private void clearEndTask() {
+		endTask.setManualDate(DateUtils.EmptyDate);
+		endTask.setRealDate(DateUtils.EmptyDate);
+		endTask.setState(eTaskState.UnDone);
+		TaskManager.Instance().save(endTask);
 	}
 }
