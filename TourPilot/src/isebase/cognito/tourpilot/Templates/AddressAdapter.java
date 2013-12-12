@@ -68,7 +68,7 @@ public class AddressAdapter<T extends IAddressable> extends ArrayAdapter<T> {
 		if (addressHolder.address instanceof Doctor && !((Doctor)addressHolder.address).getNote().equals(""))
 		{
 			TextView tvNote = new TextView(context);
-			tvNote.setText(String.format("%s %s\n", context.getString(R.string.note), ((Doctor)addressHolder.address).getNote()));
+			tvNote.setText(String.format("%s %s\n", context.getString(R.string.visit_notes), ((Doctor)addressHolder.address).getNote()));
 			tvNote.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
 			tablePhones.addView(tvNote);
 		}

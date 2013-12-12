@@ -193,74 +193,75 @@ public final class R {
         public static final int version_menu=0x7f080010;
     }
     public static final class string {
-        public static final int action_settings=0x7f06007a;
+        public static final int action_settings=0x7f060079;
+        public static final int all_ok=0x7f060082;
         /**  Programm info 
          */
-        public static final int app_name=0x7f060041;
-        public static final int atemzüge_value=0x7f060050;
-        public static final int attention=0x7f060066;
+        public static final int app_name=0x7f060040;
+        public static final int atemzüge_value=0x7f06004f;
+        public static final int attention=0x7f060065;
         public static final int aubrplanmabige_pflege=0x7f060022;
-        public static final int back=0x7f060057;
-        public static final int balance=0x7f060029;
-        public static final int blood_pressure=0x7f06002c;
-        public static final int blood_sugar=0x7f06002a;
+        public static final int back=0x7f060056;
+        public static final int balance=0x7f060028;
+        public static final int blood_pressure=0x7f06002b;
+        public static final int blood_sugar=0x7f060029;
         /**  Trivial 
          */
-        public static final int blutzucker_value=0x7f06004f;
-        public static final int cancel=0x7f060059;
-        public static final int checksum_fail=0x7f06003a;
-        public static final int checksum_ok=0x7f060039;
-        public static final int city=0x7f060048;
-        public static final int close=0x7f06005c;
+        public static final int blutzucker_value=0x7f06004e;
+        public static final int cancel=0x7f060058;
+        public static final int checksum_fail=0x7f060039;
+        public static final int checksum_ok=0x7f060038;
+        public static final int city=0x7f060047;
+        public static final int close=0x7f06005b;
         public static final int connect_with=0x7f060020;
-        public static final int connection_close_fail=0x7f06003f;
-        public static final int connection_close_ok=0x7f06003e;
-        public static final int connection_ok=0x7f060032;
-        public static final int connection_try=0x7f060031;
-        public static final int data_base_version=0x7f060043;
-        public static final int data_to_download=0x7f06003d;
-        public static final int def_empty_date=0x7f06004d;
+        public static final int connection_close_fail=0x7f06003e;
+        public static final int connection_close_ok=0x7f06003d;
+        public static final int connection_ok=0x7f060031;
+        public static final int connection_try=0x7f060030;
+        public static final int data_base_version=0x7f060042;
+        public static final int data_to_download=0x7f06003c;
+        public static final int def_empty_date=0x7f06004c;
         /**  Defaults 
          */
-        public static final int def_empty_time=0x7f06004c;
-        public static final int def_port=0x7f06004e;
-        public static final int detect_respiration=0x7f060028;
-        public static final int dialog_clear_database=0x7f060072;
-        public static final int dialog_comments=0x7f06006f;
-        public static final int dialog_complete_all_tasks=0x7f06006a;
-        public static final int dialog_connection_problems=0x7f06006c;
-        public static final int dialog_employment_not_started=0x7f060073;
-        public static final int dialog_empty_tour=0x7f060071;
-        public static final int dialog_leaving_patient=0x7f06006d;
-        public static final int dialog_no_connection=0x7f060069;
-        public static final int dialog_no_ip_entered=0x7f06006b;
-        public static final int dialog_no_patients=0x7f060070;
-        public static final int dialog_proof_logout=0x7f06006e;
-        public static final int dialog_start_employment=0x7f060074;
-        public static final int dialog_task_proof_back=0x7f060068;
+        public static final int def_empty_time=0x7f06004b;
+        public static final int def_port=0x7f06004d;
+        public static final int detect_respiration=0x7f060027;
+        public static final int dialog_clear_database=0x7f060071;
+        public static final int dialog_comments=0x7f06006e;
+        public static final int dialog_complete_all_tasks=0x7f060069;
+        public static final int dialog_connection_problems=0x7f06006b;
+        public static final int dialog_employment_not_started=0x7f060072;
+        public static final int dialog_empty_tour=0x7f060070;
+        public static final int dialog_leaving_patient=0x7f06006c;
+        public static final int dialog_no_connection=0x7f060068;
+        public static final int dialog_no_ip_entered=0x7f06006a;
+        public static final int dialog_no_patients=0x7f06006f;
+        public static final int dialog_proof_logout=0x7f06006d;
+        public static final int dialog_start_employment=0x7f060073;
+        public static final int dialog_task_proof_back=0x7f060067;
         /**  Dialogs 
          */
-        public static final int dialog_task_proof_undone=0x7f060067;
-        public static final int done=0x7f060040;
-        public static final int done_tasks=0x7f06007c;
-        public static final int end_task=0x7f060026;
+        public static final int dialog_task_proof_undone=0x7f060066;
+        public static final int done=0x7f06003f;
+        public static final int done_tasks=0x7f06007b;
+        public static final int end_task=0x7f060025;
         /**  Notes 
          */
         public static final int enter_interval=0x7f06001f;
-        public static final int enter_pin=0x7f060030;
-        public static final int err_no_address=0x7f060076;
-        public static final int err_no_patients=0x7f060077;
+        public static final int enter_pin=0x7f06002f;
+        public static final int err_no_address=0x7f060075;
+        public static final int err_no_patients=0x7f060076;
         /**  Errors 
          */
-        public static final int err_no_phone=0x7f060075;
-        public static final int gewicht_value=0x7f060051;
-        public static final int hello_request_fail=0x7f060038;
-        public static final int hello_request_ok=0x7f060037;
+        public static final int err_no_phone=0x7f060074;
+        public static final int gewicht_value=0x7f060050;
+        public static final int hello_request_fail=0x7f060037;
+        public static final int hello_request_ok=0x7f060036;
         public static final int input_server_ip=0x7f06001c;
-        public static final int invitation_fail=0x7f060034;
-        public static final int invitation_ok=0x7f060033;
-        public static final int log_out=0x7f06005e;
-        public static final int max=0x7f060056;
+        public static final int invitation_fail=0x7f060033;
+        public static final int invitation_ok=0x7f060032;
+        public static final int log_out=0x7f06005d;
+        public static final int max=0x7f060055;
         public static final int medications_changed=0x7f060021;
         public static final int menu_add_additional_work=0x7f060010;
         public static final int menu_add_patient=0x7f060014;
@@ -287,67 +288,66 @@ public final class R {
         /**  Menus 
          */
         public static final int menu_undone_all_tasks=0x7f060000;
-        public static final int min=0x7f060055;
+        public static final int min=0x7f060054;
         /**  Verification 
          */
-        public static final int minuten_einen=0x7f06007b;
-        public static final int ml=0x7f060054;
-        public static final int no=0x7f06005b;
-        public static final int no_any_patient=0x7f060078;
-        public static final int note=0x7f060024;
-        public static final int ok=0x7f060058;
+        public static final int minuten_einen=0x7f06007a;
+        public static final int ml=0x7f060053;
+        public static final int no=0x7f06005a;
+        public static final int no_any_patient=0x7f060077;
+        public static final int ok=0x7f060057;
         public static final int options=0x7f060018;
-        public static final int other=0x7f060080;
-        public static final int phone=0x7f060049;
-        public static final int phone_mobile=0x7f06004b;
+        public static final int other=0x7f06007f;
+        public static final int phone=0x7f060048;
+        public static final int phone_mobile=0x7f06004a;
         public static final int phone_number=0x7f06001e;
-        public static final int phone_private=0x7f06004a;
+        public static final int phone_private=0x7f060049;
         public static final int pin_code=0x7f060019;
-        public static final int processing_data_fail=0x7f06003c;
-        public static final int processing_data_ok=0x7f06003b;
+        public static final int processing_data_fail=0x7f06003b;
+        public static final int processing_data_ok=0x7f06003a;
         /**  Option 
          */
         public static final int program_options=0x7f060017;
-        public static final int program_version=0x7f060042;
-        public static final int puls_value=0x7f060052;
-        public static final int pulse=0x7f06002d;
-        public static final int save=0x7f06005f;
+        public static final int program_version=0x7f060041;
+        public static final int puls_value=0x7f060051;
+        public static final int pulse=0x7f06002c;
+        public static final int save=0x7f06005e;
         public static final int save_pin_code=0x7f06001a;
-        public static final int search=0x7f06005d;
+        public static final int search=0x7f06005c;
         public static final int server_ip=0x7f06001b;
         public static final int server_port=0x7f06001d;
-        public static final int start=0x7f060064;
+        public static final int start=0x7f060063;
         /**  Tasks 
          */
-        public static final int start_task=0x7f060025;
-        public static final int start_time=0x7f060060;
-        public static final int started_at=0x7f060065;
-        public static final int stop=0x7f060063;
-        public static final int stop_time=0x7f060061;
+        public static final int start_task=0x7f060024;
+        public static final int start_time=0x7f06005f;
+        public static final int started_at=0x7f060064;
+        public static final int stop=0x7f060062;
+        public static final int stop_time=0x7f060060;
         /**  Address 
          */
-        public static final int street=0x7f060046;
-        public static final int sycnhronizing_fail=0x7f060036;
-        public static final int sycnhronizing_ok=0x7f060035;
+        public static final int street=0x7f060045;
+        public static final int sycnhronizing_fail=0x7f060035;
+        public static final int sycnhronizing_ok=0x7f060034;
         /**  Synchronization 
          */
-        public static final int synchronization=0x7f06002e;
-        public static final int temperature=0x7f06002b;
-        public static final int temperature_value=0x7f060053;
-        public static final int there_are_no_done_tasks=0x7f06007e;
-        public static final int there_are_no_undone_tasks=0x7f06007f;
-        public static final int title_activity_main=0x7f060045;
-        public static final int title_activity_verification=0x7f060079;
-        public static final int tour_end=0x7f060062;
-        public static final int undone_tasks=0x7f06007d;
-        public static final int verification_cancel=0x7f060082;
-        public static final int verification_ok=0x7f060081;
-        public static final int version=0x7f060044;
+        public static final int synchronization=0x7f06002d;
+        public static final int temperature=0x7f06002a;
+        public static final int temperature_value=0x7f060052;
+        public static final int there_are_no_done_tasks=0x7f06007d;
+        public static final int there_are_no_undone_tasks=0x7f06007e;
+        public static final int title_activity_main=0x7f060044;
+        public static final int title_activity_verification=0x7f060078;
+        public static final int tour_end=0x7f060061;
+        public static final int undone_tasks=0x7f06007c;
+        public static final int verification_cancel=0x7f060081;
+        public static final int verification_ok=0x7f060080;
+        public static final int version=0x7f060043;
         public static final int visit_notes=0x7f060023;
-        public static final int waitng_sockets_to_close=0x7f06002f;
-        public static final int weight=0x7f060027;
-        public static final int yes=0x7f06005a;
-        public static final int zip=0x7f060047;
+        public static final int waitng_sockets_to_close=0x7f06002e;
+        public static final int weight=0x7f060026;
+        public static final int yes=0x7f060059;
+        public static final int zip=0x7f060046;
     }
     public static final class style {
         /** 

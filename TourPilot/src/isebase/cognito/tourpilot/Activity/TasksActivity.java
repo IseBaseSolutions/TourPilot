@@ -97,7 +97,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			checkAllIsDone();
 			checkEmploymentIsDone();
 			showPatientInfo(false);
-			setTimeSync(true);			
+			setTimeSync(true);		
 		} catch(Exception e){
 			e.printStackTrace();
 			criticalClose();
@@ -324,6 +324,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		task.setState((task.getState() == eTaskState.Done) 
 				? eTaskState.UnDone
 				: eTaskState.Done);
+		task.setQualityResult("");
 		try {
 			((ImageView) view).setImageDrawable(StaticResources.getBaseContext()
 				.getResources().getDrawable((task.getState() == eTaskState.UnDone) 

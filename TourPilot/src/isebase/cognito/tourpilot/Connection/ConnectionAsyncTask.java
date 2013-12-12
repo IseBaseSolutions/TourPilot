@@ -178,6 +178,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 			conStatus.OS.flush();
 			String recievedDate = readFromStream(conStatus.IS);
 			conStatus.serverCommandParser.parseElement(recievedDate, true);
+			correctTime();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			retVal = false;
@@ -543,6 +544,10 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		}
 
 		return retVal;
+	}
+	
+	private void correctTime() {
+		
 	}
 
 }

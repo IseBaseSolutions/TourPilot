@@ -121,9 +121,9 @@ public class VerificationActivity extends BaseActivity {
 	private String[] getTasks() {
 		String[] sTasks = new String[]{ "", "" };
 		List<Task> tasksExceptFirstAndLast = new ArrayList<Task>(tasks);
-		tasksExceptFirstAndLast.remove(0);
-		tasksExceptFirstAndLast.remove(tasksExceptFirstAndLast.size() - 1);
-		for(Task task : tasksExceptFirstAndLast) { 
+		for(Task task : tasksExceptFirstAndLast) {
+			if(task.getName().contains("Einsatzbeginn") || task.getName().contains("Einsatzende"))
+				continue;
 			if(task.getState() == eTaskState.Done) {
 				sTasks[0] +=  " - " + task.getName() + (task.getQualityResult().equals("") ? "" : (" (" + task.getQualityResult()) + ")") + "<br />";
 			}
@@ -139,13 +139,13 @@ public class VerificationActivity extends BaseActivity {
 		Bundle bundle = intentFlege.getExtras();
 		boolean isFlegeOK = false;
 		if(bundle != null){
-			isFlegeOK = bundle.getBoolean("isFlegeOK");
+			isFlegeOK = bundle.getBoolean("isAllOK");
 			if(isFlegeOK)
-				flege += "Flege is OK <br />";
+				flege += getString(R.string.all_ok) + "<br />";
 			userRemark = UserRemarkManager.Instance().load(employment.getID());
 			if(userRemark == null)
 				return flege;	
-			flege += "<b>" + getString(R.string.note) + ":</b> <br />";
+			flege += "<b>" + getString(R.string.visit_notes) + ":</b> <br />";
 			if((userRemark.getCheckboxes() & 1) == 1)
 				flege += getString(R.string.connect_with) + ": " + "<b>" + getString(R.string.yes) + "</b>" + " <br />";
 			else
@@ -176,7 +176,9 @@ public class VerificationActivity extends BaseActivity {
 		
 		String doneTasksIDs = "", undoneTasksIDs = "";
 		
-		for(int i = 1;i < tasks.size() - 1;i++) {
+		for(int i = 0; i < tasks.size(); i++) {
+			if(tasks.get(i).getName().contains("Einsatzbeginn") || tasks.get(i).getName().contains("Einsatzende"))
+				continue;
 			if(tasks.get(i).getState().equals(eTaskState.Done))
 				doneTasksIDs += (doneTasksIDs.equals("") ? "" : ",") + tasks.get(i).getID();
 			else

@@ -48,7 +48,7 @@ public class DateUtils {
 	
     public static Date getLocalDate(long milliseconds)
     {
-    	return new Date(milliseconds -(Calendar.getInstance().get(Calendar.ZONE_OFFSET)
+    	return new Date(milliseconds - (Calendar.getInstance().get(Calendar.ZONE_OFFSET)
 									  + Calendar.getInstance().get(Calendar.DST_OFFSET)));
     }
     
@@ -60,6 +60,10 @@ public class DateUtils {
     
 	public static Date getSynchronizedTime() {
 		return getLocalDate(Option.Instance().getServerTimeDifference() + (new Date()).getTime());
+	}
+	
+	public static Date getSynchronizedTime(Date date) {
+		return getLocalDate(Option.Instance().getServerTimeDifference() + date.getTime());
 	}
     
     public static String toDateTime(Date data)

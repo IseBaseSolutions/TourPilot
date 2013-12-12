@@ -60,7 +60,6 @@ public class StandardTaskDialog extends DialogFragment{
 		adb.setTitle(title);
 		etValue.setTextColor(Color.BLACK);
 		etValue.setHint(hint);
-		etValue.setHint(title);
 		etValue.setInputType(typeInput);
 		etValue.setEnabled(!isViewMode);
 		adb.setView(etValue);
