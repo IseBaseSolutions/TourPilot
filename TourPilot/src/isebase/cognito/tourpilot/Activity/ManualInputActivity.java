@@ -51,12 +51,11 @@ public class ManualInputActivity extends BaseActivity implements BaseDialogListe
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
-                super.onCreate(savedInstanceState);
-                setContentView(R.layout.activity_manual_input);
-                reloadData();
-                fillUp();
-                initDialogs();
-                setTimeSync(true);
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_manual_input);
+            reloadData();
+            fillUp();
+            initDialogs();
         }
 
         @Override

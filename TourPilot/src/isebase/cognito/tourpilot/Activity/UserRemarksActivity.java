@@ -39,7 +39,6 @@ public class UserRemarksActivity extends BaseActivity {
 			initElements();
 			setWriteAble();
 			fillUp();
-			setTimeSync(true);
 		}
 		catch(Exception e){
 			e.printStackTrace();

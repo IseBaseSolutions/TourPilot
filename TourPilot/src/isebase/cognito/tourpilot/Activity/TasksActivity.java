@@ -153,8 +153,6 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		case ACTIVITY_VERIFICATION_CODE:
 			if(resultCode == RESULT_OK) {
 				saveData(true);
-				employment.setIsDone(true);
-				EmploymentManager.Instance().save(employment);
 				if(Option.Instance().getIsAuto())
 					startSyncActivity();
 				else
@@ -313,7 +311,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	public void onChangeState(View view) {
 		if(!isClickable())
 		{
-			if (employment.isDone())
+			if (employment.isDone() || startEmploymentDialog.getFragmentManager() != null)
 				return;
 			startEmploymentDialog.show(getSupportFragmentManager(), "");
 			return;
@@ -494,6 +492,10 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	public void onDialogPositiveClick(DialogFragment dialog) {
 		if(dialog.getTag().equals("dialogBack")){
 			checkAllTasks(eTaskState.Empty, DateUtils.EmptyDate);
+			startTask.setManualDate(DateUtils.EmptyDate);
+			TaskManager.Instance().save(startTask);
+			endTask.setManualDate(DateUtils.EmptyDate);
+			TaskManager.Instance().save(endTask);
 			removeAdditionalTasks();
 			UserRemarkManager.Instance().delete(Option.Instance().getEmploymentID());
 			clearEmployment();
@@ -501,7 +503,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		}
 		else if (dialog.getTag().equals("dialogUndone")) {
 			checkAllTasksAndFillUp(eTaskState.UnDone);
-			saveEmployment();
+			//saveEmployment();
 			checkLeavingState();
 		}
 		else if (dialog.getTag().equals("dialogCheckLeavingState")) {
@@ -646,7 +648,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 	
 	private void clearEndTask() {
-		endTask.setManualDate(DateUtils.EmptyDate);
+		//endTask.setManualDate(DateUtils.EmptyDate);
 		endTask.setRealDate(DateUtils.EmptyDate);
 		endTask.setState(eTaskState.UnDone);
 		TaskManager.Instance().save(endTask);

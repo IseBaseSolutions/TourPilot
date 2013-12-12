@@ -65,7 +65,6 @@ public class PatientsActivity extends BaseActivity {
 			fillUp();
 			initDialogs();
 			showTourInfos(false);
-			setTimeSync(true);
 		} catch(Exception e) {
 			e.printStackTrace();
 			criticalClose();
