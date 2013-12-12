@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -62,6 +63,7 @@ public class StandardTaskDialog extends DialogFragment{
 		etValue.setHint(hint);
 		etValue.setInputType(typeInput);
 		etValue.setEnabled(!isViewMode);
+		etValue.setFilters(new InputFilter[] { new InputFilter.LengthFilter(10) });
 		adb.setView(etValue);
 		if(!isViewMode)
 			adb.setPositiveButton(isebase.cognito.tourpilot.R.string.ok,

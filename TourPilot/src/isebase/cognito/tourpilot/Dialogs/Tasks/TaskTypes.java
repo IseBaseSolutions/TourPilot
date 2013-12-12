@@ -2,7 +2,7 @@ package isebase.cognito.tourpilot.Dialogs.Tasks;
 
 import android.text.InputType;
 
-public class TaskDialogTypes {
+public class TaskTypes {
 
 	public static int weightTypeInput = InputType.TYPE_CLASS_NUMBER;
 	public static int respirationTypeInput = InputType.TYPE_CLASS_NUMBER;

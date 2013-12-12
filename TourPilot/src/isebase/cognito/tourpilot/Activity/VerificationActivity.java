@@ -45,7 +45,7 @@ public class VerificationActivity extends BaseActivity {
 		setContentView(R.layout.activity_verification);
 		tvVerification = (TextView) findViewById(R.id.tvVerificationText);
 		
-		employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
+		reloadData();
 		tasks = TaskManager.Instance().load(Task.EmploymentIDField, String.valueOf(Option.Instance().getEmploymentID()));
 		
 		taskVerification = "";
@@ -159,7 +159,7 @@ public class VerificationActivity extends BaseActivity {
 			else
 				flege += getString(R.string.aubrplanmabige_pflege) + ": " + "<b>" + getString(R.string.no) + "</b>" + " <br />";
 			if(!userRemark.getName().equals(""))
-				flege += "<b>" + getString(R.string.other) + ":</b> " + userRemark.getName() + "<br />";
+				flege += "<b>" + getString(R.string.other) + "</b> " + userRemark.getName() + "<br />";
 		}
 		return flege + "<br />";
 	}
@@ -171,10 +171,10 @@ public class VerificationActivity extends BaseActivity {
 		
 		long patientID = PatientManager.Instance().load(employment.getPatientID()).getID();
 		
-		Task fristTask = employment.getFirstTask();
+		Task firstTask = employment.getFirstTask();
 		Task lastTask = employment.getLastTask();
 		
-		Date dateBegin = fristTask.getManualDate().equals(DateUtils.EmptyDate) ? fristTask.getRealDate() : fristTask.getManualDate();
+		Date dateBegin = firstTask.getManualDate().equals(DateUtils.EmptyDate) ? firstTask.getRealDate() : firstTask.getManualDate();
 		Date dateEnd = lastTask.getManualDate().equals(DateUtils.EmptyDate) ? lastTask.getRealDate() : lastTask.getManualDate();
 		
 		String doneTasksIDs = "", undoneTasksIDs = "";
@@ -212,4 +212,9 @@ public class VerificationActivity extends BaseActivity {
 		}
 		return flegeMarks;
 	}
+	
+	private void reloadData() {
+		employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
+	}
+	
 }

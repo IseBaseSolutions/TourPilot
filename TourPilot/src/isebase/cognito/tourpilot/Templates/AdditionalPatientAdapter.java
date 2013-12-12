@@ -23,6 +23,7 @@ public class AdditionalPatientAdapter extends ArrayAdapter<Patient>{
 	private AdditionalPatientHolder lastCheckedAdditionalPatientHolder;
 	private int layoutResourceId;
 	private Context context;
+	private Button btOK; 
 	
 	public AdditionalPatientAdapter(Context context, int layoutResourceId, List<Patient> additionalPatients) {
 		super(context, layoutResourceId, additionalPatients);
@@ -31,6 +32,7 @@ public class AdditionalPatientAdapter extends ArrayAdapter<Patient>{
 		this.context = context;
 		for (Patient additionalPatient : additionalPatients)
 			additionalPatientHolders.add(new AdditionalPatientHolder(additionalPatient));
+		initControls();
 	}
 	
 	@Override
@@ -51,10 +53,7 @@ public class AdditionalPatientAdapter extends ArrayAdapter<Patient>{
 		@Override
 		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 			if (lastCheckedAdditionalPatientHolder == null) 
-			{
-				Button button = (Button) ((Activity) context).findViewById(R.id.btOK);
-				button.setEnabled(true);
-			}
+				btOK.setEnabled(true);
 			else
 				lastCheckedAdditionalPatientHolder.rdbAdditionalPatient.setChecked(false);
 			lastCheckedAdditionalPatientHolder = (AdditionalPatientHolder) buttonView.getTag();
@@ -73,6 +72,10 @@ public class AdditionalPatientAdapter extends ArrayAdapter<Patient>{
 	
 	public Patient getSelectedAdditionalPatient() {
 		return lastCheckedAdditionalPatientHolder.additionalPatient;
+	}
+	
+	private void initControls() {
+		btOK = (Button) ((Activity) context).findViewById(R.id.btOK);
 	}
 
 }

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -21,6 +22,8 @@ public class AdditionalEmploymentAdapter extends ArrayAdapter<AdditionalEmployme
 	private List<AdditionalEmploymentHolder> additionalEmployments;
 	private int layoutResourceId;
 	private Context context;
+	int selectedCount;
+	private Button btOK;
 	
 	public AdditionalEmploymentAdapter(Context context, int layoutResourceId, List<AdditionalEmployment> additionalEmployments) {
 		super(context, layoutResourceId, additionalEmployments);
@@ -30,6 +33,7 @@ public class AdditionalEmploymentAdapter extends ArrayAdapter<AdditionalEmployme
 		this.additionalEmployments = new ArrayList<AdditionalEmploymentHolder>();
 		for(AdditionalEmployment additionalEmployment : additionalEmployments)
 			this.additionalEmployments.add(new AdditionalEmploymentHolder(additionalEmployment));
+		initControls();
 	}
 	
 	@Override
@@ -52,7 +56,9 @@ public class AdditionalEmploymentAdapter extends ArrayAdapter<AdditionalEmployme
 		@Override
 		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 			AdditionalEmploymentHolder employmentHolder = (AdditionalEmploymentHolder) buttonView.getTag();
-			employmentHolder.isChecked = isChecked;			
+			employmentHolder.isChecked = isChecked;	
+			selectedCount += isChecked ? 1 : -1;
+			btOK.setEnabled(selectedCount != 0);
 		}
 	};
 		
@@ -77,4 +83,9 @@ public class AdditionalEmploymentAdapter extends ArrayAdapter<AdditionalEmployme
 		return selectedAdditionalEmployments;
 	}
 
+	private void initControls() {
+		btOK = (Button) ((Activity) context).findViewById(R.id.btOK);
+		btOK.setEnabled(false);
+	}
+	
 }

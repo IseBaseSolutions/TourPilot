@@ -47,7 +47,7 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 	
 	DialogFragment noPatientsDialog;
 	ProgressBar pbSync;
-	Button btOK;	
+	public Button btOK;	
 	
 	AdditionalEmploymentAdapter employmentAdapter;
 	AdditionalPatientAdapter patientAdapter;

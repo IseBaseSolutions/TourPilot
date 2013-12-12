@@ -26,7 +26,7 @@ import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
 import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.BlutdruckTaskDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.StandardTaskDialog;
-import isebase.cognito.tourpilot.Dialogs.Tasks.TaskDialogTypes;
+import isebase.cognito.tourpilot.Dialogs.Tasks.TaskTypes;
 import isebase.cognito.tourpilot.Gps.Gps;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Templates.TaskAdapter;
@@ -281,25 +281,25 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		DialogFragment dialog = null;
 		switch(task.getQuality()) {
 			case AdditionalTask.WEIGHT:
-				dialog = new StandardTaskDialog(task, getString(R.string.weight), task.getQualityResult(), getString(R.string.gewicht_value), TaskDialogTypes.weightTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.weight), task.getQualityResult(), getString(R.string.gewicht_value), TaskTypes.weightTypeInput);
 				break;
 			case AdditionalTask.DETECT_RESPIRATION:
-				dialog = new StandardTaskDialog(task, getString(R.string.detect_respiration), task.getQualityResult(), getString(R.string.atemzüge_value), TaskDialogTypes.respirationTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.detect_respiration), task.getQualityResult(), getString(R.string.atemzüge_value), TaskTypes.respirationTypeInput);
 				break;
 			case AdditionalTask.BALANCE:
-				dialog = new StandardTaskDialog(task, getString(R.string.balance), task.getQualityResult(), getString(R.string.ml), TaskDialogTypes.balanceTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.balance), task.getQualityResult(), getString(R.string.ml), TaskTypes.balanceTypeInput);
 				break;
 			case AdditionalTask.BLUTZUCKER:
-				dialog = new StandardTaskDialog(task, getString(R.string.blood_sugar), task.getQualityResult(), getString(R.string.blutzucker_value), TaskDialogTypes.blutzuckerTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.blood_sugar), task.getQualityResult(), getString(R.string.blutzucker_value), TaskTypes.blutzuckerTypeInput);
 				break;
 			case AdditionalTask.TEMPERATURE:
-				dialog = new StandardTaskDialog(task, getString(R.string.temperature), task.getQualityResult(), getString(R.string.temperature_value), TaskDialogTypes.temperatureTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.temperature), task.getQualityResult(), getString(R.string.temperature_value), TaskTypes.temperatureTypeInput);
 				break;
 			case AdditionalTask.BLUTDRUCK:
 				dialog = new BlutdruckTaskDialog(task, task.getQualityResult());
 				break;
 			case AdditionalTask.PULS:
-				dialog = new StandardTaskDialog(task, getString(R.string.pulse), task.getQualityResult(), TaskDialogTypes.pulsTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.pulse), task.getQualityResult(), TaskTypes.pulsTypeInput);
 				break;
 			default:
 				return;
@@ -344,25 +344,25 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			return;
 		switch(task.getQuality()){
 			case AdditionalTask.WEIGHT:
-				dialog = new StandardTaskDialog(task, getString(R.string.weight), getString(R.string.gewicht_value), TaskDialogTypes.weightTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.weight), getString(R.string.gewicht_value), TaskTypes.weightTypeInput);
 				break;
 			case AdditionalTask.DETECT_RESPIRATION:
-				dialog = new StandardTaskDialog(task, getString(R.string.detect_respiration), getString(R.string.atemzüge_value), TaskDialogTypes.respirationTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.detect_respiration), getString(R.string.atemzüge_value), TaskTypes.respirationTypeInput);
 				break;
 			case AdditionalTask.BALANCE:
-				dialog = new StandardTaskDialog(task, getString(R.string.balance), getString(R.string.ml), TaskDialogTypes.balanceTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.balance), getString(R.string.ml), TaskTypes.balanceTypeInput);
 				break;
 			case AdditionalTask.BLUTZUCKER:
-				dialog = new StandardTaskDialog(task, getString(R.string.blood_sugar), getString(R.string.blutzucker_value), TaskDialogTypes.blutzuckerTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.blood_sugar), getString(R.string.blutzucker_value), TaskTypes.blutzuckerTypeInput);
 				break;
 			case AdditionalTask.TEMPERATURE:
-				dialog = new StandardTaskDialog(task, getString(R.string.temperature), getString(R.string.temperature_value), TaskDialogTypes.temperatureTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.temperature), getString(R.string.temperature_value), TaskTypes.temperatureTypeInput);
 				break;
 			case AdditionalTask.BLUTDRUCK:
 				dialog = new BlutdruckTaskDialog(task);
 				break;
 			case AdditionalTask.PULS:
-				dialog = new StandardTaskDialog(task, getString(R.string.pulse), getString(R.string.puls_value), TaskDialogTypes.pulsTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.pulse), getString(R.string.puls_value), TaskTypes.pulsTypeInput);
 				break;
 			default:
 				return;
