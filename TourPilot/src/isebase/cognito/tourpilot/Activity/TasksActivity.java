@@ -637,8 +637,8 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		return employment.isDone();
 	}
 	private boolean isAllDone(){
-		  return !startTask.getRealDate().equals(DateUtils.EmptyDate) 
-		    && !endTask.getRealDate().equals(DateUtils.EmptyDate)
+		  return (!startTask.getRealDate().equals(DateUtils.EmptyDate) 
+		    && !endTask.getRealDate().equals(DateUtils.EmptyDate) && employment.isDone())
 		    || DateUtils.getTodayDateOnly().getTime() < DateUtils.getDateOnly(startTask.getPlanDate()).getTime();
 	}
 	private void checkAllIsDone(){
@@ -649,7 +649,6 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 	
 	private void clearEndTask() {
-		//endTask.setManualDate(DateUtils.EmptyDate);
 		endTask.setRealDate(DateUtils.EmptyDate);
 		endTask.setState(eTaskState.UnDone);
 		TaskManager.Instance().save(endTask);
