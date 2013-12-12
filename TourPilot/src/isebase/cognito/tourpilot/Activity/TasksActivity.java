@@ -163,8 +163,10 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 				else
 					startPatientsActivity();
 			} else {
+				endTask.setManualDate(DateUtils.EmptyDate);
 				endTask.setRealDate(DateUtils.EmptyDate);
 				endTask.setState(eTaskState.UnDone);
+				TaskManager.Instance().save(endTask);
 				fillUpTasks();
 			}
 			break;
