@@ -122,7 +122,7 @@ public class VerificationActivity extends BaseActivity {
 		String[] sTasks = new String[]{ "", "" };
 		List<Task> tasksExceptFirstAndLast = new ArrayList<Task>(tasks);
 		for(Task task : tasksExceptFirstAndLast) {
-			if(task.getName().contains("Einsatzbeginn") || task.getName().contains("Einsatzende"))
+			if(task.getName().contains(getString(R.string.start_task)) || task.getName().contains(getString(R.string.end_task)))
 				continue;
 			if(task.getState() == eTaskState.Done) {
 				sTasks[0] +=  " - " + task.getName() + (task.getQualityResult().equals("") ? "" : (" (" + task.getQualityResult()) + ")") + "<br />";
@@ -171,13 +171,16 @@ public class VerificationActivity extends BaseActivity {
 		
 		long patientID = PatientManager.Instance().load(employment.getPatientID()).getID();
 		
-		Date dateBegin = tasks.get(0).getManualDate().equals(DateUtils.EmptyDate) ? tasks.get(0).getRealDate() : tasks.get(0).getManualDate();
-		Date dateEnd = tasks.get(tasks.size()-1).getManualDate().equals(DateUtils.EmptyDate) ? tasks.get(tasks.size()-1).getRealDate() : tasks.get(tasks.size()-1).getManualDate();
+		Task fristTask = employment.getFirstTask();
+		Task lastTask = employment.getLastTask();
+		
+		Date dateBegin = fristTask.getManualDate().equals(DateUtils.EmptyDate) ? fristTask.getRealDate() : fristTask.getManualDate();
+		Date dateEnd = lastTask.getManualDate().equals(DateUtils.EmptyDate) ? lastTask.getRealDate() : lastTask.getManualDate();
 		
 		String doneTasksIDs = "", undoneTasksIDs = "";
 		
 		for(int i = 0; i < tasks.size(); i++) {
-			if(tasks.get(i).getName().contains("Einsatzbeginn") || tasks.get(i).getName().contains("Einsatzende"))
+			if(tasks.get(i).getName().contains(getString(R.string.start_task)) || tasks.get(i).getName().contains(getString(R.string.end_task)))
 				continue;
 			if(tasks.get(i).getState().equals(eTaskState.Done))
 				doneTasksIDs += (doneTasksIDs.equals("") ? "" : ",") + tasks.get(i).getID();

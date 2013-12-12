@@ -193,8 +193,8 @@ public final class R {
         public static final int version_menu=0x7f080010;
     }
     public static final class string {
-        public static final int action_settings=0x7f060079;
-        public static final int all_ok=0x7f060082;
+        public static final int action_settings=0x7f06007a;
+        public static final int all_ok=0x7f060083;
         /**  Programm info 
          */
         public static final int app_name=0x7f060040;
@@ -226,34 +226,34 @@ public final class R {
         public static final int def_empty_time=0x7f06004b;
         public static final int def_port=0x7f06004d;
         public static final int detect_respiration=0x7f060027;
-        public static final int dialog_clear_database=0x7f060071;
-        public static final int dialog_comments=0x7f06006e;
-        public static final int dialog_complete_all_tasks=0x7f060069;
-        public static final int dialog_connection_problems=0x7f06006b;
-        public static final int dialog_employment_not_started=0x7f060072;
-        public static final int dialog_empty_tour=0x7f060070;
-        public static final int dialog_leaving_patient=0x7f06006c;
-        public static final int dialog_no_connection=0x7f060068;
-        public static final int dialog_no_ip_entered=0x7f06006a;
-        public static final int dialog_no_patients=0x7f06006f;
-        public static final int dialog_proof_logout=0x7f06006d;
-        public static final int dialog_start_employment=0x7f060073;
-        public static final int dialog_task_proof_back=0x7f060067;
+        public static final int dialog_clear_database=0x7f060072;
+        public static final int dialog_comments=0x7f06006f;
+        public static final int dialog_complete_all_tasks=0x7f06006a;
+        public static final int dialog_connection_problems=0x7f06006c;
+        public static final int dialog_employment_not_started=0x7f060073;
+        public static final int dialog_empty_tour=0x7f060071;
+        public static final int dialog_leaving_patient=0x7f06006d;
+        public static final int dialog_no_connection=0x7f060069;
+        public static final int dialog_no_ip_entered=0x7f06006b;
+        public static final int dialog_no_patients=0x7f060070;
+        public static final int dialog_proof_logout=0x7f06006e;
+        public static final int dialog_start_employment=0x7f060074;
+        public static final int dialog_task_proof_back=0x7f060068;
         /**  Dialogs 
          */
-        public static final int dialog_task_proof_undone=0x7f060066;
+        public static final int dialog_task_proof_undone=0x7f060067;
         public static final int done=0x7f06003f;
-        public static final int done_tasks=0x7f06007b;
+        public static final int done_tasks=0x7f06007c;
         public static final int end_task=0x7f060025;
         /**  Notes 
          */
         public static final int enter_interval=0x7f06001f;
         public static final int enter_pin=0x7f06002f;
-        public static final int err_no_address=0x7f060075;
-        public static final int err_no_patients=0x7f060076;
+        public static final int err_no_address=0x7f060076;
+        public static final int err_no_patients=0x7f060077;
         /**  Errors 
          */
-        public static final int err_no_phone=0x7f060074;
+        public static final int err_no_phone=0x7f060075;
         public static final int gewicht_value=0x7f060050;
         public static final int hello_request_fail=0x7f060037;
         public static final int hello_request_ok=0x7f060036;
@@ -291,13 +291,13 @@ public final class R {
         public static final int min=0x7f060054;
         /**  Verification 
          */
-        public static final int minuten_einen=0x7f06007a;
+        public static final int minuten_einen=0x7f06007b;
         public static final int ml=0x7f060053;
         public static final int no=0x7f06005a;
-        public static final int no_any_patient=0x7f060077;
+        public static final int no_any_patient=0x7f060078;
         public static final int ok=0x7f060057;
         public static final int options=0x7f060018;
-        public static final int other=0x7f06007f;
+        public static final int other=0x7f060080;
         public static final int phone=0x7f060048;
         public static final int phone_mobile=0x7f06004a;
         public static final int phone_number=0x7f06001e;
@@ -314,6 +314,7 @@ public final class R {
         public static final int save=0x7f06005e;
         public static final int save_pin_code=0x7f06001a;
         public static final int search=0x7f06005c;
+        public static final int select_period=0x7f060066;
         public static final int server_ip=0x7f06001b;
         public static final int server_port=0x7f06001d;
         public static final int start=0x7f060063;
@@ -334,14 +335,14 @@ public final class R {
         public static final int synchronization=0x7f06002d;
         public static final int temperature=0x7f06002a;
         public static final int temperature_value=0x7f060052;
-        public static final int there_are_no_done_tasks=0x7f06007d;
-        public static final int there_are_no_undone_tasks=0x7f06007e;
+        public static final int there_are_no_done_tasks=0x7f06007e;
+        public static final int there_are_no_undone_tasks=0x7f06007f;
         public static final int title_activity_main=0x7f060044;
-        public static final int title_activity_verification=0x7f060078;
+        public static final int title_activity_verification=0x7f060079;
         public static final int tour_end=0x7f060061;
-        public static final int undone_tasks=0x7f06007c;
-        public static final int verification_cancel=0x7f060081;
-        public static final int verification_ok=0x7f060080;
+        public static final int undone_tasks=0x7f06007d;
+        public static final int verification_cancel=0x7f060082;
+        public static final int verification_ok=0x7f060081;
         public static final int version=0x7f060043;
         public static final int visit_notes=0x7f060023;
         public static final int waitng_sockets_to_close=0x7f06002e;
