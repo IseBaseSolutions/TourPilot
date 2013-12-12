@@ -1,16 +1,14 @@
 package isebase.cognito.tourpilot.Activity;
 
-import java.util.Date;
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
-import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentInterval;
-import isebase.cognito.tourpilot.Data.EmploymentVerification.EmploymentVerification;
-import isebase.cognito.tourpilot.Data.EmploymentVerification.EmploymentVerificationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemark;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
+
+import java.util.Date;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -40,7 +38,8 @@ public class UserRemarksActivity extends BaseActivity {
 			reloadData();
 			initElements();
 			setWriteAble();
-			fillUp();			
+			fillUp();
+			setTimeSync(true);
 		}
 		catch(Exception e){
 			e.printStackTrace();

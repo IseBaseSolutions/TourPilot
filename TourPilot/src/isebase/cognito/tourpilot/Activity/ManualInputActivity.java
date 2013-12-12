@@ -56,6 +56,7 @@ public class ManualInputActivity extends BaseActivity implements BaseDialogListe
                 reloadData();
                 fillUp();
                 initDialogs();
+                setTimeSync(true);
         }
 
         @Override

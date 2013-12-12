@@ -242,7 +242,7 @@ public final class R {
          */
         public static final int dialog_task_proof_undone=0x7f060067;
         public static final int done=0x7f060040;
-        public static final int done_tasks=0x7f06007d;
+        public static final int done_tasks=0x7f06007c;
         public static final int end_task=0x7f060026;
         /**  Notes 
          */
@@ -256,7 +256,6 @@ public final class R {
         public static final int gewicht_value=0x7f060051;
         public static final int hello_request_fail=0x7f060038;
         public static final int hello_request_ok=0x7f060037;
-        public static final int hello_world=0x7f06007b;
         public static final int input_server_ip=0x7f06001c;
         public static final int invitation_fail=0x7f060034;
         public static final int invitation_ok=0x7f060033;
@@ -291,14 +290,14 @@ public final class R {
         public static final int min=0x7f060055;
         /**  Verification 
          */
-        public static final int minuten_einen=0x7f06007c;
+        public static final int minuten_einen=0x7f06007b;
         public static final int ml=0x7f060054;
         public static final int no=0x7f06005b;
         public static final int no_any_patient=0x7f060078;
         public static final int note=0x7f060024;
         public static final int ok=0x7f060058;
         public static final int options=0x7f060018;
-        public static final int other=0x7f060081;
+        public static final int other=0x7f060080;
         public static final int phone=0x7f060049;
         public static final int phone_mobile=0x7f06004b;
         public static final int phone_number=0x7f06001e;
@@ -335,14 +334,14 @@ public final class R {
         public static final int synchronization=0x7f06002e;
         public static final int temperature=0x7f06002b;
         public static final int temperature_value=0x7f060053;
-        public static final int there_are_no_done_tasks=0x7f06007f;
-        public static final int there_are_no_undone_tasks=0x7f060080;
+        public static final int there_are_no_done_tasks=0x7f06007e;
+        public static final int there_are_no_undone_tasks=0x7f06007f;
         public static final int title_activity_main=0x7f060045;
         public static final int title_activity_verification=0x7f060079;
         public static final int tour_end=0x7f060062;
-        public static final int undone_tasks=0x7f06007e;
-        public static final int verification_cancel=0x7f060083;
-        public static final int verification_ok=0x7f060082;
+        public static final int undone_tasks=0x7f06007d;
+        public static final int verification_cancel=0x7f060082;
+        public static final int verification_ok=0x7f060081;
         public static final int version=0x7f060044;
         public static final int visit_notes=0x7f060023;
         public static final int waitng_sockets_to_close=0x7f06002f;

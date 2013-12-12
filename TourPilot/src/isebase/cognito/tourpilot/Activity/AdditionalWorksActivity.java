@@ -47,6 +47,7 @@ public class AdditionalWorksActivity extends BaseActivity implements BaseDialogL
 			fillUp();
 			fillUpTitle();
 			switchTolatest();
+			setTimeSync(true);
 		}
 		catch(Exception ex){
 			ex.printStackTrace();

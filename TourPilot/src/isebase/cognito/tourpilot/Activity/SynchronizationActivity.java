@@ -99,6 +99,11 @@ import android.widget.TextView;
 		connectionTask.terminate();
 		super.onBackPressed();
  	}
+ 	
+ 	@Override
+ 	protected void onResume() {
+ 		super.onResume();
+ 	}
 
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog) {

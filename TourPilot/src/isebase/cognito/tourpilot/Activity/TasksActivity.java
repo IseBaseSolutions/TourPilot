@@ -97,8 +97,8 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			checkAllIsDone();
 			checkEmploymentIsDone();
 			showPatientInfo(false);
-			
-		}catch(Exception e){
+			setTimeSync(true);			
+		} catch(Exception e){
 			e.printStackTrace();
 			criticalClose();
 		}
@@ -145,8 +145,10 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			if(resultCode == RESULT_OK) {
 				startVerificationActivity(ACTIVITY_VERIFICATION_CODE,!IS_FLEGE_OK);
 			} else {
+				endTask.setManualDate(DateUtils.EmptyDate);
 				endTask.setRealDate(DateUtils.EmptyDate);
 				endTask.setState(eTaskState.UnDone);
+				TaskManager.Instance().save(endTask);
 				fillUpTasks();
 			}
 			
@@ -390,7 +392,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 	
 	private void initDialogs() {
-		startEmploymentDialog = new BaseInfoDialog(getString(R.string.dialog_employment_not_started), getString(R.string.dialog_start_employment));
+		startEmploymentDialog = new BaseInfoDialog(getString(R.string.attention), getString(R.string.dialog_start_employment));
 	}
 
 	private void checkAllTasks(eTaskState state){

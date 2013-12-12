@@ -20,6 +20,12 @@ public class BaseActivity extends FragmentActivity{
 	private ConnectionStatus connectionStatus;
 	private ConnectionAsyncTask connectionTask;
 	
+	private boolean timeSync;
+	
+	public void setTimeSync(boolean timeSync) {
+		this.timeSync = timeSync;
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
@@ -47,40 +53,41 @@ public class BaseActivity extends FragmentActivity{
 	
 	@Override
 	protected void onResume() {
-
-		SynchronizationHandler syncHandler = new SynchronizationHandler() {
- 			
- 			@Override
-			public void onSynchronizedFinished(boolean isOK, String text) {
-				if(!text.equals("")){
-
-				}
- 			}
- 			
- 			@Override
- 			public void onItemSynchronized(String text) {
- 				if (connectionStatus.CurrentState == 1)
- 					connectionStatus.CurrentState = 9;
- 				else if (connectionStatus.CurrentState == 9)
- 					connectionStatus.CurrentState = 6;
- 				else 
- 					connectionStatus.nextState();
-				connectionTask = new ConnectionAsyncTask(connectionStatus);
-				connectionTask.execute(); 
- 			}
- 			
- 			@Override
- 			public void onProgressUpdate(String text, int progress){
- 			}
-
-			@Override
-			public void onProgressUpdate(String text) {			
-			}				
- 		};	
+		if (timeSync) {
+			SynchronizationHandler syncHandler = new SynchronizationHandler() {
+	 			
+	 			@Override
+				public void onSynchronizedFinished(boolean isOK, String text) {
+					if(!text.equals("")){
 	
-		connectionStatus = new ConnectionStatus(syncHandler);
-		connectionTask = new ConnectionAsyncTask(connectionStatus);
-		connectionTask.execute();
+					}
+	 			}
+	 			
+	 			@Override
+	 			public void onItemSynchronized(String text) {
+	 				if (connectionStatus.CurrentState == 1)
+	 					connectionStatus.CurrentState = 9;
+	 				else if (connectionStatus.CurrentState == 9)
+	 					connectionStatus.CurrentState = 6;
+	 				else 
+	 					connectionStatus.nextState();
+					connectionTask = new ConnectionAsyncTask(connectionStatus);
+					connectionTask.execute(); 
+	 			}
+	 			
+	 			@Override
+	 			public void onProgressUpdate(String text, int progress){
+	 			}
+	
+				@Override
+				public void onProgressUpdate(String text) {			
+				}				
+	 		};	
+		
+			connectionStatus = new ConnectionStatus(syncHandler);
+			connectionTask = new ConnectionAsyncTask(connectionStatus);
+			connectionTask.execute();
+		}
 		super.onResume();
 	}
 	

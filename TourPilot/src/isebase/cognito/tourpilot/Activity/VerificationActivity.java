@@ -160,7 +160,7 @@ public class VerificationActivity extends BaseActivity {
 				else
 					flege += getString(R.string.aubrplanmabige_pflege) + ": " + "<b>" + getString(R.string.no) + "</b>" + " <br />";
 				if(!userRemark.getName().equals(""))
-					flege += "<b>" + getString(R.string.other) + ":</b> " + userRemark.getName() + "<br />";
+					flege += "<b>" + getString(R.string.other) + "</b> " + userRemark.getName() + "<br />";
 			}
 		}
 		return flege + "<br />";

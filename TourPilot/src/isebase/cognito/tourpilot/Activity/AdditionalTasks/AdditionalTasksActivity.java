@@ -43,6 +43,7 @@ public class AdditionalTasksActivity extends BaseActivity {
 			reloadData();
 			fillUp();
 			fillUpTitle();
+			setTimeSync(true);
 		}
 		catch(Exception ex){
 			ex.printStackTrace();
@@ -115,7 +116,6 @@ public class AdditionalTasksActivity extends BaseActivity {
 	}
 
 	private void sortAdditinalTasks() {
-
 		Collections.sort(additionalTasks,new BaseObjectCompare());
 	}
 }
