@@ -503,7 +503,6 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		}
 		else if (dialog.getTag().equals("dialogUndone")) {
 			checkAllTasksAndFillUp(eTaskState.UnDone);
-			//saveEmployment();
 			checkLeavingState();
 		}
 		else if (dialog.getTag().equals("dialogCheckLeavingState")) {
@@ -648,7 +647,6 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 	
 	private void clearEndTask() {
-		//endTask.setManualDate(DateUtils.EmptyDate);
 		endTask.setRealDate(DateUtils.EmptyDate);
 		endTask.setState(eTaskState.UnDone);
 		TaskManager.Instance().save(endTask);
