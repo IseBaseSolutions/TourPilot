@@ -1,5 +1,9 @@
 package isebase.cognito.tourpilot.Activity;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Connection.ConnectionInfo;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
@@ -39,6 +43,15 @@ public class OptionsActivity extends BaseActivity {
 			super.onCreate(savedInstanceState);
 			StaticResources.setBaseContext(getBaseContext());
 			setContentView(R.layout.activity_options);
+
+			NumberFormat nf = NumberFormat.getInstance();
+			DecimalFormat df = (DecimalFormat)nf;
+			DecimalFormatSymbols d = new DecimalFormatSymbols();
+			d.setDecimalSeparator('m');
+
+			
+			df.setDecimalFormatSymbols(d);
+
 			switchToLastActivity();
 			initControls();
 			initDialogs();
