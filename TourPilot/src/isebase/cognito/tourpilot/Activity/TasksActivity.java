@@ -504,7 +504,6 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		}
 		else if (dialog.getTag().equals("dialogUndone")) {
 			checkAllTasksAndFillUp(eTaskState.UnDone);
-			//saveEmployment();
 			checkLeavingState();
 		}
 		else if (dialog.getTag().equals("dialogCheckLeavingState")) {

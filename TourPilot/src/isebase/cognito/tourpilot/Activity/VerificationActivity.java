@@ -16,7 +16,6 @@ import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -44,9 +43,9 @@ public class VerificationActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_verification);
 		tvVerification = (TextView) findViewById(R.id.tvVerificationText);
+		tasks = TaskManager.Instance().load(Task.EmploymentIDField, String.valueOf(Option.Instance().getEmploymentID()));
 		
 		reloadData();
-		tasks = TaskManager.Instance().load(Task.EmploymentIDField, String.valueOf(Option.Instance().getEmploymentID()));
 		
 		taskVerification = "";
 
@@ -117,11 +116,10 @@ public class VerificationActivity extends BaseActivity {
 		long difference = (timeStop.getTime() - timeStart.getTime()) / 1000 / 60;
 		return String.valueOf(difference) + " ";
 	}
-	
+		
 	private String[] getTasks() {
 		String[] sTasks = new String[]{ "", "" };
-		List<Task> tasksExceptFirstAndLast = new ArrayList<Task>(tasks);
-		for(Task task : tasksExceptFirstAndLast) {
+		for(Task task : tasks) {
 			if(task.getName().contains(getString(R.string.start_task)) || task.getName().contains(getString(R.string.end_task)))
 				continue;
 			if(task.getState() == eTaskState.Done) {
@@ -170,22 +168,17 @@ public class VerificationActivity extends BaseActivity {
 		long workerID = Option.Instance().getWorkerID();
 		
 		long patientID = PatientManager.Instance().load(employment.getPatientID()).getID();
-		
-		Task firstTask = employment.getFirstTask();
-		Task lastTask = employment.getLastTask();
-		
-		Date dateBegin = firstTask.getManualDate().equals(DateUtils.EmptyDate) ? firstTask.getRealDate() : firstTask.getManualDate();
-		Date dateEnd = lastTask.getManualDate().equals(DateUtils.EmptyDate) ? lastTask.getRealDate() : lastTask.getManualDate();
-		
+		Date dateBegin = employment.getFirstTask().getManualDate().equals(DateUtils.EmptyDate) ? employment.getFirstTask().getRealDate() : employment.getFirstTask().getManualDate();
+		Date dateEnd = employment.getLastTask().getManualDate().equals(DateUtils.EmptyDate) ? employment.getLastTask().getRealDate() : employment.getLastTask().getManualDate();;
+
 		String doneTasksIDs = "", undoneTasksIDs = "";
-		
-		for(int i = 0; i < tasks.size(); i++) {
-			if(tasks.get(i).getName().contains(getString(R.string.start_task)) || tasks.get(i).getName().contains(getString(R.string.end_task)))
+		for(Task task : tasks) {
+			if(task.getName().contains(getString(R.string.start_task)) || task.getName().contains(getString(R.string.end_task)))
 				continue;
-			if(tasks.get(i).getState().equals(eTaskState.Done))
-				doneTasksIDs += (doneTasksIDs.equals("") ? "" : ",") + tasks.get(i).getID();
+			if(task.getState().equals(eTaskState.Done))
+				doneTasksIDs += (doneTasksIDs.equals("") ? "" : ",") + task.getID();
 			else
-				undoneTasksIDs += (undoneTasksIDs.equals("") ? "" : ",") + tasks.get(i).getID();
+				undoneTasksIDs += (undoneTasksIDs.equals("") ? "" : ",") + task.getID();
 		}
 		String userRemarks = getFlegeMarks();
 		EmploymentVerificationManager.Instance().save(new EmploymentVerification(employmentID, workerID, patientID, dateBegin, dateEnd, doneTasksIDs, undoneTasksIDs, userRemarks));
