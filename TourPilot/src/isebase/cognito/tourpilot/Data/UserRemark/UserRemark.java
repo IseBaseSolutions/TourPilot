@@ -4,6 +4,7 @@ import java.util.Date;
 
 import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 import isebase.cognito.tourpilot.Utils.StringParser;
@@ -95,6 +96,13 @@ public class UserRemark extends BaseObject {
     }  
     
     public String toString(){
+		if (!getIsServerTime() && Option.Instance().isTimeSynchronised())
+		{
+			setDate(DateUtils.getSynchronizedTime(getDate()));
+			setIsServerTime(true);
+			UserRemarkManager.Instance().save(this);
+		}
+    	UserRemarkManager.Instance().save(this);
         String strValue = new String("O;");
         strValue += getID() + ";";
         strValue += getPatientID() + ";";
@@ -108,7 +116,12 @@ public class UserRemark extends BaseObject {
     
     public String getDone()
     {
-        //O;358;4926;2008-08-19 22:14:59;0;ferting
+		if (!getIsServerTime() && Option.Instance().isTimeSynchronised())
+		{
+			setDate(DateUtils.getSynchronizedTime(getDate()));
+			setIsServerTime(true);
+			UserRemarkManager.Instance().save(this);
+		}
         String strValue = new String("O;");
         strValue += getID() + ";";
         strValue += getPatientID() + ";";

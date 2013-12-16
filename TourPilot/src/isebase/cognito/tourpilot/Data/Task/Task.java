@@ -396,6 +396,10 @@ public class Task extends BaseObject {
     	return Integer.parseInt(strArr[1]);
     }
     
+    public boolean isLastTask() {
+    	return getLeistungs().contains("Ende");
+    }
+    
     public boolean isFirstTask() {
     	return getLeistungs().contains("Anfang");
     }

@@ -9,11 +9,13 @@ import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.PinDialog;
+import isebase.cognito.tourpilot.Utils.DataBaseUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
@@ -48,6 +50,10 @@ public class WorkersActivity extends BaseActivity implements BaseDialogListener 
 	
 	public void btOptionsClick(View view) {
 		toOptionActivity();
+	}
+	
+	public void btSyncClick(View view) {
+		startSyncActivity();
 	}
 
 	public void initListWorkers() {
@@ -117,4 +123,5 @@ public class WorkersActivity extends BaseActivity implements BaseDialogListener 
 		Option.Instance().save();
 		startOptionsActivity();
 	}
+
 }

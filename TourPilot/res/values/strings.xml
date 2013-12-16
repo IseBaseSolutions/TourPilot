@@ -157,5 +157,11 @@
     <string name="verification_ok">Senden</string>
     <string name="verification_cancel">Bearbeiten</string>
     <string name="all_ok">Pflege OK</string>
+    
+    <!-- Catalogs -->
+    <string name="btyp_kk">Krankenkassenleistung</string>
+    <string name="btyp_pk">Pflegekassenleistung</string>
+    <string name="btyp_sa">Sozialamtsleistung</string>
+    <string name="btyp_pr">Privateleistung</string>
 
 </resources>

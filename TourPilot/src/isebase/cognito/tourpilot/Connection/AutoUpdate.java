@@ -29,10 +29,6 @@ public class AutoUpdate extends AsyncTask<Void, Boolean, Void> {
     {
     	if (Option.Instance().getVersionLink() == null)
     		return null;
-//        PowerManager pm = (PowerManager) StaticResources.getBaseContext().getSystemService(Context.POWER_SERVICE);
-//        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-//             getClass().getName());
-//        wl.acquire();
         
         try {
             InputStream input = null;
@@ -43,31 +39,22 @@ public class AutoUpdate extends AsyncTask<Void, Boolean, Void> {
                 connection = (HttpURLConnection) url.openConnection();
                 connection.connect();
 
-                // expect HTTP 200 OK, so we don't mistakenly save error report 
-                // instead of the file
                 if (connection.getResponseCode() != HttpURLConnection.HTTP_OK)
                      return "Server returned HTTP " + connection.getResponseCode() 
                          + " " + connection.getResponseMessage();
 
-                // this will be useful to display download percentage
-                // might be -1: server did not report the length
-                int fileLength = connection.getContentLength();
 
-                // download the file
                 input = connection.getInputStream();
                 output = new FileOutputStream(Environment.getExternalStorageDirectory() + "/download/" + "TourPilot.apk");
 
                 byte data[] = new byte[4096];
-                long total = 0;
                 int count;
                 while ((count = input.read(data)) != -1) {
-                    // allow canceling with back button
                     if (isCancelled())
+                    {
+                    	input.close();
                         return null;
-                    total += count;
-                    // publishing the progress....
-//                    if (fileLength > 0) // only if total length is known
-//                        publishProgress((int) (total * 100 / fileLength));
+                    }
                     output.write(data, 0, count);
                 }
             } catch (Exception e) {
@@ -85,7 +72,7 @@ public class AutoUpdate extends AsyncTask<Void, Boolean, Void> {
                     connection.disconnect();
             }
         } finally {
-//            wl.release();
+        	
         }
               	
     	Intent intent = new Intent(Intent.ACTION_VIEW);

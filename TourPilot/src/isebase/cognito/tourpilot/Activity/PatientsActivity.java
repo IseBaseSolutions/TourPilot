@@ -22,7 +22,6 @@ import isebase.cognito.tourpilot.Utils.DateUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import android.app.AlertDialog;

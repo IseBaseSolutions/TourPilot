@@ -153,8 +153,14 @@ public class Work extends BaseObject implements IJob {
     //1385625680030
     
 	@Override
-	public String forServer() {
-		
+	public String forServer() {	
+		if (!getIsServerTime() && Option.Instance().isTimeSynchronised())
+		{
+			setStartTime(DateUtils.getSynchronizedTime(getStartTime()));
+			setStopTime(DateUtils.getSynchronizedTime(getStopTime()));
+			setIsServerTime(true);
+			WorkManager.Instance().save(this);
+		}
         String strValue = new String(ServerCommandParser.WORK + ";");
         strValue += Option.Instance().getWorkerID() + ";";
         strValue += DateUtils.getLocalTime(getStartTime()) + ";";

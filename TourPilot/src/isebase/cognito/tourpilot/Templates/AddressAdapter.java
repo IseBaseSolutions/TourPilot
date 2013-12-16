@@ -5,7 +5,6 @@ import isebase.cognito.tourpilot.Data.Address.IAddressable;
 import isebase.cognito.tourpilot.Data.Doctor.Doctor;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Relative.Relative;
-import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
 import java.util.List;
 

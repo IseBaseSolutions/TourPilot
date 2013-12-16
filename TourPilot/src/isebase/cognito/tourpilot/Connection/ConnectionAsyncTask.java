@@ -7,7 +7,6 @@ import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Diagnose.DiagnoseManager;
 import isebase.cognito.tourpilot.Data.Doctor.DoctorManager;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
-import isebase.cognito.tourpilot.Data.EmploymentVerification.EmploymentVerificationManager;
 import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
@@ -178,6 +177,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 			conStatus.OS.flush();
 			String recievedDate = readFromStream(conStatus.IS);
 			conStatus.serverCommandParser.parseElement(recievedDate, true);
+			Option.Instance().setTimeSynchronised(true);
 			correctTime();
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -376,7 +376,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		// strDone += CLogs.Instance().GetDone();
 		//
 		strDone += UserRemarkManager.Instance().getDone();
-		strDone += EmploymentVerificationManager.Instance().getDone();
+		//strDone += EmploymentVerificationManager.Instance().getDone();
 		//
 		// strDone += CMergedEmploymentTimes.Instance().GetDone(); // Andrew
 		//
@@ -531,6 +531,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 			conStatus.OS.flush();
 			String recievedDate = readFromStream(conStatus.IS);
 			conStatus.serverCommandParser.parseElement(recievedDate, true);
+			Option.Instance().setTimeSynchronised(true);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			retVal = false;

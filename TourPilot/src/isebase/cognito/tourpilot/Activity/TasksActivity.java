@@ -20,6 +20,8 @@ import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
+import isebase.cognito.tourpilot.Data.Worker.Worker;
+import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
@@ -54,6 +56,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 
 	private TaskAdapter taskAdapter;
 	private Employment employment;
+	private Worker worker;
 	private Diagnose diagnose;
 	
 	private Task startTask;
@@ -116,9 +119,11 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		MenuItem doctorsMenu = menu.findItem(R.id.doctors);
 		MenuItem relativesMenu = menu.findItem(R.id.relatives);
 		MenuItem notesMenu = menu.findItem(R.id.notes);
+		MenuItem gpsMenu = menu.findItem(R.id.gps);
 		infoMenu.setEnabled(infos.size() != 0);
 		commentsMenu.setEnabled(!(patientRemark == null || patientRemark.getName().length() == 0));
 		diagnoseMenu.setEnabled(!(diagnose == null || diagnose.getName().length() == 0));
+		gpsMenu.setVisible(worker.getIsUseGPS());
 		notesMenu.setEnabled(isClickable());
 		if(isEmploymentDone()) {
 			manualInputMenu.setEnabled(false);
@@ -205,7 +210,11 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	}
 	
 	private void fillUpTitle() {
-		setTitle(employment.text() + (startTask.getDayPart().equals("") ? "" : (", " + startTask.getDayPart())));
+		setTitle(employment.isWork()
+				? employment.text() 
+				: (employment.text() + (startTask.getDayPart().equals("") 
+						? "" 
+						: (", " + startTask.getDayPart()))));
 	}
 	
 	private void fillUpTasks() {		
@@ -223,6 +232,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	public void reloadData() {
 		employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
 		patientRemark = PatientRemarkManager.Instance().load(employment.getPatientID());
+		worker = WorkerManager.Instance().load(Option.Instance().getWorkerID()); 
 		tasks = TaskManager.Instance().load(Task.EmploymentIDField, String.valueOf(Option.Instance().getEmploymentID()));
 		diagnose = DiagnoseManager.Instance().load(employment.getPatientID());
 		initHeadTasks();		
@@ -232,6 +242,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		checkAllTasksAndFillUp(eTaskState.Empty);
 		startTask.setRealDate(DateUtils.getSynchronizedTime());
 		startTask.setState(eTaskState.Done);
+		startTask.setIsServerTime(Option.Instance().isTimeSynchronised());
 		endTask.setRealDate(DateUtils.EmptyDate);
 		TaskManager.Instance().save(startTask);
 		TaskManager.Instance().save(endTask);
@@ -240,9 +251,20 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		fillUpEndButtonEnabling();
 	}
 	
-	public void btEndTaskTimerClick(View view) {
-		saveData(false);
-		checkLeavingState();
+	public void btEndTaskTimerClick(View view) {		
+		if (!employment.isWork())
+		{
+			saveData(false);
+			checkLeavingState();
+		}
+		else
+		{
+			saveData(true);
+			if(Option.Instance().getIsAuto())
+				startSyncActivity();
+			else
+				startPatientsActivity();
+		}
 	}
 	
 	@Override
@@ -281,30 +303,51 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		DialogFragment dialog = null;
 		switch(task.getQuality()) {
 			case AdditionalTask.WEIGHT:
-				dialog = new StandardTaskDialog(task, getString(R.string.weight), task.getQualityResult(), getString(R.string.gewicht_value), TaskTypes.weightTypeInput);
+				dialog = new BaseInfoDialog(getString(R.string.weight), task.getQualityResult());
 				break;
 			case AdditionalTask.DETECT_RESPIRATION:
-				dialog = new StandardTaskDialog(task, getString(R.string.detect_respiration), task.getQualityResult(), getString(R.string.atemzüge_value), TaskTypes.respirationTypeInput);
+				dialog = new BaseInfoDialog(getString(R.string.detect_respiration), task.getQualityResult());
 				break;
 			case AdditionalTask.BALANCE:
-				dialog = new StandardTaskDialog(task, getString(R.string.balance), task.getQualityResult(), getString(R.string.ml), TaskTypes.balanceTypeInput);
+				dialog = new BaseInfoDialog(getString(R.string.balance), task.getQualityResult());
 				break;
 			case AdditionalTask.BLUTZUCKER:
-				dialog = new StandardTaskDialog(task, getString(R.string.blood_sugar), task.getQualityResult(), getString(R.string.blutzucker_value), TaskTypes.blutzuckerTypeInput);
+				dialog = new BaseInfoDialog(getString(R.string.blood_sugar), task.getQualityResult());
 				break;
 			case AdditionalTask.TEMPERATURE:
-				dialog = new StandardTaskDialog(task, getString(R.string.temperature), task.getQualityResult(), getString(R.string.temperature_value), TaskTypes.temperatureTypeInput);
+				dialog = new BaseInfoDialog(getString(R.string.temperature), task.getQualityResult());
 				break;
 			case AdditionalTask.BLUTDRUCK:
-				dialog = new BlutdruckTaskDialog(task, task.getQualityResult());
+				dialog = new BaseInfoDialog(getString(R.string.blood_pressure), task.getQualityResult());
 				break;
 			case AdditionalTask.PULS:
-				dialog = new StandardTaskDialog(task, getString(R.string.pulse), task.getQualityResult(), TaskTypes.pulsTypeInput);
+				dialog = new BaseInfoDialog(getString(R.string.pulse), task.getQualityResult());
 				break;
+//			case AdditionalTask.WEIGHT:
+//				dialog = new StandardTaskDialog(task, getString(R.string.weight), task.getQualityResult(), getString(R.string.gewicht_value), TaskTypes.weightTypeInput);
+//				break;
+//			case AdditionalTask.DETECT_RESPIRATION:
+//				dialog = new StandardTaskDialog(task, getString(R.string.detect_respiration), task.getQualityResult(), getString(R.string.atemzüge_value), TaskTypes.respirationTypeInput);
+//				break;
+//			case AdditionalTask.BALANCE:
+//				dialog = new StandardTaskDialog(task, getString(R.string.balance), task.getQualityResult(), getString(R.string.ml), TaskTypes.balanceTypeInput);
+//				break;
+//			case AdditionalTask.BLUTZUCKER:
+//				dialog = new StandardTaskDialog(task, getString(R.string.blood_sugar), task.getQualityResult(), getString(R.string.blutzucker_value), TaskTypes.blutzuckerTypeInput);
+//				break;
+//			case AdditionalTask.TEMPERATURE:
+//				dialog = new StandardTaskDialog(task, getString(R.string.temperature), task.getQualityResult(), getString(R.string.temperature_value), TaskTypes.temperatureTypeInput);
+//				break;
+//			case AdditionalTask.BLUTDRUCK:
+//				dialog = new BlutdruckTaskDialog(task, task.getQualityResult());
+//				break;
+//			case AdditionalTask.PULS:
+//				dialog = new StandardTaskDialog(task, getString(R.string.pulse), task.getQualityResult(), TaskTypes.pulsTypeInput);
+//				break;
 			default:
 				return;
 		}
-		dialog.show(getSupportFragmentManager(), "dialogTasks");
+		dialog.show(getSupportFragmentManager(), "dialogTaskResult");
 		getSupportFragmentManager().executePendingTransactions();
 	}
 		
@@ -319,6 +362,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		Task task = (Task) view.getTag();
 		clickedCheckBox = view;
 		task.setRealDate(DateUtils.getSynchronizedTime());
+		task.setIsServerTime(Option.Instance().isTimeSynchronised());
 		if (startTask.getManualDate().equals(DateUtils.EmptyDate))
 			task.setManualDate(DateUtils.getAverageDate(startTask.getManualDate(), endTask.getManualDate()));
 		task.setState((task.getState() == eTaskState.Done) 
@@ -398,6 +442,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		for(Task task : tasks) {
 			task.setState(state);
 			task.setRealDate(date);
+			task.setIsServerTime(Option.Instance().isTimeSynchronised());
 			task.setQualityResult("");
 		}
 		TaskManager.Instance().save(tasks);	
@@ -504,7 +549,6 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		}
 		else if (dialog.getTag().equals("dialogUndone")) {
 			checkAllTasksAndFillUp(eTaskState.UnDone);
-			//saveEmployment();
 			checkLeavingState();
 		}
 		else if (dialog.getTag().equals("dialogCheckLeavingState")) {
@@ -568,6 +612,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		if(!isEmploymentDone()) {
 			endTask.setRealDate(DateUtils.getSynchronizedTime());
 			endTask.setState(eTaskState.Done);
+			endTask.setIsServerTime(Option.Instance().isTimeSynchronised());
 			TaskManager.Instance().save(endTask);
 			fillUpEndTask();			
 		}

@@ -22,12 +22,14 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
 public class AdditionalTasksActivity extends BaseActivity {
 
 	private ListView lvAddTasks;
+	public Button btSaveAddTasks;
 	private AdditionalTaskAdapter adapter;
 	
 	private List<AdditionalTask> additionalTasks;
@@ -35,27 +37,29 @@ public class AdditionalTasksActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		try{
+		try {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_add_tasks);
-			init();
-			initFilter();
+			initControls();
 			reloadData();
 			fillUp();
 			fillUpTitle();
 			setTimeSync(true);
 		}
-		catch(Exception ex){
+		catch(Exception ex) {
 			ex.printStackTrace();
 			criticalClose();
 		}
 	}
 	
-	private void init(){
-		lvAddTasks = (ListView) findViewById(R.id.lvAddTasks);		
+	private void initControls() {
+		lvAddTasks = (ListView) findViewById(R.id.lvAddTasks);
+		btSaveAddTasks = (Button) findViewById(R.id.btSaveAddTask);
+		btSaveAddTasks.setEnabled(false);
+		initFilter();
 	}
 	
-	private void initFilter(){
+	private void initFilter() {
 		EditText etFilter = (EditText) findViewById(R.id.etAddTasksFilter);
 		etFilter.addTextChangedListener(new TextWatcher() {
 
@@ -76,7 +80,7 @@ public class AdditionalTasksActivity extends BaseActivity {
 		});
 	}
 	
-	private void reloadData(){
+	private void reloadData() {
 		int catalogType = getIntent().getIntExtra("catalog_type", BaseObject.EMPTY_ID);
 		catalog = new Catalog(eCatalogType.values()[catalogType]);	
 		
@@ -100,13 +104,12 @@ public class AdditionalTasksActivity extends BaseActivity {
 		sortAdditinalTasks();
 	}
 
-	private void fillUp(){
-		adapter = new AdditionalTaskAdapter(this
-				,R.layout.row_additional_task_template, additionalTasks);
+	private void fillUp() {
+		adapter = new AdditionalTaskAdapter(this, R.layout.row_additional_task_template, additionalTasks);
 		lvAddTasks.setAdapter(adapter);
 	}
 	
-	private void fillUpTitle(){
+	private void fillUpTitle() {
 		setTitle(catalog.getName());
 	}
 
@@ -116,6 +119,6 @@ public class AdditionalTasksActivity extends BaseActivity {
 	}
 
 	private void sortAdditinalTasks() {
-		Collections.sort(additionalTasks,new BaseObjectCompare());
+		Collections.sort(additionalTasks, new BaseObjectCompare());
 	}
 }

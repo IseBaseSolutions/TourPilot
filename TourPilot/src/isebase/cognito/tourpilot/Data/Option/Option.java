@@ -1,16 +1,10 @@
 package isebase.cognito.tourpilot.Data.Option;
 
-import java.util.Date;
-
-import isebase.cognito.tourpilot.Connection.ConnectionAsyncTask;
-import isebase.cognito.tourpilot.Connection.ConnectionStatus;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataBase.MapField;
-import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
-import isebase.cognito.tourpilot.Utils.DateUtils;
 import android.telephony.TelephonyManager;
 
 public class Option {
@@ -51,6 +45,7 @@ public class Option {
 
 	private boolean isAuto;
 	private boolean isWorkerActivity;
+	private boolean isTimeSynchronised;
 
 	@MapField(DatabaseField = PinField)
 	public String getPin() {
@@ -186,6 +181,14 @@ public class Option {
 
 	public void setVersionLink(String versionLink) {
 		this.versionLink = versionLink;
+	}
+	
+	public boolean isTimeSynchronised() {
+		return isTimeSynchronised;
+	}
+
+	public void setTimeSynchronised(boolean isTimeSynchronised) {
+		this.isTimeSynchronised = isTimeSynchronised;
 	}
 
 	public Worker getWorker() {

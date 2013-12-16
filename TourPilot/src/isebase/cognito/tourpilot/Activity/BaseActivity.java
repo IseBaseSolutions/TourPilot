@@ -1,7 +1,5 @@
 package isebase.cognito.tourpilot.Activity;
 
-import java.util.Date;
-
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Connection.ConnectionAsyncTask;
 import isebase.cognito.tourpilot.Connection.ConnectionStatus;
@@ -9,7 +7,6 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
-import isebase.cognito.tourpilot.Utils.DateUtils;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -57,6 +54,7 @@ public class BaseActivity extends FragmentActivity{
 	@Override
 	protected void onResume() {
 		if (timeSync) {
+			Option.Instance().setTimeSynchronised(false);
 			SynchronizationHandler syncHandler = new SynchronizationHandler() {
 	 			
 	 			@Override

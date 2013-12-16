@@ -1,8 +1,7 @@
 package isebase.cognito.tourpilot.Data.UserRemark;
 
-import java.util.List;
-import android.database.sqlite.SQLiteDatabase;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
+import android.database.sqlite.SQLiteDatabase;
 
 public class UserRemarkManager extends BaseObjectManager<UserRemark>{
 

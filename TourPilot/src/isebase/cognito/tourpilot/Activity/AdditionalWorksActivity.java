@@ -13,8 +13,10 @@ import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.PatientsDialog;
 import isebase.cognito.tourpilot.Dialogs.WorkStopDialog;
 import isebase.cognito.tourpilot.Dialogs.WorkTypeDialog;
-import java.util.Date;
+import isebase.cognito.tourpilot.Utils.DateUtils;
+
 import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -112,7 +114,8 @@ public class AdditionalWorksActivity extends BaseActivity implements BaseDialogL
 		}
 		if (dialog == workInputDialog)
 		{
-			work = new Work(new Date(), addWork.getID(), Option.Instance().getPilotTourID(), addWork.getName());
+			work = new Work(DateUtils.getSynchronizedTime(), addWork.getID(), Option.Instance().getPilotTourID(), addWork.getName());
+			work.setIsServerTime(Option.Instance().isTimeSynchronised());
 			WorkManager.Instance().save(work);
 			Option.Instance().setWorkID(work.getID());
 			Option.Instance().save();
@@ -121,7 +124,8 @@ public class AdditionalWorksActivity extends BaseActivity implements BaseDialogL
 		}
 		if (dialog == workStopDialog)
 		{
-			work.setStopTime(new Date());
+			work.setStopTime(DateUtils.getSynchronizedTime());
+			work.setIsServerTime(Option.Instance().isTimeSynchronised());
 			WorkManager.Instance().save(work);
 			patientsDialog = new PatientsDialog(patients, work.getName());
 			patientsDialog.show(getSupportFragmentManager(), "patientsDialog");

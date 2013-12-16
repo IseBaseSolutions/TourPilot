@@ -1,5 +1,8 @@
 package isebase.cognito.tourpilot.Data.AdditionalTask;
 
+import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.StaticResources.StaticResources;
+
 public class Catalog {
 	
 	public enum eCatalogType{
@@ -27,13 +30,13 @@ public class Catalog {
 	public static String getCatalogName(eCatalogType catalogType){
 		switch (catalogType) {
 			case btyp_kk:
-				return "Krankenkassenleistung";
+				return StaticResources.getBaseContext().getString(R.string.btyp_kk);
 			case btyp_pk:
-				return "Pfllegekassenleistung";
+				return StaticResources.getBaseContext().getString(R.string.btyp_pk);
 			case btyp_sa:
-				return "Sozialamtsleistung";
+				return StaticResources.getBaseContext().getString(R.string.btyp_sa);
 			case btyp_pr:
-				return "Privateleistung";
+				return StaticResources.getBaseContext().getString(R.string.btyp_pr);
 			default:
 				return "";
 		}				

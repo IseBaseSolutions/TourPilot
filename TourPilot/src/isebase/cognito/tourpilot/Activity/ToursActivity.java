@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.Menu;
@@ -133,8 +134,7 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 		if(dialog.getTag().equals("dialogBack"))
 			logOut();
 		else if (dialog.getTag().equals("clearDatabase") && DataBaseWrapper.Instance().clearWorkerData()) {
-			reloadData();
-			fillUp();
+			clearDB();
 		}
 	}
 
@@ -149,4 +149,31 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 		dialog.show(getSupportFragmentManager(), "clearDatabase");
 		getSupportFragmentManager().executePendingTransactions();
 	}
+	
+	private void clearDB() {
+//		pbClearDB.setVisibility(View.VISIBLE);
+//		syncButton.setEnabled(false);
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				try{
+						DataBaseWrapper.Instance().clearWorkerData();
+				}
+				catch(Exception e){
+					e.printStackTrace();
+				}
+
+				return null;
+			}
+							
+			@Override
+			protected void onPostExecute(Void result) {
+//				pbClearDB.setVisibility(View.INVISIBLE);
+//				syncButton.setEnabled(true);
+			}
+		}.execute();
+		startWorkersActivity();
+	}
+	
 }

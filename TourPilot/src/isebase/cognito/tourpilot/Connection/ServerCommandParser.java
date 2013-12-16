@@ -1,7 +1,5 @@
 package isebase.cognito.tourpilot.Connection;
 
-import java.util.Date;
-
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
@@ -30,7 +28,8 @@ import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
-import isebase.cognito.tourpilot.Utils.StringParser;
+
+import java.util.Date;
 
 public class ServerCommandParser {
 
