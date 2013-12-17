@@ -125,8 +125,8 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		diagnoseMenu.setEnabled(!(diagnose == null || diagnose.getName().length() == 0));
 		gpsMenu.setVisible(worker.getIsUseGPS());
 		notesMenu.setEnabled(isClickable());
+		manualInputMenu.setEnabled(!isEmploymentDone() && !isClickable());
 		if(isEmploymentDone()) {
-			manualInputMenu.setEnabled(false);
 			undoneTasksMenu.setEnabled(false);
 			catalogsMenu.setEnabled(false);
 		}

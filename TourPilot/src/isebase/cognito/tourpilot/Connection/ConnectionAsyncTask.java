@@ -18,6 +18,7 @@ import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
 import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
+import isebase.cognito.tourpilot.Utils.DateUtils;
 import isebase.cognito.tourpilot.Utils.StringParser;
 
 import java.io.IOException;
@@ -520,7 +521,6 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		}
 		conStatus.setAnswerFromServer(answerFromServer);
 		return true;
-
 	}
 	
 	private boolean getTimeSync() {
@@ -531,7 +531,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 			conStatus.OS.flush();
 			String recievedDate = readFromStream(conStatus.IS);
 			conStatus.serverCommandParser.parseElement(recievedDate, true);
-			Option.Instance().setTimeSynchronised(true);
+			Option.Instance().setTimeSynchronised(true);		
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			retVal = false;
