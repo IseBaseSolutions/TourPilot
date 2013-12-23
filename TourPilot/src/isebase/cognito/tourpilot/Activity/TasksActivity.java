@@ -344,14 +344,14 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		openDialogForAdditionalTask(task);
 	}
 	
-	private void openDialogForAdditionalTask(Task task){
+	private void openDialogForAdditionalTask(Task task) {
 		DialogFragment dialog = null;
-		if(task.getState() == eTaskState.Done){
-			setTaskState(task);
+		if (task.getState() == eTaskState.Done) {
 			task.setQualityResult("");
+			setTaskState(task);
 			return;
 		}
-		switch(task.getQuality()){
+		switch(task.getQuality()) {
 			case AdditionalTask.WEIGHT:
 				dialog = new StandardTaskDialog(task, getString(R.string.weight), getString(R.string.gewicht_value), TaskTypes.weightTypeInput);
 				break;
@@ -388,9 +388,17 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		task.setIsServerTime(Option.Instance().isTimeSynchronised());
 		if (startTask.getManualDate().equals(DateUtils.EmptyDate))
 			task.setManualDate(DateUtils.getAverageDate(startTask.getManualDate(), endTask.getManualDate()));
-		task.setState((task.getState() == eTaskState.Done) 
-				? eTaskState.UnDone
-				: eTaskState.Done);
+		if(!(task.getQuality() < 1 || task.getQuality() > 7))
+		{
+			if (task.getQualityResult().equals(""))
+				task.setState(eTaskState.UnDone);
+			else
+				task.setState(eTaskState.Done);
+		}
+		else
+			task.setState((task.getState() != eTaskState.Done) 
+					? eTaskState.Done
+					: eTaskState.UnDone);
 		try {
 			((ImageView) clickedCheckBox).setImageDrawable(StaticResources.getBaseContext()
 				.getResources().getDrawable((task.getState() == eTaskState.UnDone) 
@@ -542,8 +550,9 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			startVerificationActivity(ACTIVITY_VERIFICATION_CODE, IS_FLEGE_OK);
 		}
 		else if (dialog.getTag().equals("dialogTasks")) {
-			StandardTaskDialog taskDialog = (StandardTaskDialog) dialog;
-			setTaskState(taskDialog.getTask());
+			Task task  = ((StandardTaskDialog)dialog).getTask();
+			task.setQualityResult(((StandardTaskDialog)dialog).getValue());
+			setTaskState(((StandardTaskDialog)dialog).getTask());
 		}
 	}
 
@@ -556,7 +565,10 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 				startUserRemarksActivity(UserRemarksActivity.NO_SYNC_MODE, ACTIVITY_USERREMARKS_CODE);
 		}
 		if(dialog.getTag().equals("dialogTasks"))
-			fillUpEndButtonEnabling();
+		{			
+			setTaskState(((StandardTaskDialog)dialog).getTask());
+			//fillUpEndButtonEnabling();
+		}
 		return;
 	}
 
