@@ -139,7 +139,6 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			doctorsMenu.setEnabled(false);
 			relativesMenu.setEnabled(false);
 		}
-		
 		return true;
 	}
 	
@@ -325,27 +324,6 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			case AdditionalTask.PULS:
 				dialog = new BaseInfoDialog(getString(R.string.pulse), task.getQualityResult());
 				break;
-//			case AdditionalTask.WEIGHT:
-//				dialog = new StandardTaskDialog(task, getString(R.string.weight), task.getQualityResult(), getString(R.string.gewicht_value), TaskTypes.weightTypeInput);
-//				break;
-//			case AdditionalTask.DETECT_RESPIRATION:
-//				dialog = new StandardTaskDialog(task, getString(R.string.detect_respiration), task.getQualityResult(), getString(R.string.atemzüge_value), TaskTypes.respirationTypeInput);
-//				break;
-//			case AdditionalTask.BALANCE:
-//				dialog = new StandardTaskDialog(task, getString(R.string.balance), task.getQualityResult(), getString(R.string.ml), TaskTypes.balanceTypeInput);
-//				break;
-//			case AdditionalTask.BLUTZUCKER:
-//				dialog = new StandardTaskDialog(task, getString(R.string.blood_sugar), task.getQualityResult(), getString(R.string.blutzucker_value), TaskTypes.blutzuckerTypeInput);
-//				break;
-//			case AdditionalTask.TEMPERATURE:
-//				dialog = new StandardTaskDialog(task, getString(R.string.temperature), task.getQualityResult(), getString(R.string.temperature_value), TaskTypes.temperatureTypeInput);
-//				break;
-//			case AdditionalTask.BLUTDRUCK:
-//				dialog = new BlutdruckTaskDialog(task, task.getQualityResult());
-//				break;
-//			case AdditionalTask.PULS:
-//				dialog = new StandardTaskDialog(task, getString(R.string.pulse), task.getQualityResult(), TaskTypes.pulsTypeInput);
-//				break;
 			default:
 				return;
 		}
@@ -363,31 +341,16 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		}
 		Task task = (Task) view.getTag();
 		clickedCheckBox = view;
-		task.setRealDate(DateUtils.getSynchronizedTime());
-		task.setIsServerTime(Option.Instance().isTimeSynchronised());
-		if (startTask.getManualDate().equals(DateUtils.EmptyDate))
-			task.setManualDate(DateUtils.getAverageDate(startTask.getManualDate(), endTask.getManualDate()));
-		task.setState((task.getState() == eTaskState.Done) 
-				? eTaskState.UnDone
-				: eTaskState.Done);
-		task.setQualityResult("");
-		try {
-			((ImageView) view).setImageDrawable(StaticResources.getBaseContext()
-				.getResources().getDrawable((task.getState() == eTaskState.UnDone) 
-						? R.drawable.ic_action_cancel
-						: R.drawable.ic_action_accept));
-			TaskManager.Instance().save(task);
-			fillUpEndButtonEnabling();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		openDialogForAdditionalTask(task);
 	}
 	
 	private void openDialogForAdditionalTask(Task task){
 		DialogFragment dialog = null;
-		if(task.getState() != eTaskState.Done)
+		if(task.getState() == eTaskState.Done){
+			setTaskState(task);
+			task.setQualityResult("");
 			return;
+		}
 		switch(task.getQuality()){
 			case AdditionalTask.WEIGHT:
 				dialog = new StandardTaskDialog(task, getString(R.string.weight), getString(R.string.gewicht_value), TaskTypes.weightTypeInput);
@@ -411,12 +374,34 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 				dialog = new StandardTaskDialog(task, getString(R.string.pulse), getString(R.string.puls_value), TaskTypes.pulsTypeInput);
 				break;
 			default:
+				setTaskState(task);
 				return;
 		}
 		dialog.show(getSupportFragmentManager(), "dialogTasks");
 		dialog.setCancelable(false);
 		getSupportFragmentManager().executePendingTransactions();
 		
+	}
+	
+	private void setTaskState(Task task) {
+		task.setRealDate(DateUtils.getSynchronizedTime());
+		task.setIsServerTime(Option.Instance().isTimeSynchronised());
+		if (startTask.getManualDate().equals(DateUtils.EmptyDate))
+			task.setManualDate(DateUtils.getAverageDate(startTask.getManualDate(), endTask.getManualDate()));
+		task.setState((task.getState() == eTaskState.Done) 
+				? eTaskState.UnDone
+				: eTaskState.Done);
+		try {
+			((ImageView) clickedCheckBox).setImageDrawable(StaticResources.getBaseContext()
+				.getResources().getDrawable((task.getState() == eTaskState.UnDone) 
+						? R.drawable.ic_action_cancel
+						: R.drawable.ic_action_accept));
+			TaskManager.Instance().save(task);
+			fillUpEndButtonEnabling();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	private void initControls() {
@@ -482,7 +467,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.catalogs:			
+		case R.id.catalogs:
 			if(isEmploymentDone())
 				return false;
 			startCatalogsActivity();
@@ -558,10 +543,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		}
 		else if (dialog.getTag().equals("dialogTasks")) {
 			StandardTaskDialog taskDialog = (StandardTaskDialog) dialog;
-			Task task = taskDialog.getTask();
-			String value = taskDialog.getValue();
-			task.setQualityResult(value);
-			TaskManager.Instance().save(task);
+			setTaskState(taskDialog.getTask());
 		}
 	}
 
@@ -573,18 +555,8 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			else
 				startUserRemarksActivity(UserRemarksActivity.NO_SYNC_MODE, ACTIVITY_USERREMARKS_CODE);
 		}
-		if(dialog.getTag().equals("dialogTasks")) {
-			Task task = (Task) clickedCheckBox.getTag();
-			task.setState(eTaskState.UnDone);
-			try {
-				((ImageView) clickedCheckBox).setImageDrawable(StaticResources.getBaseContext()
-					.getResources().getDrawable(R.drawable.ic_action_cancel));
-				TaskManager.Instance().save(task);
-				fillUpEndButtonEnabling();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		if(dialog.getTag().equals("dialogTasks"))
+			fillUpEndButtonEnabling();
 		return;
 	}
 

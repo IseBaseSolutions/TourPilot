@@ -38,21 +38,29 @@ public class TaskAdapter extends ArrayAdapter<Task> {
 		taskHolder.btTaskState = (ImageView) row.findViewById(R.id.btChangeTaskState);		
 		taskHolder.btTaskState.setTag(taskHolder.task);
 		taskHolder.tvTaskText.setTag(taskHolder.task);
-				
+
 		taskHolder.tvTaskText.setText(taskHolder.task.getName());
 		
 		switch (taskHolder.task.getState()) {
 			case Empty:
 				break;
 			case Done:
-				taskHolder.btTaskState
+				try{
+					taskHolder.btTaskState
 						.setImageDrawable(StaticResources.getBaseContext()
 								.getResources().getDrawable(R.drawable.ic_action_accept));
+				}catch(Exception er){
+					er.printStackTrace();
+				}
 				break;
 			case UnDone:
-				taskHolder.btTaskState
+				try{
+					taskHolder.btTaskState
 						.setImageDrawable(StaticResources.getBaseContext()
 								.getResources().getDrawable(R.drawable.ic_action_cancel));
+				}catch(Exception er) {
+					er.printStackTrace();
+				}
 				break;
 		}
 

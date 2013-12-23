@@ -333,7 +333,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ EmploymentVerification.DateEndField + " INTEGER, "
 			+ EmploymentVerification.DoneTasksIDsField + " TEXT, "
 			+ EmploymentVerification.UnDoneTasksIDsField + " TEXT, "
-			+ EmploymentVerification.UserRemarksMarksField + " TEXT "
+			+ EmploymentVerification.UserRemarksMarksField + " TEXT, "
+			+ EmploymentVerification.PflegeField + " INTEGER "
 			+ ");";	
 		
 	private static String[] createDataTables = new String[]{

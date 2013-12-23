@@ -38,6 +38,8 @@ public class VerificationActivity extends BaseActivity {
 	
 	private UserRemark userRemark;
 	
+	private boolean isFlegeOK;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -135,7 +137,7 @@ public class VerificationActivity extends BaseActivity {
 		String flege = "";
 		Intent intentFlege = getIntent();
 		Bundle bundle = intentFlege.getExtras();
-		boolean isFlegeOK = false;
+		isFlegeOK = false;
 		if(bundle != null){
 			isFlegeOK = bundle.getBoolean("isAllOK");
 			if(isFlegeOK)
@@ -176,12 +178,12 @@ public class VerificationActivity extends BaseActivity {
 			if(task.getName().contains(getString(R.string.start_task)) || task.getName().contains(getString(R.string.end_task)))
 				continue;
 			if(task.getState().equals(eTaskState.Done))
-				doneTasksIDs += (doneTasksIDs.equals("") ? "" : ",") + task.getID();
+				doneTasksIDs += (doneTasksIDs.equals("") ? "" : ",") + task.getAditionalTaskID();
 			else
-				undoneTasksIDs += (undoneTasksIDs.equals("") ? "" : ",") + task.getID();
+				undoneTasksIDs += (undoneTasksIDs.equals("") ? "" : ",") + task.getAditionalTaskID();
 		}
 		String userRemarks = getFlegeMarks();
-		EmploymentVerificationManager.Instance().save(new EmploymentVerification(employmentID, workerID, patientID, dateBegin, dateEnd, doneTasksIDs, undoneTasksIDs, userRemarks));
+		EmploymentVerificationManager.Instance().save(new EmploymentVerification(employmentID, workerID, patientID, dateBegin, dateEnd, doneTasksIDs, undoneTasksIDs, userRemarks, isFlegeOK));
 	}
 
 	private String getFlegeMarks() {
