@@ -13,9 +13,11 @@ import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
+import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Templates.AdditionalTaskAdapter;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import android.os.Bundle;
@@ -33,6 +35,7 @@ public class AdditionalTasksActivity extends BaseActivity {
 	private AdditionalTaskAdapter adapter;
 	
 	private List<AdditionalTask> additionalTasks;
+	private List<Task> tasks;
 	private Catalog catalog;
 
 	@Override
@@ -42,6 +45,7 @@ public class AdditionalTasksActivity extends BaseActivity {
 			setContentView(R.layout.activity_add_tasks);
 			initControls();
 			reloadData();
+			deleteExistedAdditionalyTasks();
 			fillUp();
 			fillUpTitle();
 			setTimeSync(true);
@@ -85,6 +89,9 @@ public class AdditionalTasksActivity extends BaseActivity {
 		catalog = new Catalog(eCatalogType.values()[catalogType]);	
 		
 		Employment empl = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
+		
+		
+		
 		Patient patient = PatientManager.Instance().load(empl.getPatientID());
 		
 		switch (catalog.getCatalogType()) {
@@ -102,6 +109,32 @@ public class AdditionalTasksActivity extends BaseActivity {
 				break;
 		}
 		sortAdditinalTasks();
+	}
+	
+	private void deleteExistedAdditionalyTasks() {
+		tasks = TaskManager.Instance().load(Task.EmploymentIDField, String.valueOf(Option.Instance().getEmploymentID()));
+		List<AdditionalTask> copyAddTasks = new ArrayList<AdditionalTask>(additionalTasks);
+		tasks.remove(0);
+		Task endTask = null;
+		int i = 1;
+		while(endTask == null) {
+			Task task = tasks.get(tasks.size() - i++);
+			if(!task.getIsAdditionalTask())
+				endTask = task;
+		}
+		tasks.remove(endTask);
+		for (Task task : tasks) {
+			for (AdditionalTask addTask : copyAddTasks) {
+				if (task.getAditionalTaskID() == addTask.getID()) {
+					try {
+						additionalTasks.remove(addTask);
+					} catch(Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		
 	}
 
 	private void fillUp() {
