@@ -17,6 +17,7 @@ public class EmploymentVerification extends BaseObject {
 	public static final String DoneTasksIDsField = "done_tasks_ids";
 	public static final String UnDoneTasksIDsField = "undone_tasks_ids";
 	public static final String UserRemarksMarksField = "user_remarks_marks";
+	public static final String PflegeField = "pflege";
 
 	private long employmentID;
 	private long workerID;
@@ -26,6 +27,7 @@ public class EmploymentVerification extends BaseObject {
 	private String doneTasksIDs;
 	private String undoneTasksIDs;
 	private String userRemarksMarks;
+	private boolean isPflege;
 
 	@MapField(DatabaseField = EmploymentIDField)
 	public long getEmploymentID() {
@@ -107,9 +109,19 @@ public class EmploymentVerification extends BaseObject {
 		this.userRemarksMarks = userRemarksMarks;
 	}
 
+	@MapField(DatabaseField = PflegeField)
+	public boolean isPflege() {
+		return isPflege;
+	}
+
+	@MapField(DatabaseField = PflegeField)
+	public void setPflege(boolean isPflege) {
+		this.isPflege = isPflege;
+	}
+
 	public EmploymentVerification(long employmentID, long workerID, long patientID,
 			Date dateBegin, Date dateEnd,
-			String doneTasksIDs, String undoneTasksIDs, String userRemarksMarks) {
+			String doneTasksIDs, String undoneTasksIDs, String userRemarksMarks, boolean pflege) {
 		setEmploymentID(employmentID);
 		setWorkerID(workerID);
 		setPatientID(patientID);
@@ -118,6 +130,7 @@ public class EmploymentVerification extends BaseObject {
 		setDoneTasksIDs(doneTasksIDs);
 		setUnDoneTasksIDs(undoneTasksIDs);
 		setUserRemarksMarks(userRemarksMarks);
+		setPflege(pflege);
 	}
 
 	public EmploymentVerification() {
@@ -137,7 +150,8 @@ public class EmploymentVerification extends BaseObject {
 		strValue += DateUtils.DateFormat.format(dateEnd) + " " + DateUtils.HourMinutesFormat.format(dateEnd) + ";";
 		strValue += doneTasksIDs + ";";
 		strValue += undoneTasksIDs + ";";
-		strValue += userRemarksMarks;
+		strValue += userRemarksMarks + ";";
+		strValue += isPflege + ";";
 		SentObjectVerification.Instance().sentEmploymentVerifications.add(this);
 		return strValue;
 	}
