@@ -227,6 +227,9 @@ public final class R {
         public static final int connection_try=0x7f060030;
         public static final int data_base_version=0x7f060042;
         public static final int data_to_download=0x7f06003c;
+        /**  Toasts 
+         */
+        public static final int db_backup_created=0x7f060088;
         public static final int def_empty_date=0x7f06004c;
         /**  Defaults 
          */

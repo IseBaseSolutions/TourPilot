@@ -29,7 +29,7 @@ import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.BlutdruckTaskDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.StandardTaskDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.TaskTypes;
-import isebase.cognito.tourpilot.Gps.Gps;
+import isebase.cognito.tourpilot.Gps.GpsNavigator;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Templates.TaskAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
@@ -125,7 +125,9 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		diagnoseMenu.setEnabled(!(diagnose == null || diagnose.getName().length() == 0));
 		gpsMenu.setVisible(worker.getIsUseGPS());
 		notesMenu.setEnabled(isClickable());
-		manualInputMenu.setEnabled(!isEmploymentDone() && !isClickable());
+		catalogsMenu.setEnabled(isClickable());
+		undoneTasksMenu.setEnabled(isClickable());
+		manualInputMenu.setEnabled(!isEmploymentDone() && !isClickable() && DateUtils.isToday(employment.getDate()));
 		if(isEmploymentDone()) {
 			undoneTasksMenu.setEnabled(false);
 			catalogsMenu.setEnabled(false);
@@ -497,7 +499,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			showPatientInfo(true);
 			return true;
 		case R.id.gps:
-			Gps.startGpsNavigation(PatientManager.Instance().loadAll(employment.getPatientID()).getAddress());
+			GpsNavigator.startGpsNavigation(PatientManager.Instance().loadAll(employment.getPatientID()).getAddress());
 			return true;
 		case R.id.manualInput:
 			startManualInputActivity();

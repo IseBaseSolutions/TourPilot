@@ -43,7 +43,7 @@ public class InformationManager extends BaseObjectManager<Information>{
 			if(DateUtils.isToday(info.getReadTime()) && !isFromMenu || !info.isActualInfo(date))
 				continue;
 			strInfos += (strInfos.equals("") ? "" : "\n") + info.getName();
-			info.setReadTime(date);
+			info.setReadTime(new Date());
 			info.setIsServerTime(Option.Instance().isTimeSynchronised());
 		}
 		if(strInfos.equals(""))

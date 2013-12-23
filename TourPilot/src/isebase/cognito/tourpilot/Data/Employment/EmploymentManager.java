@@ -121,7 +121,9 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
     	employment.setPilotTourID(Option.Instance().getPilotTourID());
     	employment.setDate(new Date());
     	employment.setTourID(PilotTourManager.Instance().loadPilotTour(Option.Instance().getPilotTourID()).getTourID());
-    	employment.setDayPart("");
+    	employment.setDayPart("0");
+    	employment.setIsServerTime(Option.Instance().isTimeSynchronised());
+    	employment.setFromMobile(true);
     	EmploymentManager.Instance().save(employment);
     	Task firstTask = new Task(patient, employment.getID(), employment.getTourID(), true);
     	TaskManager.Instance().save(firstTask);

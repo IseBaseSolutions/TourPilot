@@ -52,6 +52,8 @@ public class AdditionalPatientAdapter extends ArrayAdapter<Patient>{
 	OnCheckedChangeListener onCheckboxCheckedListener = new OnCheckedChangeListener() {
 		@Override
 		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+			if (!isChecked)
+				return;
 			if (lastCheckedAdditionalPatientHolder == null) 
 				btOK.setEnabled(true);
 			else

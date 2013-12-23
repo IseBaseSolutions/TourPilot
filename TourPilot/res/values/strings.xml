@@ -163,5 +163,8 @@
     <string name="btyp_pk">Pflegekassenleistung</string>
     <string name="btyp_sa">Sozialamtsleistung</string>
     <string name="btyp_pr">Privateleistung</string>
+    
+    <!-- Toasts -->
+    <string name="db_backup_created">DB Backup erstellt</string>
 
 </resources>

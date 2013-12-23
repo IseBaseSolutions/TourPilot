@@ -31,6 +31,7 @@ public class Employment extends BaseObject implements IJob {
 	public static final String StartTimeField = "start_time";
 	public static final String StopTimeField = "stop_time";
 	public static final String DayPartField = "day_part";
+	public static final String IsAddedFromMobileField = "from_mobile";
 	
 	private boolean isDone;
 	
@@ -50,6 +51,18 @@ public class Employment extends BaseObject implements IJob {
 	private PilotTour pilotTour;
 	
 	private String dayPart;
+	
+	private boolean isFromMobile;
+
+	@MapField(DatabaseField = IsAddedFromMobileField)
+	public boolean isFromMobile() {
+		return isFromMobile;
+	}
+
+	@MapField(DatabaseField = IsAddedFromMobileField)
+	public void setFromMobile(boolean isFromMobile) {
+		this.isFromMobile = isFromMobile;
+	}
 
 	@MapField(DatabaseField = IsDoneField)
 	public boolean getIsDone() {

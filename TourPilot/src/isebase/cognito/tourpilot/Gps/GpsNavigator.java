@@ -5,7 +5,7 @@ import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import android.content.Intent;
 import android.net.Uri;
 
-public class Gps {
+public class GpsNavigator {
 
 	public static void startGpsNavigation(Address address) {
 		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format("google.navigation:q=%s+%s+%s", address.getCity(), address.getStreet().replace(" ", "+"), address.getZip())));

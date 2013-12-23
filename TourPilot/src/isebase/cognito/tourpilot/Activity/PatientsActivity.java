@@ -80,7 +80,21 @@ public class PatientsActivity extends BaseActivity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem commonTourMenu = menu.findItem(R.id.action_common_tours);
 		MenuItem tourInfoMenu = menu.findItem(R.id.tour_info);
-		commonTourMenu.setEnabled(pilotTour.getIsCommonTour());
+		MenuItem additionalWork = menu.findItem(R.id.action_add_additional_work);
+		MenuItem illnessTourMenu = menu.findItem(R.id.action_illness_tours);
+		MenuItem allPatientsMenu = menu.findItem(R.id.action_show_all_patients);
+		commonTourMenu.setEnabled(false);
+		tourInfoMenu.setEnabled(false);
+		additionalWork.setEnabled(false);
+		illnessTourMenu.setEnabled(false);
+		allPatientsMenu.setEnabled(false);
+		if (DateUtils.isToday(pilotTour.getPlanDate()))
+		{
+			commonTourMenu.setEnabled(pilotTour.getIsCommonTour());			
+			additionalWork.setEnabled(true);
+			illnessTourMenu.setEnabled(true);
+			allPatientsMenu.setEnabled(true);
+		}
 		tourInfoMenu.setEnabled(infos.size() != 0);
 		return true;
 	}

@@ -280,6 +280,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ BaseObject.CheckSumField + " INTEGER, "
 			+ BaseObject.WasSentField + " INTEGER, "
 			+ BaseObject.IsServerTimeField + " INTEGER NOT NULL DEFAULT 1, "
+			+ Employment.IsAddedFromMobileField + " INTEGER, "
 			+ Employment.PatientIDField + " INTEGER, "
 			+ Employment.PilotTourIDField + " INTEGER, "
 			+ Employment.DateField + " INTEGER, "
