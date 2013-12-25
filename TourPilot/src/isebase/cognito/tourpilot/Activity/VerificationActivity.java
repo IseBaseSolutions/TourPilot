@@ -38,6 +38,9 @@ public class VerificationActivity extends BaseActivity {
 	
 	private UserRemark userRemark;
 	
+	private Date dateBegin;
+	private Date dateEnd;
+	
 	private boolean isFlegeOK;
 	
 	@Override
@@ -49,6 +52,9 @@ public class VerificationActivity extends BaseActivity {
 		
 		reloadData();
 		
+		dateBegin = employment.getFirstTask().getManualDate().equals(DateUtils.EmptyDate) ? employment.getFirstTask().getRealDate() : employment.getFirstTask().getManualDate();
+		dateEnd = employment.getLastTask().getManualDate().equals(DateUtils.EmptyDate) ? employment.getLastTask().getRealDate() : employment.getLastTask().getManualDate();;
+
 		taskVerification = "";
 
 		taskVerification += "<b>" + getWorker(Option.Instance().getWorker()) + "</b>";
@@ -58,11 +64,11 @@ public class VerificationActivity extends BaseActivity {
 		taskVerification += "bei Patient ";
 		taskVerification += "<b>" + getPatient(employment.getName()) + "</b>";
 		taskVerification += "in der Zeit von: ";
-		taskVerification += "<b>" + getTime( DateUtils.HourMinutesFormat.format(tasks.get(0).getManualDate().equals(DateUtils.EmptyDate) ? tasks.get(0).getRealDate() : tasks.get(0).getManualDate())) + "</b>";
+		taskVerification += "<b>" + getTime( DateUtils.HourMinutesFormat.format(dateBegin)) + "</b>";
 		taskVerification += "bis ";
-		taskVerification += "<b>" + getTime(DateUtils.HourMinutesFormat.format(tasks.get(tasks.size()-1).getManualDate().equals(DateUtils.EmptyDate) ? tasks.get(tasks.size()-1).getRealDate() : tasks.get(tasks.size()-1).getManualDate())) + "</b>";
+		taskVerification += "<b>" + getTime(DateUtils.HourMinutesFormat.format(dateEnd)) + "</b>";
 		taskVerification += "bei einer Dauer von ";
-		taskVerification += "<b>" + getInterval(tasks.get(0).getManualDate().equals(DateUtils.EmptyDate) ? tasks.get(0).getRealDate() : tasks.get(0).getManualDate(),tasks.get(tasks.size()-1).getManualDate().equals(DateUtils.EmptyDate) ? tasks.get(tasks.size()-1).getRealDate() : tasks.get(tasks.size()-1).getManualDate()) + "</b>";
+		taskVerification += "<b>" + getInterval(dateBegin, dateEnd) + "</b>";
 		taskVerification += getString(R.string.minuten_einen) + "<br /><br />";
 		
 		String[] arrayResultTask = getTasks();
@@ -113,9 +119,7 @@ public class VerificationActivity extends BaseActivity {
 	}
 
 	private String getInterval(Date timeStart, Date timeStop) {
-		SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss");
-		format.setTimeZone(TimeZone.getTimeZone("UTC"));
-		long difference = (timeStop.getTime() - timeStart.getTime()) / 1000 / 60;
+		int difference = timeStop.getMinutes() - timeStart.getMinutes();
 		return String.valueOf(difference) + " ";
 	}
 		
@@ -170,8 +174,6 @@ public class VerificationActivity extends BaseActivity {
 		long workerID = Option.Instance().getWorkerID();
 		
 		long patientID = PatientManager.Instance().load(employment.getPatientID()).getID();
-		Date dateBegin = employment.getFirstTask().getManualDate().equals(DateUtils.EmptyDate) ? employment.getFirstTask().getRealDate() : employment.getFirstTask().getManualDate();
-		Date dateEnd = employment.getLastTask().getManualDate().equals(DateUtils.EmptyDate) ? employment.getLastTask().getRealDate() : employment.getLastTask().getManualDate();;
 
 		String doneTasksIDs = "", undoneTasksIDs = "";
 		for(Task task : tasks) {
