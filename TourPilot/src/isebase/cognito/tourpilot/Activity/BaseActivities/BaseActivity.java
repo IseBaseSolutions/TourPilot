@@ -1,6 +1,16 @@
-package isebase.cognito.tourpilot.Activity;
+package isebase.cognito.tourpilot.Activity.BaseActivities;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Activity.AdditionalWorksActivity;
+import isebase.cognito.tourpilot.Activity.ManualInputActivity;
+import isebase.cognito.tourpilot.Activity.OptionsActivity;
+import isebase.cognito.tourpilot.Activity.PatientsActivity;
+import isebase.cognito.tourpilot.Activity.SynchronizationActivity;
+import isebase.cognito.tourpilot.Activity.TasksActivity;
+import isebase.cognito.tourpilot.Activity.ToursActivity;
+import isebase.cognito.tourpilot.Activity.UserRemarksActivity;
+import isebase.cognito.tourpilot.Activity.VerificationActivity;
+import isebase.cognito.tourpilot.Activity.WorkersActivity;
 import isebase.cognito.tourpilot.Connection.ConnectionAsyncTask;
 import isebase.cognito.tourpilot.Connection.ConnectionStatus;
 import isebase.cognito.tourpilot.Data.Option.Option;
@@ -14,17 +24,10 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class BaseActivity extends FragmentActivity{
+public class BaseActivity extends FragmentActivity {
 
 	protected DialogFragment versionFragmentDialog;
-	private ConnectionStatus connectionStatus;
-	private ConnectionAsyncTask connectionTask;
-	
-	private boolean timeSync;
-	
-	public void setTimeSync(boolean timeSync) {
-		this.timeSync = timeSync;
-	}
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,47 +52,6 @@ public class BaseActivity extends FragmentActivity{
 		Option.Instance().save();
 		Intent optionActivity =  new Intent(getApplicationContext(), OptionsActivity.class);
 		startActivity(optionActivity);
-	}
-	
-	@Override
-	protected void onResume() {
-		if (timeSync) {
-			Option.Instance().setTimeSynchronised(false);
-			SynchronizationHandler syncHandler = new SynchronizationHandler() {
-	 			
-	 			@Override
-				public void onSynchronizedFinished(boolean isOK, String text) {
-					if(!text.equals("")){
-	
-					}
-	 			}
-	 			
-	 			@Override
-	 			public void onItemSynchronized(String text) {
-	 				if (connectionStatus.CurrentState == 1)
-	 					connectionStatus.CurrentState = 9;
-	 				else if (connectionStatus.CurrentState == 9)
-	 					connectionStatus.CurrentState = 6;
-	 				else 
-	 					connectionStatus.nextState();
-					connectionTask = new ConnectionAsyncTask(connectionStatus);
-					connectionTask.execute(); 
-	 			}
-	 			
-	 			@Override
-	 			public void onProgressUpdate(String text, int progress){
-	 			}
-	
-				@Override
-				public void onProgressUpdate(String text) {			
-				}				
-	 		};	
-		
-			connectionStatus = new ConnectionStatus(syncHandler);
-			connectionTask = new ConnectionAsyncTask(connectionStatus);
-			connectionTask.execute();
-		}
-		super.onResume();
 	}
 	
 	@Override

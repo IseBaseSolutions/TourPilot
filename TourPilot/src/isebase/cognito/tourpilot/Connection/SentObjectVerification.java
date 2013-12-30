@@ -8,6 +8,8 @@ import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemark;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
+import isebase.cognito.tourpilot.Data.WayPoint.WayPoint;
+import isebase.cognito.tourpilot.Data.WayPoint.WayPointManager;
 import isebase.cognito.tourpilot.Data.Work.Work;
 import isebase.cognito.tourpilot.Data.Work.WorkManager;
 
@@ -23,6 +25,7 @@ public class SentObjectVerification {
 	public List<Work> sentWorks = new ArrayList<Work>();
 	public List<UserRemark> sentUserRemarks = new ArrayList<UserRemark>();
 	public List<EmploymentVerification> sentEmploymentVerifications = new ArrayList<EmploymentVerification>();
+	public List<WayPoint> sentWayPoint = new ArrayList<WayPoint>();
 	
 	public static SentObjectVerification Instance() {
 		return instance == null ? instance = new SentObjectVerification() : instance;
@@ -47,7 +50,11 @@ public class SentObjectVerification {
 		
 		for(EmploymentVerification emplVerification : sentEmploymentVerifications)
 			emplVerification.setWasSent(true);
-		EmploymentVerificationManager.Instance().save(sentEmploymentVerifications);			
+		EmploymentVerificationManager.Instance().save(sentEmploymentVerifications);
+		
+		for(WayPoint wayPoint : sentWayPoint)
+			wayPoint.setWasSent(true);
+		WayPointManager.Instance().save(sentWayPoint);			
 	}
 
 }

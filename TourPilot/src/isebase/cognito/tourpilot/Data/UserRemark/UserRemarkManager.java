@@ -3,7 +3,7 @@ package isebase.cognito.tourpilot.Data.UserRemark;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 import android.database.sqlite.SQLiteDatabase;
 
-public class UserRemarkManager extends BaseObjectManager<UserRemark>{
+public class UserRemarkManager extends BaseObjectManager<UserRemark> {
 
 	public static final String TableName = "UserRemarks";
 	

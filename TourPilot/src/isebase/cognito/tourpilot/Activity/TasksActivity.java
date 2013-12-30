@@ -2,6 +2,7 @@ package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.AdditionalTasks.CatalogsActivity;
+import isebase.cognito.tourpilot.Activity.BaseActivities.BaseTimeSyncActivity;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Diagnose.Diagnose;
@@ -52,7 +53,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class TasksActivity extends BaseActivity implements BaseDialogListener {
+public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogListener {
 
 	private TaskAdapter taskAdapter;
 	private Employment employment;
@@ -126,7 +127,7 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 		gpsMenu.setVisible(worker.getIsUseGPS());
 		notesMenu.setEnabled(isClickable());
 		catalogsMenu.setEnabled(isClickable());
-		undoneTasksMenu.setEnabled(isClickable());
+		undoneTasksMenu.setEnabled(DateUtils.isToday(employment.getDate()));
 		manualInputMenu.setEnabled(!isEmploymentDone() && !isClickable() && DateUtils.isToday(employment.getDate()));
 		if(isEmploymentDone()) {
 			undoneTasksMenu.setEnabled(false);
@@ -516,6 +517,13 @@ public class TasksActivity extends BaseActivity implements BaseDialogListener {
 			return super.onOptionsItemSelected(item);
 		}
 	}
+	
+    public static String DateToDDMMYYYYHHMMSS(Date date)
+    {
+        String retVal = date.toString();
+        return retVal.substring(0, 2) + retVal.substring(3, 5) + retVal.substring(6, 10)
+                + retVal.substring(11, 13) + retVal.substring(14, 16) + retVal.substring(17, 19);
+    }
 	
 	private void showDiagnose() {
 		InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_diagnose), diagnose.getName());

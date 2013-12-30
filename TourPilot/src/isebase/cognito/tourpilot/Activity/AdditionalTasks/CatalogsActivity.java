@@ -1,7 +1,7 @@
 package isebase.cognito.tourpilot.Activity.AdditionalTasks;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Activity.BaseActivity;
+import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Data.AdditionalTask.Catalog;
 import isebase.cognito.tourpilot.Data.AdditionalTask.Catalog.eCatalogType;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;

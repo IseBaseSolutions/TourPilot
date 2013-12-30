@@ -121,7 +121,6 @@
     <string name="started_at">Gestartet um</string>
     <string name="attention">Achtung!</string>
     <string name="select_period">wählbarer Zeitraum</string>
-    
 
     <!-- Dialogs -->
     <string name="dialog_task_proof_undone">Möchten Sie diesen Einsatz als ausgefallen markieren?</string>
@@ -138,7 +137,7 @@
     <string name="dialog_clear_database">Daten leeren?</string>
     <string name="dialog_employment_not_started">Einsatz ist noch nicht gestartet</string>
     <string name="dialog_start_employment">Bitte erst Einsatzbeginn antippen</string>
-    
+
     <!-- Errors -->
     <string name="err_no_phone">Keine Telefon-Nr.</string>
     <string name="err_no_address">Keine Adresse</string>
@@ -146,7 +145,7 @@
     <string name="no_any_patient">Keine Patienten ausgewählt</string>
     <string name="title_activity_verification">VerificationActivity</string>
     <string name="action_settings">Settings</string>
-    
+
     <!-- Verification -->
     <string name="minuten_einen">Minuten einen Einsatz durchgeführt. Folgende Daten werden übermittelt:</string>
     <string name="done_tasks">durchgeführt wurde</string>
@@ -157,14 +156,18 @@
     <string name="verification_ok">Senden</string>
     <string name="verification_cancel">Bearbeiten</string>
     <string name="all_ok">Pflege OK</string>
-    
+
     <!-- Catalogs -->
     <string name="btyp_kk">Krankenkassenleistung</string>
     <string name="btyp_pk">Pflegekassenleistung</string>
     <string name="btyp_sa">Sozialamtsleistung</string>
     <string name="btyp_pr">Privateleistung</string>
-    
+
     <!-- Toasts -->
     <string name="db_backup_created">DB Backup erstellt</string>
+    <string name="title_activity_gps">GPSActivity</string>
+    <string name="start_gps">GPS STARTO!</string>
+    <string name="title_activity_base_time_sync">BaseTimeSyncActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

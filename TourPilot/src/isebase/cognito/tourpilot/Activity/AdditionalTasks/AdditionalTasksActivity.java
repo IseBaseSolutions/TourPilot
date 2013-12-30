@@ -1,7 +1,7 @@
 package isebase.cognito.tourpilot.Activity.AdditionalTasks;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Activity.BaseActivity;
+import isebase.cognito.tourpilot.Activity.BaseActivities.BaseTimeSyncActivity;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Data.AdditionalTask.Catalog;
@@ -20,6 +20,7 @@ import isebase.cognito.tourpilot.Templates.AdditionalTaskAdapter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,7 +29,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-public class AdditionalTasksActivity extends BaseActivity {
+public class AdditionalTasksActivity extends BaseTimeSyncActivity {
 
 	private ListView lvAddTasks;
 	public Button btSaveAddTasks;

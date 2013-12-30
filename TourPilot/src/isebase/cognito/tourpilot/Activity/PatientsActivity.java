@@ -1,6 +1,7 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
@@ -14,9 +15,14 @@ import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
 import isebase.cognito.tourpilot.Data.Work.Work;
 import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
+import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
 import isebase.cognito.tourpilot.DataInterfaces.Job.JobComparer;
+import isebase.cognito.tourpilot.Dialogs.BaseDialog;
+import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
+import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
 import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
+import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Templates.WorkEmploymentAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
@@ -39,10 +45,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 
-public class PatientsActivity extends BaseActivity {
+public class PatientsActivity extends BaseActivity implements BaseDialogListener{
 
 	private List<Employment> employments;
 	private List<Work> works;
+	private Worker worker;
 	private List<IJob> items = new ArrayList<IJob>();
 	private List<Information> infos = new ArrayList<Information>();
 	private Work work;
@@ -52,6 +59,7 @@ public class PatientsActivity extends BaseActivity {
 	
 	private Button btTourEnd;
 	private InfoBaseDialog infoDialog;
+	private BaseDialog dialogGPSPatient;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +76,13 @@ public class PatientsActivity extends BaseActivity {
 			e.printStackTrace();
 			criticalClose();
 		}
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (worker.getIsUseGPS())
+			dialogGPSPatient.show(getSupportFragmentManager(), "dialogGPSPatient");
 	}
 
 	@Override
@@ -88,7 +103,7 @@ public class PatientsActivity extends BaseActivity {
 		additionalWork.setEnabled(false);
 		illnessTourMenu.setEnabled(false);
 		allPatientsMenu.setEnabled(false);
-		if (DateUtils.isToday(pilotTour.getPlanDate()))
+		if (pilotTour != null && DateUtils.isToday(pilotTour.getPlanDate()))
 		{
 			commonTourMenu.setEnabled(pilotTour.getIsCommonTour());			
 			additionalWork.setEnabled(true);
@@ -169,7 +184,8 @@ public class PatientsActivity extends BaseActivity {
 	}
 
 	private void reloadData() {
-		loadJobs();		
+		loadJobs();	
+		worker = WorkerManager.Instance().load(Option.Instance().getWorkerID());
 	}
 	
 	private void loadJobs() {
@@ -225,6 +241,7 @@ public class PatientsActivity extends BaseActivity {
 				return adb.create();
 			}
 		};
+		dialogGPSPatient = new BaseDialog("Launching GPS", "Have you reached the patient?", "Yes", "No");
 	}
 	
 	private void showPatientsDialog(int position) {
@@ -254,5 +271,18 @@ public class PatientsActivity extends BaseActivity {
 			return;
 		InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_info), strInfos);
 		dialog.show(getSupportFragmentManager(), "informationDialog");
+	}
+
+	@Override
+	public void onDialogPositiveClick(DialogFragment dialog) {
+		
+	}
+
+	@Override
+	public void onDialogNegativeClick(DialogFragment dialog) {
+		Intent gpsActivity = new Intent(getApplicationContext(),
+				GPSActivity.class);
+		startActivity(gpsActivity);
+		
 	}
 }

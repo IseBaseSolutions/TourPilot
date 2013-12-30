@@ -1,6 +1,8 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
+import isebase.cognito.tourpilot.Activity.BaseActivities.BaseTimeSyncActivity;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWork;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWorkManager;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
@@ -26,7 +28,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class AdditionalWorksActivity extends BaseActivity implements BaseDialogListener {
+public class AdditionalWorksActivity extends BaseTimeSyncActivity implements BaseDialogListener {
 
 	private DialogFragment workInputDialog;
 	private DialogFragment workStopDialog;

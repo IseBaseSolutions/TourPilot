@@ -29,6 +29,8 @@ import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
+import isebase.cognito.tourpilot.Data.WayPoint.WayPoint;
+import isebase.cognito.tourpilot.Data.WayPoint.WayPointManager;
 import isebase.cognito.tourpilot.Data.Work.Work;
 import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemark;
@@ -335,6 +337,23 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ EmploymentVerification.UnDoneTasksIDsField + " TEXT, "
 			+ EmploymentVerification.UserRemarksMarksField + " TEXT, "
 			+ EmploymentVerification.PflegeField + " INTEGER "
+			+ ");";
+	
+	private static final String WAYPOINTS_TABLE_CREATE = 
+			"CREATE TABLE " + WayPointManager.TableName + "(" 
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+			+ BaseObject.NameField + " TEXT NOT NULL, " 
+			+ BaseObject.CheckSumField + " INTEGER, "
+			+ BaseObject.WasSentField + " INTEGER, "
+			+ BaseObject.IsServerTimeField + " INTEGER NOT NULL DEFAULT 1, "
+			+ WayPoint.WorkerIDField + " INTEGER, "
+			+ WayPoint.PilotTourIDField + " INTEGER, "
+			+ WayPoint.AltitudeField + " INTEGER, "
+			+ WayPoint.NbSatellitesField + " INTEGER, "
+			+ WayPoint.TimeField + " INTEGER, "
+			+ WayPoint.AccuracyField + " REAL, "
+			+ WayPoint.LatitudeField + " REAL, "
+			+ WayPoint.LongitudeField + " REAL "			
 			+ ");";	
 		
 	private static String[] createDataTables = new String[]{
@@ -356,7 +375,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		EMPLOYMENTS_TABLE_CREATE,
 		WORKS_TABLE_CREATE,
 		EMPLOYMENT_INTERVALS_TABLE_CREATE,
-		EMPLOYMENT_VERIFICATION_TABLE_CREATE
+		EMPLOYMENT_VERIFICATION_TABLE_CREATE,
+		WAYPOINTS_TABLE_CREATE
 	};
 		
 	private static String[] deleteDataTables = new String[]{		
@@ -378,7 +398,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		"DROP TABLE IF EXISTS " + EmploymentManager.TableName,
 		"DROP TABLE IF EXISTS " + WorkManager.TableName,
 		"DROP TABLE IF EXISTS " + EmploymentIntervalManager.TableName,
-		"DROP TABLE IF EXISTS " + EmploymentVerificationManager.TableName
+		"DROP TABLE IF EXISTS " + EmploymentVerificationManager.TableName,
+		"DROP TABLE IF EXISTS " + WayPointManager.TableName
 	};
 			
 	private static String[] clearWorkerDependedDataTables = new String[]{
@@ -396,7 +417,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		"DELETE FROM " + WorkManager.TableName,
 		"DELETE FROM " + EmploymentIntervalManager.TableName,
 		"DELETE FROM " + UserRemarkManager.TableName,
-		"DELETE FROM " + EmploymentVerificationManager.TableName
+		"DELETE FROM " + EmploymentVerificationManager.TableName,
+		"DELETE FROM " + WayPointManager.TableName
 	};
 	
 	@Override

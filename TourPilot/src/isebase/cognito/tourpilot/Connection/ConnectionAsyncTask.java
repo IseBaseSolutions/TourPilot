@@ -16,6 +16,7 @@ import isebase.cognito.tourpilot.Data.Relative.RelativeManager;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
+import isebase.cognito.tourpilot.Data.WayPoint.WayPointManager;
 import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
@@ -379,6 +380,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		//
 		strDone += UserRemarkManager.Instance().getDone();
 		strDone += EmploymentVerificationManager.Instance().getDone();
+		strDone += WayPointManager.Instance().getDone();
 		//
 		// strDone += CMergedEmploymentTimes.Instance().GetDone(); // Andrew
 		//

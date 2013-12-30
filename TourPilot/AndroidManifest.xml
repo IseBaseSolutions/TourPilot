@@ -11,10 +11,11 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
-    <uses-permission android:name="android.permission.SET_TIME" />    
+    <uses-permission android:name="android.permission.SET_TIME" />
 
     <application
         android:allowBackup="true"
@@ -71,7 +72,7 @@
             android:name="isebase.cognito.tourpilot.Activity.WorkersActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="isebase.cognito.tourpilot.Activity.BaseActivity"
+            android:name="isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="isebase.cognito.tourpilot.Activity.PatientsActivity"
@@ -88,6 +89,23 @@
         <activity
             android:name="isebase.cognito.tourpilot.Activity.VerificationActivity"
             android:screenOrientation="portrait" />
+
+        <service
+            android:name="isebase.cognito.tourpilot.Gps.Service.GPSLogger"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="service" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.GPSActivity"
+            android:label="@string/title_activity_gps" >
+        </activity>
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.BaseActivities.BaseTimeSyncActivity"
+            android:label="@string/title_activity_base_time_sync" >
+        </activity>
     </application>
 
 </manifest>
