@@ -185,7 +185,7 @@ public final class R {
         public static final int base_time_sync=0x7f080004;
         public static final int comments=0x7f080005;
         public static final int doctors=0x7f080006;
-        public static final int g=0x7f080007;
+        public static final int gps=0x7f080007;
         public static final int info=0x7f080008;
         public static final int main=0x7f080009;
         public static final int manual_input=0x7f08000a;
