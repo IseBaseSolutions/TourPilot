@@ -23,7 +23,7 @@ public class BlutdruckTaskDialog extends StandardTaskDialog{
 		
 	@Override
 	public String getValue(){
-		return etMinValue.getText().toString() + ":" + etMaxValue.getText().toString();
+		return etMinValue.getText().toString() + "/" + etMaxValue.getText().toString();
 	}
 	
 	private EditText etMinValue;

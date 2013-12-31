@@ -23,6 +23,8 @@ import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 public class VerificationActivity extends BaseActivity {
@@ -38,6 +40,7 @@ public class VerificationActivity extends BaseActivity {
 	
 	private Date dateBegin;
 	private Date dateEnd;
+	private Button btVerificationOK;
 	
 	private boolean isFlegeOK;
 	
@@ -46,6 +49,7 @@ public class VerificationActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_verification);
 		tvVerification = (TextView) findViewById(R.id.tvVerificationText);
+		btVerificationOK = (Button)findViewById(R.id.btVerificationOK);
 		tasks = TaskManager.Instance().load(Task.EmploymentIDField, String.valueOf(Option.Instance().getEmploymentID()));
 		
 		reloadData();
@@ -64,10 +68,16 @@ public class VerificationActivity extends BaseActivity {
 		taskVerification += "in der Zeit von: ";
 		taskVerification += "<b>" + getTime( DateUtils.HourMinutesFormat.format(dateBegin)) + "</b>";
 		taskVerification += "bis ";
-		taskVerification += "<b>" + getTime(DateUtils.HourMinutesFormat.format(dateEnd)) + "</b>";
-		taskVerification += "bei einer Dauer von ";
-		taskVerification += "<b>" + getInterval(dateBegin, dateEnd) + "</b>";
-		taskVerification += getString(R.string.minuten_einen) + "<br /><br />";
+		taskVerification += "<b>" + getTime(DateUtils.HourMinutesFormat.format(dateEnd)) + "</b> ";
+		int interval = getInterval(dateBegin, dateEnd); 
+		if( interval > 0) {
+			taskVerification += "bei einer Dauer von ";
+			taskVerification += "<b>" + interval + "</b> ";
+			taskVerification += getString(R.string.minuten_einen);
+		} else {
+			taskVerification += "die Einsatzdauer <b>ist weniger als 1 Minute</b>. ";
+		}
+		taskVerification += "<br /><br />";
 		
 		String[] arrayResultTask = getTasks();
 		int doneTasks = 0;
@@ -97,6 +107,10 @@ public class VerificationActivity extends BaseActivity {
 		finish();
 	}
 
+	public void onClickCheckVerification(View view) {
+		CheckBox chbCheckVerification = (CheckBox)findViewById(R.id.chbCheckVerification);
+		btVerificationOK.setEnabled(chbCheckVerification.isChecked());
+	}
 	private String getWorker(Worker worker) {
 		String[] workerName = worker.getName().split(" ");
 		return String.format("%s %s ",workerName[0], workerName[1]);
@@ -116,9 +130,8 @@ public class VerificationActivity extends BaseActivity {
 		return time + " ";
 	}
 
-	private String getInterval(Date timeStart, Date timeStop) {
-		int difference = timeStop.getMinutes() - timeStart.getMinutes();
-		return String.valueOf(difference) + " ";
+	private int getInterval(Date timeStart, Date timeStop) {
+		return timeStop.getMinutes() - timeStart.getMinutes();
 	}
 		
 	private String[] getTasks() {

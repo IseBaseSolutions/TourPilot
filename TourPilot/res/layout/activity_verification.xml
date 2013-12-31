@@ -18,7 +18,7 @@
         android:id="@+id/scrollView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/llVerificationButtons"
+        android:layout_above="@+id/chbCheckVerification"
         android:layout_alignLeft="@+id/llVerificationButtons"
         android:layout_alignParentTop="true"
         android:layout_alignRight="@+id/llVerificationButtons" >
@@ -42,7 +42,7 @@
         android:layout_alignParentLeft="true" >
 
         <Button
-            android:id="@+id/btVerificationOK"
+            android:id="@+id/btVerificationCancel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
@@ -50,12 +50,24 @@
             android:text="@string/verification_cancel" />
 
         <Button
-            android:id="@+id/btVerificationCancel"
+            android:id="@+id/btVerificationOK"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
+            android:enabled="false"
             android:onClick="onClickButtonOk"
             android:text="@string/verification_ok" />
+
     </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/chbCheckVerification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/llVerificationButtons"
+        android:layout_alignLeft="@+id/llVerificationButtons"
+        android:gravity="center_horizontal|center"
+        android:onClick="onClickCheckVerification"
+        android:text="@string/check_verification" />
 
 </RelativeLayout>
