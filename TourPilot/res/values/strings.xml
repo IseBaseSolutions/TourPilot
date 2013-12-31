@@ -156,7 +156,8 @@
     <string name="verification_ok">Senden</string>
     <string name="verification_cancel">Bearbeiten</string>
     <string name="all_ok">Pflege OK</string>
-
+    <string name="check_verification">Ich bestätige die Richtigkeit der Daten</string>
+    
     <!-- Catalogs -->
     <string name="btyp_kk">Krankenkassenleistung</string>
     <string name="btyp_pk">Pflegekassenleistung</string>
