@@ -89,23 +89,19 @@
         <activity
             android:name="isebase.cognito.tourpilot.Activity.VerificationActivity"
             android:screenOrientation="portrait" />
-
-        <service
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.GPSActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.BaseActivities.BaseTimeSyncActivity"
+            android:screenOrientation="portrait" />
+                <service
             android:name="isebase.cognito.tourpilot.Gps.Service.GPSLogger"
             android:exported="false" >
             <intent-filter>
                 <action android:name="service" />
             </intent-filter>
         </service>
-
-        <activity
-            android:name="isebase.cognito.tourpilot.Activity.GPSActivity"
-            android:label="@string/title_activity_gps" >
-        </activity>
-        <activity
-            android:name="isebase.cognito.tourpilot.Activity.BaseActivities.BaseTimeSyncActivity"
-            android:label="@string/title_activity_base_time_sync" >
-        </activity>
     </application>
 
 </manifest>

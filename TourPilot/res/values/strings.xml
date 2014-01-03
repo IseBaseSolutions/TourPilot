@@ -121,22 +121,24 @@
     <string name="started_at">Gestartet um</string>
     <string name="attention">Achtung!</string>
     <string name="select_period">wählbarer Zeitraum</string>
+    <string name="start_gps">GPS starten</string>
 
     <!-- Dialogs -->
     <string name="dialog_task_proof_undone">Möchten Sie diesen Einsatz als ausgefallen markieren?</string>
-    <string name="dialog_task_proof_back">Möchten Sie wirklich die Zeiten verwerfen? Wenn Sie diese Meldung mit OK bestätigen, werden die Zeiten gelöscht.</string>
+    <string name="dialog_task_proof_back">Möchten Sie wirklich die Zeiten verwerfen? Wenn Sie diese Meldung mit OK bestätigen, werden die Zeiten und jeweilige zusätzliche Leistungen gelöscht.</string>
     <string name="dialog_no_connection">Bitte, die Internet Verbindung zulassen</string>
     <string name="dialog_complete_all_tasks">Es fehlen noch Daten, die Sie für diese Tour noch nicht eingegeben haben. Bitte nehmen Sie die Eingabe jetzt vor.</string>
     <string name="dialog_no_ip_entered">Tragen Sie bitte die Server IP ein</string>
     <string name="dialog_connection_problems">Verbindungsstörungen</string>
     <string name="dialog_leaving_patient">Pflege OK?</string>
-    <string name="dialog_proof_logout">Möchten Sie wirklich abmelden?</string>
+    <string name="dialog_proof_logout">Möchten Sie sich wirklich abmelden?</string>
     <string name="dialog_comments">Bemerkungen</string>
     <string name="dialog_no_patients">Keine Patienten vorhanden</string>
     <string name="dialog_empty_tour">Die Tour ist leer</string>
     <string name="dialog_clear_database">Daten leeren?</string>
     <string name="dialog_employment_not_started">Einsatz ist noch nicht gestartet</string>
     <string name="dialog_start_employment">Bitte erst Einsatzbeginn antippen</string>
+    <string name="dialog_reached_patient">Haben Sie den Patienten erreicht?</string>
 
     <!-- Errors -->
     <string name="err_no_phone">Keine Telefon-Nr.</string>
@@ -166,9 +168,6 @@
 
     <!-- Toasts -->
     <string name="db_backup_created">DB Backup erstellt</string>
-    <string name="title_activity_gps">GPSActivity</string>
-    <string name="start_gps">GPS STARTO!</string>
     <string name="title_activity_base_time_sync">BaseTimeSyncActivity</string>
-    <string name="hello_world">Hello world!</string>
 
 </resources>

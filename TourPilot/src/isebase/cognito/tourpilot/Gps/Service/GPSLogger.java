@@ -1,7 +1,5 @@
 package isebase.cognito.tourpilot.Gps.Service;
 
-import isebase.cognito.tourpilot.Data.Employment.Employment;
-import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.WayPoint.WayPoint;
 import isebase.cognito.tourpilot.Data.WayPoint.WayPointManager;
@@ -80,59 +78,59 @@ public class GPSLogger extends Service implements LocationListener {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Toast toast = Toast.makeText(StaticResources.getBaseContext(), "Received intent " + intent.getAction(), Toast.LENGTH_SHORT);
-			toast.show();
-
-			if (OSMTracker.INTENT_TRACK_WP.equals(intent.getAction())) {
-				// Track a way point
-				Bundle extras = intent.getExtras();
-				if (extras != null) {
-					// because of the gps logging interval our last fix could be
-					// very old
-					// so we'll request the last known location from the gps
-					// provider
-					lastLocation = lmgr
-							.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-					if (lastLocation != null) {
-						Long trackId = extras.getLong(WayPoint.TrackIDField);
-						String uuid = extras
-								.getString(OSMTracker.INTENT_KEY_UUID);
-						String name = extras
-								.getString(OSMTracker.INTENT_KEY_NAME);
-						String link = extras
-								.getString(OSMTracker.INTENT_KEY_LINK);
-//						WayPoint wayPoint = new WayPoint(trackId, lastLocation,
-//								lastNbSatellites, name, link, uuid);
-					}
-				}
-			} else if (OSMTracker.INTENT_UPDATE_WP.equals(intent.getAction())) {
-				// Update an existing waypoint
-				Bundle extras = intent.getExtras();
-				if (extras != null) {
-					Long trackId = extras.getLong(WayPoint.TrackIDField);
-					String uuid = extras.getString(OSMTracker.INTENT_KEY_UUID);
-					String name = extras.getString(OSMTracker.INTENT_KEY_NAME);
-					String link = extras.getString(OSMTracker.INTENT_KEY_LINK);
-					//dataHelper.updateWayPoint(trackId, uuid, name, link);
-				}
-			} else if (OSMTracker.INTENT_DELETE_WP.equals(intent.getAction())) {
-				// Delete an existing waypoint
-				Bundle extras = intent.getExtras();
-				if (extras != null) {
-					String uuid = extras.getString(OSMTracker.INTENT_KEY_UUID);
-					//dataHelper.deleteWayPoint(uuid);
-				}
-			} else if (OSMTracker.INTENT_START_TRACKING.equals(intent
-					.getAction())) {
-				Bundle extras = intent.getExtras();
-				if (extras != null) {
-					Long trackId = extras.getLong(WayPoint.TrackIDField);
-					startTracking(trackId);
-				}
-			} else if (OSMTracker.INTENT_STOP_TRACKING.equals(intent
-					.getAction())) {
-				stopTrackingAndSave();
-			}
+//			Toast toast = Toast.makeText(StaticResources.getBaseContext(), "Received intent " + intent.getAction(), Toast.LENGTH_SHORT);
+//			toast.show();
+//
+//			if (OSMTracker.INTENT_TRACK_WP.equals(intent.getAction())) {
+//				// Track a way point
+//				Bundle extras = intent.getExtras();
+//				if (extras != null) {
+//					// because of the gps logging interval our last fix could be
+//					// very old
+//					// so we'll request the last known location from the gps
+//					// provider
+//					lastLocation = lmgr
+//							.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//					if (lastLocation != null) {
+//						Long trackId = extras.getLong(WayPoint.TrackIDField);
+//						String uuid = extras
+//								.getString(OSMTracker.INTENT_KEY_UUID);
+//						String name = extras
+//								.getString(OSMTracker.INTENT_KEY_NAME);
+//						String link = extras
+//								.getString(OSMTracker.INTENT_KEY_LINK);
+////						WayPoint wayPoint = new WayPoint(trackId, lastLocation,
+////								lastNbSatellites, name, link, uuid);
+//					}
+//				}
+//			} else if (OSMTracker.INTENT_UPDATE_WP.equals(intent.getAction())) {
+//				// Update an existing waypoint
+//				Bundle extras = intent.getExtras();
+//				if (extras != null) {
+//					Long trackId = extras.getLong(WayPoint.TrackIDField);
+//					String uuid = extras.getString(OSMTracker.INTENT_KEY_UUID);
+//					String name = extras.getString(OSMTracker.INTENT_KEY_NAME);
+//					String link = extras.getString(OSMTracker.INTENT_KEY_LINK);
+//					//dataHelper.updateWayPoint(trackId, uuid, name, link);
+//				}
+//			} else if (OSMTracker.INTENT_DELETE_WP.equals(intent.getAction())) {
+//				// Delete an existing waypoint
+//				Bundle extras = intent.getExtras();
+//				if (extras != null) {
+//					String uuid = extras.getString(OSMTracker.INTENT_KEY_UUID);
+//					//dataHelper.deleteWayPoint(uuid);
+//				}
+//			} else if (OSMTracker.INTENT_START_TRACKING.equals(intent
+//					.getAction())) {
+//				Bundle extras = intent.getExtras();
+//				if (extras != null) {
+//					Long trackId = extras.getLong(WayPoint.TrackIDField);
+//					startTracking(trackId);
+//				}
+//			} else if (OSMTracker.INTENT_STOP_TRACKING.equals(intent
+//					.getAction())) {
+//				stopTrackingAndSave();
+//			}
 		}
 	};
 

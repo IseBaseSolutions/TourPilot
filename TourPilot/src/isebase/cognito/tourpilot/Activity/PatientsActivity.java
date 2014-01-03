@@ -241,7 +241,7 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 				return adb.create();
 			}
 		};
-		dialogGPSPatient = new BaseDialog("Launching GPS", "Have you reached the patient?", "Yes", "No");
+		dialogGPSPatient = new BaseDialog(getString(R.string.start_gps), getString(R.string.dialog_reached_patient), getString(R.string.yes), getString(R.string.no));
 	}
 	
 	private void showPatientsDialog(int position) {
