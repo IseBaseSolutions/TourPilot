@@ -156,7 +156,7 @@
     <string name="verification_ok">Senden</string>
     <string name="verification_cancel">Bearbeiten</string>
     <string name="all_ok">Pflege OK</string>
-    <string name="check_verification">Ich bestätige die Richtigkeit der Daten</string>
+    <string name="check_verification">Ich bestätige, dass ich die entsprechenden Informationen auf dem vorliegenden Leistungsnachweis eingetragen habe inkl. der Startzeit sowie des Handzeichens</string>
     
     <!-- Catalogs -->
     <string name="btyp_kk">Krankenkassenleistung</string>

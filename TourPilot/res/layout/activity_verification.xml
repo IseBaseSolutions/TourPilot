@@ -62,11 +62,11 @@
 
     <CheckBox
         android:id="@+id/chbCheckVerification"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/llVerificationButtons"
         android:layout_alignLeft="@+id/llVerificationButtons"
-        android:gravity="center_horizontal|center"
+        android:gravity="center_vertical|fill_horizontal"
         android:onClick="onClickCheckVerification"
         android:text="@string/check_verification" />
 
