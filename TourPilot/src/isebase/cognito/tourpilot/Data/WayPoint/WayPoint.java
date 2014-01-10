@@ -151,19 +151,23 @@ public class WayPoint extends BaseObject {
 	}
 	
 	public WayPoint(int workerID, int pilotTourID, Location location, int nbSatellites) {
-		setWorkerID(workerID);
-		setPilotTourID(pilotTourID);
-    	setLatitude(location.getLatitude());
-    	setLongitude(location.getLongitude());
-    	setNbSatellites(nbSatellites);
-        if (location.hasAltitude()) {
-        	setAltitude(location.getAltitude());
-        }
-        
-        if (location.hasAccuracy()) {
-        	setAccuracy(location.getAccuracy());
-        }
-        setTime(location.getTime());
+		try {
+			setWorkerID(workerID);
+			setPilotTourID(pilotTourID);
+	    	setLatitude(location.getLatitude());
+	    	setLongitude(location.getLongitude());
+	    	setNbSatellites(nbSatellites);
+	        if (location.hasAltitude()) {
+	        	setAltitude(location.getAltitude());
+	        }
+	        
+	        if (location.hasAccuracy()) {
+	        	setAccuracy(location.getAccuracy());
+	        }
+	        setTime(location.getTime());
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 //	public WayPoint(long trackId, Location location, int nbSatellites, String name, String link, String uuid) {

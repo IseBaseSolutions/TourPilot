@@ -40,6 +40,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.ContextMenu;
@@ -187,6 +188,8 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 					&& task != startTask && task != endTask)
 				return;
 		}
+		if (employment.isFromMobile() && startTask.getRealDate().equals(DateUtils.EmptyDate))
+			return;
 		btEndTask.setEnabled(true);
 	}
 	
@@ -249,8 +252,10 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 		TaskManager.Instance().save(startTask);
 		TaskManager.Instance().save(endTask);
 		fillUpStartTask();
-		fillUpEndTask();
+		fillUpEndTask();		
 		fillUpEndButtonEnabling();
+		if (Build.VERSION.SDK_INT > 10)
+			invalidateOptionsMenu();
 	}
 	
 	public void btEndTaskTimerClick(View view) {		
@@ -357,7 +362,11 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 				dialog = new StandardTaskDialog(task, getString(R.string.weight), getString(R.string.gewicht_value), TaskTypes.weightTypeInput);
 				break;
 			case AdditionalTask.DETECT_RESPIRATION:
+<<<<<<< HEAD
 				dialog = new StandardTaskDialog(task, getString(R.string.detect_respiration), getString(R.string.atemzÃge_value), TaskTypes.respirationTypeInput);
+=======
+				dialog = new StandardTaskDialog(task, getString(R.string.detect_respiration), getString(R.string.atemzuge_value), TaskTypes.respirationTypeInput);
+>>>>>>> branch 'master' of ssh://git@github.com/andrewgtv/TourPilot.git
 				break;
 			case AdditionalTask.BALANCE:
 				dialog = new StandardTaskDialog(task, getString(R.string.balance), getString(R.string.ml), TaskTypes.balanceTypeInput);
@@ -561,6 +570,7 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 			Task task  = ((StandardTaskDialog)dialog).getTask();
 			task.setQualityResult(((StandardTaskDialog)dialog).getValue());
 			setTaskState(((StandardTaskDialog)dialog).getTask());
+			taskAdapter.notifyDataSetChanged();
 		}
 	}
 

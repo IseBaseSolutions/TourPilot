@@ -171,7 +171,7 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 	private void reloadData() {
 		employments = EmploymentManager.Instance().load(Employment.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID()));
 		for (Employment employment : employments)
-			if (!employment.isDone())
+			if (!employment.isDone() && !employment.isAdditionalWork())
 				addEmployments.add(new AdditionalEmployment(employment.getID(), String.format("%s %s\n%s", employment.getTime(), employment.getName(), employment.getDayPart())));
 	}
 	

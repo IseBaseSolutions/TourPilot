@@ -97,7 +97,7 @@
 
     <!-- Trivial -->
     <string name="blutzucker_value">mg/dl</string>
-    <string name="atemzüge_value">A/min</string>
+    <string name="atemzuge_value">A/min</string>
     <string name="gewicht_value">kg</string>
     <string name="puls_value">BpM</string>
     <string name="temperature_value">°C</string>
@@ -139,6 +139,8 @@
     <string name="dialog_employment_not_started">Einsatz ist noch nicht gestartet</string>
     <string name="dialog_start_employment">Bitte erst Einsatzbeginn antippen</string>
     <string name="dialog_reached_patient">Haben Sie den Patienten erreicht?</string>
+    <string name="dialog_send">Klicken Sie auf Senden, um Daten zu verschicken. Wenn Sie Daten noch überprüfen möchten, klicken Sie auf Bearbeiten.</string>
+    <string name="dialog_license_over">Kein Datenabgleich möglich. Alle Lizenzen werden bereits benutzt. Das Programm wird geschlossen.</string>
 
     <!-- Errors -->
     <string name="err_no_phone">Keine Telefon-Nr.</string>
@@ -149,7 +151,10 @@
     <string name="action_settings">Settings</string>
 
     <!-- Verification -->
-    <string name="minuten_einen">Minuten einen Einsatz durchgeführt. Folgende Daten werden übermittelt:</string>
+    <string name="minuten_einen">Minuten einen Einsatz durchgeführt.</string>
+    <string name="work_was_done">einen Einsatz durchgeführt.</string>
+    <string name="data_to_send">Folgende Daten werden übermittelt:</string>
+
     <string name="done_tasks">durchgeführt wurde</string>
     <string name="undone_tasks">NICHT DURCHGEFÜHRT WURDE</string>
     <string name="there_are_no_done_tasks">Es gibt keine erledigte(n) Aufgabe(n)</string>
@@ -159,6 +164,7 @@
     <string name="verification_cancel">Bearbeiten</string>
     <string name="all_ok">Pflege OK</string>
     <string name="check_verification">Ich bestätige, dass ich die entsprechenden Informationen auf dem vorliegenden Leistungsnachweis eingetragen habe inkl. der Startzeit sowie des Handzeichens</string>
+    <string name="agree">Einverstanden</string>
     
     <!-- Catalogs -->
     <string name="btyp_kk">Krankenkassenleistung</string>

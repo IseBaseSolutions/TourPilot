@@ -56,7 +56,7 @@ public class BlutdruckTaskDialog extends StandardTaskDialog{
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
 		adb.setTitle(getString(R.string.blood_pressure));
-				
+		setCancelable(false);
 		etMinValue.setTextColor(Color.BLACK);
 		etMinValue.setHint(getString(R.string.min));
 		etMinValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);

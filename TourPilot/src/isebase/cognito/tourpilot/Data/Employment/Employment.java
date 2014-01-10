@@ -160,7 +160,7 @@ public class Employment extends BaseObject implements IJob {
 	
 	@MapField(DatabaseField = DayPartField)
 	public String getDayPart() {
-		return dayPart.contains("Einsatzende") ? dayPart = dayPart.replace("Einsatzende ", "") : dayPart;
+		return dayPart.contains("Einsatzende") ? (dayPart = dayPart.replace("Einsatzende ", "")) : (dayPart = dayPart.replace("Einsatzbeginn ", ""));
 	}
 
 	@MapField(DatabaseField = DayPartField)
@@ -226,10 +226,12 @@ public class Employment extends BaseObject implements IJob {
             String qulityResult = task.getQualityResult().isEmpty() ? "" : "$" + task.getQualityResult();
             strTask += qulityResult;
             strTask += ";";
-            if (!DateUtils.EmptyDate.equals(task.getManualDate()))
-                strTask += DateUtils.toDateTime(task.getManualDate()) + ";";
+            strTask += (DateUtils.EmptyDate.equals(task.getManualDate()) ? "" : DateUtils.toDateTime(task.getManualDate())) + ";";
             strTask += DateUtils.toDateTime(task.getRealDate());
-            strTask += "\0";
+            strTask += (isFromMobile() && task.isFirstTask())
+            		? (";" + getID()+ "" + Option.Instance().getWorkerID() + "" + Option.Instance().getPilotTourID() + "" + getPatientID() +""+ DateUtils.HourMinutesSecondsFormat.format(startTime) +""+ DateUtils.HourMinutesSecondsFormat.format(stopTime)) 
+            				: "";
+    		strTask += "\0";
             strValue += strTask;
             SentObjectVerification.Instance().sentTasks.add(task);
         }

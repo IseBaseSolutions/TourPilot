@@ -66,13 +66,12 @@ public class StandardTaskDialog extends DialogFragment{
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
 		adb.setTitle(title);
+		setCancelable(false);
 		etValue.setTextColor(Color.BLACK);
 		etValue.setHint(hint);
 		etValue.setInputType(typeInput);
 		etValue.setEnabled(!isViewMode);
 		etValue.setFilters(new InputFilter[] { new InputFilter.LengthFilter(10) });
-		etValue.setInputType(typeInput);
-
 		etValue.addTextChangedListener(new TextWatcher(){
 			Pattern pattern = Pattern.compile("[0-9,]");
 			

@@ -4,6 +4,7 @@ import java.util.Date;
 
 import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
@@ -152,6 +153,7 @@ public class EmploymentVerification extends BaseObject {
 		strValue += undoneTasksIDs + ";";
 		strValue += userRemarksMarks + ";";
 		strValue += isPflege + ";";
+		strValue += (employmentID + "" + Option.Instance().getWorkerID() + "" + Option.Instance().getPilotTourID() + "" + patientID +""+ DateUtils.HourMinutesSecondsFormat.format(dateBegin) +""+ DateUtils.HourMinutesSecondsFormat.format(dateEnd));
 		SentObjectVerification.Instance().sentEmploymentVerifications.add(this);
 		return strValue;
 	}
