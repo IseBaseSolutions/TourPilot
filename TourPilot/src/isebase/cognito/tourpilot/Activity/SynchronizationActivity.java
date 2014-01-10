@@ -9,7 +9,9 @@ import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
+import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
+import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,6 +52,17 @@ import android.widget.TextView;
 						progressText.setText(text);
 					}
 				}
+				if (connectionStatus.getAnswerFromServer().equals("OVER")) {
+					BaseInfoDialog licenseOverDialog = new BaseInfoDialog(getString(R.string.attention), getString(R.string.dialog_license_over));
+					licenseOverDialog.show(getSupportFragmentManager(), "licenseOverDialog");
+					return;
+				}
+				if ((!connectionStatus.lastExecuteOK) && Option.Instance().getPilotTourID() != -1)
+				{
+					Intent intent = new Intent(getApplicationContext(), PatientsActivity.class);
+					startActivity(intent);
+				}
+
 				if (Option.Instance().getPalmVersion() != null 
  						&& Integer.parseInt(Option.Instance().getPalmVersion()) > Integer.parseInt(Option.Instance().getVersion()))
  				{
@@ -112,6 +125,10 @@ import android.widget.TextView;
 		{
 			AutoUpdate autoUpdate = new AutoUpdate();
 			autoUpdate.execute();	
+		}
+		if (dialog.getTag().equals("licenseOverDialog"))
+		{
+			finish();
 		}	
 	}
 

@@ -14,6 +14,9 @@ import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemark;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
+import isebase.cognito.tourpilot.Dialogs.BaseDialog;
+import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
+import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
 import java.util.Date;
@@ -21,6 +24,7 @@ import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.text.Html;
 import android.view.Menu;
 import android.view.View;
@@ -32,6 +36,7 @@ public class VerificationActivity extends BaseActivity {
 
 	private List<Task> tasks;
 	private TextView tvVerification;
+	private Button btOK;
 
 	private String taskVerification;
 
@@ -41,7 +46,6 @@ public class VerificationActivity extends BaseActivity {
 	
 	private Date dateBegin;
 	private Date dateEnd;
-	private Button btVerificationOK;
 	
 	private boolean isFlegeOK;
 	
@@ -49,14 +53,15 @@ public class VerificationActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_verification);
+		btOK = (Button) findViewById(R.id.btOK);
+		btOK.setEnabled(false);
 		tvVerification = (TextView) findViewById(R.id.tvVerificationText);
-		btVerificationOK = (Button)findViewById(R.id.btVerificationOK);
 		tasks = TaskManager.Instance().load(Task.EmploymentIDField, String.valueOf(Option.Instance().getEmploymentID()));
 		
 		reloadData();
 		
 		dateBegin = employment.getFirstTask().getManualDate().equals(DateUtils.EmptyDate) ? employment.getFirstTask().getRealDate() : employment.getFirstTask().getManualDate();
-		dateEnd = employment.getLastTask().getManualDate().equals(DateUtils.EmptyDate) ? employment.getLastTask().getRealDate() : employment.getLastTask().getManualDate();;
+		dateEnd = employment.getLastTask().getManualDate().equals(DateUtils.EmptyDate) ? employment.getLastTask().getRealDate() : employment.getLastTask().getManualDate();
 
 		taskVerification = "";
 
@@ -74,9 +79,12 @@ public class VerificationActivity extends BaseActivity {
 		if( interval > 0) {
 			taskVerification += "bei einer Dauer von ";
 			taskVerification += "<b>" + interval + "</b> ";
-			taskVerification += getString(R.string.minuten_einen);
+			taskVerification += getString(R.string.minuten_einen) + " ";
+			taskVerification += getString(R.string.data_to_send);
 		} else {
-			taskVerification += "die Einsatzdauer <b>ist weniger als 1 Minute</b>. ";
+			taskVerification += getString(R.string.work_was_done);
+			taskVerification += " Die Einsatzdauer <b>ist weniger als 1 Minute</b>. ";
+			taskVerification += getString(R.string.data_to_send);
 		}
 		taskVerification += "<br /><br />";
 		
@@ -93,7 +101,7 @@ public class VerificationActivity extends BaseActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.verification, menu);
+		//getMenuInflater().inflate(R.menu.verification, menu);
 		return true;
 	}
 
@@ -107,11 +115,29 @@ public class VerificationActivity extends BaseActivity {
 		setResult(VerificationActivity.RESULT_CANCELED);
 		finish();
 	}
+	
+	@Override
+	public void onBackPressed() {
+		setResult(VerificationActivity.RESULT_CANCELED);
+		finish();
+	}
 
 	public void onClickCheckVerification(View view) {
 		CheckBox chbCheckVerification = (CheckBox)findViewById(R.id.chbCheckVerification);
-		btVerificationOK.setEnabled(chbCheckVerification.isChecked());
+		btOK.setEnabled(chbCheckVerification.isChecked());
 	}
+	
+	public void onBtOkClick(View view) {
+		saveVerification();
+		setResult(VerificationActivity.RESULT_OK);
+		finish();		
+	}
+	
+	public void onBtCancelClick(View view) {
+		setResult(VerificationActivity.RESULT_CANCELED);
+		finish();	
+	}
+	
 	private String getWorker(Worker worker) {
 		String[] workerName = worker.getName().split(" ");
 		return String.format("%s %s ",workerName[0], workerName[1]);

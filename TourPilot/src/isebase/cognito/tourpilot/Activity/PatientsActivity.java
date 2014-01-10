@@ -45,7 +45,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 
-public class PatientsActivity extends BaseActivity implements BaseDialogListener{
+public class PatientsActivity extends BaseActivity implements BaseDialogListener {
 
 	private List<Employment> employments;
 	private List<Work> works;
@@ -81,8 +81,12 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (worker.getIsUseGPS())
-			dialogGPSPatient.show(getSupportFragmentManager(), "dialogGPSPatient");
+//		try {
+//			if (worker.getIsUseGPS() && dialogGPSPatient.getFragmentManager() == null)
+//				dialogGPSPatient.show(getSupportFragmentManager(), "dialogGPSPatient");
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	@Override

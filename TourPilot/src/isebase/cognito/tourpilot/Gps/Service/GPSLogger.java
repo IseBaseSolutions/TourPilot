@@ -19,7 +19,6 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 public class GPSLogger extends Service implements LocationListener {
 
@@ -72,7 +71,9 @@ public class GPSLogger extends Service implements LocationListener {
 	
 	private int workerID;
 	
-	private int tourID;
+	private int pilotTourID;
+	
+	private WayPoint currentWayPoint;
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 
@@ -141,20 +142,20 @@ public class GPSLogger extends Service implements LocationListener {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		Toast toast = Toast.makeText(StaticResources.getBaseContext(), "Service onBind()", Toast.LENGTH_SHORT);
-		toast.show();
+//		Toast toast = Toast.makeText(StaticResources.getBaseContext(), "Service onBind()", Toast.LENGTH_SHORT);
+//		toast.show();
 		return binder;
 	}
 
 	@Override
 	public boolean onUnbind(Intent intent) {
-		Toast toast = Toast.makeText(StaticResources.getBaseContext(), "Service onUnbind()", Toast.LENGTH_SHORT);
-		toast.show();
+//		Toast toast = Toast.makeText(StaticResources.getBaseContext(), "Service onUnbind()", Toast.LENGTH_SHORT);
+//		toast.show();
 		// If we aren't currently tracking we can
 		// stop ourselves
 		if (!isTracking) {
-			toast = Toast.makeText(StaticResources.getBaseContext(), "Service self-stopping", Toast.LENGTH_SHORT);
-			toast.show();
+//			toast = Toast.makeText(StaticResources.getBaseContext(), "Service self-stopping", Toast.LENGTH_SHORT);
+//			toast.show();
 			stopSelf();
 		}
 
@@ -176,63 +177,77 @@ public class GPSLogger extends Service implements LocationListener {
 
 	@Override
 	public void onCreate() {
-		Toast toast = Toast.makeText(StaticResources.getBaseContext(), "Service onCreate()", Toast.LENGTH_SHORT);
-		toast.show();
-		// read the logging interval from preferences
-		gpsLoggingInterval = Long.parseLong(PreferenceManager
-				.getDefaultSharedPreferences(this.getApplicationContext())
-				.getString(OSMTracker.Preferences.KEY_GPS_LOGGING_INTERVAL,
-						OSMTracker.Preferences.VAL_GPS_LOGGING_INTERVAL)) * 1000;
-
-		// Register our broadcast receiver
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(OSMTracker.INTENT_TRACK_WP);
-		filter.addAction(OSMTracker.INTENT_UPDATE_WP);
-		filter.addAction(OSMTracker.INTENT_DELETE_WP);
-		filter.addAction(OSMTracker.INTENT_START_TRACKING);
-		filter.addAction(OSMTracker.INTENT_STOP_TRACKING);
-		registerReceiver(receiver, filter);
-
-		// Register ourselves for location updates
-		lmgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		lmgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-
-		super.onCreate();
+		try {
+//			Toast toast = Toast.makeText(StaticResources.getBaseContext(), "Service onCreate()", Toast.LENGTH_SHORT);
+//			toast.show();
+			// read the logging interval from preferences
+			try {
+//				workerID = Option.Instance().getWorkerID();
+//				pilotTourID = Option.Instance().getPilotTourID();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+			gpsLoggingInterval = Long.parseLong(PreferenceManager
+					.getDefaultSharedPreferences(this.getApplicationContext())
+					.getString(OSMTracker.Preferences.KEY_GPS_LOGGING_INTERVAL,
+							OSMTracker.Preferences.VAL_GPS_LOGGING_INTERVAL)) * 1000;
+	
+			// Register our broadcast receiver
+			IntentFilter filter = new IntentFilter();
+			filter.addAction(OSMTracker.INTENT_TRACK_WP);
+			filter.addAction(OSMTracker.INTENT_UPDATE_WP);
+			filter.addAction(OSMTracker.INTENT_DELETE_WP);
+			filter.addAction(OSMTracker.INTENT_START_TRACKING);
+			filter.addAction(OSMTracker.INTENT_STOP_TRACKING);
+			registerReceiver(receiver, filter);
+	
+			// Register ourselves for location updates
+			lmgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+			lmgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+	
+			super.onCreate();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-		Toast toast = Toast.makeText(StaticResources.getBaseContext(), "Service onStartCommand(-,"+flags+","+startId+")", Toast.LENGTH_SHORT);
-		toast.show();
+//		Toast toast = Toast.makeText(StaticResources.getBaseContext(), "Service onStartCommand(-,"+flags+","+startId+")", Toast.LENGTH_SHORT);
+//		toast.show();
         //startForeground(NOTIFICATION_ID, getNotification());
         return Service.START_STICKY;
     }
     
     @Override
     public void onDestroy() {
-		Toast toast = Toast.makeText(StaticResources.getBaseContext(), "Service onDestroy()", Toast.LENGTH_SHORT);
-		toast.show();
-        if (isTracking) {
-            // If we're currently tracking, save user data.
-            stopTrackingAndSave();
-        }
-
-        // Unregister listener
-        lmgr.removeUpdates(this);
-        
-        // Unregister broadcast receiver
-        unregisterReceiver(receiver);
-        
-        // Cancel any existing notification
-        stopNotifyBackgroundService();
-
-        super.onDestroy();
+    	try {
+//			Toast toast = Toast.makeText(StaticResources.getBaseContext(), "Service onDestroy()", Toast.LENGTH_SHORT);
+//			toast.show();
+	        if (isTracking) {
+	            // If we're currently tracking, save user data.
+	            stopTrackingAndSave();
+	        }
+	
+	        // Unregister listener
+	        lmgr.removeUpdates(this);
+	        
+	        // Unregister broadcast receiver
+	        unregisterReceiver(receiver);
+	        
+	        // Cancel any existing notification
+	        stopNotifyBackgroundService();
+	
+	        super.onDestroy();
+    	} catch(Exception e) {
+    		e.printStackTrace();
+    	}
     }
     
     private void startTracking(long trackId) {
         currentTrackId = trackId;
-		Toast toast = Toast.makeText(StaticResources.getBaseContext(), "Starting track logging for track #" + trackId, Toast.LENGTH_SHORT);
-		toast.show();
+//		Toast toast = Toast.makeText(StaticResources.getBaseContext(), "Starting track logging for track #" + trackId, Toast.LENGTH_SHORT);
+//		toast.show();
         // Refresh notification with correct Track ID
         NotificationManager nmgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         //nmgr.notify(NOTIFICATION_ID, getNotification());
@@ -252,29 +267,33 @@ public class GPSLogger extends Service implements LocationListener {
 	@Override
 	public void onLocationChanged(Location location) {
         // We're receiving location, so GPS is enabled
-        isGpsEnabled = true;
-		Toast toast = Toast.makeText(StaticResources.getBaseContext(), "Location was updated", Toast.LENGTH_SHORT);
-		toast.show();
-        // first of all we check if the time from the last used fix to the current fix is greater than the logging interval
-        if((lastGPSTimestamp + gpsLoggingInterval) < System.currentTimeMillis()){
-            lastGPSTimestamp = System.currentTimeMillis(); // save the time of this fix
-    
-            lastLocation = location;
-            lastNbSatellites = countSatellites();
-            toast = Toast.makeText(StaticResources.getBaseContext(), "Location was changed to: " + lastLocation.getLatitude() + "/" + lastLocation.getLongitude(), Toast.LENGTH_SHORT);
-    		toast.show();
-    		try {
-				WayPoint wayPoint = new WayPoint(Option.Instance().getWorkerID(), Option.Instance().getPilotTourID(), lastLocation, lastNbSatellites);
-				WayPointManager.Instance().save(wayPoint);
-    		} catch(Exception e)
-    		{
-                toast = Toast.makeText(StaticResources.getBaseContext(), "Error", Toast.LENGTH_SHORT);
-        		toast.show();
-    		}    		
-            if (isTracking) {
-                //dataHelper.track(currentTrackId, location);
-            }
-        }
+		try {
+	        isGpsEnabled = true;
+//			Toast toast = Toast.makeText(StaticResources.getBaseContext(), "Location was updated", Toast.LENGTH_SHORT);
+//			toast.show();
+	        // first of all we check if the time from the last used fix to the current fix is greater than the logging interval
+	        if(((lastGPSTimestamp + gpsLoggingInterval) < System.currentTimeMillis()) && (System.currentTimeMillis() - lastGPSTimestamp) > 6000){
+	            lastGPSTimestamp = System.currentTimeMillis(); // save the time of this fix
+	    
+	            lastLocation = location;
+	            lastNbSatellites = countSatellites();
+//	            toast = Toast.makeText(StaticResources.getBaseContext(), "Location was changed to: " + lastLocation.getLatitude() + "/" + lastLocation.getLongitude(), Toast.LENGTH_SHORT);
+//	    		toast.show();
+	    		try {
+	    			currentWayPoint = new WayPoint(-1, -1, lastLocation, lastNbSatellites);
+					//WayPointManager.Instance().save(currentWayPoint);
+	    		} catch(Exception e)
+	    		{
+//	                toast = Toast.makeText(StaticResources.getBaseContext(), "Error", Toast.LENGTH_SHORT);
+//	        		toast.show();
+	    		}    		
+	            if (isTracking) {
+	                //dataHelper.track(currentTrackId, location);
+	            }
+	        }
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 	
@@ -316,8 +335,12 @@ public class GPSLogger extends Service implements LocationListener {
      * Stops notifying the user that we're tracking in the background
      */
     private void stopNotifyBackgroundService() {
-            NotificationManager nmgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            nmgr.cancel(NOTIFICATION_ID);
+    	try {
+		    NotificationManager nmgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		    nmgr.cancel(NOTIFICATION_ID);
+    	} catch(Exception e) {
+    		e.printStackTrace();
+    	}
     }
 
 	@Override

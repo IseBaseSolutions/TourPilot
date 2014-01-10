@@ -17,6 +17,7 @@ public class DateUtils {
     public static final SimpleDateFormat FileNameFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
     public static final SimpleDateFormat DateTimeFormat = new SimpleDateFormat("dd.MM.yyyy/HH:mm:ss");
     public static final SimpleDateFormat HourMinutesFormat = new SimpleDateFormat("HH:mm");
+    public static final SimpleDateFormat HourMinutesSecondsFormat = new SimpleDateFormat("HH:mm:ss");
     public static final SimpleDateFormat DateFormat = new SimpleDateFormat("dd.MM.yyyy");
     public static final SimpleDateFormat WeekDateFormat = new SimpleDateFormat("EEE dd.MM");
     

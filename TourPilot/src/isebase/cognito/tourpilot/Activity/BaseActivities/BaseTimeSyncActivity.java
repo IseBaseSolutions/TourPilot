@@ -19,6 +19,7 @@ import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
 import isebase.cognito.tourpilot.R.layout;
 import isebase.cognito.tourpilot.R.menu;
+import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -41,7 +42,8 @@ public class BaseTimeSyncActivity extends FragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);		
+		super.onCreate(savedInstanceState);
+		StaticResources.setBaseContext(getBaseContext());
 		if(!isMainActivity())
 			versionFragmentDialog = new InfoBaseDialog(
 					getString(R.string.menu_program_info), 

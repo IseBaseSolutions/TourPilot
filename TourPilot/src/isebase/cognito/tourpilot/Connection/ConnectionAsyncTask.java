@@ -1,6 +1,7 @@
 package isebase.cognito.tourpilot.Connection;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Activity.PatientsActivity;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWorkManager;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
@@ -19,6 +20,7 @@ import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
 import isebase.cognito.tourpilot.Data.WayPoint.WayPointManager;
 import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
+import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 import isebase.cognito.tourpilot.Utils.StringParser;
@@ -26,11 +28,13 @@ import isebase.cognito.tourpilot.Utils.StringParser;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.util.Date;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 
 public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
@@ -205,7 +209,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 			String recievedStatus = readFromStream(conStatus.IS);
 			if (recievedStatus.startsWith("OVER") 
 					|| recievedStatus.equals("")) {
-				// License is over
+				conStatus.setAnswerFromServer("OVER");
 				retVal = false;
 			}
 			else if(recievedStatus.startsWith("OK")) {
