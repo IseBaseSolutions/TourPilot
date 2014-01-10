@@ -362,7 +362,7 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 				dialog = new StandardTaskDialog(task, getString(R.string.weight), getString(R.string.gewicht_value), TaskTypes.weightTypeInput);
 				break;
 			case AdditionalTask.DETECT_RESPIRATION:
-				dialog = new StandardTaskDialog(task, getString(R.string.detect_respiration), getString(R.string.atemzüge_value), TaskTypes.respirationTypeInput);
+				dialog = new StandardTaskDialog(task, getString(R.string.detect_respiration), getString(R.string.atemzuge_value), TaskTypes.respirationTypeInput);
 				break;
 			case AdditionalTask.BALANCE:
 				dialog = new StandardTaskDialog(task, getString(R.string.balance), getString(R.string.ml), TaskTypes.balanceTypeInput);

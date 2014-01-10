@@ -97,7 +97,7 @@
 
     <!-- Trivial -->
     <string name="blutzucker_value">mg/dl</string>
-    <string name="atemzüge_value">A/min</string>
+    <string name="atemzuge_value">A/min</string>
     <string name="gewicht_value">kg</string>
     <string name="puls_value">BpM</string>
     <string name="temperature_value">°C</string>

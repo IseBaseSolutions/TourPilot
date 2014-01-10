@@ -205,7 +205,7 @@ public final class R {
         /**  Programm info 
          */
         public static final int app_name=0x7f060040;
-        public static final int atemzüge_value=0x7f06004f;
+        public static final int atemzuge_value=0x7f06004f;
         public static final int attention=0x7f060065;
         public static final int aubrplanmabige_pflege=0x7f060022;
         public static final int back=0x7f060056;
