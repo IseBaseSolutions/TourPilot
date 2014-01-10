@@ -91,10 +91,12 @@ public abstract class BaseObject {
 		name = "";
 		checkSum = 0;
 		wasSent = false;
-		isServerTime = false;
+		isServerTime = true;
 	}
 	
-	public abstract String forServer();
+	public String forServer() {
+		return "";
+	}
 	
 	public String getDone() {
 		return "";

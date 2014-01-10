@@ -2,7 +2,9 @@ package isebase.cognito.tourpilot.Data.SelectionPeriod;
 
 import java.util.Date;
 
+import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
+import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
 public class SelectionPeriod implements IJob {
 
@@ -49,7 +51,7 @@ public class SelectionPeriod implements IJob {
 
 	@Override
 	public String timeInterval() {
-		return "Select period";
+		return StaticResources.getBaseContext().getString(R.string.select_period);
 	}
 
 	@Override

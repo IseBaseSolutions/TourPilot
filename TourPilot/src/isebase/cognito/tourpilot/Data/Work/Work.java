@@ -1,5 +1,6 @@
 package isebase.cognito.tourpilot.Data.Work;
 
+import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.Connection.ServerCommandParser;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWork;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
@@ -8,6 +9,7 @@ import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
 import isebase.cognito.tourpilot.Utils.DateUtils;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -147,12 +149,22 @@ public class Work extends BaseObject implements IJob {
     }
         
     //W;358;1385194841000;1385196041000;2;1002012;;1385227538953
+    //1385625605453
+    //1385625680030
+    
 	@Override
-	public String forServer() {
+	public String forServer() {	
+		if (!getIsServerTime() && Option.Instance().isTimeSynchronised())
+		{
+			setStartTime(DateUtils.getSynchronizedTime(getStartTime()));
+			setStopTime(DateUtils.getSynchronizedTime(getStopTime()));
+			setIsServerTime(true);
+			WorkManager.Instance().save(this);
+		}
         String strValue = new String(ServerCommandParser.WORK + ";");
         strValue += Option.Instance().getWorkerID() + ";";
-        strValue += getStartTime().getTime() + ";";
-        strValue += getStopTime().getTime() + ";";
+        strValue += DateUtils.getLocalTime(getStartTime()) + ";";
+        strValue += DateUtils.getLocalTime(getStopTime()) + ";";
         strValue += getAdditionalWorkID() + ";";
         strValue += getPilotTourID() + ";";
         strValue += getPatientIDs() + ";";
@@ -161,6 +173,7 @@ public class Work extends BaseObject implements IJob {
 	}
 	
 	public String getDone() {
+		SentObjectVerification.Instance().sentWorks.add(this);
 		return forServer();
 	}
 	

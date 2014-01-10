@@ -11,26 +11,38 @@ import java.util.Date;
 
 public class Information extends BaseObject {
 
-	public static final String EmploymentCodeField = "employment_code";
+	public static final String EmploymentIDField = "employment_id";
+	public static final String InformationIDField = "information_id";
 	public static final String FromDateField = "from_date";
 	public static final String TilldateField = "till_date";
 	public static final String ReadTimeField = "read_time";
 	public static final String IsFromServerField = "is_from_server";
 
-	private long employmentCode;
+	private long employmentID;
+	private int informationID;
 	private Date fromDate;
 	private Date tillDate;
 	private Date readTime;
 	private boolean isFromServer;
-
-	@MapField(DatabaseField = EmploymentCodeField)
-	public long getEmploymentCode() {
-		return employmentCode;
+	
+	@MapField(DatabaseField = EmploymentIDField)
+	public long getEmploymentID() {
+		return employmentID;
 	}
 
-	@MapField(DatabaseField = EmploymentCodeField)
-	public void setEmploymentCode(long employmentCode) {
-		this.employmentCode = employmentCode;
+	@MapField(DatabaseField = EmploymentIDField)
+	public void setEmploymentID(long employmentID) {
+		this.employmentID = employmentID;
+	}
+
+	@MapField(DatabaseField = InformationIDField)
+	public int getInformationID() {
+		return informationID;
+	}
+
+	@MapField(DatabaseField = InformationIDField)
+	public void setInformationID(int informationID) {
+		this.informationID = informationID;
 	}
 
 	@MapField(DatabaseField = FromDateField)
@@ -81,8 +93,8 @@ public class Information extends BaseObject {
 		StringParser parsingString = new StringParser(initString);
 		parsingString.next(";");
 		setIsFromServer(true);
-		setID(Integer.parseInt(parsingString.next(";")));
-		setEmploymentCode(Long.parseLong(parsingString.next(";")));
+		setInformationID(Integer.parseInt(parsingString.next(";")));
+		setEmploymentID(Long.parseLong(parsingString.next(";")));
 		SimpleDateFormat format = new SimpleDateFormat("ddMMyyyyHHmm");
 		try {
 			setFromDate(format.parse(parsingString.next(";") + "0000"));
@@ -97,7 +109,7 @@ public class Information extends BaseObject {
 	@Override
 	public String forServer() {
 		String strValue = new String(ServerCommandParser.INFORMATION + ";");
-		strValue += String.format("%d;%d", getID(), getEmploymentCode()) + ";";
+		strValue += String.format("%d;%d", getID(), getEmploymentID()) + ";";
 		strValue += getCheckSum();
 		return strValue;
 	}
@@ -105,12 +117,17 @@ public class Information extends BaseObject {
 	@Override
 	protected void clear() {
 		super.clear();
-		setEmploymentCode(EMPTY_ID);
+		setInformationID(EMPTY_ID);
 		setFromDate(DateUtils.EmptyDate);
 		setTillDate(DateUtils.EmptyDate);
 		setReadTime(DateUtils.EmptyDate);
 		setIsFromServer(false);
 		
+	}
+	
+	public boolean isActualInfo(Date date) {
+		return date.getTime() >= getFromDate().getTime() 
+				&& date.getTime() <= getTillDate().getTime();		
 	}
 	
 }

@@ -1,5 +1,6 @@
 package isebase.cognito.tourpilot.Data.BaseObject;
 
+import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.Utilizer;
@@ -470,8 +471,8 @@ public abstract class BaseObjectManager<T> {
 	}
 	
 	public long getCheckSumByRequest(){
-		return getLongValue(String.format("select sum(checksum) " +
-				"from %1$s where was_sent = 0", getRecTableName()));
+		return getLongValue(String.format("SELECT SUM(checksum) " +
+				"FROM %1$s WHERE was_sent = 0", getRecTableName()));
 	}
 	
 	public long getLongValue(String strSQL){
@@ -513,8 +514,17 @@ public abstract class BaseObjectManager<T> {
 		String strDone = "";
 		for (T element : elements)
 			strDone += ((BaseObject)element).getDone() + "\0";
-		updateNotSent();
 		return strDone;	
+	}
+	
+	public List<T> sortByStrIDs(List<T> items, String strIDs) {
+		List<T> sortedItems = new ArrayList<T>();
+		String[] arr = strIDs.contains(" ") ? strIDs.split(", ") : strIDs.split(",");
+		for(int i = 0; i < arr.length; i++)
+			for (T item : items)
+				if (Integer.parseInt(arr[i]) == ((BaseObject)item).getID())
+					sortedItems.add(item);
+		return sortedItems;
 	}
 	
 	public void updateNotSent(){

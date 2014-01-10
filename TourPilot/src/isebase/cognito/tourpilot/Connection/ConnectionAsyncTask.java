@@ -7,6 +7,7 @@ import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Diagnose.DiagnoseManager;
 import isebase.cognito.tourpilot.Data.Doctor.DoctorManager;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
+import isebase.cognito.tourpilot.Data.EmploymentVerification.EmploymentVerificationManager;
 import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
@@ -15,9 +16,13 @@ import isebase.cognito.tourpilot.Data.Relative.RelativeManager;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
+import isebase.cognito.tourpilot.Data.WayPoint.WayPointManager;
 import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
+import isebase.cognito.tourpilot.Utils.DateUtils;
+import isebase.cognito.tourpilot.Utils.StringParser;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -25,6 +30,7 @@ import java.net.Socket;
 import java.util.Date;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
 import android.os.AsyncTask;
 
 public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
@@ -109,6 +115,12 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 			conStatus.isFinished = true;
 			conStatus.lastExecuteOK = closeConnection();
 			break;
+		case ConnectionStatus.ADDITONAL_PATIENTS_SYNC:
+			conStatus.lastExecuteOK = additionalPatientsSync();
+			break;
+		case ConnectionStatus.TIME_SYNC:
+			conStatus.lastExecuteOK = getTimeSync();
+			break;
 		default:
 			conStatus.isFinished = true;
 			break;
@@ -168,6 +180,8 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 			conStatus.OS.flush();
 			String recievedDate = readFromStream(conStatus.IS);
 			conStatus.serverCommandParser.parseElement(recievedDate, true);
+			Option.Instance().setTimeSynchronised(true);
+			correctTime();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			retVal = false;
@@ -194,10 +208,20 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 				// License is over
 				retVal = false;
 			}
-			else if(recievedStatus.startsWith("OK")){
-				char lastSymbol = recievedStatus.charAt(
-						recievedStatus.length() - 2);
-				Option.Instance().setIsAuto(lastSymbol == '1');
+			else if(recievedStatus.startsWith("OK")) {
+				SentObjectVerification.Instance().setWasSent();
+				StringParser stringParser = new StringParser(recievedStatus);
+				String msg = stringParser.next("\0");
+				Option.Instance().setIsAuto(msg.contains("1"));
+				msg.contains("skippflegeok");
+				if (stringParser.contains(ServerCommandParser.SERVER_CURRENT_VERSION))
+					conStatus.serverCommandParser.parseElement(stringParser.next("\0"), false);
+				else
+					Option.Instance().setPalmVersion(null);
+				if (stringParser.contains(ServerCommandParser.SERVER_VERSION_LINK))
+					conStatus.serverCommandParser.parseElement(stringParser.next("\0"), false);
+				else
+					Option.Instance().setVersionLink(null);
 			}
 						
 		} catch (Exception ex) {
@@ -355,6 +379,8 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		// strDone += CLogs.Instance().GetDone();
 		//
 		strDone += UserRemarkManager.Instance().getDone();
+		strDone += EmploymentVerificationManager.Instance().getDone();
+		strDone += WayPointManager.Instance().getDone();
 		//
 		// strDone += CMergedEmploymentTimes.Instance().GetDone(); // Andrew
 		//
@@ -478,6 +504,54 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 			stringBuffer.append((char) zis.read());
 		}
 		return stringBuffer.toString();
+	}
+	
+	private boolean additionalPatientsSync() {
+		writeToStream(conStatus.OS, conStatus.getRequestMessage());
+		try {
+			conStatus.OS.flush();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		if (!conStatus.getRequestMessage().toLowerCase().startsWith("get") 
+				&& !conStatus.getRequestMessage().toLowerCase().startsWith("sel"))
+			return true;
+		String answerFromServer = "";
+		try {
+			answerFromServer = readPack(conStatus.IS);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		conStatus.setAnswerFromServer(answerFromServer);
+		return true;
+	}
+	
+	private boolean getTimeSync() {
+		boolean retVal = true;
+
+		try {
+			writeToStream(conStatus.OS, "GETTIME_CLOSE");
+			conStatus.OS.flush();
+			String recievedDate = readFromStream(conStatus.IS);
+			conStatus.serverCommandParser.parseElement(recievedDate, true);
+			Option.Instance().setTimeSynchronised(true);		
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			retVal = false;
+		} finally {
+			if (retVal)
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.sycnhronizing_ok));
+			else
+				conStatus.setMessage(StaticResources.getBaseContext()
+						.getString(R.string.sycnhronizing_fail));
+		}
+
+		return retVal;
+	}
+	
+	private void correctTime() {
+		
 	}
 
 }

@@ -10,20 +10,34 @@
     
     <Button
         android:id="@+id/btOptions"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/lvWorkers"
+        android:onClick="btOptionsClick"
         android:text="@string/options"
-        android:textAppearance="?android:attr/textAppearanceLarge" 
-        android:onClick="btOptionsClick" />
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <ListView
-        android:id="@+id/lvWorkers"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btOptions"
-        android:layout_alignLeft="@+id/btOptions" >
-    </ListView>
+     <Button
+         android:id="@+id/btSync"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_above="@+id/btOptions"
+         android:layout_alignLeft="@+id/btOptions"
+         android:layout_alignRight="@+id/lvWorkers"
+         android:onClick="btSyncClick"
+         android:text="@string/synchronization"
+         android:textAppearance="?android:attr/textAppearanceLarge" />
+
+     <ListView
+         android:id="@+id/lvWorkers"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_above="@+id/btSync"
+         android:layout_alignParentLeft="true"
+         android:layout_alignParentTop="true" >
+
+     </ListView>
     
 </RelativeLayout>

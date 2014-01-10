@@ -1,7 +1,10 @@
 package isebase.cognito.tourpilot.Data.UserRemark;
 
 import java.util.Date;
+
+import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 import isebase.cognito.tourpilot.Utils.StringParser;
@@ -9,10 +12,13 @@ import isebase.cognito.tourpilot.Utils.StringParser;
 public class UserRemark extends BaseObject {
 
 	public static final String PatientIDField = "patient_id";
+	public static final String WorkerIDField = "worker_id";
 	public static final String DateField = "date";
 	public static final String CheckboxField = "checkboxes";
 
 	private int patientID;
+	private int workerID;
+	
 	private Date date;
 	private int checkboxes;
 	
@@ -23,6 +29,16 @@ public class UserRemark extends BaseObject {
 	@MapField(DatabaseField = PatientIDField)
 	public void setPatientID(int patientID) {
 		this.patientID = patientID;
+	}
+	
+	@MapField(DatabaseField = WorkerIDField)
+	public int getWorkerID() {
+		return workerID;
+	}
+	
+	@MapField(DatabaseField = WorkerIDField)
+	public void setWorkerID(int workerID) {
+		this.workerID = workerID;
 	}
 
 	@MapField(DatabaseField = DateField)
@@ -47,11 +63,12 @@ public class UserRemark extends BaseObject {
 		clear();
 	}
 	
-    public UserRemark(int workerID, int patientID
+    public UserRemark(int EmploymentID, int workerID,  int patientID
     		, boolean chkContact, boolean chkMed, boolean chkVisit
             , boolean chkOther, String strRemark)
     {
-        setID(workerID);
+        setID(EmploymentID);
+        setWorkerID(workerID);
         setPatientID(patientID);
         checkboxes = 0;
         if (chkContact) 
@@ -79,6 +96,13 @@ public class UserRemark extends BaseObject {
     }  
     
     public String toString(){
+		if (!getIsServerTime() && Option.Instance().isTimeSynchronised())
+		{
+			setDate(DateUtils.getSynchronizedTime(getDate()));
+			setIsServerTime(true);
+			UserRemarkManager.Instance().save(this);
+		}
+    	UserRemarkManager.Instance().save(this);
         String strValue = new String("O;");
         strValue += getID() + ";";
         strValue += getPatientID() + ";";
@@ -92,13 +116,19 @@ public class UserRemark extends BaseObject {
     
     public String getDone()
     {
-        //O;358;4926;2008-08-19 22:14:59;0;ferting
+		if (!getIsServerTime() && Option.Instance().isTimeSynchronised())
+		{
+			setDate(DateUtils.getSynchronizedTime(getDate()));
+			setIsServerTime(true);
+			UserRemarkManager.Instance().save(this);
+		}
         String strValue = new String("O;");
         strValue += getID() + ";";
         strValue += getPatientID() + ";";
         strValue += DateUtils.getLocalTime(getDate()) + ";";
         strValue += getCheckboxes() + ";";
         strValue += getName();
+        SentObjectVerification.Instance().sentUserRemarks.add(this);
         return strValue;
     }
     

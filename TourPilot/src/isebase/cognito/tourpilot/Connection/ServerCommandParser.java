@@ -1,5 +1,6 @@
 package isebase.cognito.tourpilot.Connection;
 
+import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWork;
@@ -12,6 +13,7 @@ import isebase.cognito.tourpilot.Data.Doctor.Doctor;
 import isebase.cognito.tourpilot.Data.Doctor.DoctorManager;
 import isebase.cognito.tourpilot.Data.Information.Information;
 import isebase.cognito.tourpilot.Data.Information.InformationManager;
+import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemark;
@@ -22,11 +24,12 @@ import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
-import isebase.cognito.tourpilot.Data.Work.Work;
-import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
+import isebase.cognito.tourpilot.StaticResources.StaticResources;
+
+import java.util.Date;
 
 public class ServerCommandParser {
 
@@ -64,10 +67,6 @@ public class ServerCommandParser {
 
 	private SynchronizationHandler syncHandler;
 
-	private String strVerlink;
-	private boolean needShowVersion;
-	private static long timeDiff = 0;
-
 	public ServerCommandParser(SynchronizationHandler sh) {
 		syncHandler = sh;
 	}
@@ -80,25 +79,28 @@ public class ServerCommandParser {
 		boolean blnRes = true;
 		if (commandLine.length() > 1)
 			commandActionType = commandLine.charAt(1);
-		if (commandLine.equals(END)) // pos_start = strData.length();
+		if (commandLine.equals(END))
 			blnRes = false;
 		if (commandLine.equals(""))
 			return false;
 
 		switch (commandType) {
 		case END:
-			syncHandler.onProgressUpdate("Done");
+			syncHandler.onProgressUpdate(StaticResources.getBaseContext().getString(R.string.done));
 			break;
 		case TIME:
 			if (commandLine.indexOf(SERVER_CURRENT_VERSION) == 0)
-				// TODO Check version
-				// CheckVersion(commandLine.substring(SERVER_CURRENT_VERSION.length()));
+				Option.Instance().setPalmVersion(commandLine.substring(SERVER_CURRENT_VERSION.length()));
 			if (commandLine.indexOf(SERVER_VERSION_LINK) == 0)
-				strVerlink = commandLine.substring(SERVER_VERSION_LINK.length());
+				Option.Instance().setVersionLink(commandLine.substring(SERVER_VERSION_LINK.length()));
 			if (commandLine.indexOf(SERVER_SET_TIME_KEY) == 0)
-				// TODO Set time
-				// SetTime(commandLine.substring(SERVER_SET_TIME_KEY.length()));
-				break;
+			{
+				String s = commandLine.substring(SERVER_SET_TIME_KEY.length());
+				Long serverTime = Long.parseLong(s.substring(0, s.length() - 1));
+				Option.Instance().setServerTimeDifference(serverTime - (new Date()).getTime());
+				Option.Instance().save();
+			}
+			break;
 		case WORKER:
 			if (commandActionType == NEED_TO_ADD) {
 				Worker item = new Worker(commandLine);

@@ -1,6 +1,7 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWork;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWorkManager;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
@@ -51,11 +52,11 @@ public class ManualInputActivity extends BaseActivity implements BaseDialogListe
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
-                super.onCreate(savedInstanceState);
-                setContentView(R.layout.activity_manual_input);
-                reloadData();
-                fillUp();
-                initDialogs();
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_manual_input);
+            reloadData();
+            fillUp();
+            initDialogs();
         }
 
         @Override

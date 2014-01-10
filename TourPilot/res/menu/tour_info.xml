@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item
-        android:id="@+id/tour_info"
-        android:orderInCategory="100"
-        android:showAsAction="never" 
-        android:menuCategory="system"
-        android:title="@string/menu_info"/>
-    <item
         android:id="@+id/action_db_backup"
-        android:title="@string/menu_db_backup"/>
+        android:title="@string/menu_db_backup" />
+    <item
+        android:id="@+id/action_clear_darabase"
+        android:title="@string/menu_clear_darabase" />
     
 </menu>

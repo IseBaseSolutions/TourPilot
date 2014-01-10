@@ -16,7 +16,8 @@
         android:layout_below="@+id/tvPinCode"
         android:layout_toLeftOf="@+id/cb_SavePin"
         android:inputType="number"
-        android:password="true" />
+        android:password="true" 
+        android:maxLength="10"/>
 
     <TextView
         android:id="@+id/tvPinCode"

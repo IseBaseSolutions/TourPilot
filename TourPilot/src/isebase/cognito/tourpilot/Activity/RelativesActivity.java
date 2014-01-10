@@ -2,6 +2,7 @@ package isebase.cognito.tourpilot.Activity;
 
 import java.util.List;
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
@@ -46,7 +47,7 @@ public class RelativesActivity extends BaseActivity {
 	private void reloadData()
 	{
 		employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
-		relatives =  RelativeManager.Instance().loadAllByIDs(employment.getPatient().getStrRelativeIDs());
+		relatives =  RelativeManager.Instance().sortByStrIDs(RelativeManager.Instance().loadAllByIDs(employment.getPatient().getStrRelativeIDs()), employment.getPatient().getStrRelativeIDs());
 	}
 
 }

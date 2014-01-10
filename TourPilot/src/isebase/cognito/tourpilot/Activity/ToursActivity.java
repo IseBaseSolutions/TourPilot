@@ -1,23 +1,23 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.Data.Information.Information;
-import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourComparer;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
-import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
+import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
-import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import isebase.cognito.tourpilot.Templates.PilotToursAdapter;
 import isebase.cognito.tourpilot.Utils.DataBaseUtils;
-import isebase.cognito.tourpilot.Utils.DateUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
+
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.Menu;
@@ -29,19 +29,18 @@ import android.widget.ListView;
 public class ToursActivity extends BaseActivity implements BaseDialogListener{
 
 	private List<PilotTour> pilotTours = new ArrayList<PilotTour>();
-	private List<Information> infos = new ArrayList<Information>();
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		try{
+		try {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_tours);
 			reloadData();		
 			fillUpTitle();
-			fillUp();
-			loadTourInfos(false);
-		}catch(Exception ex){
-			ex.printStackTrace();
+			fillUp();			
+		} catch(Exception e) {
+			e.printStackTrace();
 			criticalClose();
 		}
 	}
@@ -55,16 +54,15 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()){
-			case R.id.tour_info:
-				loadTourInfos(true);
-				return true;
 			case R.id.action_db_backup:
-				try{
+				try {
 					DataBaseUtils.backup();
-				}
-				catch(Exception ex){
+				} catch(Exception ex) {
 					ex.printStackTrace();
 				}
+				return true;
+			case R.id.action_clear_darabase:
+				clearDatabase();
 				return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -75,15 +73,6 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 		showDialogLogout();
 	}
 	
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu){
-		if(infos.size() == 0){
-			MenuItem item = menu.findItem(R.id.tour_info);
-			item.setEnabled(false);
-		}
-		return true;
-	}
-
 	public void fillUp() {
 		ListView listView = (ListView) findViewById(R.id.lvTours);
 		PilotToursAdapter adapter = new PilotToursAdapter(this,
@@ -143,30 +132,49 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog) {
-		logOut();
+		if(dialog.getTag().equals("dialogBack"))
+			logOut();
+		else if (dialog.getTag().equals("clearDatabase") && DataBaseWrapper.Instance().clearWorkerData()) {
+			clearDB();
+		}
 	}
 
 	@Override
 	public void onDialogNegativeClick(DialogFragment dialog) {
+		
 	}
 
-	private void loadTourInfos(boolean is_from_menu){
-		infos = InformationManager.Instance().load(Information.EmploymentCodeField, BaseObject.EMPTY_ID);
-		String strInfos = "";
-		Date today = new Date();
-		for(Information info : infos){
-			if(!DateUtils.isToday(info.getReadTime()) || is_from_menu)
-				if((today.getTime() >= info.getFromDate().getTime()) && (today.getTime() <= info.getTillDate().getTime())){
-					if(strInfos != "" )
-						strInfos += "\n";
-					strInfos += info.getName();
-					info.setReadTime(today);
-				}
-		}
-		if(strInfos.length() > 0){
-			InformationManager.Instance().save(infos);
-			InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_info),strInfos);
-			dialog.show(getSupportFragmentManager(), "");
-		}
+	private void clearDatabase(){
+		BaseDialog dialog = new BaseDialog(getString(R.string.attention), 
+				getString(R.string.dialog_clear_database));
+		dialog.show(getSupportFragmentManager(), "clearDatabase");
+		getSupportFragmentManager().executePendingTransactions();
 	}
+	
+	private void clearDB() {
+//		pbClearDB.setVisibility(View.VISIBLE);
+//		syncButton.setEnabled(false);
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				try{
+						DataBaseWrapper.Instance().clearWorkerData();
+				}
+				catch(Exception e){
+					e.printStackTrace();
+				}
+
+				return null;
+			}
+							
+			@Override
+			protected void onPostExecute(Void result) {
+//				pbClearDB.setVisibility(View.INVISIBLE);
+//				syncButton.setEnabled(true);
+			}
+		}.execute();
+		startWorkersActivity();
+	}
+	
 }

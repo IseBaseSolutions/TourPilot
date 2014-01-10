@@ -1,13 +1,17 @@
 package isebase.cognito.tourpilot.Data.Employment;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentInterval;
+import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentIntervalManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
+import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
@@ -26,6 +30,8 @@ public class Employment extends BaseObject implements IJob {
 	public static final String IsDoneField = "is_done";
 	public static final String StartTimeField = "start_time";
 	public static final String StopTimeField = "stop_time";
+	public static final String DayPartField = "day_part";
+	public static final String IsAddedFromMobileField = "from_mobile";
 	
 	private boolean isDone;
 	
@@ -41,7 +47,22 @@ public class Employment extends BaseObject implements IJob {
 	private List<Task> tasks =  new ArrayList<Task>();
 	
 	private Patient patient;
+
 	private PilotTour pilotTour;
+	
+	private String dayPart;
+	
+	private boolean isFromMobile;
+
+	@MapField(DatabaseField = IsAddedFromMobileField)
+	public boolean isFromMobile() {
+		return isFromMobile;
+	}
+
+	@MapField(DatabaseField = IsAddedFromMobileField)
+	public void setFromMobile(boolean isFromMobile) {
+		this.isFromMobile = isFromMobile;
+	}
 
 	@MapField(DatabaseField = IsDoneField)
 	public boolean getIsDone() {
@@ -135,7 +156,17 @@ public class Employment extends BaseObject implements IJob {
 
 	public void setPilotTour(PilotTour pilotTour) {
 		this.pilotTour = pilotTour;
-	}	
+	}
+	
+	@MapField(DatabaseField = DayPartField)
+	public String getDayPart() {
+		return dayPart.contains("Einsatzende") ? dayPart = dayPart.replace("Einsatzende ", "") : dayPart;
+	}
+
+	@MapField(DatabaseField = DayPartField)
+	public void setDayPart(String dayPart) {
+		this.dayPart = dayPart;
+	}
 	
 	public Employment() {
 		
@@ -166,6 +197,26 @@ public class Employment extends BaseObject implements IJob {
         SimpleDateFormat format = new SimpleDateFormat("ddMMyyyy");
         for (Task task : tasks)
         {
+    		if (!getIsServerTime() && Option.Instance().isTimeSynchronised())
+    		{
+            	task.setRealDate(Option.Instance().isTimeSynchronised() 
+            			? task.getRealDate() 
+            			: DateUtils.getSynchronizedTime(task.getRealDate()));
+            	task.setIsServerTime(true);
+    			TaskManager.Instance().save(task);
+    			if (task.isFirstTask())
+    			{
+	    			EmploymentInterval emplInt = EmploymentIntervalManager.Instance().load(getID());
+	    			emplInt.setStartTime(task.getManualDate().equals(DateUtils.EmptyDate) ? task.getRealDate() : task.getManualDate());
+	    			EmploymentIntervalManager.Instance().save(emplInt);
+    			}
+    			if (task.isLastTask())
+    			{
+	    			EmploymentInterval emplInt = EmploymentIntervalManager.Instance().load(getID());
+	    			emplInt.setStopTime(task.getManualDate().equals(DateUtils.EmptyDate) ? task.getRealDate() : task.getManualDate());
+	    			EmploymentIntervalManager.Instance().save(emplInt);
+    			}
+    		}    		
         	String strTask = strEmpl;
             strTask += format.format(task.getPlanDate()) + ";"; // date only
             strTask += task.getPlanDate().toString().substring(11,13); // time hours
@@ -180,9 +231,10 @@ public class Employment extends BaseObject implements IJob {
             strTask += DateUtils.toDateTime(task.getRealDate());
             strTask += "\0";
             strValue += strTask;
-            task.setWasSent(true);            
+            SentObjectVerification.Instance().sentTasks.add(task);
         }
         TaskManager.Instance().save(tasks);
+        SentObjectVerification.Instance().sentEmployments.add(this);
         return strValue;
     }
     
@@ -250,6 +302,10 @@ public class Employment extends BaseObject implements IJob {
 	@Override
 	public Date stopTime() {
 		return getStopTime().equals(DateUtils.EmptyDate) ? DateUtils.EmptyDate : getStopTime();
+	}
+	
+	public boolean isWork() {
+		return getPatientID() > 999900;
 	}
 	
 }

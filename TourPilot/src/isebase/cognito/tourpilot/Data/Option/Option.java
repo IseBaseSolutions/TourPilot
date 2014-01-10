@@ -21,7 +21,7 @@ public class Option {
 	public static final String IsAutoField = "is_auto";
 	public static final String IsWorkerActivityField = "is_worker_activity";
 	public static final String PinField = "pin";
-
+	public static final String ServerTimeDifferenceField = "server_time_difference";
 	public static boolean testMode = false;
 	private Worker worker;
 	private TelephonyManager phoneManager = StaticResources.phoneManager;
@@ -37,18 +37,23 @@ public class Option {
 	private int workID;
 	private int serverPort;
 	private int id;
-	private int pin;
+	private long serverTimeDifference;
+	private String pin;
+	
+	private String palmVersion;
+	private String versionLink;
 
 	private boolean isAuto;
 	private boolean isWorkerActivity;
+	private boolean isTimeSynchronised;
 
 	@MapField(DatabaseField = PinField)
-	public int getPin() {
+	public String getPin() {
 		return pin;
 	}
 
 	@MapField(DatabaseField = PinField)
-	public void setPin(int pin) {
+	public void setPin(String pin) {
 		this.pin = pin;
 	}
 	
@@ -151,6 +156,40 @@ public class Option {
 	public void setID(int id) {
 		this.id = id;
 	}
+	
+	@MapField(DatabaseField = ServerTimeDifferenceField)
+	public long getServerTimeDifference() {
+		return serverTimeDifference;
+	}
+	
+	@MapField(DatabaseField = ServerTimeDifferenceField)
+	public void setServerTimeDifference(long serverTimeDifference) {
+		this.serverTimeDifference = serverTimeDifference;
+	}
+	
+	public String getPalmVersion() {
+		return palmVersion;
+	}
+
+	public void setPalmVersion(String palmVersion) {
+		this.palmVersion = palmVersion;
+	}
+
+	public String getVersionLink() {
+		return versionLink;
+	}
+
+	public void setVersionLink(String versionLink) {
+		this.versionLink = versionLink;
+	}
+	
+	public boolean isTimeSynchronised() {
+		return isTimeSynchronised;
+	}
+
+	public void setTimeSynchronised(boolean isTimeSynchronised) {
+		this.isTimeSynchronised = isTimeSynchronised;
+	}
 
 	public Worker getWorker() {
 		if (worker != null && worker.getID() == getWorkerID())
@@ -160,13 +199,10 @@ public class Option {
 	}
 
 	protected void clear() {
-		setID(BaseObject.EMPTY_ID);
-		setWorkerID(BaseObject.EMPTY_ID);
-		setWorkID(BaseObject.EMPTY_ID);
-		setPilotTourID(BaseObject.EMPTY_ID);
-		setEmploymentID(BaseObject.EMPTY_ID);	
+		setID(BaseObject.EMPTY_ID);	
 		setServerPort(4448);		
-		setServerIP("192.168.0.138");
+		setServerIP("");
+		setPin("");
 		clearSelected();
 	}
 
@@ -180,12 +216,8 @@ public class Option {
 
 	public String getVersion() {
 		try {
-			return StaticResources
-					.getBaseContext()
-					.getPackageManager()
-					.getPackageInfo(
-							StaticResources.getBaseContext().getPackageName(),
-							0).versionName;
+			return StaticResources.getBaseContext().getPackageManager().
+					getPackageInfo(StaticResources.getBaseContext().getPackageName(), 0).versionName;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -219,5 +251,5 @@ public class Option {
 	public void save() {
 		optionManager.save(Option.Instance());
 	}
-
+	
 }

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -30,6 +31,8 @@ public class AdditionalTaskAdapter extends ArrayAdapter<AdditionalTask> implemen
 	private List<AdditionalTasktHolder> filteredTasks;
 	private int layoutResourceId;
 	private Context context;
+	private Button btSaveAddTasks;
+	int selectedCount;
 	
 	public boolean isVisible = false;
 	
@@ -42,6 +45,7 @@ public class AdditionalTaskAdapter extends ArrayAdapter<AdditionalTask> implemen
 		for(AdditionalTask task : tasks)
 			this.tasks.add(new AdditionalTasktHolder(task));
 		this.filteredTasks = this.tasks;
+		initControls();
 	}
 	
 	@Override
@@ -63,8 +67,10 @@ public class AdditionalTaskAdapter extends ArrayAdapter<AdditionalTask> implemen
 	OnCheckedChangeListener onCheckboxCheckedListener = new OnCheckedChangeListener() {
 		@Override
 		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-			AdditionalTasktHolder taskHolder = (AdditionalTasktHolder)buttonView.getTag();
-			taskHolder.isChecked = isChecked;			
+			AdditionalTasktHolder taskHolder = (AdditionalTasktHolder) buttonView.getTag();
+			taskHolder.isChecked = isChecked;
+			selectedCount += isChecked ? 1 : -1;
+			btSaveAddTasks.setEnabled(selectedCount != 0);
 		}
 	};
 	
@@ -110,6 +116,10 @@ public class AdditionalTaskAdapter extends ArrayAdapter<AdditionalTask> implemen
 		public AdditionalTasktHolder(AdditionalTask task){
 			this.additionalTask = task;
 		}		
+	}
+	
+	private void initControls() {
+		btSaveAddTasks = (Button) ((Activity) context).findViewById(R.id.btSaveAddTask);
 	}
 	
 }

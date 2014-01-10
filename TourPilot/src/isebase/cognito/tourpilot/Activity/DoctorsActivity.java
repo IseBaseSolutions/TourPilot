@@ -2,6 +2,7 @@ package isebase.cognito.tourpilot.Activity;
 
 import java.util.List;
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Data.Doctor.Doctor;
 import isebase.cognito.tourpilot.Data.Doctor.DoctorManager;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
@@ -41,7 +42,7 @@ public class DoctorsActivity extends BaseActivity {
 	
 	public void reloadData() {
 		employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
-		addressable = DoctorManager.Instance().loadAllByIDs(employment.getPatient().getStrDoctorsIDs());
+		addressable = DoctorManager.Instance().sortByStrIDs(DoctorManager.Instance().loadAllByIDs(employment.getPatient().getStrDoctorsIDs()),employment.getPatient().getStrDoctorsIDs());
 	}
 
 	private void fillUpTitle(){

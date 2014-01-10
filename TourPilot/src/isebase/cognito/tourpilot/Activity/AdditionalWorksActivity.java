@@ -1,6 +1,8 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
+import isebase.cognito.tourpilot.Activity.BaseActivities.BaseTimeSyncActivity;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWork;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWorkManager;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
@@ -13,8 +15,10 @@ import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.PatientsDialog;
 import isebase.cognito.tourpilot.Dialogs.WorkStopDialog;
 import isebase.cognito.tourpilot.Dialogs.WorkTypeDialog;
-import java.util.Date;
+import isebase.cognito.tourpilot.Utils.DateUtils;
+
 import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -24,7 +28,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class AdditionalWorksActivity extends BaseActivity implements BaseDialogListener {
+public class AdditionalWorksActivity extends BaseTimeSyncActivity implements BaseDialogListener {
 
 	private DialogFragment workInputDialog;
 	private DialogFragment workStopDialog;
@@ -47,6 +51,7 @@ public class AdditionalWorksActivity extends BaseActivity implements BaseDialogL
 			fillUp();
 			fillUpTitle();
 			switchTolatest();
+			setTimeSync(true);
 		}
 		catch(Exception ex){
 			ex.printStackTrace();
@@ -111,7 +116,8 @@ public class AdditionalWorksActivity extends BaseActivity implements BaseDialogL
 		}
 		if (dialog == workInputDialog)
 		{
-			work = new Work(new Date(), addWork.getID(), Option.Instance().getPilotTourID(), addWork.getName());
+			work = new Work(DateUtils.getSynchronizedTime(), addWork.getID(), Option.Instance().getPilotTourID(), addWork.getName());
+			work.setIsServerTime(Option.Instance().isTimeSynchronised());
 			WorkManager.Instance().save(work);
 			Option.Instance().setWorkID(work.getID());
 			Option.Instance().save();
@@ -120,7 +126,8 @@ public class AdditionalWorksActivity extends BaseActivity implements BaseDialogL
 		}
 		if (dialog == workStopDialog)
 		{
-			work.setStopTime(new Date());
+			work.setStopTime(DateUtils.getSynchronizedTime());
+			work.setIsServerTime(Option.Instance().isTimeSynchronised());
 			WorkManager.Instance().save(work);
 			patientsDialog = new PatientsDialog(patients, work.getName());
 			patientsDialog.show(getSupportFragmentManager(), "patientsDialog");
