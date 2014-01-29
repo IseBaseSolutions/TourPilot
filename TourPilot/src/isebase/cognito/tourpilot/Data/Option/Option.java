@@ -22,6 +22,7 @@ public class Option {
 	public static final String IsWorkerActivityField = "is_worker_activity";
 	public static final String PinField = "pin";
 	public static final String ServerTimeDifferenceField = "server_time_difference";
+	public static final String IsLockOptionsField = "lock_options";
 	public static boolean testMode = false;
 	private Worker worker;
 	private TelephonyManager phoneManager = StaticResources.phoneManager;
@@ -46,6 +47,17 @@ public class Option {
 	private boolean isAuto;
 	private boolean isWorkerActivity;
 	private boolean isTimeSynchronised;
+	private boolean isLockOptions;
+
+	@MapField(DatabaseField = IsLockOptionsField)
+	public boolean isLockOptions() {
+		return isLockOptions;
+	}
+
+	@MapField(DatabaseField = IsLockOptionsField)
+	public void setLockOptions(boolean isLockOptions) {
+		this.isLockOptions = isLockOptions;
+	}
 
 	@MapField(DatabaseField = PinField)
 	public String getPin() {

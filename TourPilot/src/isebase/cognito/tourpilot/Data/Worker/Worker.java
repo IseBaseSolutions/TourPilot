@@ -78,7 +78,7 @@ public class Worker extends BaseObject {
     }
     
     public boolean checkPIN(String strPin){
-    	if (strPin.isEmpty())
+    	if (strPin.equals(""))
 			return false;
 		Long pin = Long.parseLong(strPin);
 		long num = 0;

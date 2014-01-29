@@ -14,9 +14,6 @@ import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemark;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
-import isebase.cognito.tourpilot.Dialogs.BaseDialog;
-import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
-import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
 import java.util.Date;
@@ -24,7 +21,6 @@ import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.text.Html;
 import android.view.Menu;
 import android.view.View;
@@ -35,14 +31,16 @@ import android.widget.TextView;
 public class VerificationActivity extends BaseActivity {
 
 	private List<Task> tasks;
-	private TextView tvVerification;
-	private Button btOK;
-
-	private String taskVerification;
-
-	private Employment employment;
 	
-	private UserRemark userRemark;
+	private TextView tvVerification;
+	
+	private Button btOK;	
+	
+	private CheckBox chbCheckVerification;	
+	
+	private Employment employment;	
+	
+	private UserRemark userRemark;		
 	
 	private Date dateBegin;
 	private Date dateEnd;
@@ -53,30 +51,43 @@ public class VerificationActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_verification);
-		btOK = (Button) findViewById(R.id.btOK);
-		btOK.setEnabled(false);
-		tvVerification = (TextView) findViewById(R.id.tvVerificationText);
-		tasks = TaskManager.Instance().load(Task.EmploymentIDField, String.valueOf(Option.Instance().getEmploymentID()));
-		
+		initComponents();
 		reloadData();
-		
+		fillUpVerification();
+	}	
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		//getMenuInflater().inflate(R.menu.verification, menu);
+		return true;
+	}
+	
+	private void initComponents() { 
+		chbCheckVerification = (CheckBox)findViewById(R.id.chbCheckVerification);
+		btOK = (Button) findViewById(R.id.btOK);
+		btOK.setEnabled(chbCheckVerification.isChecked());
+		tvVerification = (TextView) findViewById(R.id.tvVerificationText);
+	}
+	
+	private void fillUpVerification() {
 		dateBegin = employment.getFirstTask().getManualDate().equals(DateUtils.EmptyDate) ? employment.getFirstTask().getRealDate() : employment.getFirstTask().getManualDate();
 		dateEnd = employment.getLastTask().getManualDate().equals(DateUtils.EmptyDate) ? employment.getLastTask().getRealDate() : employment.getLastTask().getManualDate();
 
-		taskVerification = "";
+		String taskVerification = "";
 
-		taskVerification += "<b>" + getWorker(Option.Instance().getWorker()) + "</b>";
+		taskVerification += "<b>" + getWorker(Option.Instance().getWorker()) + " </b>";
 		taskVerification += "hat am ";
 		
-		taskVerification += "<b>" + getDate(DateUtils.DateFormat.format(employment.getDate())) + "</b> ";
+		taskVerification += "<b>" + DateUtils.DateFormat.format(employment.getDate()) + " </b> ";
 		taskVerification += "bei Patient ";
-		taskVerification += "<b>" + getPatient(employment.getName()) + "</b>";
+		taskVerification += "<b>" + getPatientNameWithoutKey(employment.getName()) + " </b>";
 		taskVerification += "in der Zeit von: ";
-		taskVerification += "<b>" + getTime( DateUtils.HourMinutesFormat.format(dateBegin)) + "</b>";
+		taskVerification += "<b>" + DateUtils.HourMinutesFormat.format(dateBegin) + " </b>";
 		taskVerification += "bis ";
-		taskVerification += "<b>" + getTime(DateUtils.HourMinutesFormat.format(dateEnd)) + "</b> ";
-		int interval = getInterval(dateBegin, dateEnd); 
-		if( interval > 0) {
+		taskVerification += "<b>" + DateUtils.HourMinutesFormat.format(dateEnd) + " </b> ";
+		int interval = DateUtils.getInterval(dateBegin, dateEnd); 
+		if(interval > 0) {
 			taskVerification += "bei einer Dauer von ";
 			taskVerification += "<b>" + interval + "</b> ";
 			taskVerification += getString(R.string.minuten_einen) + " ";
@@ -91,18 +102,14 @@ public class VerificationActivity extends BaseActivity {
 		String[] arrayResultTask = getTasks();
 		int doneTasks = 0;
 		int undoneTasks = 1;
-		taskVerification += "<b>" + getString(R.string.done_tasks) + ":</b> <br />" + ((arrayResultTask[doneTasks].equals("")) ? getString(R.string.there_are_no_done_tasks) + "<br />" : arrayResultTask[doneTasks]) + "<br />";
-		taskVerification += "<b>" + getString(R.string.undone_tasks) + ":</b> <br />" + ((arrayResultTask[undoneTasks].equals("")) ? getString(R.string.there_are_no_undone_tasks) + "<br />" : arrayResultTask[undoneTasks]) + "<br />";
+		taskVerification += "<b>" + getString(R.string.done_tasks) + ":</b> <br />" + ((arrayResultTask[doneTasks].equals("")) 
+				? getString(R.string.there_are_no_done_tasks) + "<br />" 
+						: arrayResultTask[doneTasks]) + "<br />";
+		taskVerification += "<b>" + getString(R.string.undone_tasks) + ":</b> <br />" + ((arrayResultTask[undoneTasks].equals("")) 
+				? getString(R.string.there_are_no_undone_tasks) + "<br />" 
+						: arrayResultTask[undoneTasks]) + "<br />";
 		taskVerification += getFlege();
-		
 		tvVerification.setText(Html.fromHtml(taskVerification));
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		//getMenuInflater().inflate(R.menu.verification, menu);
-		return true;
 	}
 
 	public void onClickButtonOk(View view) {		
@@ -123,7 +130,6 @@ public class VerificationActivity extends BaseActivity {
 	}
 
 	public void onClickCheckVerification(View view) {
-		CheckBox chbCheckVerification = (CheckBox)findViewById(R.id.chbCheckVerification);
 		btOK.setEnabled(chbCheckVerification.isChecked());
 	}
 	
@@ -140,31 +146,19 @@ public class VerificationActivity extends BaseActivity {
 	
 	private String getWorker(Worker worker) {
 		String[] workerName = worker.getName().split(" ");
-		return String.format("%s %s ",workerName[0], workerName[1]);
+		return String.format("%s %s", workerName[0], workerName[1]);
 	}
-	
-	private String getDate(String date) {
-		String times = date + " ";
-		return times;
-	}
-
-	private String getPatient(String patient) {
+	private String getPatientNameWithoutKey(String patient) {
 		String[] patientName = patient.split(" ") ;
-		return String.format("%s %s ", patientName[0],patientName[1]); 
+		return String.format("%s %s", patientName[0], patientName[1]); 
 	}
 
-	private String getTime(String time) {
-		return time + " ";
-	}
 
-	private int getInterval(Date timeStart, Date timeStop) {
-		return timeStop.getMinutes() - timeStart.getMinutes();
-	}
 		
 	private String[] getTasks() {
 		String[] sTasks = new String[]{ "", "" };
 		for(Task task : tasks) {
-			if(task.getName().contains(getString(R.string.start_task)) || task.getName().contains(getString(R.string.end_task)))
+			if(task.isFirstTask() || task.isLastTask())
 				continue;
 			if(task.getState() == eTaskState.Done) {
 				sTasks[0] +=  " - " + task.getName() + (task.getQualityResult().equals("") ? "" : (" (" + task.getQualityResult()) + ")") + "<br />";
@@ -227,28 +221,18 @@ public class VerificationActivity extends BaseActivity {
 	}
 
 	private String getFlegeMarks() {
-		String flegeMarks = "";
 		if(userRemark == null)
-				flegeMarks += "";				
-		else {
-			if((userRemark.getCheckboxes() & 1) == 1)
-				flegeMarks += "+,";
-			else
-				flegeMarks += "-,";
-			if((userRemark.getCheckboxes() & 2) == 2)
-				flegeMarks += "+,";
-			else
-				flegeMarks += "-,";
-			if((userRemark.getCheckboxes() & 4) == 4)
-				flegeMarks += "+,";
-			else
-				flegeMarks += "-,";
-			flegeMarks += userRemark.getName();
-		}
+			return "";
+		String flegeMarks = "";
+		flegeMarks += ((userRemark.getCheckboxes() & 1) == 1) ? "+," : "-,";
+		flegeMarks += ((userRemark.getCheckboxes() & 2) == 2) ? "+," : "-,";
+		flegeMarks += ((userRemark.getCheckboxes() & 1) == 1) ? "+," : "-,";
+		flegeMarks += userRemark.getName();
 		return flegeMarks;
 	}
 	
 	private void reloadData() {
+		tasks = TaskManager.Instance().load(Task.EmploymentIDField, String.valueOf(Option.Instance().getEmploymentID()));
 		employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
 	}
 	

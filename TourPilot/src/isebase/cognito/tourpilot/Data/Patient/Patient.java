@@ -199,7 +199,7 @@ public class Patient extends BaseObject implements IAddressable {
 	}
 
 	private int parseInt(String strVal){
-		if (strVal.length() == 0)
+		if (strVal.equals(""))
 			return EMPTY_ID;
 		return Integer.parseInt(strVal);	
 	}

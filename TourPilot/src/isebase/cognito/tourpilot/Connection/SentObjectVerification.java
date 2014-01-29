@@ -12,7 +12,6 @@ import isebase.cognito.tourpilot.Data.WayPoint.WayPoint;
 import isebase.cognito.tourpilot.Data.WayPoint.WayPointManager;
 import isebase.cognito.tourpilot.Data.Work.Work;
 import isebase.cognito.tourpilot.Data.Work.WorkManager;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +31,8 @@ public class SentObjectVerification {
 	}
 	
 	public void setWasSent() {
-		for(Task task : sentTasks)
+		/*		
+ 		for(Task task : sentTasks)
 			task.setWasSent(true);
 		TaskManager.Instance().save(sentTasks);
 		
@@ -55,6 +55,24 @@ public class SentObjectVerification {
 		for(WayPoint wayPoint : sentWayPoint)
 			wayPoint.setWasSent(true);
 		WayPointManager.Instance().save(sentWayPoint);			
+		*/
+
+		TaskManager.Instance().updateNotSent(sentTasks);
+		EmploymentManager.Instance().updateNotSent(sentEmployments);
+		WorkManager.Instance().updateNotSent(sentWorks);
+		UserRemarkManager.Instance().updateNotSent(sentUserRemarks);
+		EmploymentVerificationManager.Instance().updateNotSent(sentEmploymentVerifications);
+		WayPointManager.Instance().delete(sentWayPoint);
+		clear();
+	}
+	
+	public void clear(){
+		sentTasks.clear();
+		sentEmployments.clear();
+		sentWorks.clear();
+		sentUserRemarks.clear();
+		sentEmploymentVerifications.clear();
+		sentWayPoint.clear();
 	}
 
 }

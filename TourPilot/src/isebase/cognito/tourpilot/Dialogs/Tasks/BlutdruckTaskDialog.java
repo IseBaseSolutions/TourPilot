@@ -23,7 +23,7 @@ public class BlutdruckTaskDialog extends StandardTaskDialog{
 		
 	@Override
 	public String getValue(){
-		return etMinValue.getText().toString() + "/" + etMaxValue.getText().toString();
+		return etMaxValue.getText().toString() + "/" + etMinValue.getText().toString();
 	}
 	
 	private EditText etMinValue;
@@ -59,19 +59,19 @@ public class BlutdruckTaskDialog extends StandardTaskDialog{
 		setCancelable(false);
 		etMinValue.setTextColor(Color.BLACK);
 		etMinValue.setHint(getString(R.string.min));
-		etMinValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
+		etMinValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
 		etMinValue.setEnabled(!isViewMode);
 		etMinValue.setFilters(new InputFilter[] {new InputFilter.LengthFilter(10)});
 		
 		etMaxValue.setTextColor(Color.BLACK);
 		etMaxValue.setHint(getString(R.string.max));
-		etMaxValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
+		etMaxValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
 		etMaxValue.setEnabled(!isViewMode);
 		etMaxValue.setFilters(new InputFilter[] {new InputFilter.LengthFilter(10)});
 		
 		LinearLayout ll = new LinearLayout(StaticResources.getBaseContext());
-		ll.addView(etMinValue);
 		ll.addView(etMaxValue);
+		ll.addView(etMinValue);
 		
 		adb.setView(ll);
 		if(!isViewMode)

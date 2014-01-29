@@ -10,13 +10,9 @@ import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.PinDialog;
-import isebase.cognito.tourpilot.Utils.DataBaseUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
@@ -28,7 +24,7 @@ public class WorkersActivity extends BaseActivity implements BaseDialogListener 
 
 	private List<Worker> workers = new ArrayList<Worker>();
 	private PinDialog pinDialog;
-	private Worker selectedWorker;
+	private Worker selectedWorker;	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +34,9 @@ public class WorkersActivity extends BaseActivity implements BaseDialogListener 
 			reloadData();
 			initDialogs();
 			initListWorkers();
+	        getSupportFragmentManager().beginTransaction()
+	        	.replace(android.R.id.content, new PinDialog())
+	        	.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			criticalClose();
@@ -71,7 +70,7 @@ public class WorkersActivity extends BaseActivity implements BaseDialogListener 
 				selectedWorker = (Worker) listView.getItemAtPosition(position);
 				if (selectedWorker.checkPIN(String.valueOf(Option.Instance().getPin())))
 					logIn();
-				else
+				else if (pinDialog.getFragmentManager() == null)
 					showPinDialog();
 			}
 		});
@@ -97,9 +96,8 @@ public class WorkersActivity extends BaseActivity implements BaseDialogListener 
 
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog) {
-		if (dialog != pinDialog)
-			return;
-		logIn();
+		if (dialog == pinDialog)
+			logIn();
 	}
 
 	@Override

@@ -305,6 +305,7 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 	
 	private void startCatalogsActivity() {
 		Intent catalogsActivity = new Intent(getApplicationContext(), CatalogsActivity.class);
+		catalogsActivity.putExtra("disableBack", true);
 		startActivity(catalogsActivity);
 	}
 	

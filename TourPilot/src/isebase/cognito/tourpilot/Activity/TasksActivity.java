@@ -17,12 +17,16 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemark;
 import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemarkManager;
+import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
+import isebase.cognito.tourpilot.Data.Work.Work;
+import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
+import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
@@ -31,6 +35,7 @@ import isebase.cognito.tourpilot.Dialogs.Tasks.BlutdruckTaskDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.StandardTaskDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.TaskTypes;
 import isebase.cognito.tourpilot.Gps.GpsNavigator;
+import isebase.cognito.tourpilot.Gps.Service.GPSLogger;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Templates.TaskAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
@@ -40,7 +45,6 @@ import java.util.Date;
 import java.util.List;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.ContextMenu;
@@ -125,7 +129,8 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 		infoMenu.setEnabled(infos.size() != 0);
 		commentsMenu.setEnabled(!(patientRemark == null || patientRemark.getName().length() == 0));
 		diagnoseMenu.setEnabled(!(diagnose == null || diagnose.getName().length() == 0));
-		gpsMenu.setVisible(worker.getIsUseGPS());
+//		gpsMenu.setVisible(worker.getIsUseGPS());
+		gpsMenu.setVisible(false);
 		notesMenu.setEnabled(isClickable());
 		catalogsMenu.setEnabled(isClickable());
 		undoneTasksMenu.setEnabled(DateUtils.isToday(employment.getDate()));
@@ -170,7 +175,21 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 				fillUpTasks();
 			}
 			break;
-		}
+		}		
+		List<Employment> employments = EmploymentManager.Instance().load(Employment.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID()));
+		List<Work> works = WorkManager.Instance().loadAll(Work.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID()));
+		List<IJob> jobs = new ArrayList<IJob>();
+		jobs.addAll(employments);
+		jobs.addAll(works);
+		boolean allIsDone = true;
+		for (IJob job : jobs)
+			if(!job.isDone())
+			{
+				allIsDone = false;
+				break;
+			}
+		if(allIsDone)
+			stopService(new Intent(this, GPSLogger.class));
 	}
 
 	private void checkEmploymentIsDone(){
@@ -254,8 +273,8 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 		fillUpStartTask();
 		fillUpEndTask();		
 		fillUpEndButtonEnabling();
-		if (Build.VERSION.SDK_INT > 10)
-			invalidateOptionsMenu();
+	//if (Build.VERSION.SDK_INT > 10)
+		supportInvalidateOptionsMenu();
 	}
 	
 	public void btEndTaskTimerClick(View view) {		
@@ -305,7 +324,7 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 				
 	public void onTaskClick(View view) {
 		Task task = (Task) view.getTag();
-		if(task.getQualityResult().isEmpty())
+		if(task.getQualityResult().equalsIgnoreCase(""))
 			return;
 		DialogFragment dialog = null;
 		switch(task.getQuality()) {
@@ -392,7 +411,7 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 	private void setTaskState(Task task) {
 		task.setRealDate(DateUtils.getSynchronizedTime());
 		task.setIsServerTime(Option.Instance().isTimeSynchronised());
-		if (startTask.getManualDate().equals(DateUtils.EmptyDate))
+		if (!startTask.getManualDate().equals(DateUtils.EmptyDate))
 			task.setManualDate(DateUtils.getAverageDate(startTask.getManualDate(), endTask.getManualDate()));
 		if(!(task.getQuality() < 1 || task.getQuality() > 7))
 		{
@@ -498,7 +517,8 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 			showPatientInfo(true);
 			return true;
 		case R.id.gps:
-			GpsNavigator.startGpsNavigation(PatientManager.Instance().loadAll(employment.getPatientID()).getAddress());
+			//GpsNavigator.startGpsNavigation(PatientManager.Instance().loadAll(employment.getPatientID()).getAddress());
+
 			return true;
 		case R.id.manualInput:
 			startManualInputActivity();
@@ -605,6 +625,7 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 	private void checkLeavingState() {		
 		BaseDialog dialogLeavingState = new BaseDialog(employment.getName(), getString(R.string.dialog_leaving_patient), getString(R.string.yes), getString(R.string.no));
 		dialogLeavingState.show(getSupportFragmentManager(), "dialogCheckLeavingState");
+		dialogLeavingState.setCancelable(false);
 		getSupportFragmentManager().executePendingTransactions();
 	}
 

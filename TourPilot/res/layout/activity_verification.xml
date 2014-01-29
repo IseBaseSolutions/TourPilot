@@ -32,7 +32,7 @@
                     android:id="@+id/chbCheckVerification"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="fill_horizontal|start"
+                    android:gravity="fill_horizontal|bottom"
                     android:onClick="onClickCheckVerification"
                     android:text="@string/check_verification" />
                 <LinearLayout

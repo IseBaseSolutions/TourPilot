@@ -10,10 +10,9 @@ import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
+import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Templates.PilotToursAdapter;
 import isebase.cognito.tourpilot.Utils.DataBaseUtils;
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,11 +24,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class ToursActivity extends BaseActivity implements BaseDialogListener{
 
-	private List<PilotTour> pilotTours = new ArrayList<PilotTour>();
-	
+	private List<PilotTour> pilotTours;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +56,9 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 			case R.id.action_db_backup:
 				try {
 					DataBaseUtils.backup();
+					Toast.makeText(StaticResources.getBaseContext()
+							, StaticResources.getBaseContext().getString(R.string.db_backup_created)
+							, Toast.LENGTH_SHORT).show();
 				} catch(Exception ex) {
 					ex.printStackTrace();
 				}
@@ -134,7 +136,7 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	public void onDialogPositiveClick(DialogFragment dialog) {
 		if(dialog.getTag().equals("dialogBack"))
 			logOut();
-		else if (dialog.getTag().equals("clearDatabase") && DataBaseWrapper.Instance().clearWorkerData()) {
+		else if (dialog.getTag().equals("clearDatabase")) {
 			clearDB();
 		}
 	}
@@ -159,12 +161,11 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 			@Override
 			protected Void doInBackground(Void... params) {
 				try{
-						DataBaseWrapper.Instance().clearWorkerData();
+					DataBaseWrapper.Instance().clearWorkerData();
 				}
 				catch(Exception e){
 					e.printStackTrace();
 				}
-
 				return null;
 			}
 							

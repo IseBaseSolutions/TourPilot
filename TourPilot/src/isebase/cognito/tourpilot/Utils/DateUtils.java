@@ -8,8 +8,17 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class DateUtils {
-	
-    public static int DayMillisec = 86400000;
+    
+    public static final int MILLISECONDS_IN_SECOND = 1000;
+    public static final int SECONDS_IN_MINUTE = 60;
+    public static final int MINUTES_IN_HOUR = 60;
+    public static final int HOUR_IN_DAY = 24;
+    
+    public static final int MILLISECONDS_IN_DAY = 
+    		MILLISECONDS_IN_SECOND * 
+    		SECONDS_IN_MINUTE * 
+    		MINUTES_IN_HOUR * 
+    		HOUR_IN_DAY;
 
     public static final Date EmptyDate = new Date(0);
     
@@ -18,7 +27,9 @@ public class DateUtils {
     public static final SimpleDateFormat DateTimeFormat = new SimpleDateFormat("dd.MM.yyyy/HH:mm:ss");
     public static final SimpleDateFormat HourMinutesFormat = new SimpleDateFormat("HH:mm");
     public static final SimpleDateFormat HourMinutesSecondsFormat = new SimpleDateFormat("HH:mm:ss");
+    public static final SimpleDateFormat MinutesSecondsFormat = new SimpleDateFormat("mm:ss");
     public static final SimpleDateFormat DateFormat = new SimpleDateFormat("dd.MM.yyyy");
+    public static final SimpleDateFormat BackupDateFormat = new SimpleDateFormat("yyyy.MM.dd");
     public static final SimpleDateFormat WeekDateFormat = new SimpleDateFormat("EEE dd.MM");
     
     public static Date getDateOnly(Date date){
@@ -107,5 +118,13 @@ public class DateUtils {
     public static boolean isToday(Date date){
     	return new Date().getDate() == date.getDate();
     }
+        
+    public static int millisecondsToMinutes(long milliseconds){
+    	return (int) ((milliseconds / (MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE)) % SECONDS_IN_MINUTE);
+    }
+    
+    public static int getInterval(Date timeStart, Date timeStop) {
+		return DateUtils.millisecondsToMinutes(timeStop.getTime() - timeStart.getTime());
+	}
     
 }

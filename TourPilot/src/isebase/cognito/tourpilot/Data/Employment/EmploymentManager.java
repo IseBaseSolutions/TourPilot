@@ -2,8 +2,6 @@ package isebase.cognito.tourpilot.Data.Employment;
 
 import java.util.Date;
 import java.util.List;
-
-import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentIntervalManager;
@@ -45,6 +43,7 @@ public class EmploymentManager extends BaseObjectManager<Employment> {
 	
 	public void createEmployments() {
 		clearTable();
+
 		String firstStr = "'%beginn%'";
 		String strSQL = String.format("INSERT INTO %3$s" +
 				"(_id, patient_id, name, was_sent, checksum, is_server_time" +

@@ -3,13 +3,11 @@ package isebase.cognito.tourpilot.Data.BaseObject;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.Utilizer;
-
 import java.lang.reflect.Method;
 import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -42,8 +40,7 @@ public abstract class BaseObjectManager<T> {
 
 	public void delete(long id) {
 		try {
-			DataBaseWrapper
-					.Instance()
+			DataBaseWrapper.Instance()
 					.getReadableDatabase()
 					.delete(getRecTableName(), BaseObject.IDField + " = " + id,
 							null);
@@ -54,6 +51,23 @@ public abstract class BaseObjectManager<T> {
 		}
 	}
 
+	public void delete(List<? extends BaseObject> items){
+		String ids = Utilizer.getIDsString(items);
+		if(ids.equals(""))
+			return;
+		try {
+			DataBaseWrapper.Instance()
+					.getReadableDatabase()
+					.delete(getRecTableName(), BaseObject.IDField + " IN (" + ids + ")",
+							null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+	
+	}
+	
 	public void delete(Class<T> item) {
 		try {
 			int id = (Integer) item.getMethod("getID").invoke(item);
@@ -75,7 +89,7 @@ public abstract class BaseObjectManager<T> {
 	
 	public List<T> loadByIDs(String ids) {
 		List<T> items = new ArrayList<T>();
-		if (ids == "")
+		if (ids.equals(""))
 			return items;
 		Cursor cursor = null;
 		try {
@@ -471,6 +485,10 @@ public abstract class BaseObjectManager<T> {
 		return retVal;
 	}
 	
+	/**
+	 * Send an SQL request to sum checksums from items where was_sent = FALSE
+	 * @return checksum of items where was_sent = FALSE
+	 * */
 	public long getCheckSumByRequest(){
 		return getLongValue(String.format("SELECT SUM(checksum) " +
 				"FROM %1$s WHERE was_sent = 0", getRecTableName()));
@@ -528,9 +546,25 @@ public abstract class BaseObjectManager<T> {
 		return sortedItems;
 	}
 	
+	/**
+	 * Update table. Set was_sent to TRUE for all items where was_sent = FALSE
+	 */
 	public void updateNotSent(){
 		execSQL(String.format("update %1$s set was_sent = 1 where was_sent = 0",
 				getRecTableName()));
+	}
+	
+	/**
+	 * Update table. Set was_sent to TRUE for each item in items collection
+	 * @param  items - collection to change was_sent to TRUE
+	 */
+	public void updateNotSent(Iterable<? extends BaseObject> items){
+		String ids = Utilizer.getIDsString(items);
+		if(ids != "")
+			execSQL(String.format("update %1$s set was_sent = 1 where %2$s in (%3$s)",
+					getRecTableName(),
+					BaseObject.IDField,
+					ids));
 	}
 	
 }

@@ -3,7 +3,6 @@ package isebase.cognito.tourpilot.Activity.BaseActivities;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.AdditionalWorksActivity;
 import isebase.cognito.tourpilot.Activity.ManualInputActivity;
-import isebase.cognito.tourpilot.Activity.OptionsActivity;
 import isebase.cognito.tourpilot.Activity.PatientsActivity;
 import isebase.cognito.tourpilot.Activity.SynchronizationActivity;
 import isebase.cognito.tourpilot.Activity.TasksActivity;
@@ -11,18 +10,16 @@ import isebase.cognito.tourpilot.Activity.ToursActivity;
 import isebase.cognito.tourpilot.Activity.UserRemarksActivity;
 import isebase.cognito.tourpilot.Activity.VerificationActivity;
 import isebase.cognito.tourpilot.Activity.WorkersActivity;
+import isebase.cognito.tourpilot.Activity.WorkersOptionActivity.WorkerOptionActivity;
 import isebase.cognito.tourpilot.Connection.ConnectionAsyncTask;
 import isebase.cognito.tourpilot.Connection.ConnectionStatus;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
-import isebase.cognito.tourpilot.R.layout;
-import isebase.cognito.tourpilot.R.menu;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
-import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -62,7 +59,7 @@ public class BaseTimeSyncActivity extends FragmentActivity {
 	protected void criticalClose(){
 		Option.Instance().clearSelected();
 		Option.Instance().save();
-		Intent optionActivity =  new Intent(getApplicationContext(), OptionsActivity.class);
+		Intent optionActivity =  new Intent(getApplicationContext(), WorkerOptionActivity.class);
 		startActivity(optionActivity);
 	}
 	
@@ -127,7 +124,7 @@ public class BaseTimeSyncActivity extends FragmentActivity {
 	
 	protected void startWorkersActivity() {
 		Intent workersActivity = new Intent(getApplicationContext(),
-				WorkersActivity.class);
+				WorkerOptionActivity.class);
 		startActivity(workersActivity);
 	}
 
@@ -159,7 +156,7 @@ public class BaseTimeSyncActivity extends FragmentActivity {
 	}
 
 	protected void startOptionsActivity() {
-		Intent optionsActivity = new Intent(getApplicationContext(), OptionsActivity.class);
+		Intent optionsActivity = new Intent(getApplicationContext(), WorkerOptionActivity.class);
 		startActivity(optionsActivity);
 	}
 	

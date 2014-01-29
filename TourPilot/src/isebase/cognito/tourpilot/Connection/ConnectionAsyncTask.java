@@ -1,10 +1,8 @@
 package isebase.cognito.tourpilot.Connection;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Activity.PatientsActivity;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWorkManager;
-import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Diagnose.DiagnoseManager;
 import isebase.cognito.tourpilot.Data.Doctor.DoctorManager;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
@@ -20,21 +18,15 @@ import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
 import isebase.cognito.tourpilot.Data.WayPoint.WayPointManager;
 import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
-import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
-import isebase.cognito.tourpilot.Utils.DateUtils;
 import isebase.cognito.tourpilot.Utils.StringParser;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.ConnectException;
 import java.net.Socket;
 import java.util.Date;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-
-import android.content.Intent;
 import android.os.AsyncTask;
 
 public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
@@ -129,7 +121,6 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 			conStatus.isFinished = true;
 			break;
 		}
-
 		return null;
 
 	}
@@ -249,10 +240,9 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 			writePack(conStatus.OS, getStrChecksums());
 			String strChecksumRecieve = readFromStream(conStatus.IS);
 			String strCheckItems = strChecksumRecieve;
-
 			writePack(conStatus.OS, get_SRV_msgStoredData(strCheckItems));
 			String dataFromServer = readPack(conStatus.IS);
-			if(dataFromServer == "")
+			if(dataFromServer.equals(""))
 				retVal = false;
 			else
 				conStatus.setDataFromServer(dataFromServer.split("\0"));
@@ -261,12 +251,9 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 			retVal = false;
 		} finally {
 			if (retVal)
-				conStatus.setMessage(String.format(
-						"%1$s \n %2$s: %3$s",
-						StaticResources.getBaseContext().getString(
-								R.string.checksum_ok),
-						StaticResources.getBaseContext().getString(
-								R.string.data_to_download),
+				conStatus.setMessage(String.format("%1$s \n %2$s: %3$s",
+						StaticResources.getBaseContext().getString(R.string.checksum_ok),
+						StaticResources.getBaseContext().getString(R.string.data_to_download),
 						conStatus.getTotalProgress()));
 			else
 				conStatus.setMessage(StaticResources.getBaseContext()
@@ -361,16 +348,14 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 
 	private String getDataToSend() {
 		String strMsg = new String("U;");
-		strMsg += Option.Instance().getWorkerID();
-		strMsg += ";";
-		strMsg += Option.Instance().getPrevWorkerID();
-		strMsg += ";:";
+		strMsg += Option.Instance().getWorkerID() +";";
+		strMsg += Option.Instance().getPrevWorkerID() + ";:";
 		strMsg += Option.Instance().getDeviceID() + ";";
 		strMsg += Option.Instance().getPhoneNumber() + "@";
 		strMsg += Option.Instance().getVersion() + "\0R;";
-		if (Option.Instance().getWorkerID() != BaseObject.EMPTY_ID)
-			strMsg += "0";//TorubleFlags
-		else
+//		if (Option.Instance().getWorkerID() != BaseObject.EMPTY_ID)
+//			strMsg += "0";//TorubleFlags
+//		else
 			strMsg += "0";
 		strMsg += "\0x1\0";
 		String strDone = "";
@@ -501,7 +486,6 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 
 		StringBuffer stringBuffer = new StringBuffer();
 		GZIPInputStream zis = new GZIPInputStream(is);
-
 		while (zis.available() != 0){
 			if(isTerminated)
 				return "";

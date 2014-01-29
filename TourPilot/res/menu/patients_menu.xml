@@ -28,7 +28,6 @@
     <item
         android:id="@+id/tour_info"
         android:orderInCategory="100"
-        android:showAsAction="never" 
         android:menuCategory="system"
         android:title="@string/menu_info" />
 </menu>

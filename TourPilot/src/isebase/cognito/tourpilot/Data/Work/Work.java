@@ -168,7 +168,9 @@ public class Work extends BaseObject implements IJob {
         strValue += getAdditionalWorkID() + ";";
         strValue += getPilotTourID() + ";";
         strValue += getPatientIDs() + ";";
-        strValue += !getManualTime().equals(DateUtils.EmptyDate) ? getManualTime() : ""; 
+        strValue += !getManualTime().equals(DateUtils.EmptyDate) 
+        		? DateUtils.toDateTime(DateUtils.getSynchronizedTime(getManualTime())) 
+        		: ""; 
         return strValue;
 	}
 	

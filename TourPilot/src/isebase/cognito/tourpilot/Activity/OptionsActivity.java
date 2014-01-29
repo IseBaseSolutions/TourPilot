@@ -1,9 +1,5 @@
 package isebase.cognito.tourpilot.Activity;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
-
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Connection.ConnectionInfo;
@@ -13,6 +9,7 @@ import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Utils.DataBaseUtils;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -23,9 +20,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 public class OptionsActivity extends BaseActivity {
-
+	
+	private static final int PICKFILE_RESULT_CODE = 0;
+	
 	private DialogFragment noConnectionDialog;
 	private DialogFragment noIPEnteredDialog;
 
@@ -34,27 +34,23 @@ public class OptionsActivity extends BaseActivity {
 	private EditText etPhoneNumber;
 	private EditText etPin;
 	
-	private ProgressBar pbClearDB;
+	private ProgressBar pbBusy;
 	private Button syncButton;
 	private CheckBox cbSavePin;
 
+	private static final int BACKUP_MODE = 0;
+	private static final int CLEAR_MODE = 1;
+	private static final int RESTORE_MODE = 2;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		try {
 			super.onCreate(savedInstanceState);
 			StaticResources.setBaseContext(getBaseContext());
 			setContentView(R.layout.activity_options);
-
-			NumberFormat nf = NumberFormat.getInstance();
-			DecimalFormat df = (DecimalFormat)nf;
-			DecimalFormatSymbols d = new DecimalFormatSymbols();
-			d.setDecimalSeparator('m');
-
-			
-			df.setDecimalFormatSymbols(d);
-
 			switchToLastActivity();
 			initControls();
+			fillUp();
 			initDialogs();
 		}
 		catch(Exception e) {
@@ -63,8 +59,7 @@ public class OptionsActivity extends BaseActivity {
 	}
 
 	@Override
-	public void onBackPressed() {
-		
+	public void onBackPressed() {		
 	}
 	
 	@Override
@@ -77,50 +72,40 @@ public class OptionsActivity extends BaseActivity {
 		getMenuInflater().inflate(R.menu.options_menu, menu);
 		return true;
 	}
-
-	private void busy(final boolean dbBackup){
-		pbClearDB.setVisibility(View.VISIBLE);
-		syncButton.setEnabled(false);
-		new AsyncTask<Void, Void, Void>() {
-
-			@Override
-			protected Void doInBackground(Void... params) {
-				try{
-					if(dbBackup)
-						DataBaseUtils.backup();
-					else
-						DataBaseWrapper.Instance().clearAllData();	
-				}
-				catch(Exception e){
-					e.printStackTrace();
-				}
-
-				return null;
-			}
-							
-			@Override
-			protected void onPostExecute(Void result) {
-				pbClearDB.setVisibility(View.INVISIBLE);
-				syncButton.setEnabled(true);
-			}
-		}.execute();
-	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_clear_database:
-			busy(false);
-			return true;
 		case R.id.action_show_program_info:
 			versionFragmentDialog.show(getSupportFragmentManager(), "dialogVersion");
 			return true;
+		case R.id.action_clear_database:
+			busy(CLEAR_MODE);
+			return true;
 		case R.id.action_db_backup:		
-			busy(true);
+			busy(BACKUP_MODE);
+			return true;
+		case R.id.action_db_restore:		
+			chooseFile();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {	
+		if (data == null || data.getData() == null)
+			return;
+		String path = data.getData().getPath();
+		if(requestCode == PICKFILE_RESULT_CODE && resultCode == RESULT_OK)
+			if(path.endsWith(".db"))
+				busy(RESTORE_MODE, path);
+			else
+				Toast.makeText(StaticResources.getBaseContext()
+					, R.string.err_not_db_file
+					, Toast.LENGTH_SHORT).show();
+				
 	}
 	
 	public void btStartSyncClick(View view) {
@@ -137,21 +122,76 @@ public class OptionsActivity extends BaseActivity {
 		startSyncActivity();
 	}
 
-	public void initControls() {
+	private void busy(final int mode, final String... data){
+		pbBusy.setVisibility(View.VISIBLE);
+		syncButton.setEnabled(false);
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				try{
+					switch(mode){
+						case BACKUP_MODE:
+							DataBaseUtils.backup();
+							break;
+						case CLEAR_MODE:
+							DataBaseWrapper.Instance().clearAllData();
+							break;
+						case RESTORE_MODE:
+							DataBaseUtils.restore(data[0]);
+							break;
+					}							
+				}
+				catch(Exception e){
+					e.printStackTrace();
+				}
+				return null;
+			}
+							
+			@Override
+			protected void onPostExecute(Void result) {
+				pbBusy.setVisibility(View.INVISIBLE);
+				syncButton.setEnabled(true);
+				int textID = 0;
+				switch(mode){
+					case BACKUP_MODE:
+						textID = R.string.db_backup_created;
+						break;
+					case CLEAR_MODE:
+						textID = R.string.db_cleared;
+						break;
+					case RESTORE_MODE:
+						textID = R.string.db_backup_restored;
+						fillUp();
+						break;
+					default:
+						return;
+				}
+				Toast.makeText(StaticResources.getBaseContext()
+						, textID
+						, Toast.LENGTH_SHORT).show();
+			}
+		}.execute();
+	}
+
+	private void initControls() {
 		syncButton = (Button)findViewById(R.id.btSynchronization);
-		pbClearDB = (ProgressBar) findViewById(R.id.pbClearDB);
+		pbBusy = (ProgressBar) findViewById(R.id.pbClearDB);
 		etServerIP = (EditText) findViewById(R.id.etServerIP);
 		etServerPort = (EditText) findViewById(R.id.etServerPort);
 		etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
 		etPin = (EditText) findViewById(R.id.etPinCode);
 		cbSavePin = (CheckBox)findViewById(R.id.cb_SavePin);
+	}
+	
+	private void fillUp(){
 		etPhoneNumber.setText(Option.Instance().getPhoneNumber());
 		etServerIP.setText(Option.Instance().getServerIP());
 		etServerPort.setText(String.valueOf(Option.Instance().getServerPort()));
 		etPin.setText(String.valueOf(Option.Instance().getPin()));
 	}
 
-	private void saveOptions() {
+	private void saveOptions() {		
 		Option.Instance().setPrevWorkerID(BaseObject.EMPTY_ID);
 		Option.Instance().setWorkerID(BaseObject.EMPTY_ID);
 		Option.Instance().setServerIP(etServerIP.getText().toString());
@@ -178,6 +218,19 @@ public class OptionsActivity extends BaseActivity {
 				getString(R.string.dialog_connection_problems),
 				getString(R.string.dialog_no_connection));
 	}
+	
+	private void chooseFile(){
+	   Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+       intent.setType("file/*");
+       try{
+    	   startActivityForResult(intent, PICKFILE_RESULT_CODE);
+       }
+       catch(Exception e){
+			Toast.makeText(StaticResources.getBaseContext()
+					, R.string.err_no_filemanager
+					, Toast.LENGTH_LONG).show();
+       }
+	}
 		
 	private void switchToLastActivity() {
 		if (Option.Instance().getWorkID() != -1)
@@ -190,7 +243,7 @@ public class OptionsActivity extends BaseActivity {
 			startToursActivity();
 		else if (Option.Instance().isWorkerActivity())
 			startWorkersActivity();
-			return;
+		return;
 	}
 
 }

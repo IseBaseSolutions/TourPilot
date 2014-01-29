@@ -2,6 +2,7 @@ package isebase.cognito.tourpilot.Dialogs;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.SelectionPeriod.SelectionPeriod;
+import isebase.cognito.tourpilot.Utils.DateUtils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -22,8 +23,19 @@ public class IntervalInputDialog extends BaseDialog  {
 	
 	private int minHour;
     private int minMinute;
+    private int minTotalMinute;
+    
     private int maxHour;
     private int maxMinute;
+    private int maxTotalMinute;
+    
+    private int getStartTotalMinute(){
+    	return tpStartTime.getCurrentHour() * DateUtils.MINUTES_IN_HOUR + tpStartTime.getCurrentMinute();
+    }
+    
+    private int getStopTotalMinute(){
+    	return tpStopTime.getCurrentHour() * DateUtils.MINUTES_IN_HOUR + tpStopTime.getCurrentMinute();
+    }
     
     PatientsDialog patientsDialog;
     
@@ -47,13 +59,35 @@ public class IntervalInputDialog extends BaseDialog  {
 	    tpStartTime.setCurrentMinute(selectedPeriod.startTime().getMinutes());
 	    
 	    tpStartTime.setOnTimeChangedListener(new OnTimeChangedListener() {
+	    	
+			private boolean needToHandle = true;
+			
+			private void setHourMinutes(int hours, int minutes){
+				needToHandle = false;
+				tpStartTime.setCurrentHour(hours);
+				tpStartTime.setCurrentMinute(minutes);
+				needToHandle = true;
+			}
 			
 			@Override
 			public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+				if(!needToHandle)
+					return;
+				if (getStartTotalMinute() < minTotalMinute)
+					setHourMinutes(minHour, minMinute);
+				
+				if(getStartTotalMinute() > maxTotalMinute)
+					setHourMinutes(maxHour, maxMinute);
+				
+				if(getStartTotalMinute() > getStopTotalMinute())
+					setHourMinutes(tpStopTime.getCurrentHour(), tpStopTime.getCurrentMinute());
+								
+				/*
 				if (hourOfDay < minHour || hourOfDay > maxHour || hourOfDay > tpStopTime.getCurrentHour())
 					tpStartTime.setCurrentHour(minHour);
 				if (hourOfDay == minHour && minute < minMinute || hourOfDay == tpStopTime.getCurrentHour() && minute > tpStopTime.getCurrentMinute())
 					tpStartTime.setCurrentMinute(minMinute);
+				*/				
 			}
 		});
 	    
@@ -63,12 +97,34 @@ public class IntervalInputDialog extends BaseDialog  {
 	    tpStopTime.setCurrentMinute(selectedPeriod.stopTime().getMinutes());
 	    tpStopTime.setOnTimeChangedListener(new OnTimeChangedListener() {
 			
+	    	private boolean needToHandle = true;
+			
+			private void setHourMinutes(int hours, int minutes){
+				needToHandle = false;
+				tpStopTime.setCurrentHour(hours);
+				tpStopTime.setCurrentMinute(minutes);
+				needToHandle = true;
+			}
+			
 			@Override
 			public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+				if(!needToHandle)
+					return;
+				
+				if (getStopTotalMinute() < minTotalMinute)
+					setHourMinutes(minHour, minMinute);
+				
+				if(getStopTotalMinute() > maxTotalMinute)
+					setHourMinutes(maxHour, maxMinute);
+				
+				if(getStartTotalMinute() > getStopTotalMinute())
+					setHourMinutes(tpStartTime.getCurrentHour(), tpStartTime.getCurrentMinute());
+				
+				/*
 				if (hourOfDay < minHour || hourOfDay > maxHour || hourOfDay < tpStartTime.getCurrentHour())
 					tpStopTime.setCurrentHour(maxHour);
 				if (hourOfDay == maxHour && minute > maxMinute || hourOfDay == tpStartTime.getCurrentHour() && minute < tpStartTime.getCurrentMinute())
-					tpStopTime.setCurrentMinute(maxMinute);
+					tpStopTime.setCurrentMinute(maxMinute);*/
 			}
 		});
 	    
@@ -87,9 +143,11 @@ public class IntervalInputDialog extends BaseDialog  {
 	private void setMinMaxTime() {
 		minMinute = selectedPeriod.getStartTime().getMinutes();
 		minHour = selectedPeriod.getStartTime().getHours();
+		minTotalMinute = minHour * DateUtils.MINUTES_IN_HOUR + minMinute;
 		
 		maxMinute = selectedPeriod.getStopTime().getMinutes();
 		maxHour = selectedPeriod.getStopTime().getHours();
+		maxTotalMinute = maxHour * DateUtils.MINUTES_IN_HOUR + maxMinute;
 	}
 	
     public Date getStartDate() {

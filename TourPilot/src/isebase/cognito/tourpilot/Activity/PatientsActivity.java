@@ -12,17 +12,19 @@ import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
+import isebase.cognito.tourpilot.Data.WayPoint.WayPoint;
 import isebase.cognito.tourpilot.Data.Work.Work;
 import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
 import isebase.cognito.tourpilot.DataInterfaces.Job.JobComparer;
+import isebase.cognito.tourpilot.DataInterfaces.Job.JobComparer.eJobComparerType;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
-import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
 import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
-import isebase.cognito.tourpilot.StaticResources.StaticResources;
+import isebase.cognito.tourpilot.Gps.GpsNavigator;
+import isebase.cognito.tourpilot.Gps.Service.GPSLogger;
 import isebase.cognito.tourpilot.Templates.WorkEmploymentAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
@@ -32,10 +34,13 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,10 +52,8 @@ import android.widget.ListView;
 
 public class PatientsActivity extends BaseActivity implements BaseDialogListener {
 
-	private List<Employment> employments;
-	private List<Work> works;
 	private Worker worker;
-	private List<IJob> items = new ArrayList<IJob>();
+	private List<IJob> jobs;
 	private List<Information> infos = new ArrayList<Information>();
 	private Work work;
 	private DialogFragment selectedPatientsDialog;
@@ -78,16 +81,17 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 		}
 	}
 	
-	@Override
-	protected void onResume() {
-		super.onResume();
+//	@Override
+//	protected void onResume() {
+//		super.onResume();
 //		try {
-//			if (worker.getIsUseGPS() && dialogGPSPatient.getFragmentManager() == null)
-//				dialogGPSPatient.show(getSupportFragmentManager(), "dialogGPSPatient");
+//			
+//			if ( && dialogGPSPatient.getFragmentManager() == null)
+//				
 //		} catch(Exception e) {
 //			e.printStackTrace();
 //		}
-	}
+//	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -153,7 +157,7 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 	}
 	
 	public void btEndTourClick(View view) {
-		for(IJob job : items)
+		for(IJob job : jobs)
 			if(!job.isDone()) {
 				infoDialog.show(getSupportFragmentManager(), "");
 				getSupportFragmentManager().executePendingTransactions();
@@ -170,19 +174,26 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 	}
 	
 	private void fillUp() {
-		WorkEmploymentAdapter adapter = new WorkEmploymentAdapter(this, R.layout.row_work_employment_template, items);
+		WorkEmploymentAdapter adapter = new WorkEmploymentAdapter(this, R.layout.row_work_employment_template, jobs);
 		ListView lvEmployments = (ListView) findViewById(R.id.lvEmployments);
 		lvEmployments.setAdapter(adapter);
 		lvEmployments.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-				if (items.get(position) instanceof Employment)
+				if (jobs.get(position) instanceof Employment)
 				{
-					saveSelectedEmploymentID(((Employment)items.get(position)).getID());
-					startTasksActivity();
+					Employment employment = (Employment)jobs.get(position);
+					saveSelectedEmploymentID(employment.getID());
+					if (worker.getIsUseGPS() && !employment.isDone())
+						dialogGPSPatient.show(getSupportFragmentManager(), "dialogGPSPatient");
+					else
+						startTasksActivity();
 				}
 				else
+				{
+					initSelectedPatientsDialog();
 					showPatientsDialog(position);
+				}
 			}
 		});
 	}
@@ -193,18 +204,19 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 	}
 	
 	private void loadJobs() {
-		employments = EmploymentManager.Instance().load(Employment.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID()));
-		works = WorkManager.Instance().loadAll(Work.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID()));
+		List<Employment> employments = EmploymentManager.Instance().load(Employment.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID()));
+		List<Work> works = WorkManager.Instance().loadAll(Work.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID()));
 		pilotTour = PilotTourManager.Instance().loadPilotTour(Option.Instance().getPilotTourID());
-		items.addAll(employments);
-		items.addAll(works);
-		Collections.sort(items, new JobComparer());
+		jobs = new ArrayList<IJob>();
+		jobs.addAll(employments);
+		jobs.addAll(works);
+		Collections.sort(jobs, new JobComparer(eJobComparerType.NORMAL_DONE_SENT));
 	}
 	
 	private void checkTourEndButton() {
-		int taskCount = items.size();
+		int taskCount = jobs.size();
 		int syncTaskCount = 0;
-		for(IJob job : items)
+		for(IJob job : jobs)
 			if(job.wasSent())
 				syncTaskCount++;
 		btTourEnd.setEnabled(!(syncTaskCount == taskCount 
@@ -225,8 +237,14 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 	}
 	
 	private void initDialogs() {
-		infoDialog = new InfoBaseDialog(getString(R.string.attention), 
-				getString(R.string.dialog_complete_all_tasks));
+		infoDialog = new InfoBaseDialog(getString(R.string.attention), getString(R.string.dialog_complete_all_tasks));
+		dialogGPSPatient = new BaseDialog(getString(R.string.start_gps)
+				, getString(R.string.dialog_start_gps)
+				, getString(R.string.yes)
+				, getString(R.string.no));
+	}
+	
+	private void initSelectedPatientsDialog() {
 		selectedPatientsDialog = new DialogFragment() {
 			@Override
 			public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -245,11 +263,10 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 				return adb.create();
 			}
 		};
-		dialogGPSPatient = new BaseDialog(getString(R.string.start_gps), getString(R.string.dialog_reached_patient), getString(R.string.yes), getString(R.string.no));
 	}
 	
 	private void showPatientsDialog(int position) {
-		work = (Work) items.get(position);
+		work = (Work) jobs.get(position);
 		List<Patient> patients = PatientManager.Instance().loadByIDs(work.getPatientIDs());
 		if (patients.size() > 0) {
 			patientsArr = new String[patients.size()];
@@ -279,14 +296,45 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog) {
-		
+		if (dialog.getTag() == "dialogGPSPatient")
+		{
+			Intent patientsActivity = new Intent(getApplicationContext(),
+					PatientsActivity.class);
+			startActivity(patientsActivity);
+			
+			GpsNavigator.startGpsNavigation(PatientManager.Instance()
+					.loadAll(EmploymentManager.Instance().load(Option.Instance()
+							.getEmploymentID()).getPatientID()).getAddress());
+//			WayPointManager.Instance().updateWasSent();
+//			WayPointManager.Instance().updateTourID();
+			Intent gpsLoggerServiceIntent = new Intent(this, GPSLogger.class);
+			gpsLoggerServiceIntent.putExtra(WayPoint.TrackIDField, 0);
+			startService(gpsLoggerServiceIntent);
+			ServiceConnection gpsLoggerConnection = new ServiceConnection() {
+				
+				@Override
+				public void onServiceDisconnected(ComponentName name) {
+					// TODO Auto-generated method stub					
+				}
+
+				@Override
+				public void onServiceConnected(ComponentName name, IBinder service) {
+					// TODO Auto-generated method stub				
+				}
+				
+			};
+			bindService(gpsLoggerServiceIntent, gpsLoggerConnection, 0);
+		}
+//		Intent gpsActivity = new Intent(getApplicationContext(),
+//				GPSActivity.class);
+//		startActivity(gpsActivity);
 	}
 
 	@Override
 	public void onDialogNegativeClick(DialogFragment dialog) {
-		Intent gpsActivity = new Intent(getApplicationContext(),
-				GPSActivity.class);
-		startActivity(gpsActivity);
-		
+		if (dialog.getTag() == "dialogGPSPatient")
+		{
+			startTasksActivity();
+		}
 	}
 }

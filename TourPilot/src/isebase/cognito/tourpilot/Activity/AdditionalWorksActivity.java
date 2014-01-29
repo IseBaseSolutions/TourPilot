@@ -72,7 +72,6 @@ public class AdditionalWorksActivity extends BaseTimeSyncActivity implements Bas
 				this, android.R.layout.simple_list_item_1, additionalWorks);
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
@@ -80,7 +79,6 @@ public class AdditionalWorksActivity extends BaseTimeSyncActivity implements Bas
 				workInputDialog = new WorkTypeDialog(addWork.getName());
 				workInputDialog.show(getSupportFragmentManager(), "addWorkDialog");
 			}
-
 		});
 	}
 

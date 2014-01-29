@@ -74,7 +74,7 @@ public class UserRemarksActivity extends BaseActivity {
 		userRemark.setCheckboxes(chbConnect.isChecked()
 				, chbMedchanges.isChecked()
 				, chbPflege.isChecked()
-				, !etOther.getText().toString().isEmpty());
+				, etOther.getText().toString() != "");
 		userRemark.setDate(new Date());
 	}
 	

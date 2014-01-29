@@ -44,7 +44,7 @@ public class Employment extends BaseObject implements IJob {
 
 	private int tourID;
 		
-	private List<Task> tasks =  new ArrayList<Task>();
+	private List<Task> tasks;
 	
 	private Patient patient;
 
@@ -169,7 +169,7 @@ public class Employment extends BaseObject implements IJob {
 	}
 	
 	public Employment() {
-		
+		tasks =  new ArrayList<Task>();
 	}
 	
 	@Override
@@ -223,11 +223,13 @@ public class Employment extends BaseObject implements IJob {
             strTask += task.getPlanDate().toString().substring(14,16) + ";"; // time minutes
             strTask += task.getLeistungs() + ";";
             strTask += (task.getState().equals(eTaskState.Done) ? "ja" : "nein"); 
-            String qulityResult = task.getQualityResult().isEmpty() ? "" : "$" + task.getQualityResult();
+            String qulityResult = task.getQualityResult().equals("") ? "" : "$" + task.getQualityResult();
             strTask += qulityResult;
             strTask += ";";
-            strTask += (DateUtils.EmptyDate.equals(task.getManualDate()) ? "" : DateUtils.toDateTime(task.getManualDate())) + ";";
-            strTask += DateUtils.toDateTime(task.getRealDate());
+            strTask += (DateUtils.EmptyDate.equals(task.getManualDate()) ? DateUtils.toDateTime(task.getRealDate())
+            		: DateUtils.toDateTime(task.getManualDate())) + ";";
+            strTask += (DateUtils.EmptyDate.equals(task.getManualDate()) ? "" : DateUtils.toDateTime(task.getRealDate()));
+
             strTask += (isFromMobile() && task.isFirstTask())
             		? (";" + getID()+ "" + Option.Instance().getWorkerID() + "" + Option.Instance().getPilotTourID() + "" + getPatientID() +""+ DateUtils.HourMinutesSecondsFormat.format(startTime) +""+ DateUtils.HourMinutesSecondsFormat.format(stopTime)) 
             				: "";

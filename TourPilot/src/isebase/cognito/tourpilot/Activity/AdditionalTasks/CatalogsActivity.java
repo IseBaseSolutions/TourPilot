@@ -56,7 +56,11 @@ public class CatalogsActivity extends BaseActivity {
 	
 	@Override
 	public void onBackPressed() {
-		super.onBackPressed();
+		Intent intentFlege = getIntent();
+		Bundle bundle = intentFlege.getExtras();
+		if(bundle == null)
+			super.onBackPressed();
+		
 	}
 		
 	private void fillUpTitle(){

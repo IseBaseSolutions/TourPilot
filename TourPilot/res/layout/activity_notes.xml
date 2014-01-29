@@ -45,7 +45,7 @@
         android:layout_height="248dp"
         android:layout_weight="0.79"
         android:focusable="true"
-        android:gravity="start"
+        android:gravity="top"
         android:top="2dp"
         android:visibility="visible" >
     </EditText>

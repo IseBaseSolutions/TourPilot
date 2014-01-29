@@ -298,7 +298,7 @@ public class ServerCommandParser {
 	private int getIDFromStr(String str) {
 		int retVal = BaseObject.EMPTY_ID;
 		try{
-			str = str.substring(1,str.length()-1);
+			str = str.substring(1, str.length()-1);
 			String firstNumber = str.split(";")[0];
 			retVal = Integer.parseInt(firstNumber);
 		}

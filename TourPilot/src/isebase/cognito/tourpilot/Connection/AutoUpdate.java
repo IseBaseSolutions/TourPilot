@@ -18,7 +18,6 @@ import android.os.Environment;
 
 public class AutoUpdate extends AsyncTask<Void, Boolean, Void> {
 	
-
 	@Override
 	protected Void doInBackground(Void... params) {
 		platformRequest();
@@ -42,7 +41,6 @@ public class AutoUpdate extends AsyncTask<Void, Boolean, Void> {
                 if (connection.getResponseCode() != HttpURLConnection.HTTP_OK)
                      return "Server returned HTTP " + connection.getResponseCode() 
                          + " " + connection.getResponseMessage();
-
 
                 input = connection.getInputStream();
                 output = new FileOutputStream(Environment.getExternalStorageDirectory() + "/download/" + "TourPilot.apk");

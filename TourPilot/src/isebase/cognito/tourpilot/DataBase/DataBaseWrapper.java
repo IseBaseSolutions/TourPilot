@@ -1,11 +1,14 @@
 package isebase.cognito.tourpilot.DataBase;
 
+import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWorkManager;
 import isebase.cognito.tourpilot.Data.Address.Address;
 import isebase.cognito.tourpilot.Data.Address.AddressManager;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.CustomRemark.CustomRemark;
+import isebase.cognito.tourpilot.Data.CustomRemark.CustomRemarkManager;
 import isebase.cognito.tourpilot.Data.Diagnose.DiagnoseManager;
 import isebase.cognito.tourpilot.Data.Doctor.Doctor;
 import isebase.cognito.tourpilot.Data.Doctor.DoctorManager;
@@ -69,7 +72,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	private static DataBaseWrapper instance;
 
 	public static synchronized DataBaseWrapper Instance() {
-		if (instance == null || instance.getReadableDatabase() == null)
+		if (instance == null || instance.getReadableDatabase() == null || instance.getWritableDatabase() == null)
 			instance = new DataBaseWrapper(StaticResources.getBaseContext());
 		return instance;
 	}	
@@ -135,6 +138,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	private static final String OPTIONS_TABLE_CREATE = 
 			"CREATE TABLE " + Option.TableName + "("
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+			+ Option.IsLockOptionsField + " INTEGER, "
 			+ Option.WorkerIDField + " INTEGER, "
 			+ Option.WorkIDField + " INTEGER, "
 			+ Option.PreviousWorkerIDField + " INTEGER, " 
@@ -355,6 +359,16 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ WayPoint.LatitudeField + " REAL, "
 			+ WayPoint.LongitudeField + " REAL "			
 			+ ");";	
+	
+	private static final String CUSTOM_REMARKS_TABLE_CREATE = 
+			"CREATE TABLE " + CustomRemarkManager.TableName + "(" 
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
+			+ BaseObject.NameField + " TEXT NOT NULL, "
+			+ BaseObject.CheckSumField + " INTEGER, "
+			+ BaseObject.WasSentField + " INTEGER, "
+			+ BaseObject.IsServerTimeField + " INTEGER  NOT NULL DEFAULT 1, "
+			+ CustomRemark.PosNumberField + " INTEGER"
+			+ ");";
 		
 	private static String[] createDataTables = new String[]{
 		TOURS_TABLE_CREATE,
@@ -376,7 +390,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		WORKS_TABLE_CREATE,
 		EMPLOYMENT_INTERVALS_TABLE_CREATE,
 		EMPLOYMENT_VERIFICATION_TABLE_CREATE,
-		WAYPOINTS_TABLE_CREATE
+		WAYPOINTS_TABLE_CREATE,
+		CUSTOM_REMARKS_TABLE_CREATE
 	};
 		
 	private static String[] deleteDataTables = new String[]{		
@@ -399,7 +414,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		"DROP TABLE IF EXISTS " + WorkManager.TableName,
 		"DROP TABLE IF EXISTS " + EmploymentIntervalManager.TableName,
 		"DROP TABLE IF EXISTS " + EmploymentVerificationManager.TableName,
-		"DROP TABLE IF EXISTS " + WayPointManager.TableName
+		"DROP TABLE IF EXISTS " + WayPointManager.TableName,
+		"DROP TABLE IF EXISTS " + CustomRemarkManager.TableName
 	};
 			
 	private static String[] clearWorkerDependedDataTables = new String[]{
@@ -418,7 +434,8 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		"DELETE FROM " + EmploymentIntervalManager.TableName,
 		"DELETE FROM " + UserRemarkManager.TableName,
 		"DELETE FROM " + EmploymentVerificationManager.TableName,
-		"DELETE FROM " + WayPointManager.TableName
+		"DELETE FROM " + WayPointManager.TableName,
+		"DELETE FROM " + CustomRemarkManager.TableName
 	};
 	
 	@Override
@@ -434,9 +451,20 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		}
 	}
 
+	/**
+	 * Remove all tables from 'deleteDataTables' list.
+	 * </p>
+	 * Create tables from 'createDataTables' list
+	 * </p>
+	 * Call clear function of instance of object SentObjectVerification
+	 * @return TRUE if no errors was found.
+	 * </p>
+	 * FALSE if error was found
+	 * */
 	public boolean clearAllData(){
 		boolean retVal = true;	
-				for(String deleteTable : deleteDataTables){
+		SentObjectVerification.Instance().clear();
+		for(String deleteTable : deleteDataTables){
 			try{
 				Instance().getReadableDatabase().execSQL(deleteTable);
 			}catch(Exception ex){
@@ -457,9 +485,18 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		return retVal;	
 	}
 	
+	/**
+	 * Delete all records from tables in 'clearWorkerDependedDataTables' list
+	 * </p>
+	 * Call clear function of instance of object SentObjectVerification
+	 * @return TRUE if no errors was found.
+	 * </p>
+	 * FALSE if error was found
+	 * */
 	public boolean clearWorkerData(){
 		boolean retVal = true;
 		try{			
+			SentObjectVerification.Instance().clear();
 			for(String clearTable : clearWorkerDependedDataTables)
 				Instance().getReadableDatabase().execSQL(clearTable);						
 		}catch(Exception ex){

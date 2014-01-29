@@ -19,6 +19,7 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 public class GPSLogger extends Service implements LocationListener {
 
@@ -63,6 +64,8 @@ public class GPSLogger extends Service implements LocationListener {
 	 * the timestamp of the last GPS fix we used
 	 */
 	private long lastGPSTimestamp = 0;
+	
+	private long previousTime = 0;
 
 	/**
 	 * the interval (in ms) to log GPS fixes defined in the preferences
@@ -72,6 +75,10 @@ public class GPSLogger extends Service implements LocationListener {
 	private int workerID;
 	
 	private int pilotTourID;
+	
+	private double prevLat;
+	
+	private double prevLon;
 	
 	private WayPoint currentWayPoint;
 
@@ -178,12 +185,10 @@ public class GPSLogger extends Service implements LocationListener {
 	@Override
 	public void onCreate() {
 		try {
-//			Toast toast = Toast.makeText(StaticResources.getBaseContext(), "Service onCreate()", Toast.LENGTH_SHORT);
-//			toast.show();
-			// read the logging interval from preferences
+			StaticResources.setBaseContext(this);
 			try {
-//				workerID = Option.Instance().getWorkerID();
-//				pilotTourID = Option.Instance().getPilotTourID();
+				workerID = Option.Instance().getWorkerID();
+				pilotTourID = Option.Instance().getPilotTourID();
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
@@ -204,7 +209,6 @@ public class GPSLogger extends Service implements LocationListener {
 			// Register ourselves for location updates
 			lmgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 			lmgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-	
 			super.onCreate();
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -222,8 +226,7 @@ public class GPSLogger extends Service implements LocationListener {
     @Override
     public void onDestroy() {
     	try {
-//			Toast toast = Toast.makeText(StaticResources.getBaseContext(), "Service onDestroy()", Toast.LENGTH_SHORT);
-//			toast.show();
+
 	        if (isTracking) {
 	            // If we're currently tracking, save user data.
 	            stopTrackingAndSave();
@@ -243,53 +246,38 @@ public class GPSLogger extends Service implements LocationListener {
     		e.printStackTrace();
     	}
     }
-    
-    private void startTracking(long trackId) {
-        currentTrackId = trackId;
-//		Toast toast = Toast.makeText(StaticResources.getBaseContext(), "Starting track logging for track #" + trackId, Toast.LENGTH_SHORT);
-//		toast.show();
-        // Refresh notification with correct Track ID
-        NotificationManager nmgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        //nmgr.notify(NOTIFICATION_ID, getNotification());
-        isTracking = true;
-	}
 
 	/**
 	 * Stops GPS Logging
 	 */
 	private void stopTrackingAndSave() {
         isTracking = false;
-        //dataHelper.stopTracking(currentTrackId);
         currentTrackId = -1;
         this.stopSelf();
 	}
 	
 	@Override
 	public void onLocationChanged(Location location) {
-        // We're receiving location, so GPS is enabled
 		try {
 	        isGpsEnabled = true;
-//			Toast toast = Toast.makeText(StaticResources.getBaseContext(), "Location was updated", Toast.LENGTH_SHORT);
-//			toast.show();
-	        // first of all we check if the time from the last used fix to the current fix is greater than the logging interval
-	        if(((lastGPSTimestamp + gpsLoggingInterval) < System.currentTimeMillis()) && (System.currentTimeMillis() - lastGPSTimestamp) > 6000){
+
+	        if(((lastGPSTimestamp + gpsLoggingInterval) < System.currentTimeMillis()) /*&& (System.currentTimeMillis() - lastGPSTimestamp) > 6000*/){
+
 	            lastGPSTimestamp = System.currentTimeMillis(); // save the time of this fix
 	    
 	            lastLocation = location;
 	            lastNbSatellites = countSatellites();
-//	            toast = Toast.makeText(StaticResources.getBaseContext(), "Location was changed to: " + lastLocation.getLatitude() + "/" + lastLocation.getLongitude(), Toast.LENGTH_SHORT);
-//	    		toast.show();
-	    		try {
-	    			currentWayPoint = new WayPoint(-1, -1, lastLocation, lastNbSatellites);
-					//WayPointManager.Instance().save(currentWayPoint);
-	    		} catch(Exception e)
-	    		{
-//	                toast = Toast.makeText(StaticResources.getBaseContext(), "Error", Toast.LENGTH_SHORT);
-//	        		toast.show();
-	    		}    		
-	            if (isTracking) {
-	                //dataHelper.track(currentTrackId, location);
-	            }
+	            if (previousTime != 0 && (System.currentTimeMillis() - previousTime < 10000))
+	            	return;
+    			if (((location.getLatitude() != prevLat || location.getLongitude() != prevLon) && lastLocation.getAccuracy() < 25))
+    			{
+    				StaticResources.setBaseContext(this);
+        			currentWayPoint = new WayPoint(workerID, pilotTourID, lastLocation, lastNbSatellites);
+    				WayPointManager.Instance().save(currentWayPoint);
+    				prevLat = currentWayPoint.getLatitude();
+    				prevLon = currentWayPoint.getLongitude();
+    				previousTime = System.currentTimeMillis();
+    			}
 	        }
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -312,24 +300,6 @@ public class GPSLogger extends Service implements LocationListener {
         
         return count;
     }
-    
-    /**
-     * Builds the notification to display when tracking in background.
-     */
-//    private Notificsation getNotification() {
-//        Notification n = new Notification(R.drawable.ic_stat_track, getResources().getString(R.string.notification_ticker_text), System.currentTimeMillis());
-//                
-//        Intent startTrackLogger = new Intent(this, TrackLogger.class);
-//        startTrackLogger.putExtra(TrackContentProvider.Schema.COL_TRACK_ID, currentTrackId);
-//        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, startTrackLogger, PendingIntent.FLAG_UPDATE_CURRENT);
-//        n.flags = Notification.FLAG_FOREGROUND_SERVICE | Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
-//        n.setLatestEventInfo(
-//                        getApplicationContext(),
-//                        getResources().getString(R.string.notification_title).replace("{0}", (currentTrackId > -1) ? Long.toString(currentTrackId) : "?"),
-//                        getResources().getString(R.string.notification_text),
-//                        contentIntent);
-//        return n;
-//    }
     
     /**
      * Stops notifying the user that we're tracking in the background

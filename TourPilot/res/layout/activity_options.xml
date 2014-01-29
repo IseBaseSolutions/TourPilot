@@ -8,6 +8,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".OptionsActivity" >
 
+    <CheckBox
+        android:id="@+id/cb_SavePin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="@string/save_pin_code" />
+    
     <EditText
         android:id="@+id/etPinCode"
         android:layout_width="match_parent"
@@ -36,15 +43,6 @@
         android:onClick="btStartSyncClick"
         android:text="@string/synchronization"
         android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <CheckBox
-        android:id="@+id/cb_SavePin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/etPinCode"
-        android:layout_alignBottom="@+id/etPinCode"
-        android:layout_alignParentRight="true"
-        android:text="@string/save_pin_code" />
 
     <ProgressBar
         android:id="@+id/pbClearDB"

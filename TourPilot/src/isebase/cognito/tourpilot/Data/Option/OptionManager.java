@@ -26,6 +26,6 @@ class OptionManager extends BaseObjectManager<Option> {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db) {
-			
+		db.execSQL("ALTER TABLE " + Option.TableName + " ADD COLUMN + " + Option.IsLockOptionsField + " INTEGER DEFAULT 0");
 	}
 }

@@ -2,21 +2,20 @@
  
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
+import isebase.cognito.tourpilot.Activity.WorkersOptionActivity.WorkerOptionActivity;
 import isebase.cognito.tourpilot.Connection.AutoUpdate;
 import isebase.cognito.tourpilot.Connection.ConnectionAsyncTask;
 import isebase.cognito.tourpilot.Connection.ConnectionStatus;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
-import isebase.cognito.tourpilot.StaticResources.StaticResources;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -66,7 +65,8 @@ import android.widget.TextView;
 				if (Option.Instance().getPalmVersion() != null 
  						&& Integer.parseInt(Option.Instance().getPalmVersion()) > Integer.parseInt(Option.Instance().getVersion()))
  				{
-					DialogFragment newVersionDialog = new BaseDialog("New version", "There is new version of appliacation. Click yes to update or cancel to return to the options");
+					DialogFragment newVersionDialog = new BaseDialog(getString(R.string.dialog_new_version), getString(R.string.dialog_update_program));
+					newVersionDialog.setCancelable(false);
 					newVersionDialog.show(getSupportFragmentManager(), "newVersionDialog");
 					return;
  				}
@@ -78,7 +78,7 @@ import android.widget.TextView;
 							? new Intent(getApplicationContext(), PatientsActivity.class) 
 							: (Option.Instance().getWorkerID() != -1)
 									? new Intent(getApplicationContext(), ToursActivity.class)
-									: new Intent(getApplicationContext(), WorkersActivity.class);
+									: new Intent(getApplicationContext(), WorkerOptionActivity.class);
 					startActivity(nextActivity);					
 				}
  			}
@@ -134,7 +134,12 @@ import android.widget.TextView;
 
 	@Override
 	public void onDialogNegativeClick(DialogFragment dialog) {
-		finish();
+		if (dialog.getTag().equals("newVersionDialog"))
+		{
+			Option.Instance().setWorkerID(BaseObject.EMPTY_ID);
+			Option.Instance().save();
+			finish();
+		}
 	}
 	
 	private void initControls() {

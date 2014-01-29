@@ -38,7 +38,6 @@
 	            android:layout_marginLeft="10dp"
 	            android:editable="false"
 	            android:text="00:00"
-	            android:textAlignment="center"
 	            android:textAppearance="?android:attr/textAppearanceLarge"
 	            android:textColor="@color/active"
 	            android:textSize="25dp" />
@@ -50,7 +49,6 @@
 	            android:editable="false"
 	            android:layout_marginLeft="10dp"
 	            android:text="28.11.2013"
-	            android:textAlignment="center"
 	            android:textAppearance="?android:attr/textAppearanceSmall"
 	            android:textColor="@color/active" />
 	    </LinearLayout>
@@ -91,7 +89,6 @@
 	            android:layout_marginLeft="10dp"
 	            android:editable="false"
 	            android:text="00:00"
-	            android:textAlignment="center"
 	            android:textAppearance="?android:attr/textAppearanceLarge"
 	            android:textColor="@color/not_active"
 	            android:textSize="25dp" />
@@ -102,7 +99,6 @@
 	            android:editable="false"
 	            android:layout_marginLeft="10dp"
 	            android:text="28.11.2013"
-	            android:textAlignment="center"
 	            android:textAppearance="?android:attr/textAppearanceSmall"
 	            android:textColor="@color/not_active" />
    		 </LinearLayout>
