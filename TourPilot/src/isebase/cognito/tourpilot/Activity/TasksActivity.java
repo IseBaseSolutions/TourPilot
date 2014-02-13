@@ -14,10 +14,8 @@ import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentIntervalManag
 import isebase.cognito.tourpilot.Data.Information.Information;
 import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemark;
 import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemarkManager;
-import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
@@ -34,7 +32,6 @@ import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.BlutdruckTaskDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.StandardTaskDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.TaskTypes;
-import isebase.cognito.tourpilot.Gps.GpsNavigator;
 import isebase.cognito.tourpilot.Gps.Service.GPSLogger;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Templates.TaskAdapter;
@@ -84,6 +81,10 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 	public final static int ACTIVITY_USERREMARKS_CODE = 0;
 	public final static int ACTIVITY_VERIFICATION_CODE = 1;
 	
+	public final static int SIMPLE_MODE = 0;
+	public final static int SYNC_MODE = 1;
+	public final static int NO_SYNC_MODE = 2;
+	
 	public static String timeEndTasks;
 	
 	public static boolean IS_FLEGE_OK = true;
@@ -93,6 +94,7 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 	private PatientRemark patientRemark;
 	
 	private DialogFragment startEmploymentDialog;
+	private BaseDialog clearAllTasksDialog;
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -263,6 +265,13 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 	}
 	
 	public void btStartTaskTimerClick(View view) {
+		if (!startTask.getRealDate().equals(DateUtils.EmptyDate))
+			clearAllTasksDialog.show(getSupportFragmentManager(), "clearAllTasksDialog");
+		else
+			updateStartTime();
+	}
+	
+	private void updateStartTime() {
 		checkAllTasksAndFillUp(eTaskState.Empty);
 		startTask.setRealDate(DateUtils.getSynchronizedTime());
 		startTask.setState(eTaskState.Done);
@@ -452,6 +461,7 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 	
 	private void initDialogs() {
 		startEmploymentDialog = new BaseInfoDialog(getString(R.string.attention), getString(R.string.dialog_start_employment));
+		clearAllTasksDialog = new BaseDialog(getString(R.string.attention), getString(R.string.dialog_clear_tasks));
 	}
 
 	private void checkAllTasks(eTaskState state){
@@ -511,7 +521,7 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 			showUndoneDialog();
 			return true;
 		case R.id.notes:
-			startUserRemarksActivity(UserRemarksActivity.SIMPLE_MODE, ACTIVITY_USERREMARKS_CODE);
+			startUserRemarksActivity(SIMPLE_MODE, ACTIVITY_USERREMARKS_CODE);
 			return true;
 		case R.id.info:
 			showPatientInfo(true);
@@ -588,15 +598,18 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 			setTaskState(((StandardTaskDialog)dialog).getTask());
 			taskAdapter.notifyDataSetChanged();
 		}
+		else if (dialog.getTag().equals("clearAllTasksDialog")) {
+			updateStartTime();
+		}		
 	}
 
 	@Override
 	public void onDialogNegativeClick(DialogFragment dialog) {
 		if(dialog.getTag().equals("dialogCheckLeavingState")){
 			if (Option.Instance().getIsAuto())
-				startUserRemarksActivity(UserRemarksActivity.SYNC_MODE, ACTIVITY_USERREMARKS_CODE);
+				startUserRemarksActivity(SYNC_MODE, ACTIVITY_USERREMARKS_CODE);
 			else
-				startUserRemarksActivity(UserRemarksActivity.NO_SYNC_MODE, ACTIVITY_USERREMARKS_CODE);
+				startUserRemarksActivity(NO_SYNC_MODE, ACTIVITY_USERREMARKS_CODE);
 		}
 		if(dialog.getTag().equals("dialogTasks"))
 		{			
@@ -658,10 +671,11 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 	
 
 	protected void startUserRemarksActivity(Integer mode, int activityCode) {
-		Intent userRemarksActivity = new Intent(getApplicationContext(), UserRemarksActivity.class);
+		//Intent userRemarksActivity = new Intent(getApplicationContext(), UserRemarksActivity.class);
+		Intent userRemarksActivity = new Intent(getApplicationContext(), NewUserRemarksActivity.class);
 		userRemarksActivity.putExtra("Mode", mode);
 		userRemarksActivity.putExtra("ViewMode", isEmploymentDone());
-		if (mode == UserRemarksActivity.SIMPLE_MODE)
+		if (mode == SIMPLE_MODE)
 			startActivity(userRemarksActivity);
 		else
 			startActivityForResult(userRemarksActivity, activityCode);

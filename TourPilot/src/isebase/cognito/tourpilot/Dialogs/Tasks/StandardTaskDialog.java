@@ -73,16 +73,20 @@ public class StandardTaskDialog extends DialogFragment{
 		etValue.setEnabled(!isViewMode);
 		etValue.setFilters(new InputFilter[] { new InputFilter.LengthFilter(10) });
 		etValue.addTextChangedListener(new TextWatcher(){
-			Pattern pattern = Pattern.compile("[0-9,]");
+			Pattern pattern = Pattern.compile("[0-9,.]");
 			
 			@Override
 			public void afterTextChanged(Editable editable) {
 				if (editable.length() == 0)
 					return;
 				Matcher matcher = pattern.matcher(String.valueOf(editable.toString().charAt(editable.length() - 1)));
-				if(matcher.matches() && editable.toString().indexOf(",") == editable.toString().lastIndexOf(","))
+				if(matcher.matches() && editable.toString().indexOf(".") == -1)
 					return;
-				editable.delete(editable.length() - 1, editable.length());
+				if (editable.toString().indexOf(".") != -1)
+					editable.replace(editable.length() - 1, editable.length(), ",");
+				else
+					editable.delete(editable.length() - 1, editable.length());
+
 			}
 
 			@Override

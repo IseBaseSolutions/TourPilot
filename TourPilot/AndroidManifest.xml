@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="isebase.cognito.tourpilot"
     android:versionCode="1"
-    android:versionName="1037" >
+    android:versionName="1042" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -19,16 +19,25 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_medic"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
+        <!--
+            <activity
+            android:name="isebase.cognito.tourpilot.Activity.NewUserRemarksActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" >
+        -->
         <activity
             android:name="isebase.cognito.tourpilot.Activity.WorkersOptionActivity.WorkerOptionActivity"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"
-            android:label="@string/app_name">
+            android:windowSoftInputMode="adjustPan" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -75,7 +84,7 @@
             android:name="isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="isebase.cognito.tourpilot.Activity.PatientsActivity" 
+            android:name="isebase.cognito.tourpilot.Activity.PatientsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="isebase.cognito.tourpilot.Activity.ManualInputActivity"
@@ -95,15 +104,27 @@
         <activity
             android:name="isebase.cognito.tourpilot.Activity.BaseActivities.BaseTimeSyncActivity"
             android:screenOrientation="portrait" />
-        <!-- <activity
-            android:name="isebase.cognito.tourpilot.Activity.WorkerOptionActivity"/> -->
-         <service
+        <activity android:name="isebase.cognito.tourpilot.Activity.WorkerOptionActivity" />
+
+        <service
             android:name="isebase.cognito.tourpilot.Gps.Service.GPSLogger"
             android:exported="false" >
             <intent-filter>
                 <action android:name="service" />
             </intent-filter>
         </service>
+
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.NewUserRemarksActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.TasksAssessmentsActivity.TasksAssessementsActivity"
+            android:label="@string/title_activity_tasks_assessements" >
+        </activity>
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.QuestionsActivity"
+            android:label="@string/title_activity_simple_questions" >
+        </activity>
     </application>
 
 </manifest>

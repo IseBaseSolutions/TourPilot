@@ -3,6 +3,7 @@ package isebase.cognito.tourpilot.Connection;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWorkManager;
+import isebase.cognito.tourpilot.Data.CustomRemark.CustomRemarkManager;
 import isebase.cognito.tourpilot.Data.Diagnose.DiagnoseManager;
 import isebase.cognito.tourpilot.Data.Doctor.DoctorManager;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
@@ -11,6 +12,10 @@ import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemarkManager;
+import isebase.cognito.tourpilot.Data.Question.Category.CategoryManager;
+import isebase.cognito.tourpilot.Data.Question.Link.LinkManager;
+import isebase.cognito.tourpilot.Data.Question.Question.QuestionManager;
+import isebase.cognito.tourpilot.Data.Question.QuestionSetting.QuestionSettingManager;
 import isebase.cognito.tourpilot.Data.Relative.RelativeManager;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
@@ -20,6 +25,7 @@ import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Utils.StringParser;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,6 +33,7 @@ import java.net.Socket;
 import java.util.Date;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
 import android.os.AsyncTask;
 
 public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
@@ -394,12 +401,8 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		String strMsg = "";
 		strMsg += "z" + AdditionalTaskManager.Instance().getCheckSumByRequest() + "\0.\0";
 		strMsg += "a" + WorkerManager.Instance().getCheckSumByRequest() + "\0.\0";
-		strMsg += "u" + AdditionalWorkManager.Instance().getCheckSumByRequest() + "\0.\0";
-//		strMsg += "q" + CQuestions.Instance().getCheckSums() + "\0.\0";
-//		strMsg += "y" + CTopics.Instance().getCheckSums() + "\0.\0";
-//		strMsg += "j" + CLinks.Instance().getCheckSums() + "\0.\0";
-//		strMsg += ">" + CFreeQuestions.Instance().getCheckSums() + "\0.\0";
-//		strMsg += "<" + CFreeTopics.Instance().getCheckSums() + "\0.\0";
+		strMsg += "u" + AdditionalWorkManager.Instance().getCheckSumByRequest() + "\0.\0";		
+
 		boolean userIsPresent = Option.Instance().getWorkerID() != -1;
 		strMsg += "d" + (userIsPresent ? DiagnoseManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
 		strMsg += "b" + (userIsPresent ? PatientRemarkManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
@@ -409,7 +412,19 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		strMsg += "i" + (userIsPresent ? InformationManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
 		strMsg += "r" + (userIsPresent ? TourManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
 		strMsg += "t" + (userIsPresent ? TaskManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
-//		strMsg += "x" + (userIsPresent ? CQuestionSettings.Instance().getCheckSums() : 0) + "\0.\0";
+		if (Integer.parseInt(Option.Instance().getVersion()) > 1041)
+		{
+			strMsg += "#" + CustomRemarkManager.Instance().getCheckSumByRequest() + "\0.\0";
+		}
+		if (Integer.parseInt(Option.Instance().getVersion()) > 1042)
+		{
+			strMsg += "q" + QuestionManager.Instance().getCheckSumByRequest() + "\0.\0";
+			strMsg += "y" + CategoryManager.Instance().getCheckSumByRequest() + "\0.\0";
+			strMsg += "j" + LinkManager.Instance().getCheckSumByRequest() + "\0.\0";
+			strMsg += "x" + (userIsPresent ? QuestionSettingManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
+		}
+//		strMsg += ">" + CFreeQuestions.Instance().getCheckSums() + "\0.\0";
+//		strMsg += "<" + CFreeTopics.Instance().getCheckSums() + "\0.\0";
 //		strMsg += "*" + (userIsPresent ? CFreeQuestionSettings.Instance().getCheckSums() : 0) + "\0.\0";
 //		strMsg += "^" + (userIsPresent ? CAutoQuestionSettings.Instance().getCheckSums() : 0) + "\0.\0";
 		return strMsg;
@@ -425,14 +440,16 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 //			strMsg += CFreeTopics.Instance().forServer();
 //		if (strNeedSend.length() > 15 && strNeedSend.charAt(15) == '1')
 //			strMsg += CFreeQuestions.Instance().forServer();
-//		if (strNeedSend.length() > 14 && strNeedSend.charAt(14) == '1')
-//			strMsg += CQuestionSettings.Instance().forServer();
-//		if (strNeedSend.length() > 13 && strNeedSend.charAt(13) == '1')
-//			strMsg += CLinks.Instance().forServer();
-//		if (strNeedSend.length() > 12 && strNeedSend.charAt(12) == '1')
-//			strMsg += CTopics.Instance().forServer();
-//		if (strNeedSend.length() > 11 && strNeedSend.charAt(11) == '1')
-//			strMsg += CQuestions.Instance().forServer();
+		if (strNeedSend.length() > 15 && strNeedSend.charAt(15) == '1')
+			strMsg += QuestionSettingManager.Instance().forServer();
+		if (strNeedSend.length() > 14 && strNeedSend.charAt(14) == '1')
+			strMsg += LinkManager.Instance().forServer();
+		if (strNeedSend.length() > 13 && strNeedSend.charAt(13) == '1')
+			strMsg += CategoryManager.Instance().forServer();
+		if (strNeedSend.length() > 12 && strNeedSend.charAt(12) == '1')
+			strMsg += QuestionManager.Instance().forServer();
+		if (strNeedSend.length() > 11 && strNeedSend.charAt(11) == '1')
+			strMsg += CustomRemarkManager.Instance().forServer();
 		if (strNeedSend.length() > 10 && strNeedSend.charAt(10) == '1')
 			strMsg += TaskManager.Instance().forServer();
 		if (strNeedSend.length() > 9 && strNeedSend.charAt(9) == '1')

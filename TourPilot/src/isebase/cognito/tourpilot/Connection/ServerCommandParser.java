@@ -7,6 +7,8 @@ import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWork;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWorkManager;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
+import isebase.cognito.tourpilot.Data.CustomRemark.CustomRemark;
+import isebase.cognito.tourpilot.Data.CustomRemark.CustomRemarkManager;
 import isebase.cognito.tourpilot.Data.Diagnose.Diagnose;
 import isebase.cognito.tourpilot.Data.Diagnose.DiagnoseManager;
 import isebase.cognito.tourpilot.Data.Doctor.Doctor;
@@ -18,6 +20,14 @@ import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemark;
 import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemarkManager;
+import isebase.cognito.tourpilot.Data.Question.Category.Category;
+import isebase.cognito.tourpilot.Data.Question.Category.CategoryManager;
+import isebase.cognito.tourpilot.Data.Question.Link.Link;
+import isebase.cognito.tourpilot.Data.Question.Link.LinkManager;
+import isebase.cognito.tourpilot.Data.Question.Question.Question;
+import isebase.cognito.tourpilot.Data.Question.Question.QuestionManager;
+import isebase.cognito.tourpilot.Data.Question.QuestionSetting.QuestionSetting;
+import isebase.cognito.tourpilot.Data.Question.QuestionSetting.QuestionSettingManager;
 import isebase.cognito.tourpilot.Data.Relative.Relative;
 import isebase.cognito.tourpilot.Data.Relative.RelativeManager;
 import isebase.cognito.tourpilot.Data.Task.Task;
@@ -57,13 +67,14 @@ public class ServerCommandParser {
 	public static final char TOUR = 'R';
 	public static final char RELATIVE = 'V';
 	public static final char QUESTION = 'Q';
-	public static final char TOPIC = 'Y';
+	public static final char CATEGORY = 'Y';
 	public static final char LINK = 'J';
 	public static final char QUESTION_SETTING = 'X';
 	public static final char FREE_TOPIC = '<';
 	public static final char FREE_QUESTION = '>';
 	public static final char FREE_QUESTION_SETTING = '*';
 	public static final char AUTO_QUESTION_SETTING = '^';
+	public static final char CUSTOM_REMARK = '#';
 
 	private SynchronizationHandler syncHandler;
 
@@ -193,6 +204,46 @@ public class ServerCommandParser {
 				syncHandler.onProgressUpdate(item.getFullName() + " OK");
 			} else 
 				removeByID(commandLine, RelativeManager.Instance());
+			break;
+		case CUSTOM_REMARK:
+			if (commandActionType == NEED_TO_ADD) {
+				CustomRemark item = new CustomRemark(commandLine);
+				CustomRemarkManager.Instance().save(item);
+				syncHandler.onProgressUpdate(item.getName() + " OK");
+			} else 
+				removeByID(commandLine, CustomRemarkManager.Instance());
+			break;
+		case QUESTION:
+			if (commandActionType == NEED_TO_ADD) {
+				Question item = new Question(commandLine);
+				QuestionManager.Instance().save(item);
+				syncHandler.onProgressUpdate(item.getName() + " OK");
+			} else 
+				removeByID(commandLine, QuestionManager.Instance());
+			break;
+		case CATEGORY:
+			if (commandActionType == NEED_TO_ADD) {
+				Category item = new Category(commandLine);
+				CategoryManager.Instance().save(item);
+				syncHandler.onProgressUpdate(item.getName() + " OK");
+			} else 
+				removeByID(commandLine, CategoryManager.Instance());
+			break;
+		case LINK:
+			if (commandActionType == NEED_TO_ADD) {
+				Link item = new Link(commandLine);
+				LinkManager.Instance().save(item);
+				syncHandler.onProgressUpdate(item.getName() + " OK");
+			} else 
+				removeByID(commandLine, LinkManager.Instance());
+			break;
+		case QUESTION_SETTING:
+			if (commandActionType == NEED_TO_ADD) {
+				QuestionSetting item = new QuestionSetting(commandLine);
+				QuestionSettingManager.Instance().save(item);
+				syncHandler.onProgressUpdate(item.getName() + " OK");
+			} else 
+				removeByID(commandLine, QuestionSettingManager.Instance());
 			break;
 		/*
 		 * case QUESTION: // ANDREW if

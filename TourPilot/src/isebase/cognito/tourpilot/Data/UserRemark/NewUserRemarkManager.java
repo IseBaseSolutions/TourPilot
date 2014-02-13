@@ -1,33 +1,31 @@
 package isebase.cognito.tourpilot.Data.UserRemark;
 
-import java.util.List;
-
-import isebase.cognito.tourpilot.Activity.UserRemarksActivity;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
-import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
-import isebase.cognito.tourpilot.Data.Patient.PatientManager;
+
+import java.util.List;
+
 import android.database.sqlite.SQLiteDatabase;
 
-public class UserRemarkManager extends BaseObjectManager<UserRemark> {
+public class NewUserRemarkManager extends BaseObjectManager<NewUserRemark> {
 
 	public static final String TableName = "UserRemarks";
 	
-	public UserRemarkManager(Class<UserRemark> entityClass) {
+	public NewUserRemarkManager(Class<NewUserRemark> entityClass) {
 		super(entityClass);
 	}
-	private static UserRemarkManager instance;
+	private static NewUserRemarkManager instance;
 
-	public static UserRemarkManager Instance() {
+	public static NewUserRemarkManager Instance() {
 		if (instance != null)
 			return instance;
-		instance = new UserRemarkManager();
+		instance = new NewUserRemarkManager();
 		instance.open();
 		return instance;
 	}
 		
-	public UserRemarkManager() {
-		super(UserRemark.class);
+	public NewUserRemarkManager() {
+		super(NewUserRemark.class);
 	}
 	
 	@Override
@@ -40,10 +38,10 @@ public class UserRemarkManager extends BaseObjectManager<UserRemark> {
 
 	}
 	
-	public List<UserRemark> loadByEmploymentID(int employmentID) {
+	public List<NewUserRemark> loadByEmploymentID(int employmentID) {
 		String strSQL = String.format("SELECT * FROM %1$s " +
 				"WHERE %2$s = %3$d"
-				, UserRemarkManager.TableName
+				, NewUserRemarkManager.TableName
 				, Employment.PilotTourIDField
 				, employmentID);
 		return load(strSQL);

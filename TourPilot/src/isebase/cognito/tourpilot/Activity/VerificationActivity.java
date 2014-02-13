@@ -2,6 +2,8 @@ package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
+import isebase.cognito.tourpilot.Data.CustomRemark.CustomRemark;
+import isebase.cognito.tourpilot.Data.CustomRemark.CustomRemarkManager;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.EmploymentVerification.EmploymentVerification;
@@ -16,6 +18,7 @@ import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -182,18 +185,27 @@ public class VerificationActivity extends BaseActivity {
 			if(userRemark == null)
 				return flege;	
 			flege += "<b>" + getString(R.string.visit_notes) + ":</b> <br />";
-			if((userRemark.getCheckboxes() & 1) == 1)
-				flege += getString(R.string.connect_with) + ": " + "<b>" + getString(R.string.yes) + "</b>" + " <br />";
-			else
-				flege += getString(R.string.connect_with) + ": " + "<b>" + getString(R.string.no) + "</b>" + " <br />";
-			if((userRemark.getCheckboxes() & 2) == 2)
-				flege += getString(R.string.medications_changed) + ": " + "<b>" + getString(R.string.yes) + "</b>" + " <br />";
-			else
-				flege += getString(R.string.medications_changed) + ": " + "<b>" + getString(R.string.no) + "</b>" + " <br />";
-			if((userRemark.getCheckboxes() & 4) == 4)
-				flege += getString(R.string.aubrplanmabige_pflege) + ": " + "<b>" + getString(R.string.yes) + "</b>" + " <br />";
-			else
-				flege += getString(R.string.aubrplanmabige_pflege) + ": " + "<b>" + getString(R.string.no) + "</b>" + " <br />";
+//			if((userRemark.getCheckboxes() & 1) == 1)
+//				flege += getString(R.string.connect_with) + ": " + "<b>" + getString(R.string.yes) + "</b>" + " <br />";
+//			else
+//				flege += getString(R.string.connect_with) + ": " + "<b>" + getString(R.string.no) + "</b>" + " <br />";
+//			if((userRemark.getCheckboxes() & 2) == 2)
+//				flege += getString(R.string.medications_changed) + ": " + "<b>" + getString(R.string.yes) + "</b>" + " <br />";
+//			else
+//				flege += getString(R.string.medications_changed) + ": " + "<b>" + getString(R.string.no) + "</b>" + " <br />";
+//			if((userRemark.getCheckboxes() & 4) == 4)
+//				flege += getString(R.string.aubrplanmabige_pflege) + ": " + "<b>" + getString(R.string.yes) + "</b>" + " <br />";
+//			else
+//				flege += getString(R.string.aubrplanmabige_pflege) + ": " + "<b>" + getString(R.string.no) + "</b>" + " <br />";
+//			if(!userRemark.getName().equals(""))
+//				flege += "<b>" + getString(R.string.other) + "</b> " + userRemark.getName() + "<br />";
+			List<CustomRemark> cutomRemarks = CustomRemarkManager.Instance().load();
+			List<String> s = Arrays.asList(userRemark.getCheckedIDsArr());
+			for (CustomRemark customRemark : cutomRemarks) {
+				flege += customRemark.getName() + ": " + "<b>";
+				flege += s.contains(String.valueOf(customRemark.getID())) ? getString(R.string.yes) : getString(R.string.no);
+				flege += "</b>" + " <br />";
+			}			
 			if(!userRemark.getName().equals(""))
 				flege += "<b>" + getString(R.string.other) + "</b> " + userRemark.getName() + "<br />";
 		}
@@ -216,8 +228,10 @@ public class VerificationActivity extends BaseActivity {
 			else
 				undoneTasksIDs += (undoneTasksIDs.equals("") ? "" : ",") + task.getAditionalTaskID();
 		}
-		String userRemarks = getFlegeMarks();
-		EmploymentVerificationManager.Instance().save(new EmploymentVerification(employmentID, workerID, patientID, dateBegin, dateEnd, doneTasksIDs, undoneTasksIDs, userRemarks, isFlegeOK));
+		String userRemarks = userRemark != null ? (userRemark.getCheckedIDs() + ";" + userRemark.getName()) : "";
+		//String userRemarks = getFlegeMarks();
+		EmploymentVerification verification = new EmploymentVerification(employmentID, workerID, patientID, dateBegin, dateEnd, doneTasksIDs, undoneTasksIDs, userRemarks, isFlegeOK);
+		EmploymentVerificationManager.Instance().save(verification);
 	}
 
 	private String getFlegeMarks() {

@@ -111,6 +111,7 @@
     <string name="cancel">Abbruch</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
+    <string name="dont_know">Keine</string>
     <string name="close">Schließen</string>
     <string name="search">Suchen</string>
     <string name="log_out">Abmelden</string>
@@ -118,7 +119,7 @@
     <string name="start_time">Einsatzbeginn</string>
     <string name="stop_time">Einsatzende</string>
     <string name="tour_end">Tourende</string>
-    <string name="stop">Stop</string>
+    <string name="stop">Stopp</string>
     <string name="start">Start</string>
     <string name="started_at">Gestartet um</string>
     <string name="attention">Achtung!</string>
@@ -146,6 +147,7 @@
     <string name="dialog_new_version">Neue Version</string>
     <string name="dialog_update_program">Neue Programmversion liegt vor. Soll sie installiert werden?</string>
     <string name="dialog_start_gps">Soll die Route zu dem gewählten Patienten verlegt werden?</string>
+    <string name="dialog_clear_tasks">Wollen Sie die Zeiten für den Einsatzbeginn verwerfen. Wenn Sie diese Meldung mit ja bestätigen, werden die Zeiten gelöscht</string>
 
     <!-- Errors -->
     <string name="err_not_db_file">Wählen Sie bitte die Datei mit der Erweiterung .db</string>
@@ -161,7 +163,6 @@
     <string name="minuten_einen">Minuten einen Einsatz durchgeführt.</string>
     <string name="work_was_done">einen Einsatz durchgeführt.</string>
     <string name="data_to_send">Folgende Daten werden übermittelt:</string>
-
     <string name="done_tasks">durchgeführt wurde</string>
     <string name="undone_tasks">NICHT DURCHGEFÜHRT WURDE</string>
     <string name="there_are_no_done_tasks">Es gibt keine erledigte(n) Aufgabe(n)</string>
@@ -172,7 +173,7 @@
     <string name="all_ok">Pflege OK</string>
     <string name="check_verification">Ich bestätige, dass ich die entsprechenden Informationen auf dem vorliegenden Leistungsnachweis eingetragen habe inkl. der Startzeit sowie des Handzeichens</string>
     <string name="agree">Einverstanden</string>
-    
+
     <!-- Catalogs -->
     <string name="btyp_kk">Krankenkassenleistung</string>
     <string name="btyp_pk">Pflegekassenleistung</string>
@@ -184,5 +185,15 @@
     <string name="db_backup_restored">DB entpackt</string>
     <string name="db_cleared">DB geleert</string>
     <string name="title_activity_base_time_sync">BaseTimeSyncActivity</string>
+    <string name="title_activity_new_user_remarks">NewUserRemarksActivity</string>
+    <string name="hello_world">Hello world!</string>
+
+    <!-- Skalas -->
+    <string name="braden">Braden-Skala</string>
+    <string name="norton">Norton-Skala</string>
+    <string name="sturzrisiko">Sturzrisiko-Skala</string>
+    <string name="schmerzermittlung">Schmerzermittlung</string>
+    <string name="title_activity_tasks_assessements">TasksAssessementsActivity</string>
+    <string name="title_activity_simple_questions">SimpleQuestionsActivity</string>
 
 </resources>

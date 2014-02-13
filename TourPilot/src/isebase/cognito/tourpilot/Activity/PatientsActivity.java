@@ -39,6 +39,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
@@ -48,6 +49,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 public class PatientsActivity extends BaseActivity implements BaseDialogListener {
@@ -219,8 +221,14 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 		for(IJob job : jobs)
 			if(job.wasSent())
 				syncTaskCount++;
-		btTourEnd.setEnabled(!(syncTaskCount == taskCount 
-				|| !DateUtils.isToday(pilotTour.getPlanDate())));		
+		if (syncTaskCount == taskCount 
+				|| !DateUtils.isToday(pilotTour.getPlanDate())) {
+			btTourEnd.setVisibility(ImageButton.GONE);
+		}
+		else
+			btTourEnd.setVisibility(ImageButton.VISIBLE);
+//		btTourEnd.setEnabled(!(syncTaskCount == taskCount 
+//				|| !DateUtils.isToday(pilotTour.getPlanDate())));		
 	}
 	
 	private void fillUpTitle() {
@@ -305,25 +313,26 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 			GpsNavigator.startGpsNavigation(PatientManager.Instance()
 					.loadAll(EmploymentManager.Instance().load(Option.Instance()
 							.getEmploymentID()).getPatientID()).getAddress());
+			startTasksActivity();
 //			WayPointManager.Instance().updateWasSent();
 //			WayPointManager.Instance().updateTourID();
-			Intent gpsLoggerServiceIntent = new Intent(this, GPSLogger.class);
-			gpsLoggerServiceIntent.putExtra(WayPoint.TrackIDField, 0);
-			startService(gpsLoggerServiceIntent);
-			ServiceConnection gpsLoggerConnection = new ServiceConnection() {
-				
-				@Override
-				public void onServiceDisconnected(ComponentName name) {
-					// TODO Auto-generated method stub					
-				}
-
-				@Override
-				public void onServiceConnected(ComponentName name, IBinder service) {
-					// TODO Auto-generated method stub				
-				}
-				
-			};
-			bindService(gpsLoggerServiceIntent, gpsLoggerConnection, 0);
+//			Intent gpsLoggerServiceIntent = new Intent(this, GPSLogger.class);
+//			gpsLoggerServiceIntent.putExtra(WayPoint.TrackIDField, 0);
+//			startService(gpsLoggerServiceIntent);
+//			ServiceConnection gpsLoggerConnection = new ServiceConnection() {
+//				
+//				@Override
+//				public void onServiceDisconnected(ComponentName name) {
+//					// TODO Auto-generated method stub					
+//				}
+//
+//				@Override
+//				public void onServiceConnected(ComponentName name, IBinder service) {
+//					// TODO Auto-generated method stub				
+//				}
+//				
+//			};
+//			bindService(gpsLoggerServiceIntent, gpsLoggerConnection, 0);
 		}
 //		Intent gpsActivity = new Intent(getApplicationContext(),
 //				GPSActivity.class);

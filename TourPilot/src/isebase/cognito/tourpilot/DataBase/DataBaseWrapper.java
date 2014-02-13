@@ -24,20 +24,33 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemarkManager;
-import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
+import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
+import isebase.cognito.tourpilot.Data.Question.Answer.Answer;
+import isebase.cognito.tourpilot.Data.Question.Answer.AnswerManager;
+import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategory;
+import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategoryManager;
+import isebase.cognito.tourpilot.Data.Question.Category.Category;
+import isebase.cognito.tourpilot.Data.Question.Category.CategoryManager;
+import isebase.cognito.tourpilot.Data.Question.Link.Link;
+import isebase.cognito.tourpilot.Data.Question.Link.LinkManager;
+import isebase.cognito.tourpilot.Data.Question.Question.Question;
+import isebase.cognito.tourpilot.Data.Question.Question.QuestionManager;
+import isebase.cognito.tourpilot.Data.Question.QuestionSetting.QuestionSetting;
+import isebase.cognito.tourpilot.Data.Question.QuestionSetting.QuestionSettingManager;
 import isebase.cognito.tourpilot.Data.Relative.Relative;
 import isebase.cognito.tourpilot.Data.Relative.RelativeManager;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
+import isebase.cognito.tourpilot.Data.UserRemark.NewUserRemark;
+import isebase.cognito.tourpilot.Data.UserRemark.UserRemark;
+import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
 import isebase.cognito.tourpilot.Data.WayPoint.WayPoint;
 import isebase.cognito.tourpilot.Data.WayPoint.WayPointManager;
 import isebase.cognito.tourpilot.Data.Work.Work;
 import isebase.cognito.tourpilot.Data.Work.WorkManager;
-import isebase.cognito.tourpilot.Data.UserRemark.UserRemark;
-import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
@@ -63,7 +76,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	
 	private static final String DATABASE_NAME = "TourPilot.db";
 
-	public static final int DATABASE_VERSION = 11;
+	public static final int DATABASE_VERSION = 18;
 	
 	private DataBaseWrapper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -92,6 +105,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ UserRemark.PatientIDField + " INTEGER, "
 			+ UserRemark.WorkerIDField + " INTEGER, " 
 			+ UserRemark.DateField + " INTEGER, " 
+			+ UserRemark.CheckedIDsField + " TEXT, " 
 			+ UserRemark.CheckboxField + " INTEGER " 
 			+ ");";
 	
@@ -369,6 +383,83 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ BaseObject.IsServerTimeField + " INTEGER  NOT NULL DEFAULT 1, "
 			+ CustomRemark.PosNumberField + " INTEGER"
 			+ ");";
+	
+	private static final String QUESTIONS_TABLE_CREATE = 
+			"CREATE TABLE " + QuestionManager.TableName + "(" 
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
+			+ BaseObject.NameField + " TEXT NOT NULL, "
+			+ BaseObject.CheckSumField + " INTEGER, "
+			+ BaseObject.WasSentField + " INTEGER, "
+			+ BaseObject.IsServerTimeField + " INTEGER  NOT NULL DEFAULT 1, "
+			+ Question.OwnerIDsStringField + " TEXT, "
+			+ Question.KeyAnswerField + " INTEGER"
+			+ ");";
+	
+	private static final String CATEGORIES_TABLE_CREATE = 
+			"CREATE TABLE " + CategoryManager.TableName + "(" 
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
+			+ BaseObject.NameField + " TEXT NOT NULL, "
+			+ BaseObject.CheckSumField + " INTEGER, "
+			+ BaseObject.WasSentField + " INTEGER, "
+			+ BaseObject.IsServerTimeField + " INTEGER  NOT NULL DEFAULT 1"
+			+ ");";
+	
+	private static final String LINKS_TABLE_CREATE = 
+			"CREATE TABLE " + LinkManager.TableName + "(" 
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
+			+ BaseObject.NameField + " TEXT NOT NULL, "
+			+ BaseObject.CheckSumField + " INTEGER, "
+			+ BaseObject.WasSentField + " INTEGER, "
+			+ BaseObject.IsServerTimeField + " INTEGER  NOT NULL DEFAULT 1, "
+			+ Link.QuestionIDField + " INTEGER, "
+			+ Link.CategoryIDField + " INTEGER"
+			+ ");";
+	
+	private static final String QUESTION_SETTINGS_TABLE_CREATE = 
+			"CREATE TABLE " + QuestionSettingManager.TableName + "(" 
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
+			+ BaseObject.NameField + " TEXT NOT NULL, "
+			+ BaseObject.CheckSumField + " INTEGER, "
+			+ BaseObject.WasSentField + " INTEGER, "
+			+ BaseObject.IsServerTimeField + " INTEGER  NOT NULL DEFAULT 1, "
+			+ QuestionSetting.DateField + " INTEGER, "
+			+ QuestionSetting.PatientIDField + " INTEGER, "
+			+ QuestionSetting.PilotTourIDField + " INTEGER, "
+			+ QuestionSetting.QuestionIDsStringField + " TEXT, "
+			+ QuestionSetting.CategoryIDsStringField + " TEXT, "
+			+ QuestionSetting.WorkerIDField + " INTEGER"
+			+ ");";
+	
+	private static final String ANSWERS_TABLE_CREATE = 
+			"CREATE TABLE " + AnswerManager.TableName + "(" 
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
+			+ BaseObject.NameField + " TEXT NOT NULL, "
+			+ BaseObject.CheckSumField + " INTEGER, "
+			+ BaseObject.WasSentField + " INTEGER, "
+			+ BaseObject.IsServerTimeField + " INTEGER  NOT NULL DEFAULT 1, "
+			+ Answer.PatientIDField + " INTEGER, "
+			+ Answer.QuestionIDField + " INTEGER, "
+			+ Answer.CatgoryIDField + " INTEGER, "
+			+ Answer.EmploymentIDField + " INTEGER, "
+			+ Answer.WorkerIDField + " INTEGER, "
+			+ Answer.PilotTourIDField + " INTEGER, "
+			+ Answer.TypeField + " INTEGER, "
+			+ Answer.AnswerIDField + " INTEGER, "
+			+ Answer.AnswerIDkeyField + " TEXT, "
+			+ Answer.AddInfoField + " TEXT"
+			+ ");";
+	
+	private static final String ANSWERED_CATEGORIES_TABLE_CREATE = 
+			"CREATE TABLE " + AnsweredCategoryManager.TableName + "(" 
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
+			+ BaseObject.NameField + " TEXT NOT NULL, "
+			+ BaseObject.CheckSumField + " INTEGER, "
+			+ BaseObject.WasSentField + " INTEGER, "
+			+ BaseObject.IsServerTimeField + " INTEGER  NOT NULL DEFAULT 1, "
+			+ AnsweredCategory.CategoryIDField + " INTEGER, "
+			+ AnsweredCategory.EmploymentIDField + " INTEGER, "
+			+ AnsweredCategory.IsAnsweredField + " INTEGERs"
+			+ ");";
 		
 	private static String[] createDataTables = new String[]{
 		TOURS_TABLE_CREATE,
@@ -391,7 +482,13 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		EMPLOYMENT_INTERVALS_TABLE_CREATE,
 		EMPLOYMENT_VERIFICATION_TABLE_CREATE,
 		WAYPOINTS_TABLE_CREATE,
-		CUSTOM_REMARKS_TABLE_CREATE
+		CUSTOM_REMARKS_TABLE_CREATE,
+		QUESTIONS_TABLE_CREATE,
+		CATEGORIES_TABLE_CREATE,
+		LINKS_TABLE_CREATE,
+		QUESTION_SETTINGS_TABLE_CREATE,
+		ANSWERS_TABLE_CREATE,
+		ANSWERED_CATEGORIES_TABLE_CREATE
 	};
 		
 	private static String[] deleteDataTables = new String[]{		
@@ -415,7 +512,14 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		"DROP TABLE IF EXISTS " + EmploymentIntervalManager.TableName,
 		"DROP TABLE IF EXISTS " + EmploymentVerificationManager.TableName,
 		"DROP TABLE IF EXISTS " + WayPointManager.TableName,
-		"DROP TABLE IF EXISTS " + CustomRemarkManager.TableName
+		"DROP TABLE IF EXISTS " + CustomRemarkManager.TableName,
+		"DROP TABLE IF EXISTS " + QuestionManager.TableName,
+		"DROP TABLE IF EXISTS " + CategoryManager.TableName,
+		"DROP TABLE IF EXISTS " + LinkManager.TableName,
+		"DROP TABLE IF EXISTS " + QuestionSettingManager.TableName,
+		"DROP TABLE IF EXISTS " + AnswerManager.TableName,
+		"DROP TABLE IF EXISTS " + AnsweredCategoryManager.TableName
+		
 	};
 			
 	private static String[] clearWorkerDependedDataTables = new String[]{
@@ -435,7 +539,9 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		"DELETE FROM " + UserRemarkManager.TableName,
 		"DELETE FROM " + EmploymentVerificationManager.TableName,
 		"DELETE FROM " + WayPointManager.TableName,
-		"DELETE FROM " + CustomRemarkManager.TableName
+		"DELETE FROM " + QuestionSettingManager.TableName,
+		"DELETE FROM " + AnswerManager.TableName,
+		"DELETE FROM " + AnsweredCategoryManager.TableName
 	};
 	
 	@Override
@@ -508,7 +614,51 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+		try {
+			db.execSQL("ALTER TABLE " + Option.TableName + " ADD COLUMN " + Option.IsLockOptionsField + " INTEGER DEFAULT 0");		
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			db.execSQL("ALTER TABLE " + UserRemarkManager.TableName + " ADD COLUMN " + UserRemark.CheckedIDsField + " TEXT");
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			db.execSQL(CUSTOM_REMARKS_TABLE_CREATE);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			db.execSQL(QUESTIONS_TABLE_CREATE);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			db.execSQL(CATEGORIES_TABLE_CREATE);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			db.execSQL(LINKS_TABLE_CREATE);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			db.execSQL(QUESTION_SETTINGS_TABLE_CREATE);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			db.execSQL(ANSWERS_TABLE_CREATE);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			db.execSQL(ANSWERED_CATEGORIES_TABLE_CREATE);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

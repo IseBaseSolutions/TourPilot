@@ -76,7 +76,7 @@ public class AutoUpdate extends AsyncTask<Void, Boolean, Void> {
     	Intent intent = new Intent(Intent.ACTION_VIEW);
     	File file = new File(Environment.getExternalStorageDirectory() + "/download/" + "TourPilot.apk");
     	intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-    	intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    	intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
     	StaticResources.getBaseContext().startActivity(intent);
         return null;
     }

@@ -10,6 +10,8 @@ import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -61,6 +63,23 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+		
+		
+        PackageManager pm = getPackageManager();
+        boolean app_installed = false;
+        try {
+            pm.getPackageInfo("org.microemu.android", PackageManager.GET_ACTIVITIES);
+            app_installed = true;
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            app_installed = false;
+        }
+        if (app_installed){
+        	Uri uri = Uri.fromParts("package", "org.microemu.android", null);
+        	Intent it = new Intent(Intent.ACTION_DELETE, uri);
+        	it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
+        	StaticResources.getBaseContext().startActivity(it);
+        }
 		switchToLastActivity();
 	}
 
@@ -125,9 +144,9 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
 				case 0:
-					return "Options";
+					return "Optionen";
 				case 1:
-					return "Workers";
+					return "Mitarbeiter";
 			}
 			return null;
 		}

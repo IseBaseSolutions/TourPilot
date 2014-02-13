@@ -27,9 +27,7 @@ public class UserRemarksActivity extends BaseActivity {
 	
 	private UserRemark userRemark;
 	
-	public final static int SIMPLE_MODE = 0;
-	public final static int SYNC_MODE = 1;
-	public final static int NO_SYNC_MODE = 2;
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -4,6 +4,7 @@ import java.util.Date;
 
 import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.CustomRemark.CustomRemark;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.DateUtils;
@@ -14,6 +15,7 @@ public class UserRemark extends BaseObject {
 	public static final String PatientIDField = "patient_id";
 	public static final String WorkerIDField = "worker_id";
 	public static final String DateField = "date";
+	public static final String CheckedIDsField = "checked_ids";
 	public static final String CheckboxField = "checkboxes";
 
 	private int patientID;
@@ -21,6 +23,7 @@ public class UserRemark extends BaseObject {
 	
 	private Date date;
 	private int checkboxes;
+	private String checkedIDs;
 	
 	@MapField(DatabaseField = PatientIDField)
 	public int getPatientID() {
@@ -57,6 +60,20 @@ public class UserRemark extends BaseObject {
 	@MapField(DatabaseField = CheckboxField)
 	public void setCheckboxes(int checkboxes) {
 		this.checkboxes = checkboxes;
+	}
+	
+	@MapField(DatabaseField = CheckedIDsField)
+	public String getCheckedIDs() {
+		return checkedIDs;
+	}
+	
+	@MapField(DatabaseField = CheckedIDsField)
+	public void setCheckedIDs(String checkedIDs) {
+		this.checkedIDs = checkedIDs;
+	}
+	
+	public String[] getCheckedIDsArr() {
+		return getCheckedIDs().split(",");
 	}
 	
 	public UserRemark(){
@@ -123,11 +140,12 @@ public class UserRemark extends BaseObject {
 			UserRemarkManager.Instance().save(this);
 		}
         String strValue = new String("O;");
-        strValue += getID() + ";";
+        strValue += getWorkerID() + ";";
         strValue += getPatientID() + ";";
         strValue += DateUtils.getLocalTime(getDate()) + ";";
         strValue += getCheckboxes() + ";";
-        strValue += getName();
+        strValue += getName() + ";";
+        strValue += getCheckedIDs();
         SentObjectVerification.Instance().sentUserRemarks.add(this);
         return strValue;
     }
@@ -156,6 +174,7 @@ public class UserRemark extends BaseObject {
 		setPatientID(EMPTY_ID);
 		setDate(DateUtils.EmptyDate);
 		setCheckboxes(0);
+		setCheckedIDs("");
 	}
 	
 }

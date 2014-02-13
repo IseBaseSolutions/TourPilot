@@ -144,6 +144,10 @@ public class Patient extends BaseObject implements IAddressable {
 		return getID() > AdditionalWorkCode;
 	}
 	
+	public boolean isMan() {
+		return getSex().equals("Herr");
+	}
+	
 	public Patient() {
 		clear();
 	}
