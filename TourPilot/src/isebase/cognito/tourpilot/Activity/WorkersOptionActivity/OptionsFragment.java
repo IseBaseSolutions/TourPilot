@@ -36,11 +36,11 @@ public class OptionsFragment extends Fragment {
 	public DialogFragment noConnectionDialog;
 	public DialogFragment noIPEnteredDialog;
 	
-	private final int PICKFILE_RESULT_CODE = 0;
 	
-	private final int BACKUP_MODE = 0;
-	private final int CLEAR_MODE = 1;
-	private final int RESTORE_MODE = 2;
+	
+	public final int BACKUP_MODE = 0;
+	public final int CLEAR_MODE = 1;
+	public final int RESTORE_MODE = 2;
 	
 	public int getBackupMode() {
 		return BACKUP_MODE;
@@ -150,18 +150,7 @@ public class OptionsFragment extends Fragment {
 		}.execute();
 	}
 	
-	public void chooseFile(){
-	   Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-       intent.setType("file/*");
-       try{
-    	   startActivityForResult(intent, PICKFILE_RESULT_CODE);
-       }
-       catch(Exception e){
-			Toast.makeText(StaticResources.getBaseContext()
-					, R.string.err_no_filemanager
-					, Toast.LENGTH_LONG).show();
-       }
-	}
+
 	
 	private void initDialogs() {
 		versionFragmentDialog = new InfoBaseDialog(

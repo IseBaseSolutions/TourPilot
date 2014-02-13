@@ -267,8 +267,8 @@ public class GPSLogger extends Service implements LocationListener {
 	    
 	            lastLocation = location;
 	            lastNbSatellites = countSatellites();
-	            if (previousTime != 0 && (System.currentTimeMillis() - previousTime < 10000))
-	            	return;
+	            /*if (previousTime != 0 && (System.currentTimeMillis() - previousTime < 10000))
+	            	return;*/
     			if (((location.getLatitude() != prevLat || location.getLongitude() != prevLon) && lastLocation.getAccuracy() < 25))
     			{
     				StaticResources.setBaseContext(this);

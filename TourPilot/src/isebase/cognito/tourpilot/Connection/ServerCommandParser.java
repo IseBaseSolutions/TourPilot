@@ -154,8 +154,11 @@ public class ServerCommandParser {
 				AdditionalTask item = new AdditionalTask(commandLine);
 				AdditionalTaskManager.Instance().save(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
-			} else 
-				removeByID(commandLine, AdditionalTaskManager.Instance());
+			} else {
+				String[] arr = commandLine.split(";");
+				commandLine = "L" + arr[1] +";"+ arr[2];
+ 				removeByID(commandLine, AdditionalTaskManager.Instance());
+			}
 			break;
 		case DOCTOR:
 			if (commandActionType == NEED_TO_ADD) {

@@ -29,6 +29,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 public class WorkerOptionActivity extends BaseActivity implements BaseDialogListener {
 
@@ -41,6 +42,8 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
 	 */
 	private SectionsPagerAdapter mSectionsPagerAdapter;
+	
+	public static final int PICKFILE_RESULT_CODE = 0;
 
 	/**
 	 * The {@link ViewPager} that will host the section contents.
@@ -102,11 +105,39 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 			optionsFragment.busy(optionsFragment.getBackupMode());
 			return true;
 		case R.id.action_db_restore:		
-			optionsFragment.chooseFile();
+			chooseFile();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	public void chooseFile(){
+		   Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+	       intent.setType("file/*");
+	       try{
+	    	   startActivityForResult(intent, WorkerOptionActivity.PICKFILE_RESULT_CODE);
+	       }
+	       catch(Exception e){
+				Toast.makeText(StaticResources.getBaseContext()
+						, R.string.err_no_filemanager
+						, Toast.LENGTH_LONG).show();
+	       }
+		}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {	
+		if (data == null || data.getData() == null)
+			return;
+		String path = data.getData().getPath();
+		if(requestCode == PICKFILE_RESULT_CODE && resultCode == RESULT_OK)
+			if(path.endsWith(".db"))
+				optionsFragment.busy(optionsFragment.RESTORE_MODE, path);
+			else
+				Toast.makeText(StaticResources.getBaseContext()
+					, R.string.err_not_db_file
+					, Toast.LENGTH_SHORT).show();
+				
 	}
 	
 	@Override
@@ -142,6 +173,7 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 
 		@Override
 		public CharSequence getPageTitle(int position) {
+			Option.Instance().save();
 			switch (position) {
 				case 0:
 					return "Optionen";

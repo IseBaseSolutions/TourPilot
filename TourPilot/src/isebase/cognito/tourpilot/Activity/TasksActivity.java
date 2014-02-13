@@ -671,8 +671,13 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 	
 
 	protected void startUserRemarksActivity(Integer mode, int activityCode) {
-		//Intent userRemarksActivity = new Intent(getApplicationContext(), UserRemarksActivity.class);
-		Intent userRemarksActivity = new Intent(getApplicationContext(), NewUserRemarksActivity.class);
+		Intent userRemarksActivity;
+		if (Integer.parseInt(Option.Instance().getVersion()) > 1041)
+		{
+			userRemarksActivity = new Intent(getApplicationContext(), NewUserRemarksActivity.class);
+		} else {
+			userRemarksActivity = new Intent(getApplicationContext(), UserRemarksActivity.class);
+		}
 		userRemarksActivity.putExtra("Mode", mode);
 		userRemarksActivity.putExtra("ViewMode", isEmploymentDone());
 		if (mode == SIMPLE_MODE)

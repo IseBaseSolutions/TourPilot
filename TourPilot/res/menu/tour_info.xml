@@ -6,5 +6,8 @@
     <item
         android:id="@+id/action_clear_darabase"
         android:title="@string/menu_clear_darabase" />
+    <item
+        android:id="@+id/action_db_restore"
+        android:title="@string/menu_db_restore"/>
     
 </menu>

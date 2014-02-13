@@ -16,6 +16,7 @@ import isebase.cognito.tourpilot.Utils.DataBaseUtils;
 import java.util.Collections;
 import java.util.List;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -27,7 +28,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class ToursActivity extends BaseActivity implements BaseDialogListener{
-
+	
 	private List<PilotTour> pilotTours;
 	
 	@Override
