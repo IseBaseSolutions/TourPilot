@@ -185,7 +185,7 @@ public class VerificationActivity extends BaseActivity {
 			if(userRemark == null)
 				return flege;	
 			flege += "<b>" + getString(R.string.visit_notes) + ":</b> <br />";
-			if (Integer.parseInt(Option.Instance().getVersion()) > 1041)
+			if (Integer.parseInt(Option.Instance().getVersion()) > 1042)
 			{
 				List<CustomRemark> cutomRemarks = CustomRemarkManager.Instance().load();
 				List<String> s = Arrays.asList(userRemark.getCheckedIDsArr());
@@ -233,7 +233,7 @@ public class VerificationActivity extends BaseActivity {
 				undoneTasksIDs += (undoneTasksIDs.equals("") ? "" : ",") + task.getAditionalTaskID();
 		}
 		String userRemarks;
-		if (Integer.parseInt(Option.Instance().getVersion()) > 1041) {
+		if (Integer.parseInt(Option.Instance().getVersion()) > 1042) {
 			userRemarks = userRemark != null ? (userRemark.getCheckedIDs() + ";" + userRemark.getName()) : "";
 		}
 		else {

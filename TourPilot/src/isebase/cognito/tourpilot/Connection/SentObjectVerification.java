@@ -4,6 +4,8 @@ import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.EmploymentVerification.EmploymentVerification;
 import isebase.cognito.tourpilot.Data.EmploymentVerification.EmploymentVerificationManager;
+import isebase.cognito.tourpilot.Data.Question.Answer.Answer;
+import isebase.cognito.tourpilot.Data.Question.Answer.AnswerManager;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemark;
@@ -25,7 +27,8 @@ public class SentObjectVerification {
 	public List<Work> sentWorks = new ArrayList<Work>();
 	public List<UserRemark> sentUserRemarks = new ArrayList<UserRemark>();
 	public List<EmploymentVerification> sentEmploymentVerifications = new ArrayList<EmploymentVerification>();
-	public List<WayPoint> sentWayPoint = new ArrayList<WayPoint>();
+	public List<WayPoint> sentWayPoints = new ArrayList<WayPoint>();
+	public List<Answer> sentAnswers = new ArrayList<Answer>();
 	
 	public static SentObjectVerification Instance() {
 		return instance == null ? instance = new SentObjectVerification() : instance;
@@ -63,7 +66,8 @@ public class SentObjectVerification {
 		WorkManager.Instance().updateNotSent(sentWorks);
 		UserRemarkManager.Instance().updateNotSent(sentUserRemarks);
 		EmploymentVerificationManager.Instance().updateNotSent(sentEmploymentVerifications);
-		WayPointManager.Instance().delete(sentWayPoint);
+		AnswerManager.Instance().updateNotSent(sentAnswers);
+		WayPointManager.Instance().delete(sentWayPoints);
 		clear();
 	}
 	
@@ -73,7 +77,8 @@ public class SentObjectVerification {
 		sentWorks.clear();
 		sentUserRemarks.clear();
 		sentEmploymentVerifications.clear();
-		sentWayPoint.clear();
+		sentWayPoints.clear();
+		sentAnswers.clear();
 	}
 
 }

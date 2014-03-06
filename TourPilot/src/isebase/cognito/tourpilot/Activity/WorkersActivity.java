@@ -3,7 +3,7 @@ package isebase.cognito.tourpilot.Activity;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectCompare;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectComparer;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
@@ -78,7 +78,7 @@ public class WorkersActivity extends BaseActivity implements BaseDialogListener 
 
 	public void reloadData() {
 		workers = WorkerManager.Instance().load(null, null, BaseObject.NameField);
-		Collections.sort(workers,new BaseObjectCompare());
+		Collections.sort(workers,new BaseObjectComparer());
 		Option.Instance().setWorkerActivity(true);
 		Option.Instance().save();
 	}

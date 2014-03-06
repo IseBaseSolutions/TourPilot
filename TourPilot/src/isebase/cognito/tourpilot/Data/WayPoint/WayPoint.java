@@ -278,7 +278,7 @@ public class WayPoint extends BaseObject {
 		strValue += getTime() + ";";
 		strValue += getLatitude() + ";";
 		strValue += getLongitude() + ";";
-		SentObjectVerification.Instance().sentWayPoint.add(this);
+		SentObjectVerification.Instance().sentWayPoints.add(this);
 		return strValue;
     }
 

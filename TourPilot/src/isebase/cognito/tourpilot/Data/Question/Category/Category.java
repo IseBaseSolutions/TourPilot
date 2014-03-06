@@ -9,8 +9,7 @@ import isebase.cognito.tourpilot.Utils.StringParser;
 public class Category extends BaseObject {
 
 	private boolean blocked;
-	
-	public enum type {braden, norton, sturzrisiko, schmerzermittlung, normal};
+	public enum type {normal, norton, sturzrisiko, braden, schmerzermittlung };
 	
 	public boolean isBlocked() {
 		return blocked;
@@ -47,9 +46,9 @@ public class Category extends BaseObject {
 				return type.braden;
 		else if(getName().equals(StaticResources.getBaseContext().getString(R.string.norton)))
 				return type.norton;
-		else if(getName().equals(StaticResources.getBaseContext().getString(R.string.sturzrisiko)))
+		else if(getName().equals(StaticResources.getBaseContext().getString(R.string.fallenFactor)))
 				return type.sturzrisiko;
-		else if(getName().equals(StaticResources.getBaseContext().getString(R.string.schmerzermittlung)))
+		else if(getName().equals(StaticResources.getBaseContext().getString(R.string.pain_analyse)))
 			return type.schmerzermittlung;
 		return type.normal;
     }

@@ -26,9 +26,7 @@ public class UserRemarksActivity extends BaseActivity {
 	private EditText etOther;
 	
 	private UserRemark userRemark;
-	
-
-	
+		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		try{
@@ -108,7 +106,7 @@ public class UserRemarksActivity extends BaseActivity {
 			CheckBox chbConnect = (CheckBox)findViewById(R.id.chbConnect);
 			CheckBox chbMedchanges = (CheckBox)findViewById(R.id.chbMedchanges);
 			CheckBox chbPflege = (CheckBox)findViewById(R.id.chbPflege);
-			TextView tvOther = (TextView)findViewById(R.id.tvOther);
+			TextView tvOther = (TextView)findViewById(R.id.tvOther2);
 			EditText etOther = (EditText)findViewById(R.id.etOther);
 			Button btUserRemarkSave = (Button)findViewById(R.id.btUserRemarkSave);
 			try {

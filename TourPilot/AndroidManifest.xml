@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="isebase.cognito.tourpilot"
     android:versionCode="1"
-    android:versionName="1041" >
+    android:versionName="1043" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -28,7 +28,7 @@
             android:name="isebase.cognito.tourpilot.Activity.NewUserRemarksActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" >
+            android:windowSoftInputMode="adjustPan" >
         -->
         <activity
             android:name="isebase.cognito.tourpilot.Activity.WorkersOptionActivity.WorkerOptionActivity"
@@ -119,12 +119,22 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="isebase.cognito.tourpilot.Activity.TasksAssessmentsActivity.TasksAssessementsActivity"
-            android:label="@string/title_activity_tasks_assessements" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
-            android:name="isebase.cognito.tourpilot.Activity.QuestionsActivity"
-            android:label="@string/title_activity_simple_questions" >
-        </activity>
+            android:name="isebase.cognito.tourpilot.Activity.QuestionActivities.QuestionsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.QuestionActivities.BradenSkalaActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.QuestionActivities.PainAnalyseSkalaActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.QuestionActivities.FallenFactorSkalaActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.QuestionActivities.NortonSkalaActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

@@ -19,8 +19,7 @@
         android:id="@+id/lvAnswers"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/tgSwitch" 
-        android:visibility="invisible">
+        android:layout_above="@+id/tgSwitch">
     </ListView>
 
     <ToggleButton
@@ -30,8 +29,8 @@
         android:layout_alignLeft="@+id/lvQuestions"
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/lvQuestions"
-        android:textOn="Show questions"
-    	android:textOff="Show answers" 
+        android:textOn="@string/show_questions"
+    	android:textOff="@string/show_answers"
     	android:onClick="onTgSwitchClicked"/>
             
 </RelativeLayout>

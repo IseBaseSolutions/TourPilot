@@ -59,7 +59,6 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 
 	private TaskAdapter taskAdapter;
 	private Employment employment;
-	private Worker worker;
 	private Diagnose diagnose;
 	
 	private Task startTask;
@@ -108,7 +107,7 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 			checkAllIsDone();
 			checkEmploymentIsDone();
 			showPatientInfo(false);
-			setTimeSync(true);		
+			setTimeSync(true);
 		} catch(Exception e){
 			e.printStackTrace();
 			criticalClose();
@@ -127,13 +126,13 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 		MenuItem doctorsMenu = menu.findItem(R.id.doctors);
 		MenuItem relativesMenu = menu.findItem(R.id.relatives);
 		MenuItem notesMenu = menu.findItem(R.id.notes);
-		MenuItem gpsMenu = menu.findItem(R.id.gps);
+//		MenuItem gpsMenu = menu.findItem(R.id.gps);
 		infoMenu.setEnabled(infos.size() != 0);
 		commentsMenu.setEnabled(!(patientRemark == null || patientRemark.getName().length() == 0));
 		diagnoseMenu.setEnabled(!(diagnose == null || diagnose.getName().length() == 0));
 //		gpsMenu.setVisible(worker.getIsUseGPS());
-		gpsMenu.setVisible(false);
-		notesMenu.setEnabled(isClickable());
+//		gpsMenu.setVisible(false);
+		notesMenu.setEnabled(!employment.getStartTime().equals(DateUtils.EmptyDate));
 		catalogsMenu.setEnabled(isClickable());
 		undoneTasksMenu.setEnabled(DateUtils.isToday(employment.getDate()));
 		manualInputMenu.setEnabled(!isEmploymentDone() && !isClickable() && DateUtils.isToday(employment.getDate()));
@@ -258,7 +257,7 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 	public void reloadData() {
 		employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
 		patientRemark = PatientRemarkManager.Instance().load(employment.getPatientID());
-		worker = WorkerManager.Instance().load(Option.Instance().getWorkerID()); 
+		
 		tasks = TaskManager.Instance().load(Task.EmploymentIDField, String.valueOf(Option.Instance().getEmploymentID()));
 		diagnose = DiagnoseManager.Instance().load(employment.getPatientID());
 		initHeadTasks();		
@@ -526,10 +525,10 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 		case R.id.info:
 			showPatientInfo(true);
 			return true;
-		case R.id.gps:
-			//GpsNavigator.startGpsNavigation(PatientManager.Instance().loadAll(employment.getPatientID()).getAddress());
-
-			return true;
+//		case R.id.gps:
+//			//GpsNavigator.startGpsNavigation(PatientManager.Instance().loadAll(employment.getPatientID()).getAddress());
+//
+//			return true;
 		case R.id.manualInput:
 			startManualInputActivity();
 			return true;
@@ -672,7 +671,7 @@ public class TasksActivity extends BaseTimeSyncActivity implements BaseDialogLis
 
 	protected void startUserRemarksActivity(Integer mode, int activityCode) {
 		Intent userRemarksActivity;
-		if (Integer.parseInt(Option.Instance().getVersion()) > 1041)
+		if (Integer.parseInt(Option.Instance().getVersion()) > 1042)
 		{
 			userRemarksActivity = new Intent(getApplicationContext(), NewUserRemarksActivity.class);
 		} else {

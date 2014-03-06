@@ -7,6 +7,8 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourComparer;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
+import isebase.cognito.tourpilot.Data.Task.Task;
+import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
@@ -38,7 +40,7 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 			setContentView(R.layout.activity_tours);
 			reloadData();		
 			fillUpTitle();
-			fillUp();			
+			fillUp();
 		} catch(Exception e) {
 			e.printStackTrace();
 			criticalClose();

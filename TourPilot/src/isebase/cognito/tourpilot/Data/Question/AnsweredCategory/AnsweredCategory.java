@@ -7,7 +7,6 @@ public class AnsweredCategory extends BaseObject {
 
 	public static final String CategoryIDField = "category_id";
 	public static final String EmploymentIDField = "employment_id";
-	public static final String IsAnsweredField = "is_answered";
 	
 	int categoryID;
 	int employmentID;
@@ -31,21 +30,16 @@ public class AnsweredCategory extends BaseObject {
 	@MapField(DatabaseField = EmploymentIDField)
 	public void setEmploymentID(int employmentID) {
 		this.employmentID = employmentID;
-	}
-
-	@MapField(DatabaseField = IsAnsweredField)
-	public boolean isAnswered() {
-		return isAnswered;
-	}
-
-	@MapField(DatabaseField = IsAnsweredField)
-	public void setAnswered(boolean isAnswered) {
-		this.isAnswered = isAnswered;
-	}
-	
+	}	
 	
 	public AnsweredCategory() {
 		clear();
+	}
+	
+	public AnsweredCategory(int categoryID, int employmentID) {
+		clear();
+		setCategoryID(categoryID);
+		setEmploymentID(employmentID);
 	}
 
 	@Override
@@ -53,7 +47,6 @@ public class AnsweredCategory extends BaseObject {
 		super.clear();
 		setCategoryID(BaseObject.EMPTY_ID);
 		setEmploymentID(BaseObject.EMPTY_ID);
-		setAnswered(false);
 	}
 	
 }

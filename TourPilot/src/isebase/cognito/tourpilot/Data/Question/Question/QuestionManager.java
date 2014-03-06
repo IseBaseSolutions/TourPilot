@@ -53,7 +53,7 @@ public class QuestionManager extends BaseObjectManager<Question> {
 				" INNER JOIN %2$s as t2 ON t1._id = t2.category_id " +
 				" INNER JOIN %3$s t3 ON t2.question_id = t3._id " +
 				" INNER JOIN QuestionSettings t4 ON t4._id = %4$d " +
-				" LEFT JOIN Answers t5 ON t3._id = t5.question_id " +  
+				" LEFT JOIN Answers t5 ON t3._id = t5.question_id AND t5.employment_id = %4$d" +  
 				" WHERE t1._id = %5$s AND t5._id IS NULL AND t3._id in (%6$s) GROUP BY t3._id "
 				, CategoryManager.TableName
 				, LinkManager.TableName

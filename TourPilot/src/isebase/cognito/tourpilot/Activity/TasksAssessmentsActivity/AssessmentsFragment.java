@@ -1,14 +1,26 @@
 package isebase.cognito.tourpilot.Activity.TasksAssessmentsActivity;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Activity.AdditionalEmploymentsActivity;
-import isebase.cognito.tourpilot.Activity.QuestionsActivity;
+import isebase.cognito.tourpilot.Activity.QuestionActivities.BradenSkalaActivity;
+import isebase.cognito.tourpilot.Activity.QuestionActivities.FallenFactorSkalaActivity;
+import isebase.cognito.tourpilot.Activity.QuestionActivities.NortonSkalaActivity;
+import isebase.cognito.tourpilot.Activity.QuestionActivities.PainAnalyseSkalaActivity;
+import isebase.cognito.tourpilot.Activity.QuestionActivities.QuestionsActivity;
+import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategory;
+import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategoryManager;
 import isebase.cognito.tourpilot.Data.Question.Category.Category;
 import isebase.cognito.tourpilot.Data.Question.Category.Category.type;
 import isebase.cognito.tourpilot.Data.Question.Category.CategoryManager;
+import isebase.cognito.tourpilot.Templates.EmploymentCategoryAdapter;
+import isebase.cognito.tourpilot.Utils.DateUtils;
 
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +29,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class AssessmentsFragment extends Fragment {
@@ -27,8 +38,10 @@ public class AssessmentsFragment extends Fragment {
 	View rootView;
 	
 	ListView lvAssessments;
-	List<Category> categories = new ArrayList<Category>();	
-	
+	List<Category> categories = new ArrayList<Category>();
+	public List<AnsweredCategory> answeredCategories = new ArrayList<AnsweredCategory>();
+	List<EmploymentCategory> employmentCategories = new ArrayList<EmploymentCategory>();
+	EmploymentCategoryAdapter adapter;
 	public AssessmentsFragment(TasksAssessementsActivity instance) {
 		activity = instance;
 	}
@@ -41,7 +54,7 @@ public class AssessmentsFragment extends Fragment {
 		try{
 			super.onCreate(savedInstanceState);
 			initControls();
-			reloadData();	
+			//reloadData();	
 			fillUpAssessments();	
 		} catch(Exception e){
 			e.printStackTrace();
@@ -50,31 +63,69 @@ public class AssessmentsFragment extends Fragment {
 		return rootView;
 	}
 	
+	@Override
+	public void onResume() {
+		reloadData();
+		adapter.notifyDataSetChanged();
+		super.onResume();
+	}
+	
 	private void initControls() {
 		lvAssessments = (ListView) rootView.findViewById(R.id.lvAssessments);
 	}
 	
-	private void reloadData() {
+	public void reloadData() {
 		categories = CategoryManager.Instance().load();
-		List<Category> filteredCategories = new ArrayList<Category>();
+		answeredCategories = AnsweredCategoryManager.Instance().LoadByEmploymentID(Option.Instance().getEmploymentID());
+		employmentCategories.clear();
 		for(Category category : categories)
-			if (category.getCategoryType() == type.normal)
-				filteredCategories.add(category);
-		categories = filteredCategories;
+			employmentCategories.add(new EmploymentCategory(category.getName(), category.getID(), category.getCategoryType(), isAnswered(category)));
+		Collections.sort(employmentCategories, new EmploymentCategoryComparer());
+	}
+	
+	private boolean isAnswered(Category category) {
+		for(AnsweredCategory answeredCategory : answeredCategories)
+			if (answeredCategory.getCategoryID() == category.getID())
+				return true;
+		return false;
 	}
 	
 	private void fillUpAssessments() {
-		ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(activity,
-				android.R.layout.simple_list_item_1, categories);
+		adapter = new EmploymentCategoryAdapter(activity, 
+				R.layout.row_employment_category_template, employmentCategories);
 		lvAssessments.setAdapter(adapter);
 		lvAssessments.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
-
-				Category category = (Category) lvAssessments.getItemAtPosition(position);
-				startQuestionActivity(category.getID());
+				
+				if (activity.tasksFragment.getStartTask().getRealDate().getTime() == DateUtils.EmptyDate.getTime())
+				{
+					if (activity.tasksFragment.startEmploymentDialog.getFragmentManager() == null)
+						activity.tasksFragment.startEmploymentDialog.show(getFragmentManager(), "");
+					return;
+				}
+				EmploymentCategory employmentCategory = (EmploymentCategory) lvAssessments.getItemAtPosition(position);
+				switch(employmentCategory.type)
+				{
+					case normal:
+						startQuestionActivity(employmentCategory.categoryID);
+						break;
+					case braden:
+						startBradenSkalaActivity();
+						break;
+					case norton:
+						startNortonSkalaActivity();
+						break;
+					case schmerzermittlung:
+						startPainAnalyseSkalaActivity();
+						break;
+					case sturzrisiko:
+						startFallenFactorSkalaActivity();
+						break;
+				}
+				
 			}
 		});
 	}
@@ -83,6 +134,59 @@ public class AssessmentsFragment extends Fragment {
 		Intent questionsActivity = new Intent(activity.getApplicationContext(), QuestionsActivity.class);
 		questionsActivity.putExtra("categoryID", categoryID);
 		startActivity(questionsActivity);
+	}
+	
+	private void startBradenSkalaActivity() {
+		Intent bradenSkalaActivity = new Intent(activity.getApplicationContext(), BradenSkalaActivity.class);
+		startActivity(bradenSkalaActivity);
+	}
+	
+	private void startPainAnalyseSkalaActivity() {
+		Intent painAnalyseSkalaActivity = new Intent(activity.getApplicationContext(), PainAnalyseSkalaActivity.class);
+		startActivity(painAnalyseSkalaActivity);
+	}
+	
+	private void startFallenFactorSkalaActivity() {
+		Intent fallenFactorSkalaActivity = new Intent(activity.getApplicationContext(), FallenFactorSkalaActivity.class);
+		startActivity(fallenFactorSkalaActivity);
+	}
+	
+	private void startNortonSkalaActivity() {
+		Intent nortonSkalaActivity = new Intent(activity.getApplicationContext(), NortonSkalaActivity.class);
+		startActivity(nortonSkalaActivity);
+	}
+	
+	public class EmploymentCategory {
+		public String name;
+		public int categoryID;
+		public boolean isAnswered;
+		public Category.type type;
+		
+		public EmploymentCategory(String name, int categoryID, Category.type type, boolean isAnswered) {
+			this.name = name;
+			this.categoryID = categoryID;
+			this.type = type;
+			this.isAnswered = isAnswered;
+		}
+		
+		@Override
+		public String toString() {
+			return name;
+		}
+	}
+	
+	public class EmploymentCategoryComparer implements Comparator<EmploymentCategory> {
+
+		@Override
+		public int compare(EmploymentCategory lhs, EmploymentCategory rhs) {
+			
+			Collator deCollator = Collator.getInstance(Locale.GERMANY);
+			// TODO Auto-generated method stub
+			if (lhs.isAnswered == rhs.isAnswered)
+				return deCollator.compare(lhs.name, rhs.name);
+			return lhs.isAnswered ? 1 : -1;
+		}
+		
 	}
 
 }

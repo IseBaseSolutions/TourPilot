@@ -12,6 +12,7 @@ import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemarkManager;
+import isebase.cognito.tourpilot.Data.Question.Answer.AnswerManager;
 import isebase.cognito.tourpilot.Data.Question.Category.CategoryManager;
 import isebase.cognito.tourpilot.Data.Question.Link.LinkManager;
 import isebase.cognito.tourpilot.Data.Question.Question.QuestionManager;
@@ -368,6 +369,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		String strDone = "";
 		strDone += EmploymentManager.Instance().getDone();
 		strDone += WorkManager.Instance().getDone();
+		strDone += AnswerManager.Instance().getDone();
 		//
 		// if (User != null)
 		// strDone += CInformations.Instance().GetDone();
@@ -412,7 +414,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		strMsg += "i" + (userIsPresent ? InformationManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
 		strMsg += "r" + (userIsPresent ? TourManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
 		strMsg += "t" + (userIsPresent ? TaskManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
-		if (Integer.parseInt(Option.Instance().getVersion()) > 1041)
+		if (Integer.parseInt(Option.Instance().getVersion()) > 1042)
 		{
 			strMsg += "#" + CustomRemarkManager.Instance().getCheckSumByRequest() + "\0.\0";
 		}

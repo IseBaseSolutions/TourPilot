@@ -2,23 +2,14 @@ package isebase.cognito.tourpilot.Activity.TasksAssessmentsActivity;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
-import isebase.cognito.tourpilot.Activity.WorkersOptionActivity.OptionsFragment;
-import isebase.cognito.tourpilot.Activity.WorkersOptionActivity.WorkersFragment;
-import isebase.cognito.tourpilot.Activity.WorkersOptionActivity.WorkerOptionActivity.SectionsPagerAdapter;
-import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Question.QuestionSetting.QuestionSettingManager;
-import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
-import isebase.cognito.tourpilot.R.layout;
-import isebase.cognito.tourpilot.R.menu;
+import isebase.cognito.tourpilot.Dialogs.Tasks.StandardTaskDialog;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
-import android.net.Uri;
+import isebase.cognito.tourpilot.Utils.DateUtils;
 import android.os.Bundle;
-import android.app.Activity;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -44,7 +35,7 @@ public class TasksAssessementsActivity extends BaseActivity implements BaseDialo
 	/**
 	 * The {@link ViewPager} that will host the section contents.
 	 */
-	private ViewPager mViewPager;
+	protected ViewPager mViewPager;
 	
 	TasksFragment tasksFragment;
 	AssessmentsFragment assessmentsFragment;
@@ -72,25 +63,83 @@ public class TasksAssessementsActivity extends BaseActivity implements BaseDialo
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.options_menu, menu);
+		getMenuInflater().inflate(R.menu.tasks, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		MenuItem manualInputMenu = menu.findItem(R.id.manualInput);
+		MenuItem undoneTasksMenu = menu.findItem(R.id.cancelAllTasks);
+		MenuItem catalogsMenu = menu.findItem(R.id.catalogs);
+		MenuItem infoMenu = menu.findItem(R.id.info);
+		MenuItem commentsMenu = menu.findItem(R.id.comments);
+		MenuItem diagnoseMenu = menu.findItem(R.id.diagnose);
+		MenuItem addresseMenu = menu.findItem(R.id.address);
+		MenuItem doctorsMenu = menu.findItem(R.id.doctors);
+		MenuItem relativesMenu = menu.findItem(R.id.relatives);
+		MenuItem notesMenu = menu.findItem(R.id.notes);
+		infoMenu.setEnabled(tasksFragment.getInfos().size() != 0);
+		commentsMenu.setEnabled(!(tasksFragment.getPatientRemark() == null || tasksFragment.getPatientRemark().getName().length() == 0));
+		diagnoseMenu.setEnabled(!(tasksFragment.getDiagnose() == null || tasksFragment.getDiagnose().getName().length() == 0));
+		notesMenu.setEnabled(!tasksFragment.getStartTask().getRealDate().equals(DateUtils.EmptyDate));
+		catalogsMenu.setEnabled(tasksFragment.isClickable());
+		undoneTasksMenu.setEnabled(DateUtils.isToday(tasksFragment.employment.getDate()));
+		manualInputMenu.setEnabled(!tasksFragment.isEmploymentDone() && !tasksFragment.isClickable() && DateUtils.isToday(tasksFragment.employment.getDate()));
+		if(tasksFragment.isEmploymentDone()) {
+			undoneTasksMenu.setEnabled(false);
+			catalogsMenu.setEnabled(false);
+		}
+		if(tasksFragment.employment.isAdditionalWork()){
+			catalogsMenu.setEnabled(false);
+			diagnoseMenu.setEnabled(false);
+			addresseMenu.setEnabled(false);
+			doctorsMenu.setEnabled(false);
+			relativesMenu.setEnabled(false);
+		}
 		return true;
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-//		case R.id.action_show_program_info:
-//			optionsFragment.versionFragmentDialog.show(getSupportFragmentManager(), "dialogVersion");
+		case R.id.catalogs:
+			if(tasksFragment.isEmploymentDone())
+				return false;
+			tasksFragment.startCatalogsActivity();
+			return true;
+		case R.id.cancelAllTasks:
+			if(tasksFragment.isEmploymentDone())
+				return false;
+			tasksFragment.showUndoneDialog();
+			return true;
+		case R.id.notes:
+			tasksFragment.startUserRemarksActivity(tasksFragment.SIMPLE_MODE, tasksFragment.ACTIVITY_USERREMARKS_CODE);
+			return true;
+		case R.id.info:
+			tasksFragment.showPatientInfo(true);
+			return true;
+//		case R.id.gps:			//GpsNavigator.startGpsNavigation(PatientManager.Instance().loadAll(employment.getPatientID()).getAddress());
+//
 //			return true;
-//		case R.id.action_clear_database:
-//			optionsFragment.busy(optionsFragment.getClearMode());
-//			return true;
-//		case R.id.action_db_backup:		
-//			optionsFragment.busy(optionsFragment.getBackupMode());
-//			return true;
-//		case R.id.action_db_restore:		
-//			optionsFragment.chooseFile();
-//			return true;
+		case R.id.manualInput:
+			startManualInputActivity();
+			return true;
+		case R.id.address:
+			tasksFragment.startAddressActivity();
+			return true;
+		case R.id.doctors:
+			tasksFragment.startDoctorsActivity();
+			return true;
+		case R.id.relatives:
+			tasksFragment.startRelativesActivity();
+			return true;
+		case R.id.comments:
+			tasksFragment.showComments();
+			return true;
+		case R.id.diagnose:
+			tasksFragment.showDiagnose();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -111,7 +160,7 @@ public class TasksAssessementsActivity extends BaseActivity implements BaseDialo
 			startPatientsActivity();
 		}
 	}
-
+	
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.
@@ -144,35 +193,69 @@ public class TasksAssessementsActivity extends BaseActivity implements BaseDialo
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
 				case 0:
-					return "Tasks";
+					return "Tätigkeiten";
 				case 1:
 					return "Assessments";
 			}
 			return null;
 		}
-	}
-	
-	public void btSyncClick(View view) {
-		//saveSettings();
-		startSyncActivity();
-	}
-	
-	
-	private void switchToLastActivity() {
 		
+	}
+	
+//	public void btSyncClick(View view) {
+//		//saveSettings();
+//		startSyncActivity();
+//	}
+	
+	public void btStartTaskTimerClick(View view) {
+		tasksFragment.btStartTaskTimerClick(view);
+	}
+	
+	public void btEndTaskTimerClick(View view) {
+		tasksFragment.btEndTaskTimerClick(view);		
+	}
+	
+	public void onChangeState(View view) {
+		tasksFragment.onChangeState(view);
+	}
+	
+	public void onTaskClick(View view) {
+		tasksFragment.onTaskClick(view);
 	}
 
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog) {
-		if (dialog.getTag().equals("dialogPin"))
+		if (dialog.getTag().equals("dialogBack"))
 		{
-			//assessmentsFragment.logIn();
+			tasksFragment.clearTasks();
 		}
+		else if (dialog.getTag().equals("dialogUndone")) {
+			tasksFragment.undoneTasks();
+		}
+		else if (dialog.getTag().equals("dialogCheckLeavingState")) {
+			tasksFragment.startVerification();
+		}
+		else if (dialog.getTag().equals("dialogTasks")) {
+			tasksFragment.setTaskValue(dialog);
+		}
+		else if (dialog.getTag().equals("clearAllTasksDialog")) {
+			tasksFragment.updateStartTime();
+		}		
 	}
 
 	@Override
 	public void onDialogNegativeClick(DialogFragment dialog) {
-		return;		
+		if(dialog.getTag().equals("dialogCheckLeavingState")){
+			if (Option.Instance().getIsAuto())
+				tasksFragment.startUserRemarksActivity(tasksFragment.SYNC_MODE, tasksFragment.ACTIVITY_USERREMARKS_CODE);
+			else
+				tasksFragment.startUserRemarksActivity(tasksFragment.NO_SYNC_MODE, tasksFragment.ACTIVITY_USERREMARKS_CODE);
+		}
+		if(dialog.getTag().equals("dialogTasks"))
+		{			
+			tasksFragment.setTaskState(((StandardTaskDialog)dialog).getTask());
+		}
+		return;
 	}
 	
 	private void reloadData() {

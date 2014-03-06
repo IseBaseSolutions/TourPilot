@@ -7,7 +7,7 @@ import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Data.AdditionalTask.Catalog;
 import isebase.cognito.tourpilot.Data.AdditionalTask.Catalog.eCatalogType;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectCompare;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectComparer;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
@@ -153,6 +153,6 @@ public class AdditionalTasksActivity extends BaseTimeSyncActivity {
 	}
 
 	private void sortAdditinalTasks() {
-		Collections.sort(additionalTasks, new BaseObjectCompare());
+		Collections.sort(additionalTasks, new BaseObjectComparer());
 	}
 }

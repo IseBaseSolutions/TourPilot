@@ -5,6 +5,8 @@ import isebase.cognito.tourpilot.Activity.SynchronizationActivity;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Data.Task.Task;
+import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
@@ -173,7 +175,6 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 
 		@Override
 		public CharSequence getPageTitle(int position) {
-			Option.Instance().save();
 			switch (position) {
 				case 0:
 					return "Optionen";

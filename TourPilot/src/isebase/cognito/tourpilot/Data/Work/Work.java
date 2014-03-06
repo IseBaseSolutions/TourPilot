@@ -163,8 +163,8 @@ public class Work extends BaseObject implements IJob {
 		}
         String strValue = new String(ServerCommandParser.WORK + ";");
         strValue += Option.Instance().getWorkerID() + ";";
-        strValue += DateUtils.getLocalTime(getStartTime()) + ";";
-        strValue += DateUtils.getLocalTime(getStopTime()) + ";";
+        strValue += DateUtils.toDateTime(getStartTime()) + ";";
+        strValue += DateUtils.toDateTime(getStopTime()) + ";";
         strValue += getAdditionalWorkID() + ";";
         strValue += getPilotTourID() + ";";
         strValue += getPatientIDs() + ";";

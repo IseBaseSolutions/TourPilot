@@ -3,13 +3,15 @@ package isebase.cognito.tourpilot.Activity.TasksAssessmentsActivity;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.AddressPatientActivity;
 import isebase.cognito.tourpilot.Activity.DoctorsActivity;
+import isebase.cognito.tourpilot.Activity.ManualInputActivity;
 import isebase.cognito.tourpilot.Activity.NewUserRemarksActivity;
+import isebase.cognito.tourpilot.Activity.PatientsActivity;
 import isebase.cognito.tourpilot.Activity.RelativesActivity;
 import isebase.cognito.tourpilot.Activity.SynchronizationActivity;
+import isebase.cognito.tourpilot.Activity.VerificationActivity;
 import isebase.cognito.tourpilot.Activity.AdditionalTasks.CatalogsActivity;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectCompare;
 import isebase.cognito.tourpilot.Data.Diagnose.Diagnose;
 import isebase.cognito.tourpilot.Data.Diagnose.DiagnoseManager;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
@@ -21,21 +23,22 @@ import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemark;
 import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemarkManager;
+import isebase.cognito.tourpilot.Data.Question.Answer.AnswerManager;
+import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategory;
+import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategoryManager;
 import isebase.cognito.tourpilot.Data.Task.Task;
-import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
+import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
 import isebase.cognito.tourpilot.Data.Work.Work;
 import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
-import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
 import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
-import isebase.cognito.tourpilot.Dialogs.PinDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.BlutdruckTaskDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.StandardTaskDialog;
 import isebase.cognito.tourpilot.Dialogs.Tasks.TaskTypes;
@@ -45,7 +48,6 @@ import isebase.cognito.tourpilot.Templates.TaskAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -53,16 +55,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -72,11 +70,12 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 
 	private TaskAdapter taskAdapter;
 	public Employment employment;
-	private Worker worker;
 	private Diagnose diagnose;
-	
-	private Task startTask;
+
+
+
 	private List<Task> tasks;
+	private Task startTask;
 	private Task endTask;
 	
 	private View clickedCheckBox;
@@ -105,13 +104,29 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	private List<Information> infos;
 
 	private PatientRemark patientRemark;
-	
-	private DialogFragment startEmploymentDialog;
+
+	public DialogFragment startEmploymentDialog;
 	private BaseDialog clearAllTasksDialog;
 	
 	private View rootView;
 	
-	TasksAssessementsActivity activity;
+	TasksAssessementsActivity activity;	
+
+	public Task getStartTask() {
+		return startTask;
+	}
+	
+	public Diagnose getDiagnose() {
+		return diagnose;
+	}
+	
+	public List<Information> getInfos() {
+		return infos;
+	}
+	
+	public PatientRemark getPatientRemark() {
+		return patientRemark;
+	}
 	
 	public TasksFragment(TasksAssessementsActivity instance) {
 		activity = instance;
@@ -146,7 +161,7 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 		switch(activityCode) {
 		case ACTIVITY_USERREMARKS_CODE:
 			if(resultCode == activity.RESULT_OK) {
-				//activity.startVerificationActivity(ACTIVITY_VERIFICATION_CODE,!IS_FLEGE_OK);
+				startVerificationActivity(ACTIVITY_VERIFICATION_CODE,!IS_FLEGE_OK);
 			} else {
 				clearEndTask();
 				fillUpTasks();
@@ -158,11 +173,11 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 				saveData(true);
 				if(Option.Instance().getIsAuto())
 				{
-					//startSyncActivity();
+					startSyncActivity();
 				}
 				else
 				{
-					//startPatientsActivity();
+					startPatientsActivity();
 				}
 			} else {
 				clearEndTask();
@@ -182,8 +197,14 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 				allIsDone = false;
 				break;
 			}
-//		if(allIsDone)
-//			activity.stopService(new Intent(this, GPSLogger.class));
+		if(allIsDone)
+			activity.stopService(new Intent(activity, GPSLogger.class));
+	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		// TODO Auto-generated method stub
+		super.onCreateOptionsMenu(menu, inflater);
 	}
 
 	private void checkEmploymentIsDone(){
@@ -250,7 +271,6 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	public void reloadData() {
 		employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
 		patientRemark = PatientRemarkManager.Instance().load(employment.getPatientID());
-		worker = WorkerManager.Instance().load(Option.Instance().getWorkerID()); 
 		tasks = TaskManager.Instance().load(Task.EmploymentIDField, String.valueOf(Option.Instance().getEmploymentID()));
 		diagnose = DiagnoseManager.Instance().load(employment.getPatientID());
 		initHeadTasks();		
@@ -263,7 +283,7 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 			updateStartTime();
 	}
 	
-	private void updateStartTime() {
+	public void updateStartTime() {
 		checkAllTasksAndFillUp(eTaskState.Empty);
 		startTask.setRealDate(DateUtils.getSynchronizedTime());
 		startTask.setState(eTaskState.Done);
@@ -278,7 +298,13 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 		activity.supportInvalidateOptionsMenu();
 	}
 	
-	public void btEndTaskTimerClick(View view) {		
+
+	
+	public void btEndTaskTimerClick(View view) {
+		if (activity.hasQuestions && activity.assessmentsFragment.answeredCategories.size() != activity.assessmentsFragment.employmentCategories.size()){
+			activity.mViewPager.setCurrentItem(1);
+			return;
+		}			
 		if (!employment.isWork())
 		{
 			saveData(false);
@@ -289,32 +315,15 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 			saveData(true);
 			if(Option.Instance().getIsAuto())
 			{
-				//startSyncActivity();
+				startSyncActivity();
 			}
 			else
 			{
-				//startPatientsActivity();
+				startPatientsActivity();
 			}
 		}
 	}
 	
-
-//	@Override
-//	public void onBackPressed() {
-//		if(!employment.isDone() && isClickable()) {
-//			BaseDialog dialog = new BaseDialog(
-//					getString(R.string.attention),
-//					getString(R.string.dialog_task_proof_back));
-//			dialog.show(getSupportFragmentManager(), "dialogBack");
-//			getSupportFragmentManager().executePendingTransactions();
-//		}
-//		else
-//		{
-//			clearEmployment();
-//			startPatientsActivity();
-//		}
-//	}
-				
 	public void onTaskClick(View view) {
 		Task task = (Task) view.getTag();
 		if(task.getQualityResult().equalsIgnoreCase(""))
@@ -401,7 +410,7 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 		
 	}
 	
-	private void setTaskState(Task task) {
+	public void setTaskState(Task task) {
 		task.setRealDate(DateUtils.getSynchronizedTime());
 		task.setIsServerTime(Option.Instance().isTimeSynchronised());
 		if (!startTask.getManualDate().equals(DateUtils.EmptyDate))
@@ -445,6 +454,7 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	
 	private void initDialogs() {
 		startEmploymentDialog = new BaseInfoDialog(getString(R.string.attention), getString(R.string.dialog_start_employment));
+		startEmploymentDialog.setCancelable(false);
 		clearAllTasksDialog = new BaseDialog(getString(R.string.attention), getString(R.string.dialog_clear_tasks));
 	}
 
@@ -490,6 +500,11 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 		Option.Instance().setEmploymentID(BaseObject.EMPTY_ID);
 		Option.Instance().save();
 	}
+	
+	public void clearAnswers() {
+		AnswerManager.Instance().delete(AnswerManager.Instance().loadByEmploymentID(Option.Instance().getEmploymentID()));
+		AnsweredCategoryManager.Instance().delete(AnsweredCategoryManager.Instance().LoadByEmploymentID(Option.Instance().getEmploymentID()));
+	}	
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -510,12 +525,12 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 		case R.id.info:
 			showPatientInfo(true);
 			return true;
-		case R.id.gps:
-			//GpsNavigator.startGpsNavigation(PatientManager.Instance().loadAll(employment.getPatientID()).getAddress());
-
-			return true;
+//		case R.id.gps:
+//			//GpsNavigator.startGpsNavigation(PatientManager.Instance().loadAll(employment.getPatientID()).getAddress());
+//
+//			return true;
 		case R.id.manualInput:
-			//startManualInputActivity();
+			startManualInputActivity();
 			return true;
 		case R.id.address:
 			startAddressActivity();
@@ -544,7 +559,7 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
                 + retVal.substring(11, 13) + retVal.substring(14, 16) + retVal.substring(17, 19);
     }
 	
-	private void showDiagnose() {
+    protected void showDiagnose() {
 		InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_diagnose), diagnose.getName());
 		dialog.show(getFragmentManager(), "");
 		getFragmentManager().executePendingTransactions();
@@ -559,28 +574,14 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog) {
 		if(dialog.getTag().equals("dialogBack")){
-			checkAllTasks(eTaskState.Empty, DateUtils.EmptyDate);
-			startTask.setManualDate(DateUtils.EmptyDate);
-			TaskManager.Instance().save(startTask);
-			endTask.setManualDate(DateUtils.EmptyDate);
-			TaskManager.Instance().save(endTask);
-			removeAdditionalTasks();
-			UserRemarkManager.Instance().delete(Option.Instance().getEmploymentID());
-			clearEmployment();
-			//startPatientsActivity();
 		}
 		else if (dialog.getTag().equals("dialogUndone")) {
-			checkAllTasksAndFillUp(eTaskState.UnDone);
-			checkLeavingState();
 		}
 		else if (dialog.getTag().equals("dialogCheckLeavingState")) {
-			//startVerificationActivity(ACTIVITY_VERIFICATION_CODE, IS_FLEGE_OK);
+			
 		}
 		else if (dialog.getTag().equals("dialogTasks")) {
-			Task task  = ((StandardTaskDialog)dialog).getTask();
-			task.setQualityResult(((StandardTaskDialog)dialog).getValue());
-			setTaskState(((StandardTaskDialog)dialog).getTask());
-			taskAdapter.notifyDataSetChanged();
+
 		}
 		else if (dialog.getTag().equals("clearAllTasksDialog")) {
 			updateStartTime();
@@ -603,7 +604,7 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 		return;
 	}
 
-	private void showPatientInfo(boolean isFromMenu){
+	protected void showPatientInfo(boolean isFromMenu){
 		infos = InformationManager.Instance().load(Information.EmploymentIDField, String.valueOf(employment.getID()));
 		String strInfos = InformationManager.getInfoStr(infos, DateUtils.getSynchronizedTime(), isFromMenu);
 		if (strInfos.equals(""))
@@ -613,7 +614,7 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 		dialog.show(getFragmentManager(), "");
 	}
 
-	private void showComments(){
+	protected void showComments(){
 		InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.dialog_comments), 
 				patientRemark.getName());
 		dialog.show(getFragmentManager(), "");
@@ -653,9 +654,37 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 		endTask.setState(eTaskState.Done);
 	}
 	
+	public void clearTasks() {
+		checkAllTasks(eTaskState.Empty, DateUtils.EmptyDate);
+		startTask.setManualDate(DateUtils.EmptyDate);
+		TaskManager.Instance().save(startTask);
+		endTask.setManualDate(DateUtils.EmptyDate);
+		TaskManager.Instance().save(endTask);
+		removeAdditionalTasks();
+		UserRemarkManager.Instance().delete(Option.Instance().getEmploymentID());
+		if (activity.hasQuestions)
+			clearAnswers();
+		clearEmployment();
+		startPatientsActivity();
+	}
+	
+	public void undoneTasks() {
+		checkAllTasksAndFillUp(eTaskState.UnDone);
+		checkLeavingState();
+	}
+	
+	public void startVerification() {
+		startVerificationActivity(ACTIVITY_VERIFICATION_CODE, IS_FLEGE_OK);
+	}
+	
+	public void setTaskValue(DialogFragment dialog) {
+		Task task  = ((StandardTaskDialog)dialog).getTask();
+		task.setQualityResult(((StandardTaskDialog)dialog).getValue());
+		setTaskState(((StandardTaskDialog)dialog).getTask());
+		taskAdapter.notifyDataSetChanged();
+	}
 
-	protected void startUserRemarksActivity(Integer mode, int activityCode) {
-		//Intent userRemarksActivity = new Intent(getApplicationContext(), UserRemarksActivity.class);
+	public void startUserRemarksActivity(Integer mode, int activityCode) {
 		Intent userRemarksActivity = new Intent(activity.getApplicationContext(), NewUserRemarksActivity.class);
 		userRemarksActivity.putExtra("Mode", mode);
 		userRemarksActivity.putExtra("ViewMode", isEmploymentDone());
@@ -665,27 +694,49 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 			startActivityForResult(userRemarksActivity, activityCode);
 	}
 	
-	private void startCatalogsActivity() {
+	protected void startCatalogsActivity() {
 		Intent catalogsActivity = new Intent(activity.getApplicationContext(), CatalogsActivity.class);
 		startActivity(catalogsActivity);
 	}
 	
-	private void startAddressActivity() {
+	protected void startAddressActivity() {
 		Intent addressActivity = new Intent(activity.getApplicationContext(), AddressPatientActivity.class);
 		startActivity(addressActivity);
 	}
 	
-	private void startDoctorsActivity() {
+	protected void startDoctorsActivity() {
 		Intent doctorsActivity = new Intent(activity.getApplicationContext(), DoctorsActivity.class);
 		startActivity(doctorsActivity);
 	}
 	
-	private void startRelativesActivity() {
+	protected void startRelativesActivity() {
 		Intent relativesActivity = new Intent(activity.getApplicationContext(), RelativesActivity.class);
 		startActivity(relativesActivity);
 	}
+	
+	protected void startSyncActivity() {
+		Intent synchActivity = new Intent(activity.getApplicationContext(),
+				SynchronizationActivity.class);
+		startActivity(synchActivity);
+	}
+	
+	private void startPatientsActivity() {
+		Intent patientsActivity = new Intent(activity.getApplicationContext(), PatientsActivity.class);
+		startActivity(patientsActivity);
+	}
+	
+	private void startManualInputActivity() {
+		Intent manualInputActivity = new Intent(activity.getApplicationContext(), ManualInputActivity.class);
+		startActivity(manualInputActivity);
+	}
+	
+	private void startVerificationActivity(Integer requestCode,boolean isAllOK) {
+		Intent VerificationActivity = new Intent(activity.getApplicationContext(), VerificationActivity.class);
+		VerificationActivity.putExtra("isAllOK", isAllOK);
+		startActivityForResult(VerificationActivity, requestCode);
+	}
 		
-	private void showUndoneDialog() {
+	protected void showUndoneDialog() {
 		BaseDialog dialog = new BaseDialog(getString(R.string.attention),
 				getString(R.string.dialog_task_proof_undone));
 		dialog.show(getFragmentManager(), "dialogUndone");
@@ -697,7 +748,7 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 				&& endTask.getRealDate().equals(DateUtils.EmptyDate);
 	}
 	
-	private boolean isEmploymentDone(){
+	protected boolean isEmploymentDone(){
 		return employment.isDone();
 	}
 	private boolean isAllDone(){

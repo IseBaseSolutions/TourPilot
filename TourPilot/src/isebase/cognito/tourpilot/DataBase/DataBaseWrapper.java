@@ -443,7 +443,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ Answer.PilotTourIDField + " INTEGER, "
 			+ Answer.TypeField + " INTEGER, "
 			+ Answer.AnswerIDField + " INTEGER, "
-			+ Answer.AnswerIDkeyField + " TEXT, "
+			+ Answer.AnswerKeyField + " TEXT, "
 			+ Answer.AddInfoField + " TEXT"
 			+ ");";
 	
@@ -455,8 +455,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ BaseObject.WasSentField + " INTEGER, "
 			+ BaseObject.IsServerTimeField + " INTEGER  NOT NULL DEFAULT 1, "
 			+ AnsweredCategory.CategoryIDField + " INTEGER, "
-			+ AnsweredCategory.EmploymentIDField + " INTEGER, "
-			+ AnsweredCategory.IsAnsweredField + " INTEGERs"
+			+ AnsweredCategory.EmploymentIDField + " INTEGER "
 			+ ");";
 		
 	private static String[] createDataTables = new String[]{

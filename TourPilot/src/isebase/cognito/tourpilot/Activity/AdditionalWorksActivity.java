@@ -120,6 +120,7 @@ public class AdditionalWorksActivity extends BaseTimeSyncActivity implements Bas
 			Option.Instance().setWorkID(work.getID());
 			Option.Instance().save();
 			workStopDialog = new WorkStopDialog(addWork.getName(), work.startTime());
+			workStopDialog.setCancelable(false);
 			workStopDialog.show(getSupportFragmentManager(), "stopDialog");
 		}
 		if (dialog == workStopDialog)
@@ -128,6 +129,7 @@ public class AdditionalWorksActivity extends BaseTimeSyncActivity implements Bas
 			work.setIsServerTime(Option.Instance().isTimeSynchronised());
 			WorkManager.Instance().save(work);
 			patientsDialog = new PatientsDialog(patients, work.getName());
+			patientsDialog.setCancelable(false);
 			patientsDialog.show(getSupportFragmentManager(), "patientsDialog");
 		}
 		

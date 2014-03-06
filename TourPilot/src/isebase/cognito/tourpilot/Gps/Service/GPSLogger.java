@@ -72,10 +72,6 @@ public class GPSLogger extends Service implements LocationListener {
 	 */
 	private long gpsLoggingInterval;
 	
-	private int workerID;
-	
-	private int pilotTourID;
-	
 	private double prevLat;
 	
 	private double prevLon;
@@ -186,12 +182,6 @@ public class GPSLogger extends Service implements LocationListener {
 	public void onCreate() {
 		try {
 			StaticResources.setBaseContext(this);
-			try {
-				workerID = Option.Instance().getWorkerID();
-				pilotTourID = Option.Instance().getPilotTourID();
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
 			gpsLoggingInterval = Long.parseLong(PreferenceManager
 					.getDefaultSharedPreferences(this.getApplicationContext())
 					.getString(OSMTracker.Preferences.KEY_GPS_LOGGING_INTERVAL,
@@ -272,7 +262,7 @@ public class GPSLogger extends Service implements LocationListener {
     			if (((location.getLatitude() != prevLat || location.getLongitude() != prevLon) && lastLocation.getAccuracy() < 25))
     			{
     				StaticResources.setBaseContext(this);
-        			currentWayPoint = new WayPoint(workerID, pilotTourID, lastLocation, lastNbSatellites);
+        			currentWayPoint = new WayPoint(Option.Instance().getWorkerID(), Option.Instance().getPilotTourID(), lastLocation, lastNbSatellites);
     				WayPointManager.Instance().save(currentWayPoint);
     				prevLat = currentWayPoint.getLatitude();
     				prevLon = currentWayPoint.getLongitude();

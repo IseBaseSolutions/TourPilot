@@ -17,18 +17,18 @@ public class Answer extends BaseObject implements IQuestionable {
 	public static final String PilotTourIDField = "pilot_tour_id";
 	public static final String TypeField = "type";
 	public static final String AnswerIDField = "answer_id";
-	public static final String AnswerIDkeyField = "answer_id_key";
+	public static final String AnswerKeyField = "answer_id_key";
 	public static final String AddInfoField = "add_info";
 
 	private long patientID;
-	private long questionID;
+	private int questionID;
 	private long categoryID;
 	private long emplID;
 	private long workerID;
 	private long pilotTourID;
 	private int type;
 	private int answerID;
-	private String answerIDkey;	
+	private String answerKey;	
 	private String addInfo;
 	
 	@MapField(DatabaseField = PatientIDField)
@@ -42,12 +42,12 @@ public class Answer extends BaseObject implements IQuestionable {
 	}
 
 	@MapField(DatabaseField = QuestionIDField)
-	public long getQuestionID() {
+	public int getQuestionID() {
 		return questionID;
 	}
 	
 	@MapField(DatabaseField = QuestionIDField)
-	public void setQuestionID(long questionID) {
+	public void setQuestionID(int questionID) {
 		this.questionID = questionID;
 	}
 
@@ -111,14 +111,14 @@ public class Answer extends BaseObject implements IQuestionable {
 		this.answerID = answerID;
 	}
 
-	@MapField(DatabaseField = AnswerIDkeyField)
-	public String getAnswerIDkey() {
-		return answerIDkey;
+	@MapField(DatabaseField = AnswerKeyField)
+	public String getAnswerKey() {
+		return answerKey;
 	}
 
-	@MapField(DatabaseField = AnswerIDkeyField)
-	public void setAnswerIDkey(String answerIDkey) {
-		this.answerIDkey = answerIDkey;
+	@MapField(DatabaseField = AnswerKeyField)
+	public void setAnswerKey(String answerKey) {
+		this.answerKey = answerKey;
 	}
 
 	@MapField(DatabaseField = AddInfoField)
@@ -135,17 +135,62 @@ public class Answer extends BaseObject implements IQuestionable {
 		clear();
 	}
 	
-	public Answer(Patient patient, Question question, int answerID, int categoryID) {
+	public Answer(Patient patient, int questionID, String questionName, int answerID, int categoryID, String answerKey, int type) {
 		clear();
 		setPatientID(patient.getID());
 		setWorkerID(Option.Instance().getWorkerID());
 		setEmploymentID(Option.Instance().getEmploymentID());
 		setPilotTourID(Option.Instance().getPilotTourID());
 		setAnswerID(answerID);
-		setType(0);
+		setType(type);
+		setQuestionID(questionID);
+		setCategoryID(categoryID);
+		setName(questionName);
+		setAnswerKey(answerKey);
+	}
+	
+	public Answer(Patient patient, Question question, int answerID, int categoryID, int type) {
+		clear();
+		setPatientID(patient.getID());
+		setWorkerID(Option.Instance().getWorkerID());
+		setEmploymentID(Option.Instance().getEmploymentID());
+		setPilotTourID(Option.Instance().getPilotTourID());
+		setAnswerID(answerID);
+		setType(type);
 		setQuestionID(question.getID());
 		setCategoryID(categoryID);
 		setName(question.getNameWithKeyWords(patient));
+	}
+	
+	public int getBradenAnswer() {
+		return Integer.parseInt(getAnswerKey().split("#")[0]);
+	}
+	
+	public int getBradenLevel() {
+		return getAnswerKey().equals("") ? -1 : Integer.parseInt(getAnswerKey().split("%")[1]);
+	}
+	
+	public int[] getBradenCheckedIndexes() {
+		String strArray[] = getAnswerKey().split("%")[0].split("#")[1].split("/");
+		int intArray[] = new int[strArray.length];
+		for (int i = 0; i < strArray.length; i++)
+			intArray[i] = Integer.parseInt(strArray[i]);
+		return intArray;
+	}
+	
+	@Override
+	public String forServer() {
+        String strValue = new String("N;");
+        strValue += getPatientID() + ";";
+        strValue += getWorkerID() + ";";
+        strValue += getEmploymentID() + ";";
+        strValue += getPilotTourID() + ";";
+        strValue += getType() + ";";
+        strValue += getQuestionID() + ";";
+        strValue += getAnswerID() + ";";
+        strValue += getAnswerKey() + ";";
+        strValue += getAddInfo() + ";";
+        return strValue;
 	}
 	
 	@Override
@@ -153,7 +198,7 @@ public class Answer extends BaseObject implements IQuestionable {
 		super.clear();
 		setAddInfo("");
 		setAnswerID(-1);
-		setAnswerIDkey("");
+		setAnswerKey("");
 	}
 
 	@Override

@@ -120,7 +120,7 @@ public class DateUtils {
     }
         
     public static int millisecondsToMinutes(long milliseconds){
-    	return (int) ((milliseconds / (MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE)) % SECONDS_IN_MINUTE);
+    	return (int) ((milliseconds / (MILLISECONDS_IN_SECOND)) / SECONDS_IN_MINUTE);
     }
     
     public static int getInterval(Date timeStart, Date timeStop) {

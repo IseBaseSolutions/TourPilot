@@ -12,6 +12,8 @@ import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
+import isebase.cognito.tourpilot.Data.Task.Task;
+import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.WayPoint.WayPoint;
 import isebase.cognito.tourpilot.Data.WayPoint.WayPointManager;
 import isebase.cognito.tourpilot.Data.Work.Work;
@@ -44,6 +46,7 @@ import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
+import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -258,7 +261,7 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 			@Override
 			public Dialog onCreateDialog(Bundle savedInstanceState) {
 				AlertDialog.Builder adb = new AlertDialog.Builder(getActivity())
-						.setTitle(work.getName())
+						.setTitle(work.getName() + " " + DateUtils.HourMinutesFormat.format(work.getStartTime()) + " - " + DateUtils.HourMinutesFormat.format(work.getStopTime()))
 						.setItems(patientsArr, null)
 						.setPositiveButton(
 								isebase.cognito.tourpilot.R.string.ok, new OnClickListener() {
@@ -315,29 +318,29 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 					.loadAll(EmploymentManager.Instance().load(Option.Instance()
 							.getEmploymentID()).getPatientID()).getAddress());
 			startTasksActivity();
-//			WayPointManager.Instance().updateWasSent();
-//			WayPointManager.Instance().updateTourID();
-//			Intent gpsLoggerServiceIntent = new Intent(this, GPSLogger.class);
-//			gpsLoggerServiceIntent.putExtra(WayPoint.TrackIDField, 0);
-//			startService(gpsLoggerServiceIntent);
-//			ServiceConnection gpsLoggerConnection = new ServiceConnection() {
-//				
-//				@Override
-//				public void onServiceDisconnected(ComponentName name) {
-//					// TODO Auto-generated method stub					
-//				}
-//
-//				@Override
-//				public void onServiceConnected(ComponentName name, IBinder service) {
-//					// TODO Auto-generated method stub				
-//				}
-//				
-//			};
-//			bindService(gpsLoggerServiceIntent, gpsLoggerConnection, 0);
+			//WayPointManager.Instance().updateWasSent();
+			//WayPointManager.Instance().updateTourID();
+			Intent gpsLoggerServiceIntent = new Intent(this, GPSLogger.class);
+			gpsLoggerServiceIntent.putExtra(WayPoint.TrackIDField, 0);
+			startService(gpsLoggerServiceIntent);
+			//ServiceConnection gpsLoggerConnection = new ServiceConnection() {
+				
+			//	@Override
+			//	public void onServiceDisconnected(ComponentName name) {
+			// TODO Auto-generated method stub					
+			//	}
+
+			//	@Override
+			//	public void onServiceConnected(ComponentName name, IBinder service) {
+					// TODO Auto-generated method stub				
+			//	}
+				
+			//};
+			//bindService(gpsLoggerServiceIntent, gpsLoggerConnection, 0);
 		}
-//		Intent gpsActivity = new Intent(getApplicationContext(),
-//				GPSActivity.class);
-//		startActivity(gpsActivity);
+		//Intent gpsActivity = new Intent(getApplicationContext(),
+		//		GPSActivity.class);
+		//startActivity(gpsActivity);
 	}
 
 	@Override

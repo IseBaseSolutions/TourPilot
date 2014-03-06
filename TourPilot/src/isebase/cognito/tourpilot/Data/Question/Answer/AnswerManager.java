@@ -3,7 +3,11 @@ package isebase.cognito.tourpilot.Data.Question.Answer;
 import java.util.ArrayList;
 import java.util.List;
 
+import isebase.cognito.tourpilot.Connection.SentObjectVerification;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
+import isebase.cognito.tourpilot.Data.Employment.Employment;
+import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Question.Category.CategoryManager;
 import isebase.cognito.tourpilot.Data.Question.Link.LinkManager;
@@ -42,13 +46,61 @@ public class AnswerManager extends BaseObjectManager<Answer> {
 		
 	}
 	
-	public List<Answer> loadByCategory(int categoryID) {
+    public String getDone()
+    {
+    	List<Employment> employments = EmploymentManager.Instance().load(BaseObject.WasSentField, "0 AND is_done = 1");
+    	List<Answer> answers;
+    	String strEmpls = "";
+    	for (Employment employment : employments) {
+    		answers = loadByEmploymentID(employment.getID());
+        	for (Answer answer : answers) {
+        		strEmpls += answer.forServer() + "\0";
+        		SentObjectVerification.Instance().sentAnswers.add(answer);
+        	}
+    	}
+    	return strEmpls;
+    }
+	
+	public List<Answer> loadByCategoryID(int categoryID) {
 		String strSQL = String.format("SELECT * FROM %1$s " +
 				" WHERE employment_id = %2$d AND category_id = %3$d "
 				, AnswerManager.Instance().getRecTableName()
 				, Option.Instance().getEmploymentID()
 				, categoryID);
 		return load(strSQL);
+	}
+	
+	public List<Answer> loadByEmploymentID(int employmentID) {
+		String strSQL = String.format("SELECT * FROM %1$s " +
+				" WHERE employment_id = %2$d"
+				, AnswerManager.Instance().getRecTableName()
+				, employmentID);
+		return load(strSQL);
+	}
+	
+//	public Answer loadBradenAnswerByQuestionID(int questionID) {
+//		String strSQL = String.format("SELECT * FROM %1$s " +
+//				" WHERE question_id = %2$d AND employment_id = %3$d" 
+//				, AnswerManager.Instance().getRecTableName()
+//				, questionID
+//				, Option.Instance().getEmploymentID());
+//		List<Answer> answers = load(strSQL);
+//		if (answers.size() > 0)
+//			return answers.get(0);
+//		return null;
+//	}
+	
+	public Answer loadByQuestionIDAndType(int questionID, int type) {
+		String strSQL = String.format("SELECT * FROM %1$s " +
+				" WHERE question_id = %2$d AND type = %3$d AND employment_id = %4$d" 
+				, AnswerManager.Instance().getRecTableName()
+				, questionID
+				, type
+				, Option.Instance().getEmploymentID());
+		List<Answer> answers = load(strSQL);
+		if (answers.size() > 0)
+			return answers.get(0);
+		return null;
 	}
 	
 	public boolean isSubQuestionAnswered(Question subQuestion) {

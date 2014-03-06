@@ -1,6 +1,7 @@
 package isebase.cognito.tourpilot.Templates;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
@@ -28,13 +29,15 @@ public class QuestionAdapter extends ArrayAdapter<IQuestionable> {
 		private int layoutResourceId;
 		private Context context;
 		public Patient patient;
+		private Employment employment;
 
 		public QuestionAdapter(Context context, int layoutResourceId, List<IQuestionable> items) {
 			super(context, layoutResourceId, items);
 			this.layoutResourceId = layoutResourceId;
 			this.context = context;
 			this.items = items;
-			patient = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID()).getPatient();
+			employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
+			patient = employment.getPatient();
 		}
 
 		@Override
@@ -48,8 +51,9 @@ public class QuestionAdapter extends ArrayAdapter<IQuestionable> {
 			questionHolder.tvQuestionName.setText(items.get(position) instanceof Question 
 					? ((Question)items.get(position)).getNameWithKeyWords(patient) 
 							: items.get(position).name());						
-			questionHolder.rgAnswers = (RadioGroup) row.findViewById(R.id.rgAnswers);
-			
+			questionHolder.rgAnswers = (RadioGroup) row.findViewById(R.id.rg_1);
+			if (employment.isDone())
+				disableRadioButtons(questionHolder.rgAnswers);
 			if (items.get(position) instanceof Answer)
 			{
 				Answer answer = (Answer) items.get(position);
@@ -57,9 +61,13 @@ public class QuestionAdapter extends ArrayAdapter<IQuestionable> {
 			}			
 			questionHolder.item = items.get(position);
 			
-			//row.setTag(questionHolder);
 			questionHolder.rgAnswers.setTag(questionHolder);
 			return row;
+		}
+		
+		private void disableRadioButtons(RadioGroup radioGroup) {
+			for (int i = 0; i < radioGroup.getChildCount(); i++)
+				((RadioButton)radioGroup.getChildAt(i)).setEnabled(false);
 		}
 
 		public class QuestionHolder {
