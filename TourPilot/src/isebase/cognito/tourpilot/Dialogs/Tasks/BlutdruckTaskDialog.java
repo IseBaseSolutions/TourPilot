@@ -57,13 +57,13 @@ public class BlutdruckTaskDialog extends StandardTaskDialog{
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
 		adb.setTitle(getString(R.string.blood_pressure));
 		setCancelable(false);
-		etMinValue.setTextColor(Color.BLACK);
+		etMinValue.setTextColor(etMinValue.getHintTextColors().getDefaultColor());
 		etMinValue.setHint(getString(R.string.min));
 		etMinValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
 		etMinValue.setEnabled(!isViewMode);
 		etMinValue.setFilters(new InputFilter[] {new InputFilter.LengthFilter(10)});
 		
-		etMaxValue.setTextColor(Color.BLACK);
+		etMaxValue.setTextColor(etMaxValue.getHintTextColors().getDefaultColor());
 		etMaxValue.setHint(getString(R.string.max));
 		etMaxValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
 		etMaxValue.setEnabled(!isViewMode);

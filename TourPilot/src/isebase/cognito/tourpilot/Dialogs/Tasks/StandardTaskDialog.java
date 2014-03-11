@@ -67,7 +67,7 @@ public class StandardTaskDialog extends DialogFragment{
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
 		adb.setTitle(title);
 		setCancelable(false);
-		etValue.setTextColor(Color.BLACK);
+		etValue.setTextColor(etValue.getHintTextColors().getDefaultColor());
 		etValue.setHint(hint);
 		etValue.setInputType(typeInput);
 		etValue.setEnabled(!isViewMode);

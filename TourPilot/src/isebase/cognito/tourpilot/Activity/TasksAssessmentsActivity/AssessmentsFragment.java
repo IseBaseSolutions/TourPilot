@@ -10,8 +10,12 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategory;
 import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategoryManager;
 import isebase.cognito.tourpilot.Data.Question.Category.Category;
-import isebase.cognito.tourpilot.Data.Question.Category.Category.type;
 import isebase.cognito.tourpilot.Data.Question.Category.CategoryManager;
+import isebase.cognito.tourpilot.Data.Question.ExtraCategory.ExtraCategory;
+import isebase.cognito.tourpilot.Data.Question.ExtraCategory.ExtraCategoryManager;
+import isebase.cognito.tourpilot.Data.Question.QuestionSetting.QuestionSetting;
+import isebase.cognito.tourpilot.Data.Question.QuestionSetting.QuestionSettingManager;
+import isebase.cognito.tourpilot.Dialogs.ExtraCategoriesDialog;
 import isebase.cognito.tourpilot.Templates.EmploymentCategoryAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
@@ -22,8 +26,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,8 +42,9 @@ public class AssessmentsFragment extends Fragment {
 	TasksAssessementsActivity activity;
 	
 	View rootView;
-	
+	public QuestionSetting questionSetting;
 	ListView lvAssessments;
+	int allCategoriesCount;
 	List<Category> categories = new ArrayList<Category>();
 	public List<AnsweredCategory> answeredCategories = new ArrayList<AnsweredCategory>();
 	List<EmploymentCategory> employmentCategories = new ArrayList<EmploymentCategory>();
@@ -75,7 +82,15 @@ public class AssessmentsFragment extends Fragment {
 	}
 	
 	public void reloadData() {
-		categories = CategoryManager.Instance().load();
+		questionSetting = QuestionSettingManager.Instance().loadAll(Option.Instance().getEmploymentID());
+		reloadCategories();
+	}
+	
+	public void reloadCategories() {
+		if (questionSetting == null)
+			return;
+		allCategoriesCount = CategoryManager.Instance().load().size();
+		categories = CategoryManager.Instance().loadByQuestionSettings(questionSetting);		
 		answeredCategories = AnsweredCategoryManager.Instance().LoadByEmploymentID(Option.Instance().getEmploymentID());
 		employmentCategories.clear();
 		for(Category category : categories)
@@ -128,6 +143,23 @@ public class AssessmentsFragment extends Fragment {
 				
 			}
 		});
+	}
+	
+	public void showExtraAssessmentsDialog() {
+		List<Category> ExtraCategories = CategoryManager.Instance().loadExtraCategoriesByQuestionSettings(questionSetting);
+		ExtraCategoriesDialog extraCategoriesDialog = new ExtraCategoriesDialog(ExtraCategories, getString(R.string.extra_assessments));
+		extraCategoriesDialog.show(getFragmentManager(), "extraAssessmentsDialog");
+	}
+	
+	public void saveExtraAssessments(DialogFragment dialog) {
+		questionSetting.setExtraCategoryIDsString(questionSetting.getExtraCategoryIDsString() + (questionSetting.getExtraCategoryIDsString().equals("") ? "" : ",") +((ExtraCategoriesDialog)dialog).getSelectedCategoriesID());
+		ExtraCategory extraCategory = ExtraCategoryManager.Instance().load(Option.Instance().getEmploymentID());
+		if (extraCategory == null)
+			extraCategory = new ExtraCategory(Option.Instance().getEmploymentID()); 
+		extraCategory.setExtraCategoryIDsString(questionSetting.getExtraCategoryIDsString());
+		ExtraCategoryManager.Instance().save(extraCategory);
+		reloadCategories();
+		adapter.notifyDataSetChanged();
 	}
 	
 	private void startQuestionActivity(int categoryID) {

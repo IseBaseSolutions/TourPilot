@@ -79,6 +79,7 @@ public class TasksAssessementsActivity extends BaseActivity implements BaseDialo
 		MenuItem doctorsMenu = menu.findItem(R.id.doctors);
 		MenuItem relativesMenu = menu.findItem(R.id.relatives);
 		MenuItem notesMenu = menu.findItem(R.id.notes);
+		MenuItem extraAssessments = menu.findItem(R.id.extraAssessments);
 		infoMenu.setEnabled(tasksFragment.getInfos().size() != 0);
 		commentsMenu.setEnabled(!(tasksFragment.getPatientRemark() == null || tasksFragment.getPatientRemark().getName().length() == 0));
 		diagnoseMenu.setEnabled(!(tasksFragment.getDiagnose() == null || tasksFragment.getDiagnose().getName().length() == 0));
@@ -86,6 +87,12 @@ public class TasksAssessementsActivity extends BaseActivity implements BaseDialo
 		catalogsMenu.setEnabled(tasksFragment.isClickable());
 		undoneTasksMenu.setEnabled(DateUtils.isToday(tasksFragment.employment.getDate()));
 		manualInputMenu.setEnabled(!tasksFragment.isEmploymentDone() && !tasksFragment.isClickable() && DateUtils.isToday(tasksFragment.employment.getDate()));
+		extraAssessments.setVisible(false);
+		if (assessmentsFragment != null) {
+			extraAssessments.setEnabled(!tasksFragment.getStartTask().getRealDate().equals(DateUtils.EmptyDate) && !tasksFragment.isEmploymentDone() && assessmentsFragment.allCategoriesCount != assessmentsFragment.categories.size());
+			extraAssessments.setVisible(true);
+		}
+
 		if(tasksFragment.isEmploymentDone()) {
 			undoneTasksMenu.setEnabled(false);
 			catalogsMenu.setEnabled(false);
@@ -119,9 +126,9 @@ public class TasksAssessementsActivity extends BaseActivity implements BaseDialo
 		case R.id.info:
 			tasksFragment.showPatientInfo(true);
 			return true;
-//		case R.id.gps:			//GpsNavigator.startGpsNavigation(PatientManager.Instance().loadAll(employment.getPatientID()).getAddress());
-//
-//			return true;
+		case R.id.extraAssessments:
+			assessmentsFragment.showExtraAssessmentsDialog();
+			return true;
 		case R.id.manualInput:
 			startManualInputActivity();
 			return true;
@@ -159,6 +166,13 @@ public class TasksAssessementsActivity extends BaseActivity implements BaseDialo
 			tasksFragment.clearEmployment();
 			startPatientsActivity();
 		}
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+//		if (assessmentsFragment != null)
+//			assessmentsFragment.reloadCategories();
 	}
 	
 	/**
@@ -240,7 +254,10 @@ public class TasksAssessementsActivity extends BaseActivity implements BaseDialo
 		}
 		else if (dialog.getTag().equals("clearAllTasksDialog")) {
 			tasksFragment.updateStartTime();
-		}		
+		}
+		else if (dialog.getTag().equals("extraAssessmentsDialog")) {
+			assessmentsFragment.saveExtraAssessments(dialog);
+		}	
 	}
 
 	@Override
@@ -259,7 +276,7 @@ public class TasksAssessementsActivity extends BaseActivity implements BaseDialo
 	}
 	
 	private void reloadData() {
-		hasQuestions = (QuestionSettingManager.Instance().load(Option.Instance().getEmploymentID()) != null);
+		hasQuestions = (QuestionSettingManager.Instance().loadAll(Option.Instance().getEmploymentID()) != null);
 	}
 
 }

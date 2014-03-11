@@ -10,6 +10,7 @@ import isebase.cognito.tourpilot.Activity.ToursActivity;
 import isebase.cognito.tourpilot.Activity.UserRemarksActivity;
 import isebase.cognito.tourpilot.Activity.VerificationActivity;
 import isebase.cognito.tourpilot.Activity.WorkersActivity;
+import isebase.cognito.tourpilot.Activity.TasksAssessmentsActivity.TasksAssessementsActivity;
 import isebase.cognito.tourpilot.Activity.WorkersOptionActivity.WorkerOptionActivity;
 import isebase.cognito.tourpilot.Connection.ConnectionAsyncTask;
 import isebase.cognito.tourpilot.Connection.ConnectionStatus;
@@ -146,7 +147,7 @@ public class BaseTimeSyncActivity extends FragmentActivity {
 	}
 	
 	protected void startTasksActivity() {
-		Intent tasksActivity = new Intent(getApplicationContext(), TasksActivity.class);
+		Intent tasksActivity = new Intent(getApplicationContext(), TasksAssessementsActivity.class);
 		startActivity(tasksActivity);
 	}
 	

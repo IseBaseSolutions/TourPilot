@@ -6,6 +6,7 @@ import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Question.Answer.Answer;
 import isebase.cognito.tourpilot.Data.Question.Answer.AnswerManager;
+import isebase.cognito.tourpilot.Data.Question.QuestionSetting.QuestionSetting;
 import android.database.sqlite.SQLiteDatabase;
 
 public class CategoryManager extends BaseObjectManager<Category> {
@@ -38,13 +39,31 @@ public class CategoryManager extends BaseObjectManager<Category> {
 	
 	public Category loadByCategoryName(String name) {
 		String strSQL = String.format("SELECT * FROM %1$s " +
-				" WHERE name like '%2$s' "
+				" WHERE name LIKE '%2$s' "
 				, CategoryManager.Instance().getRecTableName()
 				, name);
 		List<Category> list = load(strSQL);
 		if (list.size() > 0)
 			return list.get(0);
 		return null;
+	}
+	
+	public List<Category> loadByQuestionSettings(QuestionSetting questionSettings) {
+		String strSQL = String.format("SELECT * FROM %1$s " +
+				" WHERE _id IN (%2$s) OR _id IN (%3$s)"
+				, CategoryManager.Instance().getRecTableName()
+				, questionSettings.getCategoryIDsString()
+				, questionSettings.getExtraCategoryIDsString());
+		return load(strSQL);
+	}
+	
+	public List<Category> loadExtraCategoriesByQuestionSettings(QuestionSetting questionSettings) {
+		String strSQL = String.format("SELECT * FROM %1$s " +
+				" WHERE _id NOT IN (%2$s) AND _id NOT IN (%3$s)"
+				, CategoryManager.Instance().getRecTableName()
+				, questionSettings.getCategoryIDsString()
+				, questionSettings.getExtraCategoryIDsString());
+		return load(strSQL);
 	}
 	
 }

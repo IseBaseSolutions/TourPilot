@@ -45,7 +45,7 @@ public class QuestionManager extends BaseObjectManager<Question> {
 	}
 	
 	public List<Question> loadActualsByCategory(int categoryID) {
-		QuestionSetting questionSettings = QuestionSettingManager.Instance().load(Option.Instance().getEmploymentID());
+		QuestionSetting questionSettings = QuestionSettingManager.Instance().loadAll(Option.Instance().getEmploymentID());
 		if (questionSettings == null)
 			return new ArrayList<Question>();
 		String strSQL = String.format("SELECT t3.* " +
@@ -54,14 +54,28 @@ public class QuestionManager extends BaseObjectManager<Question> {
 				" INNER JOIN %3$s t3 ON t2.question_id = t3._id " +
 				" INNER JOIN QuestionSettings t4 ON t4._id = %4$d " +
 				" LEFT JOIN Answers t5 ON t3._id = t5.question_id AND t5.employment_id = %4$d" +  
-				" WHERE t1._id = %5$s AND t5._id IS NULL AND t3._id in (%6$s) GROUP BY t3._id "
+				" WHERE t1._id = %5$s AND t5._id IS NULL %6$s GROUP BY t3._id "
 				, CategoryManager.TableName
 				, LinkManager.TableName
 				, QuestionManager.TableName
 				, Option.Instance().getEmploymentID()
 				, categoryID
-				, questionSettings.getQuestionIDsString());
+				, isExtraCategory(categoryID, questionSettings) ? "" : getCassualCategoryStr(questionSettings));
 		return load(strSQL);
+	}
+	
+	private String getCassualCategoryStr(QuestionSetting questionSettings) {
+		return String.format("AND t3._id in (%1$s)", questionSettings.getQuestionIDsString());
+	}
+	
+	private boolean isExtraCategory(int categoryID, QuestionSetting questionSettings) {
+		if (questionSettings.getExtraCategoryIDsString().equals(""))
+			return false;		
+		String[] extracategoriesIDArr = questionSettings.getExtraCategoryIDsString().split(",");
+		for (int i = 0; i < extracategoriesIDArr.length; i++)
+			if (Integer.parseInt(extracategoriesIDArr[i]) == categoryID)
+				return true;
+		return false;
 	}
 	
 }

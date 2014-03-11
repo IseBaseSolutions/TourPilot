@@ -24,7 +24,8 @@ public class QuestionSetting extends BaseObject {
 	private Date date;
 	private String questionIDsString;
 	private String categoryIDsString;
-	
+	private String extraCategoryIDsString;
+
 	@MapField(DatabaseField = PatientIDField)
 	public long getPatientID() {
 		return patientID;
@@ -85,6 +86,14 @@ public class QuestionSetting extends BaseObject {
 		this.categoryIDsString = categoryIDsString;
 	}
 	
+	public String getExtraCategoryIDsString() {
+		return extraCategoryIDsString;
+	}
+
+	public void setExtraCategoryIDsString(String extraCategoryIDsString) {
+		this.extraCategoryIDsString = extraCategoryIDsString;
+	}
+	
 	public QuestionSetting() {
 		clear();
 	}
@@ -114,6 +123,12 @@ public class QuestionSetting extends BaseObject {
         strValue += ncryptor.LToNcode(getID()) + ";";
         strValue += ncryptor.LToNcode(getCheckSum());
         return strValue;
+    }
+    
+    @Override
+    protected void clear() {
+    	super.clear();
+    	setExtraCategoryIDsString("");
     }
 
 }

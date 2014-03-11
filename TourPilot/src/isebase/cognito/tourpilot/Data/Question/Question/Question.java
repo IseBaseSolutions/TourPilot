@@ -77,7 +77,7 @@ public class Question extends BaseObject implements IQuestionable {
     		if (arr[i].contains("#"))
     		{
     			if (arr[i].contains("@"))
-    				name += (patient.getSex().equals("Herr") ? arr[i].split("@")[0].replace("#", "") : arr[i].split("@")[1].replace("#", ""));
+    				name += (patient.getSex().contains("Herr") ? arr[i].split("@")[0].replace("#", "") : arr[i].split("@")[1].replace("#", ""));
     			else
     				name += (arr[i].contains("pat.zuname") ? patient.getSurname() : patient.getName().split(" ")[0]);
     		}

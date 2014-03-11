@@ -319,6 +319,13 @@
 				        android:text="@string/pain_analyse_punkt_5_0_0"
 				        android:layout_weight="1"
 				        android:onClick="onCheckBoxChecked"/>
+		  		    
+		  		    <CheckBox android:id="@+id/chb_5_0_1"
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+				        android:text="@string/pain_analyse_punkt_5_0_1"
+				        android:layout_weight="1"
+				        android:onClick="onCheckBoxChecked"/>
 				    
 		   		</RadioGroup>
 		   		

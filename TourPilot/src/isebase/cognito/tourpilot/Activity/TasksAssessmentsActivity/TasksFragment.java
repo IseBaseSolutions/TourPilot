@@ -26,6 +26,9 @@ import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemarkManager;
 import isebase.cognito.tourpilot.Data.Question.Answer.AnswerManager;
 import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategory;
 import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategoryManager;
+import isebase.cognito.tourpilot.Data.Question.ExtraCategory.ExtraCategoryManager;
+import isebase.cognito.tourpilot.Data.Question.QuestionSetting.QuestionSetting;
+import isebase.cognito.tourpilot.Data.Question.QuestionSetting.QuestionSettingManager;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
@@ -504,6 +507,9 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	public void clearAnswers() {
 		AnswerManager.Instance().delete(AnswerManager.Instance().loadByEmploymentID(Option.Instance().getEmploymentID()));
 		AnsweredCategoryManager.Instance().delete(AnsweredCategoryManager.Instance().LoadByEmploymentID(Option.Instance().getEmploymentID()));
+		QuestionSetting questionSetting = QuestionSettingManager.Instance().load(employment.getID());
+		questionSetting.setExtraCategoryIDsString("");
+		ExtraCategoryManager.Instance().delete(employment.getID());
 	}	
 
 	@Override

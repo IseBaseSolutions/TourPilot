@@ -37,7 +37,7 @@ public class AnsweredCategoryManager extends BaseObjectManager<AnsweredCategory>
 	
 	public AnsweredCategory loadByCategoryID(int categoryID) {
 		String strSQL = String.format("SELECT * FROM %1$s " +
-				" WHERE category_id = '%2$d' && employment_id = '%3$d'"
+				" WHERE category_id = %2$d AND employment_id = %3$d"
 				, AnsweredCategoryManager.Instance().getRecTableName()
 				, categoryID
 				, Option.Instance().getEmploymentID());

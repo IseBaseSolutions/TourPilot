@@ -7,6 +7,7 @@
     <string name="menu_notes">Besuchsvermerke</string>
     <string name="menu_info">Info</string>
     <string name="menu_gps">Gps</string>
+    <string name="menu_extra_assessments">Zusätzliche Assessments</string>
     <string name="menu_manual_input">Manuelle Eingabe</string>
     <string name="menu_address">Adressen</string>
     <string name="menu_relatives">Angehörige</string>
@@ -422,5 +423,7 @@
     
     <string name="do_you_want_change_answer">Möchten Sie wirklich die Antwort ändern?</string>
     <string name="answer_changing">Antwort ändern</string>
+    
+    <string name ="extra_assessments">Zusätzliche Assessments hinzufügen</string>
 
 </resources>

@@ -1,20 +1,15 @@
 package isebase.cognito.tourpilot.Data.Question.Answer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.Data.Question.Category.CategoryManager;
-import isebase.cognito.tourpilot.Data.Question.Link.LinkManager;
 import isebase.cognito.tourpilot.Data.Question.Question.Question;
-import isebase.cognito.tourpilot.Data.Question.Question.QuestionManager;
-import isebase.cognito.tourpilot.Data.Question.QuestionSetting.QuestionSetting;
-import isebase.cognito.tourpilot.Data.Question.QuestionSetting.QuestionSettingManager;
+
+import java.util.List;
+
 import android.database.sqlite.SQLiteDatabase;
 
 public class AnswerManager extends BaseObjectManager<Answer> {

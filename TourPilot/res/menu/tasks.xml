@@ -48,11 +48,11 @@
         android:menuCategory="container"
         android:orderInCategory="3" />
     
- <!-- <item
-        android:id="@+id/gps"
-        android:title="@string/menu_gps"
+ 	<item
+        android:id="@+id/extraAssessments"
+        android:title="@string/menu_extra_assessments"
         android:menuCategory="container"
-        android:orderInCategory="4" /> -->   
+        android:orderInCategory="4" />  
     
     <item
         android:id="@+id/manualInput"

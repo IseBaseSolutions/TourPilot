@@ -169,6 +169,7 @@ public class PainAnalyseSkalaActivity extends Activity {
 					showBtOk(R.id.linear_layout_can_someone_answer);
 			}
 			else {
+				((RadioButton)((RadioGroup)llCanSomeoneAnswer.getChildAt(1)).getChildAt(0)).setChecked(true);
 				llRelativeOrNurse.setVisibility(View.VISIBLE);
 				if (answer.getAddInfo().equals("Nurse")) {
 					showNurseGradeLayout();
@@ -188,6 +189,7 @@ public class PainAnalyseSkalaActivity extends Activity {
 		}	
 		((RadioButton)((RadioGroup)llAbleGiveData.getChildAt(1)).getChildAt(0)).setEnabled(!employment.isDone());
 		((RadioButton)((RadioGroup)llAbleGiveData.getChildAt(1)).getChildAt(1)).setEnabled(!employment.isDone());
+//		((RadioButton)((RadioGroup)llTest.getChildAt(0)).getChildAt(1)).setEnabled(!employment.isDone());
 		((RadioButton)((RadioGroup)llHasAnyPain.getChildAt(1)).getChildAt(0)).setEnabled(!employment.isDone());
 		((RadioButton)((RadioGroup)llHasAnyPain.getChildAt(1)).getChildAt(1)).setEnabled(!employment.isDone());
 		((RadioButton)((RadioGroup)llCanSomeoneAnswer.getChildAt(1)).getChildAt(0)).setEnabled(!employment.isDone());
@@ -196,6 +198,11 @@ public class PainAnalyseSkalaActivity extends Activity {
 		((RadioButton)((RadioGroup)llRelativeOrNurse.getChildAt(1)).getChildAt(1)).setEnabled(!employment.isDone());
 		((Spinner)(llRelativeSelection.getChildAt(1))).setEnabled(!employment.isDone());
 		((Spinner)(llGrade.getChildAt(1))).setEnabled(!employment.isDone());
+		for (int i = 0; i < llTest.getChildCount(); i++)
+			for (int j = 0; j < ((LinearLayout)llTest.getChildAt(i)).getChildCount(); j++)
+				if (((LinearLayout)llTest.getChildAt(i)).getChildAt(j) instanceof RadioGroup)
+					for (int k = 0; k < ((RadioGroup)((LinearLayout)llTest.getChildAt(i)).getChildAt(j)).getChildCount(); k++)
+						((CheckBox)((RadioGroup)((LinearLayout)llTest.getChildAt(i)).getChildAt(j)).getChildAt(k)).setEnabled(!employment.isDone());
 	}
 	
 	private int getSelectedRelativeIndex() {
@@ -520,7 +527,7 @@ public class PainAnalyseSkalaActivity extends Activity {
 	private void showRelativeGradeLayout() {
 		llGrade.setVisibility(View.VISIBLE);
 		tvGrade.setText("Der Angehörige gibt an, dass "
-				+ additionalInfo
+				+ patient.getSurname() + " " + patient.FullClearName()
 				+ " Schmerzen in einer Stärke von 1- 10 hat. 1 = "
 				+ "kaum Schmerzen, 10 = stärkster vorstellbarer Schmerz. Bitte geben Sie die entsprechende Nummer in das "
 				+ "Feld ein.");

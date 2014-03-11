@@ -31,6 +31,8 @@ import isebase.cognito.tourpilot.Data.Question.Answer.AnswerManager;
 import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategory;
 import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategoryManager;
 import isebase.cognito.tourpilot.Data.Question.Category.CategoryManager;
+import isebase.cognito.tourpilot.Data.Question.ExtraCategory.ExtraCategory;
+import isebase.cognito.tourpilot.Data.Question.ExtraCategory.ExtraCategoryManager;
 import isebase.cognito.tourpilot.Data.Question.Link.Link;
 import isebase.cognito.tourpilot.Data.Question.Link.LinkManager;
 import isebase.cognito.tourpilot.Data.Question.Question.Question;
@@ -402,6 +404,16 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 			+ BaseObject.IsServerTimeField + " INTEGER  NOT NULL DEFAULT 1"
 			+ ");";
 	
+	private static final String EXTRA_CATEGORIES_TABLE_CREATE = 
+			"CREATE TABLE " + ExtraCategoryManager.TableName + "(" 
+			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
+			+ BaseObject.NameField + " TEXT NOT NULL, "
+			+ BaseObject.CheckSumField + " INTEGER, "
+			+ BaseObject.WasSentField + " INTEGER, "
+			+ BaseObject.IsServerTimeField + " INTEGER  NOT NULL DEFAULT 1, "
+			+ ExtraCategory.ExtraCategoryIDsStringField + " TEXT "
+			+ ");";
+	
 	private static final String LINKS_TABLE_CREATE = 
 			"CREATE TABLE " + LinkManager.TableName + "(" 
 			+ BaseObject.IDField + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
@@ -484,6 +496,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		CATEGORIES_TABLE_CREATE,
 		LINKS_TABLE_CREATE,
 		QUESTION_SETTINGS_TABLE_CREATE,
+		EXTRA_CATEGORIES_TABLE_CREATE,
 		ANSWERS_TABLE_CREATE,
 		ANSWERED_CATEGORIES_TABLE_CREATE
 	};
@@ -512,6 +525,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		"DROP TABLE IF EXISTS " + CustomRemarkManager.TableName,
 		"DROP TABLE IF EXISTS " + QuestionManager.TableName,
 		"DROP TABLE IF EXISTS " + CategoryManager.TableName,
+		"DROP TABLE IF EXISTS " + ExtraCategoryManager.TableName,
 		"DROP TABLE IF EXISTS " + LinkManager.TableName,
 		"DROP TABLE IF EXISTS " + QuestionSettingManager.TableName,
 		"DROP TABLE IF EXISTS " + AnswerManager.TableName,
@@ -538,6 +552,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		"DELETE FROM " + WayPointManager.TableName,
 		"DELETE FROM " + QuestionSettingManager.TableName,
 		"DELETE FROM " + AnswerManager.TableName,
+		"DELETE FROM " + ExtraCategoryManager.TableName,
 		"DELETE FROM " + AnsweredCategoryManager.TableName
 	};
 	
