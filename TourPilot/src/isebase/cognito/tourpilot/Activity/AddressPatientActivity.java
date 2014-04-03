@@ -1,7 +1,5 @@
 package isebase.cognito.tourpilot.Activity;
 
-import java.util.ArrayList;
-import java.util.List;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
@@ -10,6 +8,10 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Templates.AddressAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import android.os.Bundle;
 import android.widget.ListView;
 
@@ -42,8 +44,8 @@ public class AddressPatientActivity extends BaseActivity {
 	}
 	
 	public void reloadData() {
-		employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
 		patients = new ArrayList<Patient>();
+		employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
 		patients.add(PatientManager.Instance().loadAll(employment.getPatientID()));
 	}
 	

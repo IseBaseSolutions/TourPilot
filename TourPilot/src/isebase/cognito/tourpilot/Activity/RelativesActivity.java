@@ -1,6 +1,5 @@
 package isebase.cognito.tourpilot.Activity;
 
-import java.util.List;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
@@ -9,6 +8,9 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Relative.Relative;
 import isebase.cognito.tourpilot.Data.Relative.RelativeManager;
 import isebase.cognito.tourpilot.Templates.AddressAdapter;
+
+import java.util.List;
+
 import android.os.Bundle;
 import android.widget.ListView;
 
@@ -44,8 +46,7 @@ public class RelativesActivity extends BaseActivity {
 		relativesListView.setAdapter(adapter);
 	}
 	
-	private void reloadData()
-	{
+	private void reloadData() {	
 		employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
 		relatives =  RelativeManager.Instance().sortByStrIDs(RelativeManager.Instance().loadAllByIDs(employment.getPatient().getStrRelativeIDs()), employment.getPatient().getStrRelativeIDs());
 	}

@@ -37,9 +37,16 @@ import isebase.cognito.tourpilot.Data.Tour.TourManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
+import isebase.cognito.tourpilot.NewData.NewBaseObject.BaseObjectDAO;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
+import java.sql.SQLException;
 import java.util.Date;
+//import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
+//import isebase.cognito.tourpilot.Data.Question.Category.Category;
+//import isebase.cognito.tourpilot.Data.Question.Link.Link;
+//import isebase.cognito.tourpilot.Data.Question.Question.Question;
+//import isebase.cognito.tourpilot.Data.Worker.Worker;
 
 public class ServerCommandParser {
 
@@ -75,6 +82,7 @@ public class ServerCommandParser {
 	public static final char FREE_QUESTION_SETTING = '*';
 	public static final char AUTO_QUESTION_SETTING = '^';
 	public static final char CUSTOM_REMARK = '#';
+	public static final char WAY_POINT = 'C';
 
 	private SynchronizationHandler syncHandler;
 
@@ -117,7 +125,7 @@ public class ServerCommandParser {
 				Worker item = new Worker(commandLine);
 				WorkerManager.Instance().save(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
-			} else 
+			} else
 				removeByID(commandLine, WorkerManager.Instance());
 			break;
 		case PATIENT_REMARK:
@@ -159,6 +167,7 @@ public class ServerCommandParser {
 				commandLine = "L" + arr[1] +";"+ arr[2];
  				removeByID(commandLine, AdditionalTaskManager.Instance());
 			}
+			
 			break;
 		case DOCTOR:
 			if (commandActionType == NEED_TO_ADD) {
@@ -221,7 +230,7 @@ public class ServerCommandParser {
 				Question item = new Question(commandLine);
 				QuestionManager.Instance().save(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
-			} else 
+			} else
 				removeByID(commandLine, QuestionManager.Instance());
 			break;
 		case CATEGORY:
@@ -229,16 +238,16 @@ public class ServerCommandParser {
 				Category item = new Category(commandLine);
 				CategoryManager.Instance().save(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
-			} else 
-				removeByID(commandLine, CategoryManager.Instance());
+			} else
+				removeByID(commandLine, QuestionManager.Instance());
 			break;
 		case LINK:
 			if (commandActionType == NEED_TO_ADD) {
 				Link item = new Link(commandLine);
 				LinkManager.Instance().save(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
-			} else 
-				removeByID(commandLine, LinkManager.Instance());
+			} else
+				removeByID(commandLine, QuestionManager.Instance());
 			break;
 		case QUESTION_SETTING:
 			if (commandActionType == NEED_TO_ADD) {

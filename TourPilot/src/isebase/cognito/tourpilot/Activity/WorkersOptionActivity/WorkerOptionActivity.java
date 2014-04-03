@@ -1,37 +1,28 @@
 package isebase.cognito.tourpilot.Activity.WorkersOptionActivity;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Activity.SynchronizationActivity;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
-import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.Data.Task.Task;
-import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
+import isebase.cognito.tourpilot.NewData.NewBaseObject.NewBaseObject;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
+//import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 
 public class WorkerOptionActivity extends BaseActivity implements BaseDialogListener {
 
@@ -60,6 +51,7 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_worker_option);
 		StaticResources.setBaseContext(getBaseContext());
+		HelperFactory.setHelper(getBaseContext());		
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
@@ -197,8 +189,8 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 	public void saveSettings() {
 		Option.Instance().setServerIP(optionsFragment.etServerIP.getText().toString());
 		Option.Instance().setServerPort(Integer.parseInt(optionsFragment.etServerPort.getText().toString()));
-		Option.Instance().setPrevWorkerID(BaseObject.EMPTY_ID);
-		Option.Instance().setWorkerID(BaseObject.EMPTY_ID);
+		Option.Instance().setPrevWorkerID(NewBaseObject.EMPTY_ID);
+		Option.Instance().setWorkerID(NewBaseObject.EMPTY_ID);
 	}
 	
 	private void switchToLastActivity() {
@@ -208,7 +200,7 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 			startTasksActivity();
 		else if (Option.Instance().getPilotTourID() != -1)
 			startPatientsActivity();
-		else if (WorkerManager.Instance().load(null, null, BaseObject.NameField).size() > 0)
+		else if (WorkerManager.Instance().load().size() > 0)
 			mViewPager.setCurrentItem(1);
 		else 
 			mViewPager.setCurrentItem(0);

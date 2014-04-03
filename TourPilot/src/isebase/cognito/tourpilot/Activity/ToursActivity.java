@@ -7,18 +7,16 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourComparer;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
-import isebase.cognito.tourpilot.Data.Task.Task;
-import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Templates.PilotToursAdapter;
 import isebase.cognito.tourpilot.Utils.DataBaseUtils;
+
 import java.util.Collections;
 import java.util.List;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;

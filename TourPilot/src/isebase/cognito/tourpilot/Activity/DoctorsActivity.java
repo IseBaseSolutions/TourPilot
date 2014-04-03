@@ -8,6 +8,8 @@ import isebase.cognito.tourpilot.Data.Doctor.DoctorManager;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
+import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
 import isebase.cognito.tourpilot.Templates.AddressAdapter;
 import android.os.Bundle;
 import android.widget.ListView;
@@ -42,7 +44,7 @@ public class DoctorsActivity extends BaseActivity {
 	
 	public void reloadData() {
 		employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
-		addressable = DoctorManager.Instance().sortByStrIDs(DoctorManager.Instance().loadAllByIDs(employment.getPatient().getStrDoctorsIDs()),employment.getPatient().getStrDoctorsIDs());
+		addressable = DoctorManager.Instance().sortByStrIDs(DoctorManager.Instance().loadAllByIDs(employment.getPatient().getStrDoctorsIDs()), employment.getPatient().getStrDoctorsIDs());
 	}
 
 	private void fillUpTitle(){

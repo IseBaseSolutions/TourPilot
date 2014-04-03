@@ -2,6 +2,7 @@ package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
+import isebase.cognito.tourpilot.Data.Address.Address;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
@@ -12,10 +13,7 @@ import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
-import isebase.cognito.tourpilot.Data.Task.Task;
-import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.WayPoint.WayPoint;
-import isebase.cognito.tourpilot.Data.WayPoint.WayPointManager;
 import isebase.cognito.tourpilot.Data.Work.Work;
 import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
@@ -28,6 +26,7 @@ import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import isebase.cognito.tourpilot.Gps.GpsNavigator;
 import isebase.cognito.tourpilot.Gps.Service.GPSLogger;
+import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
 import isebase.cognito.tourpilot.Templates.WorkEmploymentAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
@@ -37,16 +36,11 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.opengl.Visibility;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
-import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -86,18 +80,6 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 			criticalClose();
 		}
 	}
-	
-//	@Override
-//	protected void onResume() {
-//		super.onResume();
-//		try {
-//			
-//			if ( && dialogGPSPatient.getFragmentManager() == null)
-//				
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -195,6 +177,15 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 					else
 						startTasksActivity();
 				}
+				else if (jobs.get(position) instanceof NewEmployment)
+				{
+					NewEmployment newEmployment = (NewEmployment)jobs.get(position);
+					saveSelectedEmploymentID(newEmployment.getId());
+					if (worker.getIsUseGPS() && !newEmployment.isDone())
+						dialogGPSPatient.show(getSupportFragmentManager(), "dialogGPSPatient");
+					else
+						startTasksActivity();
+				}
 				else
 				{
 					initSelectedPatientsDialog();
@@ -206,15 +197,16 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 
 	private void reloadData() {
 		loadJobs();	
+//		worker = HelperFactory.getHelper().getWorkerDAO().load(Option.Instance().getWorkerID());
 		worker = WorkerManager.Instance().load(Option.Instance().getWorkerID());
 	}
 	
 	private void loadJobs() {
-		List<Employment> employments = EmploymentManager.Instance().load(Employment.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID()));
+		jobs = new ArrayList<IJob>();
+		jobs.addAll(EmploymentManager.Instance().load(Employment.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID())));				
 		List<Work> works = WorkManager.Instance().loadAll(Work.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID()));
 		pilotTour = PilotTourManager.Instance().loadPilotTour(Option.Instance().getPilotTourID());
-		jobs = new ArrayList<IJob>();
-		jobs.addAll(employments);
+
 		jobs.addAll(works);
 		Collections.sort(jobs, new JobComparer(eJobComparerType.NORMAL_DONE_SENT));
 	}
@@ -314,9 +306,7 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 					PatientsActivity.class);
 			startActivity(patientsActivity);
 			
-			GpsNavigator.startGpsNavigation(PatientManager.Instance()
-					.loadAll(EmploymentManager.Instance().load(Option.Instance()
-							.getEmploymentID()).getPatientID()).getAddress());
+			GpsNavigator.startGpsNavigation(getPatientAdress());
 			startTasksActivity();
 			//WayPointManager.Instance().updateWasSent();
 			//WayPointManager.Instance().updateTourID();
@@ -341,6 +331,10 @@ public class PatientsActivity extends BaseActivity implements BaseDialogListener
 		//Intent gpsActivity = new Intent(getApplicationContext(),
 		//		GPSActivity.class);
 		//startActivity(gpsActivity);
+	}
+
+	private Address getPatientAdress() {
+		return PatientManager.Instance().loadAll(EmploymentManager.Instance().load(Option.Instance().getEmploymentID()).getPatientID()).getAddress();
 	}
 
 	@Override

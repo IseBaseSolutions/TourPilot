@@ -1,12 +1,10 @@
 package isebase.cognito.tourpilot.Data.UserRemark;
 
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
+import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
+
 import java.util.List;
 
-import isebase.cognito.tourpilot.Activity.UserRemarksActivity;
-import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
-import isebase.cognito.tourpilot.Data.Employment.Employment;
-import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
-import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import android.database.sqlite.SQLiteDatabase;
 
 public class UserRemarkManager extends BaseObjectManager<UserRemark> {
@@ -39,14 +37,6 @@ public class UserRemarkManager extends BaseObjectManager<UserRemark> {
 	public void onUpgrade(SQLiteDatabase db) {
 
 	}
-	
-	public List<UserRemark> loadByEmploymentID(int employmentID) {
-		String strSQL = String.format("SELECT * FROM %1$s " +
-				"WHERE %2$s = %3$d"
-				, UserRemarkManager.TableName
-				, Employment.PilotTourIDField
-				, employmentID);
-		return load(strSQL);
-	}
+
 	
 }

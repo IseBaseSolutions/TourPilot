@@ -16,6 +16,9 @@ import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemark;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
+import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
+import isebase.cognito.tourpilot.NewData.NewWorker.NewWorker;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
 import java.util.Arrays;
@@ -41,7 +44,7 @@ public class VerificationActivity extends BaseActivity {
 	
 	private CheckBox chbCheckVerification;	
 	
-	private Employment employment;	
+	private Employment employment;
 	
 	private UserRemark userRemark;		
 	
@@ -78,7 +81,6 @@ public class VerificationActivity extends BaseActivity {
 		dateEnd = employment.getLastTask().getManualDate().equals(DateUtils.EmptyDate) ? employment.getLastTask().getRealDate() : employment.getLastTask().getManualDate();
 
 		String taskVerification = "";
-
 		taskVerification += "<b>" + getWorker(Option.Instance().getWorker()) + " </b>";
 		taskVerification += "hat am ";
 		
@@ -151,6 +153,12 @@ public class VerificationActivity extends BaseActivity {
 		String[] workerName = worker.getName().split(" ");
 		return String.format("%s %s", workerName[0], workerName[1]);
 	}
+	
+	private String getWorker(NewWorker worker) {
+		String[] workerName = worker.getName().split(" ");
+		return String.format("%s %s", workerName[0], workerName[1]);
+	}
+	
 	private String getPatientNameWithoutKey(String patient) {
 		String[] patientName = patient.split(" ") ;
 		return String.format("%s %s", patientName[0], patientName[1]); 
@@ -221,7 +229,7 @@ public class VerificationActivity extends BaseActivity {
 		
 		long workerID = Option.Instance().getWorkerID();
 		
-		long patientID = PatientManager.Instance().load(employment.getPatientID()).getID();
+		long patientID = PatientManager.Instance().load( employment.getPatientID()).getID();
 
 		String doneTasksIDs = "", undoneTasksIDs = "";
 		for(Task task : tasks) {

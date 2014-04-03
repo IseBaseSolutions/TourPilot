@@ -5,6 +5,7 @@ import isebase.cognito.tourpilot.Data.Address.Address;
 import isebase.cognito.tourpilot.Data.Address.IAddressable;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.DataBase.MapField;
+import isebase.cognito.tourpilot.NewData.NewAddress.NewAddress;
 import isebase.cognito.tourpilot.Utils.NCryptor;
 import isebase.cognito.tourpilot.Utils.StringParser;
 
@@ -112,6 +113,12 @@ public class Relative extends BaseObject implements IAddressable {
 	@Override
 	public String toString(){
 		return String.format("%s\n%s\n%s,%s\n",getFullName(),address.getStreet(),address.getZip(),address.getCity());
+	}
+
+	@Override
+	public NewAddress getNewAddress() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

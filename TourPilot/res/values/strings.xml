@@ -425,5 +425,7 @@
     <string name="answer_changing">Antwort ändern</string>
     
     <string name ="extra_assessments">Zusätzliche Assessments hinzufügen</string>
+    
+    <string name ="new_DB_version">1045</string>
 
 </resources>

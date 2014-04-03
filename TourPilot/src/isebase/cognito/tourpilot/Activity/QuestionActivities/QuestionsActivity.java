@@ -3,8 +3,6 @@ package isebase.cognito.tourpilot.Activity.QuestionActivities;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Activity.TasksAssessmentsActivity.TasksAssessementsActivity;
-import isebase.cognito.tourpilot.Data.Employment.Employment;
-import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Question.Answer.Answer;
 import isebase.cognito.tourpilot.Data.Question.Answer.AnswerManager;
@@ -42,7 +40,6 @@ public class QuestionsActivity extends BaseActivity implements BaseDialogListene
 	List<IQuestionable> answers = new ArrayList<IQuestionable>();
 	List<Question> subQuestions = new ArrayList<Question>();
 	Category category;
-	Employment employment;
 	QuestionAdapter questionAdapter;
 	QuestionAdapter answerAdapter;
 	BaseDialog changeAnswerDialog;

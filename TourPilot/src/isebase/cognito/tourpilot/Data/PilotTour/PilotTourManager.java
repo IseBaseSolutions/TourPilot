@@ -1,9 +1,9 @@
 package isebase.cognito.tourpilot.Data.PilotTour;
 
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
-import isebase.cognito.tourpilot.Data.Employment.Employment;
-import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Tour.TourManager;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
+import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
 
 import java.util.List;
 
@@ -48,9 +48,9 @@ public class PilotTourManager extends BaseObjectManager<PilotTour> {
 				"t2.is_server_time as is_server_time " +
 				"FROM %1$s t1 INNER JOIN %2$s t2 ON t1.tour_id = t2._id " +
 				"GROUP BY t1.%3$s",
-				EmploymentManager.TableName,
+				HelperFactory.getHelper().getEmploymentDAO().getTableInfo().getTableName(),
 				TourManager.TableName,
-				Employment.PilotTourIDField);
+				NewEmployment.PILOT_TOUR_ID_FIELD);
 		return load(strSQL);		
 	}
 	
@@ -67,9 +67,9 @@ public class PilotTourManager extends BaseObjectManager<PilotTour> {
 				"FROM %1$s t1 INNER JOIN %2$s t2 ON t1.tour_id = t2._id " +
 				"WHERE t1.%3$s = %4$d " +
 				"GROUP BY t1.%3$s",
-				EmploymentManager.TableName,
+				HelperFactory.getHelper().getEmploymentDAO().getTableInfo().getTableName(),
 				TourManager.TableName,
-				Employment.PilotTourIDField,
+				NewEmployment.PILOT_TOUR_ID_FIELD,
 				pilotTourID);
 		return load(strSQL).get(0);		
 	}

@@ -5,6 +5,7 @@ import isebase.cognito.tourpilot.Data.Address.Address;
 import isebase.cognito.tourpilot.Data.Address.IAddressable;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.DataBase.MapField;
+import isebase.cognito.tourpilot.NewData.NewAddress.NewAddress;
 import isebase.cognito.tourpilot.Utils.NCryptor;
 import isebase.cognito.tourpilot.Utils.StringParser;
 
@@ -113,6 +114,12 @@ public class Doctor extends BaseObject implements IAddressable {
 	public Address getAddress() {
 		// TODO Auto-generated method stub
 		return address;
+	}
+
+	@Override
+	public NewAddress getNewAddress() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

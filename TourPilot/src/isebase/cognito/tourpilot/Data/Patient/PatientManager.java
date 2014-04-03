@@ -3,8 +3,9 @@ package isebase.cognito.tourpilot.Data.Patient;
 import isebase.cognito.tourpilot.Data.Address.Address;
 import isebase.cognito.tourpilot.Data.Address.AddressManager;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
-import isebase.cognito.tourpilot.Data.Employment.Employment;
-import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
+import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
+
 import java.util.List;
 
 import android.database.sqlite.SQLiteDatabase;
@@ -77,8 +78,8 @@ public class PatientManager extends BaseObjectManager<Patient> {
 				"INNER JOIN %2$s as t2 ON t1._id = t2.patient_id " +
 				"WHERE t2.%3$s = %4$d GROUP BY t2._id "
 				, PatientManager.TableName
-				, EmploymentManager.TableName
-				, Employment.PilotTourIDField
+				, HelperFactory.getHelper().getEmploymentDAO().getTableInfo().getTableName()
+				, NewEmployment.PILOT_TOUR_ID_FIELD
 				, tourPilotID);
 		return load(strSQL);
 	}

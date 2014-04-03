@@ -11,35 +11,20 @@ public class WayPoint extends BaseObject {
 	public static final String LatitudeField = "latitude"; 
 	public static final String LongitudeField = "longitude"; 
 	public static final String NbSatellitesField = "nbSatellites"; 
-//	public static final String UuidField = "uuid";
 	public static final String AltitudeField = "altitude"; 
 	public static final String AccuracyField = "accuracy";
-//	public static final String LinkField = "link"; 
 	public static final String TimeField = "time"; 
 	public static final String WorkerIDField = "worker_id"; 
 	public static final String PilotTourIDField = "pilot_tour_id"; 
 	
-	//private long trackID;
 	private double latitude;
 	private double longitude;
 	private int nbSatellites;
-	//private String uuid;
 	private double altitude;
 	private float accuracy;
-	//private String link;
 	private long time;
 	private int workerID;
 	private int pilotTourID;
-
-//	@MapField(DatabaseField = TrackIDField)
-//	public long getTrackID() {
-//		return trackID;
-//	}
-//
-//	@MapField(DatabaseField = TrackIDField)
-//	public void setTrackID(long trackID) {
-//		this.trackID = trackID;
-//	}
 
 	@MapField(DatabaseField = LatitudeField)
 	public double getLatitude() {

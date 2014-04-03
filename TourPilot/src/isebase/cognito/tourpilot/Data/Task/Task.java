@@ -10,7 +10,9 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.DataBase.MapField;
+import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 import isebase.cognito.tourpilot.Utils.StringParser;
 
@@ -265,12 +267,17 @@ public class Task extends BaseObject {
 		PilotTour pilotTour = PilotTourManager.Instance().loadPilotTour(Option.Instance().getPilotTourID());
 		setTourID(pilotTour.getTourID());
 		Employment employment = EmploymentManager.Instance().load(getEmploymentID());
-		setPatientID(employment.getPatientID());
+		NewEmployment newEmployment = HelperFactory.getHelper().getEmploymentDAO().load((int)getEmploymentID());
+		setPatientID(employment == null ? newEmployment.getPatientID() : employment.getPatientID());
 		setQuality(additionalTask.getQuality());
 		setQualityResult("");
 		setMinutePrice(-1);
 		SimpleDateFormat ddMMyyyyFormat = new SimpleDateFormat("ddMMyyyy");
-		String lstStr = employment.isFromMobile() ? employment.getDayPart() : TaskManager.Instance().getFirstSymbol(employment.getID()) + "";
+		String lstStr = "";
+		if (employment == null)
+			lstStr = newEmployment.isFromMobile() ? newEmployment.getDayPart() : TaskManager.Instance().getFirstSymbol(newEmployment.getId()) + "";
+		else
+			lstStr = employment.isFromMobile() ? employment.getDayPart() : TaskManager.Instance().getFirstSymbol(employment.getID()) + "";
 		lstStr += additionalTask.getCatalogType();
 		lstStr += "Z";
 		if ( additionalTask.getCatalogType() < 10 ) lstStr += "0";

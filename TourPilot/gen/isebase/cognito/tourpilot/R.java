@@ -674,6 +674,7 @@ public final class R {
          */
         public static final int minuten_einen=0x7f060089;
         public static final int ml=0x7f060056;
+        public static final int new_DB_version=0x7f060182;
         public static final int no=0x7f06005d;
         public static final int no_any_patient=0x7f060086;
         public static final int norton=0x7f0600a1;

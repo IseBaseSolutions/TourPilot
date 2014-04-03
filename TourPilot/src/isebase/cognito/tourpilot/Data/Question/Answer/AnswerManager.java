@@ -7,8 +7,15 @@ import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Question.Question.Question;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
+import isebase.cognito.tourpilot.NewData.NewBaseObject.NewBaseObject;
+import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
 
+import java.sql.SQLException;
 import java.util.List;
+
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.UpdateBuilder;
 
 import android.database.sqlite.SQLiteDatabase;
 
@@ -42,10 +49,10 @@ public class AnswerManager extends BaseObjectManager<Answer> {
 	}
 	
     public String getDone()
-    {
-    	List<Employment> employments = EmploymentManager.Instance().load(BaseObject.WasSentField, "0 AND is_done = 1");
-    	List<Answer> answers;
+    {    	
     	String strEmpls = "";
+    	List<Answer> answers;
+    	List<Employment> employments = EmploymentManager.Instance().load(BaseObject.WasSentField, "0 AND is_done = 1");
     	for (Employment employment : employments) {
     		answers = loadByEmploymentID(employment.getID());
         	for (Answer answer : answers) {
@@ -72,18 +79,6 @@ public class AnswerManager extends BaseObjectManager<Answer> {
 				, employmentID);
 		return load(strSQL);
 	}
-	
-//	public Answer loadBradenAnswerByQuestionID(int questionID) {
-//		String strSQL = String.format("SELECT * FROM %1$s " +
-//				" WHERE question_id = %2$d AND employment_id = %3$d" 
-//				, AnswerManager.Instance().getRecTableName()
-//				, questionID
-//				, Option.Instance().getEmploymentID());
-//		List<Answer> answers = load(strSQL);
-//		if (answers.size() > 0)
-//			return answers.get(0);
-//		return null;
-//	}
 	
 	public Answer loadByQuestionIDAndType(int questionID, int type) {
 		String strSQL = String.format("SELECT * FROM %1$s " +

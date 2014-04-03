@@ -9,6 +9,7 @@ import isebase.cognito.tourpilot.Connection.ConnectionStatus;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
@@ -72,8 +73,7 @@ import android.widget.TextView;
  				}
 				if(isOK) {		
 					if(Option.Instance().getWorkerID() != -1)
-						EmploymentManager.Instance().createEmployments();
-
+							EmploymentManager.Instance().createEmployments();
 					Intent nextActivity = (Option.Instance().getPilotTourID() != -1) 
 							? new Intent(getApplicationContext(), PatientsActivity.class) 
 							: (Option.Instance().getWorkerID() != -1)

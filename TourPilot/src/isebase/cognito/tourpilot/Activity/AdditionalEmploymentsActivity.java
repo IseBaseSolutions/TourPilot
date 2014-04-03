@@ -12,9 +12,12 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
+import isebase.cognito.tourpilot.NewData.NewEmployment.EmploymentDAO;
+import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
 import isebase.cognito.tourpilot.Templates.AdditionalEmploymentAdapter;
 import isebase.cognito.tourpilot.Templates.AdditionalPatientAdapter;
 import isebase.cognito.tourpilot.Utils.StringParser;
@@ -298,6 +301,7 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 			patient.setIsAdditional(true);
 			PatientManager.Instance().save(patient);
 		}
+
 		Employment employment = EmploymentManager.createEmployment(patient);
 		Option.Instance().setEmploymentID(employment.getID());
 		Option.Instance().save();

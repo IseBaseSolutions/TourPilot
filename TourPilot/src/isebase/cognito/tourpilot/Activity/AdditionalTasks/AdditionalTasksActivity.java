@@ -15,6 +15,8 @@ import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.TaskManager;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
+import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
 import isebase.cognito.tourpilot.Templates.AdditionalTaskAdapter;
 
 import java.util.ArrayList;
@@ -88,12 +90,8 @@ public class AdditionalTasksActivity extends BaseTimeSyncActivity {
 	private void reloadData() {
 		int catalogType = getIntent().getIntExtra("catalog_type", BaseObject.EMPTY_ID);
 		catalog = new Catalog(eCatalogType.values()[catalogType]);	
-		
-		Employment empl = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
-		
-		
-		
-		Patient patient = PatientManager.Instance().load(empl.getPatientID());
+
+		Patient patient = PatientManager.Instance().load(EmploymentManager.Instance().load(Option.Instance().getEmploymentID()).getPatientID());
 		
 		switch (catalog.getCatalogType()) {
 			case btyp_kk:

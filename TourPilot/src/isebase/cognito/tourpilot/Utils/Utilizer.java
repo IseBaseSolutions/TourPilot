@@ -1,6 +1,8 @@
 package isebase.cognito.tourpilot.Utils;
 
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.NewData.NewBaseObject.NewBaseObject;
+
 import java.util.List;
 
 public class Utilizer {
@@ -32,6 +34,18 @@ public class Utilizer {
 			retVal += String.format("%s%s" 
 					, retVal.equals("") ? "" : ", "
 					, item.getID());
+		
+		return retVal;
+	}
+	
+	public static String getNewIDsString(Iterable<? extends NewBaseObject> items){
+		String retVal = "";
+		if(items == null)
+			return retVal;
+		for(NewBaseObject item : items)
+			retVal += String.format("%s%s" 
+					, retVal.equals("") ? "" : ", "
+					, item.getId());
 		
 		return retVal;
 	}

@@ -3,7 +3,9 @@ package isebase.cognito.tourpilot.Data.Option;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.DataBase.MapField;
+import isebase.cognito.tourpilot.NewData.NewWorker.NewWorker;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import android.telephony.TelephonyManager;
 
@@ -25,6 +27,7 @@ public class Option {
 	public static final String IsLockOptionsField = "lock_options";
 	public static boolean testMode = false;
 	private Worker worker;
+	private NewWorker newWorker;
 	private TelephonyManager phoneManager = StaticResources.phoneManager;
 	private OptionManager optionManager;
 	private static Option instance;
@@ -208,6 +211,13 @@ public class Option {
 			return worker;
 		worker = WorkerManager.Instance().load(workerID);
 		return worker;
+	}
+	
+	public NewWorker getNewWorker() {
+		if (newWorker != null && newWorker.getId() == getWorkerID())
+			return newWorker;
+		newWorker = HelperFactory.getHelper().getWorkerDAO().load(workerID);
+		return newWorker;
 	}
 
 	protected void clear() {

@@ -10,6 +10,8 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.UserRemark.RemarksComparer;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemark;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
+import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -59,11 +61,12 @@ public class NewUserRemarksActivity extends BaseActivity {
 
 	private void reloadData() {
 		employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
+
 		customRemarks = CustomRemarkManager.Instance().load();
 		userRemark = UserRemarkManager.Instance().load(Option.Instance().getEmploymentID());
 		if (userRemark == null)
 			userRemark = new UserRemark(employment.getID(), Option.Instance().getWorkerID(), employment.getPatientID(), 
-					false, false, false, false, "");
+						false, false, false, false, "");
 		Collections.sort(customRemarks, new RemarksComparer());
 	}
 
@@ -127,13 +130,13 @@ public class NewUserRemarksActivity extends BaseActivity {
 		if (bundle == null)
 			return;
 		
-		setResult(UserRemarksActivity.RESULT_OK, intent);
+		setResult(NewUserRemarksActivity.RESULT_OK, intent);
 		finish();
 	}
 
 	@Override
 	public void onBackPressed() {
-		setResult(UserRemarksActivity.RESULT_CANCELED);
+		setResult(NewUserRemarksActivity.RESULT_CANCELED);
 		finish();
 	}
 

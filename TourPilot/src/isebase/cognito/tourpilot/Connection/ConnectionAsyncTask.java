@@ -24,6 +24,7 @@ import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
 import isebase.cognito.tourpilot.Data.WayPoint.WayPointManager;
 import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Utils.StringParser;
 
@@ -183,6 +184,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 			conStatus.OS.flush();
 			String recievedDate = readFromStream(conStatus.IS);
 			conStatus.serverCommandParser.parseElement(recievedDate, true);
+
 			Option.Instance().setTimeSynchronised(true);
 			correctTime();
 		} catch (Exception ex) {

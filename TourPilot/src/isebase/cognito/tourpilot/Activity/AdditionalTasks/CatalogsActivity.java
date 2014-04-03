@@ -10,6 +10,8 @@ import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Patient.PatientManager;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
+import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +45,7 @@ public class CatalogsActivity extends BaseActivity {
 
 	private void reloadData(){
 		employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
+
 		Patient patient = PatientManager.Instance().load(employment.getPatientID());
 		if(patient.getKK() != BaseObject.EMPTY_ID)
 			catalogs.add(new Catalog(eCatalogType.btyp_kk));

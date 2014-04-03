@@ -1,7 +1,6 @@
 package isebase.cognito.tourpilot.Data.Question.Question;
 
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Question.Interfaces.IQuestionable;
 import isebase.cognito.tourpilot.DataBase.MapField;

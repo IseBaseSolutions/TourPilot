@@ -5,6 +5,8 @@ import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Question.Answer.Answer;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
+import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
 import java.util.ArrayList;
@@ -45,7 +47,6 @@ public class BradenDialog extends DialogFragment{
 	private TextView tvOther1;
 	private TextView tvOther2;
 	private Employment employment;
-
 	public LinearLayout getCurrentLayout() {
 		return currentLayout;
 	}

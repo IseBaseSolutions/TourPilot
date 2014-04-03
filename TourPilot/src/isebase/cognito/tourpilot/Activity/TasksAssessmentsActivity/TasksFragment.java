@@ -24,7 +24,6 @@ import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemark;
 import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemarkManager;
 import isebase.cognito.tourpilot.Data.Question.Answer.AnswerManager;
-import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategory;
 import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategoryManager;
 import isebase.cognito.tourpilot.Data.Question.ExtraCategory.ExtraCategoryManager;
 import isebase.cognito.tourpilot.Data.Question.QuestionSetting.QuestionSetting;
@@ -35,8 +34,6 @@ import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
 import isebase.cognito.tourpilot.Data.Work.Work;
 import isebase.cognito.tourpilot.Data.Work.WorkManager;
-import isebase.cognito.tourpilot.Data.Worker.Worker;
-import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
@@ -74,8 +71,6 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	private TaskAdapter taskAdapter;
 	public Employment employment;
 	private Diagnose diagnose;
-
-
 
 	private List<Task> tasks;
 	private Task startTask;
@@ -188,11 +183,9 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 			}
 			break;
 		}		
-		List<Employment> employments = EmploymentManager.Instance().load(Employment.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID()));
-		List<Work> works = WorkManager.Instance().loadAll(Work.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID()));
 		List<IJob> jobs = new ArrayList<IJob>();
-		jobs.addAll(employments);
-		jobs.addAll(works);
+		jobs.addAll(EmploymentManager.Instance().load(Employment.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID())));
+		jobs.addAll(WorkManager.Instance().loadAll(Work.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID())));
 		boolean allIsDone = true;
 		for (IJob job : jobs)
 			if(!job.isDone())
@@ -482,7 +475,7 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	
 	private void saveEmployment() {
 		if (Option.Instance().getEmploymentID() == BaseObject.EMPTY_ID)
-			return;			
+			return;
 		Employment empl = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
 		EmploymentInterval emplInterval = new EmploymentInterval(empl.getID(), 
 				(startTask.getManualDate().equals(DateUtils.EmptyDate) 
@@ -495,7 +488,7 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 		empl.setStartTime(emplInterval.getStartTime());
 		empl.setStopTime(emplInterval.getStopTime());
 		empl.setIsDone(true);
-		EmploymentIntervalManager.Instance().save(new EmploymentInterval(empl.getID(), empl.getStartTime(), empl.getStopTime()));
+//		EmploymentIntervalManager.Instance().save(new EmploymentInterval(empl.getID(), empl.getStartTime(), empl.getStopTime()));
 		EmploymentManager.Instance().save(empl);
 	}
 	
@@ -759,7 +752,7 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	}
 	private boolean isAllDone(){
 		  return (!startTask.getRealDate().equals(DateUtils.EmptyDate) 
-		    && !endTask.getRealDate().equals(DateUtils.EmptyDate) && employment.isDone())
+		    && !endTask.getRealDate().equals(DateUtils.EmptyDate) && isEmploymentDone())
 		    || DateUtils.getTodayDateOnly().getTime() < DateUtils.getDateOnly(startTask.getPlanDate()).getTime();
 	}
 	private void checkAllIsDone(){

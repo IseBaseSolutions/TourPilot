@@ -14,13 +14,13 @@ import isebase.cognito.tourpilot.Data.Question.Category.Category;
 import isebase.cognito.tourpilot.Data.Question.Category.CategoryManager;
 import isebase.cognito.tourpilot.Data.Relative.Relative;
 import isebase.cognito.tourpilot.Data.Relative.RelativeManager;
-import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
+import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
 
 import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -94,8 +94,9 @@ public class PainAnalyseSkalaActivity extends Activity {
 
 	private void reloadData() {
 		category = CategoryManager.Instance().loadByCategoryName(getString(R.string.pain_analyse));
-		patient = PatientManager.Instance().load(EmploymentManager.Instance().load(Option.Instance().getEmploymentID()).getPatientID());
 		employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
+		patient = PatientManager.Instance().load(employment.getPatientID());
+
 		List<Answer> answers = AnswerManager.Instance().loadByCategoryID(category.getID());
 		if (answers.size() > 0)
 			answer = answers.get(0);
@@ -146,26 +147,26 @@ public class PainAnalyseSkalaActivity extends Activity {
 			llHasAnyPain.setVisibility(View.VISIBLE);
 			if (answer.getAnswerID() == 0) {
 				((RadioButton)((RadioGroup)llHasAnyPain.getChildAt(1)).getChildAt(1)).setChecked(true);
-				if (!employment.isDone())
+				if (!isEmploymentDone())
 					showBtOk(R.id.linear_layout_has_any_pain);
 			}
 			else {
 				showPatientGradeLayout();
 				((RadioButton)((RadioGroup)llHasAnyPain.getChildAt(1)).getChildAt(0)).setChecked(true);
 				((Spinner)(llGrade.getChildAt(1))).setSelection(answer.getAnswerID()-1);
-				if (!employment.isDone())
+				if (!isEmploymentDone())
 					showBtOk(R.id.linear_layout_grade);
 			}
 		}
 		else {
 			((RadioButton)((RadioGroup)llAbleGiveData.getChildAt(1)).getChildAt(1)).setChecked(true);
-			((RadioButton)((RadioGroup)llAbleGiveData.getChildAt(1)).getChildAt(1)).setEnabled(!employment.isDone());
+			((RadioButton)((RadioGroup)llAbleGiveData.getChildAt(1)).getChildAt(1)).setEnabled(!isEmploymentDone());
 			setTestAnswers();
 			llTest.setVisibility(View.VISIBLE);
 			llCanSomeoneAnswer.setVisibility(View.VISIBLE);
 			if (answer.getAnswerID() == -1) {
 				((RadioButton)((RadioGroup)llCanSomeoneAnswer.getChildAt(1)).getChildAt(1)).setChecked(true);
-				if (!employment.isDone())
+				if (!isEmploymentDone())
 					showBtOk(R.id.linear_layout_can_someone_answer);
 			}
 			else {
@@ -183,26 +184,25 @@ public class PainAnalyseSkalaActivity extends Activity {
 					((Spinner)(llRelativeSelection.getChildAt(1))).setSelection(getSelectedRelativeIndex());
 					((Spinner)(llGrade.getChildAt(1))).setSelection(answer.getAnswerID()-1);
 				}
-				if (!employment.isDone())
+				if (!isEmploymentDone())
 					showBtOk(R.id.linear_layout_grade);
 			}
 		}	
-		((RadioButton)((RadioGroup)llAbleGiveData.getChildAt(1)).getChildAt(0)).setEnabled(!employment.isDone());
-		((RadioButton)((RadioGroup)llAbleGiveData.getChildAt(1)).getChildAt(1)).setEnabled(!employment.isDone());
-//		((RadioButton)((RadioGroup)llTest.getChildAt(0)).getChildAt(1)).setEnabled(!employment.isDone());
-		((RadioButton)((RadioGroup)llHasAnyPain.getChildAt(1)).getChildAt(0)).setEnabled(!employment.isDone());
-		((RadioButton)((RadioGroup)llHasAnyPain.getChildAt(1)).getChildAt(1)).setEnabled(!employment.isDone());
-		((RadioButton)((RadioGroup)llCanSomeoneAnswer.getChildAt(1)).getChildAt(0)).setEnabled(!employment.isDone());
-		((RadioButton)((RadioGroup)llCanSomeoneAnswer.getChildAt(1)).getChildAt(1)).setEnabled(!employment.isDone());
-		((RadioButton)((RadioGroup)llRelativeOrNurse.getChildAt(1)).getChildAt(0)).setEnabled(!employment.isDone());
-		((RadioButton)((RadioGroup)llRelativeOrNurse.getChildAt(1)).getChildAt(1)).setEnabled(!employment.isDone());
-		((Spinner)(llRelativeSelection.getChildAt(1))).setEnabled(!employment.isDone());
-		((Spinner)(llGrade.getChildAt(1))).setEnabled(!employment.isDone());
+		((RadioButton)((RadioGroup)llAbleGiveData.getChildAt(1)).getChildAt(0)).setEnabled(!isEmploymentDone());
+		((RadioButton)((RadioGroup)llAbleGiveData.getChildAt(1)).getChildAt(1)).setEnabled(!isEmploymentDone());
+		((RadioButton)((RadioGroup)llHasAnyPain.getChildAt(1)).getChildAt(0)).setEnabled(!isEmploymentDone());
+		((RadioButton)((RadioGroup)llHasAnyPain.getChildAt(1)).getChildAt(1)).setEnabled(!isEmploymentDone());
+		((RadioButton)((RadioGroup)llCanSomeoneAnswer.getChildAt(1)).getChildAt(0)).setEnabled(!isEmploymentDone());
+		((RadioButton)((RadioGroup)llCanSomeoneAnswer.getChildAt(1)).getChildAt(1)).setEnabled(!isEmploymentDone());
+		((RadioButton)((RadioGroup)llRelativeOrNurse.getChildAt(1)).getChildAt(0)).setEnabled(!isEmploymentDone());
+		((RadioButton)((RadioGroup)llRelativeOrNurse.getChildAt(1)).getChildAt(1)).setEnabled(!isEmploymentDone());
+		((Spinner)(llRelativeSelection.getChildAt(1))).setEnabled(!isEmploymentDone());
+		((Spinner)(llGrade.getChildAt(1))).setEnabled(!isEmploymentDone());
 		for (int i = 0; i < llTest.getChildCount(); i++)
 			for (int j = 0; j < ((LinearLayout)llTest.getChildAt(i)).getChildCount(); j++)
 				if (((LinearLayout)llTest.getChildAt(i)).getChildAt(j) instanceof RadioGroup)
 					for (int k = 0; k < ((RadioGroup)((LinearLayout)llTest.getChildAt(i)).getChildAt(j)).getChildCount(); k++)
-						((CheckBox)((RadioGroup)((LinearLayout)llTest.getChildAt(i)).getChildAt(j)).getChildAt(k)).setEnabled(!employment.isDone());
+						((CheckBox)((RadioGroup)((LinearLayout)llTest.getChildAt(i)).getChildAt(j)).getChildAt(k)).setEnabled(isEmploymentDone());
 	}
 	
 	private int getSelectedRelativeIndex() {
@@ -553,6 +553,10 @@ public class PainAnalyseSkalaActivity extends Activity {
 			// TODO Auto-generated method stub
 			
 		}
+	}
+	
+	private boolean isEmploymentDone() {
+		return employment.isDone();
 	}
 
 }

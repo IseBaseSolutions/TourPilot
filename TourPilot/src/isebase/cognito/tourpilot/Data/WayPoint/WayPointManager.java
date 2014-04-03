@@ -31,14 +31,5 @@ public class WayPointManager extends BaseObjectManager<WayPoint>{
 		
 	}
 
-	public void updateWasSent(){
-		String strSQL = "UPDATE WayPoints SET was_sent = 0 WHERE was_sent = 1";
-		execSQL(strSQL);
-	}
-	
-	public void updateTourID(){
-		String strSQL = "UPDATE WayPoints SET pilot_tour_id = 390753 WHERE pilot_tour_id = 390701";
-		execSQL(strSQL);
-	}
 
 }

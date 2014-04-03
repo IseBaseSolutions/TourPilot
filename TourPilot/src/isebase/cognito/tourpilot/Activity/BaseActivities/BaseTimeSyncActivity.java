@@ -3,13 +3,11 @@ package isebase.cognito.tourpilot.Activity.BaseActivities;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.AdditionalWorksActivity;
 import isebase.cognito.tourpilot.Activity.ManualInputActivity;
+import isebase.cognito.tourpilot.Activity.NewUserRemarksActivity;
 import isebase.cognito.tourpilot.Activity.PatientsActivity;
 import isebase.cognito.tourpilot.Activity.SynchronizationActivity;
-import isebase.cognito.tourpilot.Activity.TasksActivity;
 import isebase.cognito.tourpilot.Activity.ToursActivity;
-import isebase.cognito.tourpilot.Activity.UserRemarksActivity;
 import isebase.cognito.tourpilot.Activity.VerificationActivity;
-import isebase.cognito.tourpilot.Activity.WorkersActivity;
 import isebase.cognito.tourpilot.Activity.TasksAssessmentsActivity.TasksAssessementsActivity;
 import isebase.cognito.tourpilot.Activity.WorkersOptionActivity.WorkerOptionActivity;
 import isebase.cognito.tourpilot.Connection.ConnectionAsyncTask;
@@ -168,7 +166,7 @@ public class BaseTimeSyncActivity extends FragmentActivity {
 	
 
 	protected void startUserRemarksActivity() {
-		Intent userRemarksActivity = new Intent(getApplicationContext(), UserRemarksActivity.class);
+		Intent userRemarksActivity = new Intent(getApplicationContext(), NewUserRemarksActivity.class);
 		startActivity(userRemarksActivity);
 	}
 

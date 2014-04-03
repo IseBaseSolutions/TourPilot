@@ -3,14 +3,12 @@ package isebase.cognito.tourpilot.Dialogs;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
-import isebase.cognito.tourpilot.StaticResources.StaticResources;
+import isebase.cognito.tourpilot.NewData.NewWorker.NewWorker;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.InputFilter;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -33,15 +31,8 @@ public class PinDialog extends BaseDialog {
 	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
-//		etPin = new EditText(StaticResources.getBaseContext());
-//		etPin.setHint(isebase.cognito.tourpilot.R.string.enter_pin);
-//		etPin.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
-//		etPin.setFilters(new InputFilter[] { new InputFilter.LengthFilter(10) });		
+		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());		
 	    LayoutInflater inflater = getActivity().getLayoutInflater();
-
-	    // Inflate and set the layout for the dialog
-	    // Pass null as the parent view because its going in the dialog layout
 	    View view = inflater.inflate(R.layout.dialog_pin, null);
 	    adb.setView(view);
 		adb.setIcon(android.R.drawable.ic_partial_secure);

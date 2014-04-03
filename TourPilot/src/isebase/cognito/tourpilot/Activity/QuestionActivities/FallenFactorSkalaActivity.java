@@ -14,8 +14,10 @@ import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategory
 import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategoryManager;
 import isebase.cognito.tourpilot.Data.Question.Category.Category;
 import isebase.cognito.tourpilot.Data.Question.Category.CategoryManager;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
+import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.View;

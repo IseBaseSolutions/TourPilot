@@ -565,7 +565,7 @@ public class DataBaseWrapper extends SQLiteOpenHelper {
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-		finally{
+			finally{
 		}
 	}
 

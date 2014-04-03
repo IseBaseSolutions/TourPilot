@@ -1,20 +1,22 @@
 package isebase.cognito.tourpilot.Activity.WorkersOptionActivity;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.SynchronizationActivity;
-import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectComparer;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.PinDialog;
+import isebase.cognito.tourpilot.NewData.NewWorker.NewWorker;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -24,15 +26,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ListView;
+//import isebase.cognito.tourpilot.Data.Worker.Worker;
 
 public class WorkersFragment extends Fragment implements BaseDialogListener {
 
 	private List<Worker> workers = new ArrayList<Worker>();
 	private PinDialog pinDialog;
-	private Worker selectedWorker;	
+	private Worker selectedWorker;
 	
 	private View rootView;
 	
@@ -73,6 +74,7 @@ public class WorkersFragment extends Fragment implements BaseDialogListener {
 					logIn();
 				else if (pinDialog.getFragmentManager() == null)
 					showPinDialog();
+
 			}
 		});
 	}
@@ -80,8 +82,8 @@ public class WorkersFragment extends Fragment implements BaseDialogListener {
 
 	
 	public void reloadData() {
-		workers = WorkerManager.Instance().load(null, null, BaseObject.NameField);
-		Collections.sort(workers,new BaseObjectComparer());
+		workers = WorkerManager.Instance().load();
+		Collections.sort(workers, new BaseObjectComparer());
 		Option.Instance().setWorkerActivity(true);
 		Option.Instance().save();
 	}

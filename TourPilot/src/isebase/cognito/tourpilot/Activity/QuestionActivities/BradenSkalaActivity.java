@@ -11,8 +11,10 @@ import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategory
 import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategoryManager;
 import isebase.cognito.tourpilot.Data.Question.Category.Category;
 import isebase.cognito.tourpilot.Data.Question.Category.CategoryManager;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.BradenDialog;
+import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
 import isebase.cognito.tourpilot.Templates.ExpandableListAdapter;
 
 import java.util.ArrayList;
@@ -320,7 +322,7 @@ public class BradenSkalaActivity extends BaseActivity implements BaseDialogListe
     }
     
     private void reloadData() {
-    	employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
+   		employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
     	category = CategoryManager.Instance().loadByCategoryName(getString(R.string.braden));
     	answers = AnswerManager.Instance().loadByCategoryID(category.getID());
 

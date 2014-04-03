@@ -97,7 +97,7 @@ public class TasksAssessementsActivity extends BaseActivity implements BaseDialo
 			undoneTasksMenu.setEnabled(false);
 			catalogsMenu.setEnabled(false);
 		}
-		if(tasksFragment.employment.isAdditionalWork()){
+		if(tasksFragment.employment.isAdditionalWork()) {
 			catalogsMenu.setEnabled(false);
 			diagnoseMenu.setEnabled(false);
 			addresseMenu.setEnabled(false);
