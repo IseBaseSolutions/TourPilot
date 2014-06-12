@@ -2,30 +2,26 @@ package isebase.cognito.tourpilot.Activity.AdditionalTasks;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseTimeSyncActivity;
-import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
-import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Data.AdditionalTask.Catalog;
+import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.AdditionalTask.Catalog.eCatalogType;
-import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectComparer;
-import isebase.cognito.tourpilot.Data.Employment.Employment;
-import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
-import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.Task.Task;
-import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
-import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
 import isebase.cognito.tourpilot.Templates.AdditionalTaskAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,14 +29,18 @@ import android.widget.ListView;
 
 public class AdditionalTasksActivity extends BaseTimeSyncActivity {
 
-	private ListView lvAddTasks;
-	public Button btSaveAddTasks;
-	private AdditionalTaskAdapter adapter;
+	/** Members **/
 	
+	public Button btSaveAddTasks;
+	
+	private ListView lvAddTasks;
+	private AdditionalTaskAdapter adapter;	
 	private List<AdditionalTask> additionalTasks;
 	private List<Task> tasks;
 	private Catalog catalog;
 
+	/** Override **/
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		try {
@@ -48,7 +48,7 @@ public class AdditionalTasksActivity extends BaseTimeSyncActivity {
 			setContentView(R.layout.activity_add_tasks);
 			initControls();
 			reloadData();
-			deleteExistedAdditionalyTasks();
+			deleteExistedAdditionalTasks();
 			fillUp();
 			fillUpTitle();
 			setTimeSync(true);
@@ -58,6 +58,13 @@ public class AdditionalTasksActivity extends BaseTimeSyncActivity {
 			criticalClose();
 		}
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		return false;
+	}
+	
+	/** Internal **/
 	
 	private void initControls() {
 		lvAddTasks = (ListView) findViewById(R.id.lvAddTasks);
@@ -84,6 +91,7 @@ public class AdditionalTasksActivity extends BaseTimeSyncActivity {
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2,int arg3) {
 				adapter.getFilter().filter(arg0);
 			}
+			
 		});
 	}
 	
@@ -91,47 +99,39 @@ public class AdditionalTasksActivity extends BaseTimeSyncActivity {
 		int catalogType = getIntent().getIntExtra("catalog_type", BaseObject.EMPTY_ID);
 		catalog = new Catalog(eCatalogType.values()[catalogType]);	
 
-		Patient patient = PatientManager.Instance().load(EmploymentManager.Instance().load(Option.Instance().getEmploymentID()).getPatientID());
+		Patient patient = HelperFactory.getHelper().getEmploymentDAO().loadAll((int)Option.Instance().getEmploymentID()).getPatient();
+//		Patient patient = HelperFactory.getHelper().getPatientDAO().load(HelperFactory.getHelper().getEmploymentDAO().load((int)Option.Instance().getEmploymentID()).getPatientID());
 		
 		switch (catalog.getCatalogType()) {
 			case btyp_kk:
-				additionalTasks = AdditionalTaskManager.Instance().loadByCatalog(patient.getKK());
+				additionalTasks = HelperFactory.getHelper().getAdditionalTaskDAO().loadByCatalog(patient.getKK());
 				break;
 			case btyp_pk:		
-				additionalTasks = AdditionalTaskManager.Instance().loadByCatalog(patient.getPK());	
+				additionalTasks = HelperFactory.getHelper().getAdditionalTaskDAO().loadByCatalog(patient.getPK());	
 				break;
 			case btyp_pr:			
-				additionalTasks = AdditionalTaskManager.Instance().loadByCatalog(patient.getPR());
+				additionalTasks = HelperFactory.getHelper().getAdditionalTaskDAO().loadByCatalog(patient.getPR());
 				break;
 			case btyp_sa:			
-				additionalTasks = AdditionalTaskManager.Instance().loadByCatalog(patient.getSA());
+				additionalTasks = HelperFactory.getHelper().getAdditionalTaskDAO().loadByCatalog(patient.getSA());
 				break;
 		}
 		sortAdditinalTasks();
 	}
 	
-	private void deleteExistedAdditionalyTasks() {
-		tasks = TaskManager.Instance().load(Task.EmploymentIDField, String.valueOf(Option.Instance().getEmploymentID()));
-		List<AdditionalTask> copyAddTasks = new ArrayList<AdditionalTask>(additionalTasks);
-		tasks.remove(0);
-		Task endTask = null;
-		int i = 1;
-		while(endTask == null) {
-			Task task = tasks.get(tasks.size() - i++);
-			if(!task.getIsAdditionalTask())
-				endTask = task;
-		}
-		tasks.remove(endTask);
+	private void deleteExistedAdditionalTasks() {
+		tasks = HelperFactory.getHelper().getTaskDAO().load(Task.EMPLOYMENT_ID_FIELD, String.valueOf(Option.Instance().getEmploymentID()));
+		
+		HashMap<Integer, AdditionalTask> addTasks = new HashMap<Integer, AdditionalTask>();
+		
+		for (AdditionalTask additionalTask : additionalTasks)
+			addTasks.put(additionalTask.getId(), additionalTask);
+		
 		for (Task task : tasks) {
-			for (AdditionalTask addTask : copyAddTasks) {
-				if (task.getAditionalTaskID() == addTask.getID()) {
-					try {
-						additionalTasks.remove(addTask);
-					} catch(Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}
+			if (task.isFirstTask() || task.isLastTask())
+				continue;
+			if (addTasks.containsKey(task.getAditionalTaskID()))
+				additionalTasks.remove(addTasks.get(task.getAditionalTaskID()));
 		}
 		
 	}
@@ -146,7 +146,7 @@ public class AdditionalTasksActivity extends BaseTimeSyncActivity {
 	}
 
 	public void onSaveAddTasks(View view) {
-		TaskManager.Instance().createTasks(adapter.getSelectedTasks());
+		HelperFactory.getHelper().getTaskDAO().createTasks(adapter.getSelectedTasks());
 		startTasksActivity();
 	}
 

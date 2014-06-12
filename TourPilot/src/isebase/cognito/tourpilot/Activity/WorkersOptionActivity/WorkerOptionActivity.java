@@ -1,13 +1,15 @@
 package isebase.cognito.tourpilot.Activity.WorkersOptionActivity;
 
+import java.util.Date;
+
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
-import isebase.cognito.tourpilot.NewData.NewBaseObject.NewBaseObject;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
+import isebase.cognito.tourpilot.Utils.DateUtils;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -17,31 +19,22 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
-//import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 
 public class WorkerOptionActivity extends BaseActivity implements BaseDialogListener {
 
-	/**
-	 * The {@link android.support.v4.view.PagerAdapter} that will provide
-	 * fragments for each of the sections. We use a
-	 * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which
-	 * will keep every loaded fragment in memory. If this becomes too memory
-	 * intensive, it may be best to switch to a
-	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-	 */
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	
 	public static final int PICKFILE_RESULT_CODE = 0;
 
-	/**
-	 * The {@link ViewPager} that will host the section contents.
-	 */
 	private ViewPager mViewPager;
+	
+	WorkerOptionActivity instance;
 	
 	OptionsFragment optionsFragment;
 	WorkersFragment workersFragment;
@@ -50,13 +43,9 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_worker_option);
+		instance = this;
 		StaticResources.setBaseContext(getBaseContext());
-		HelperFactory.setHelper(getBaseContext());		
-
-		// Create the adapter that will return a fragment for each of the three
-		// primary sections of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -77,6 +66,7 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
         	it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
         	StaticResources.getBaseContext().startActivity(it);
         }
+        setDeviceSettings();
 		switchToLastActivity();
 	}
 
@@ -97,13 +87,24 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 			return true;
 		case R.id.action_db_backup:		
 			optionsFragment.busy(optionsFragment.getBackupMode());
+			Toast.makeText(StaticResources.getBaseContext()
+					, StaticResources.getBaseContext().getString(R.string.db_backup_created)
+					, Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.action_db_restore:		
 			chooseFile();
 			return true;
+		case R.id.action_close_program:
+			close();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
 	}
 	
 	public void chooseFile(){
@@ -125,8 +126,9 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 			return;
 		String path = data.getData().getPath();
 		if(requestCode == PICKFILE_RESULT_CODE && resultCode == RESULT_OK)
-			if(path.endsWith(".db"))
+			if(path.endsWith(".db")) {
 				optionsFragment.busy(optionsFragment.RESTORE_MODE, path);
+			}
 			else
 				Toast.makeText(StaticResources.getBaseContext()
 					, R.string.err_not_db_file
@@ -155,9 +157,9 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 			// Return a DummySectionFragment (defined as a static inner class
 			// below) with the page number as its lone argument.
 			if(position == 0)
-				return optionsFragment = new OptionsFragment();
+				return optionsFragment = new OptionsFragment(instance);
 			else
-				return workersFragment = new WorkersFragment();
+				return workersFragment = new WorkersFragment(instance);
 		}
 
 		@Override
@@ -189,18 +191,20 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 	public void saveSettings() {
 		Option.Instance().setServerIP(optionsFragment.etServerIP.getText().toString());
 		Option.Instance().setServerPort(Integer.parseInt(optionsFragment.etServerPort.getText().toString()));
-		Option.Instance().setPrevWorkerID(NewBaseObject.EMPTY_ID);
-		Option.Instance().setWorkerID(NewBaseObject.EMPTY_ID);
+		Option.Instance().setPrevWorkerID(BaseObject.EMPTY_ID);
+		Option.Instance().setWorkerID(BaseObject.EMPTY_ID);
 	}
 	
-	private void switchToLastActivity() {
+	public void switchToLastActivity() {
 		if (Option.Instance().getWorkID() != -1)
 			startAdditionalWorksActivity();
 		else if (Option.Instance().getEmploymentID() != -1)
 			startTasksActivity();
 		else if (Option.Instance().getPilotTourID() != -1)
 			startPatientsActivity();
-		else if (WorkerManager.Instance().load().size() > 0)
+		else if (Option.Instance().isTourActivity())
+			startToursActivity();
+		else if (HelperFactory.getHelper().getWorkerDAO().load().size() > 0)
 			mViewPager.setCurrentItem(1);
 		else 
 			mViewPager.setCurrentItem(0);
@@ -220,6 +224,12 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 		return;		
 	}
 	
-	
+	private void setDeviceSettings() {
+		DisplayMetrics displaymetrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+		StaticResources.height = displaymetrics.heightPixels;
+		StaticResources.width = displaymetrics.widthPixels;
+	}
+
 	
 }

@@ -2,22 +2,24 @@
  
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
-import isebase.cognito.tourpilot.Activity.WorkersOptionActivity.WorkerOptionActivity;
 import isebase.cognito.tourpilot.Connection.AutoUpdate;
 import isebase.cognito.tourpilot.Connection.ConnectionAsyncTask;
 import isebase.cognito.tourpilot.Connection.ConnectionStatus;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
+import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
-import java.text.SimpleDateFormat;
+import isebase.cognito.tourpilot.Utils.DateUtils;
+
 import java.util.ArrayList;
 import java.util.Date;
-import android.content.Intent;
+import java.util.List;
+
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.ArrayAdapter;
@@ -27,14 +29,17 @@ import android.widget.TextView;
  
  public class SynchronizationActivity extends BaseActivity implements BaseDialogListener {
  	
-	private ListView lvConnectionLog;
- 	private SynchronizationHandler syncHandler;
+	/** Members **/
+	 
 	private ArrayAdapter<String> adapter;
 	private ConnectionStatus connectionStatus;
 	private ConnectionAsyncTask connectionTask;
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm"); 
+	private ListView lvConnectionLog;
 	private ProgressBar progressBar;
 	private TextView progressText;
+ 	private SynchronizationHandler syncHandler;
+ 	
+ 	/** Override **/
  	
  	@Override
  	protected void onCreate(Bundle savedInstanceState) {
@@ -47,45 +52,37 @@ import android.widget.TextView;
  			@Override
 			public void onSynchronizedFinished(boolean isOK, String text) {
 				if(!text.equals("")){
-					adapter.insert(dateFormat.format(new Date()) + " " + text, 0);	
+					adapter.insert(DateUtils.DateHourMinutesFormat.format(new Date()) + " " + text, 0);	
 					if(!isOK){
 						progressText.setText(text);
 					}
 				}
-				if (connectionStatus.getAnswerFromServer().equals("OVER")) {
-					BaseInfoDialog licenseOverDialog = new BaseInfoDialog(getString(R.string.attention), getString(R.string.dialog_license_over));
-					licenseOverDialog.show(getSupportFragmentManager(), "licenseOverDialog");
-					return;
+				if (isInterrupted()) {
+					showInterruptDialog();
 				}
-				if ((!connectionStatus.lastExecuteOK) && Option.Instance().getPilotTourID() != -1)
-				{
-					Intent intent = new Intent(getApplicationContext(), PatientsActivity.class);
-					startActivity(intent);
+				else if (isLicenseOver()) {
+					showLicenseOverDialog();
 				}
-
-				if (Option.Instance().getPalmVersion() != null 
- 						&& Integer.parseInt(Option.Instance().getPalmVersion()) > Integer.parseInt(Option.Instance().getVersion()))
+				else if (isNewVersionAvailable())
  				{
-					DialogFragment newVersionDialog = new BaseDialog(getString(R.string.dialog_new_version), getString(R.string.dialog_update_program));
-					newVersionDialog.setCancelable(false);
-					newVersionDialog.show(getSupportFragmentManager(), "newVersionDialog");
-					return;
+					showNewVersionAvilableDialog();
  				}
-				if(isOK) {		
-					if(Option.Instance().getWorkerID() != -1)
-							EmploymentManager.Instance().createEmployments();
-					Intent nextActivity = (Option.Instance().getPilotTourID() != -1) 
-							? new Intent(getApplicationContext(), PatientsActivity.class) 
-							: (Option.Instance().getWorkerID() != -1)
-									? new Intent(getApplicationContext(), ToursActivity.class)
-									: new Intent(getApplicationContext(), WorkerOptionActivity.class);
-					startActivity(nextActivity);					
+				else if ((!connectionStatus.lastExecuteOK) && isPilotTourPresent())
+				{
+					startPatientsActivity();
+				}
+				else if(isOK) {
+					if(isWorkerPresent()) {
+						HelperFactory.getHelper().getEmploymentDAO().createEmployments();
+						clearOldInfo();
+					}
+					switchToNextActivity();					
 				}
  			}
  			
  			@Override
  			public void onItemSynchronized(String text) {
-				adapter.insert(dateFormat.format(new Date()) + " " + text, 0);	
+				adapter.insert(DateUtils.DateHourMinutesFormat.format(DateUtils.GetServerDateTime()) + " " + text, 0);	
 				connectionStatus.nextState();
 				connectionTask = new ConnectionAsyncTask(connectionStatus);
 				connectionTask.execute(); 
@@ -106,7 +103,7 @@ import android.widget.TextView;
 		connectionStatus = new ConnectionStatus(syncHandler);
 		connectionTask = new ConnectionAsyncTask(connectionStatus);
 		connectionTask.execute();
- 	}	
+ 	}
  	
  	@Override
  	public void onBackPressed() {
@@ -126,10 +123,19 @@ import android.widget.TextView;
 			AutoUpdate autoUpdate = new AutoUpdate();
 			autoUpdate.execute();	
 		}
-		if (dialog.getTag().equals("licenseOverDialog"))
+		else if (dialog.getTag().equals("licenseOverDialog"))
 		{
 			finish();
-		}	
+		}
+		else if (dialog.getTag().equals("interruptDialog"))
+		{
+			switchToNextActivity();
+		}
+		else if (dialog.getTag().equals("closeDialog"))
+		{
+			close();
+		}
+		
 	}
 
 	@Override
@@ -141,6 +147,8 @@ import android.widget.TextView;
 			finish();
 		}
 	}
+	
+	/** Internal **/
 	
 	private void initControls() {
 		lvConnectionLog = (ListView) findViewById(R.id.lvSyncText);
@@ -154,6 +162,59 @@ import android.widget.TextView;
 		lvConnectionLog.setAdapter(adapter);
 		adapter.add(getString(R.string.waitng_sockets_to_close));
 	}
- 	
+	
 
+	public void close() {
+		moveTaskToBack(true);
+		finish();		
+	}
+	
+	private void clearOldInfo() {
+		List<PilotTour> pilotTours = HelperFactory.getHelper().getPilotTourDAO().loadPilotTours();
+		for (PilotTour pilotTour : pilotTours) {
+			if (pilotTour.isActual())
+				continue;
+			List<Employment> employments = HelperFactory.getHelper().getEmploymentDAO().loadNotActualByPilotTourID(pilotTour.getId());
+			for (Employment employment : employments) {
+				employment.clearConnectedData();
+				if (Option.Instance().getEmploymentID() == employment.getId())
+					Option.Instance().setEmploymentID(BaseObject.EMPTY_ID);
+			}
+			HelperFactory.getHelper().getWorkDAO().deleteNotActual();
+			HelperFactory.getHelper().getEmploymentDAO().delete(employments);
+			if (Option.Instance().getPilotTourID() == pilotTour.getId())
+				Option.Instance().setPilotTourID(BaseObject.EMPTY_ID);
+		}
+	}
+	
+	private boolean isInterrupted() {
+		return connectionStatus.getAnswerFromServer().equals("INTERRUPT");
+	}
+	
+	private void showInterruptDialog() {
+		BaseInfoDialog interruptDialog = new BaseInfoDialog(getString(R.string.attention), getString(R.string.dialog_interrupt));
+		interruptDialog.show(getSupportFragmentManager(), "interruptDialog");
+	}
+	
+	private boolean isLicenseOver() {
+		return connectionStatus.getAnswerFromServer().equals("OVER");
+	}
+	
+	private void showLicenseOverDialog() {
+		BaseInfoDialog licenseOverDialog = new BaseInfoDialog(getString(R.string.attention), getString(R.string.dialog_license_over));
+		licenseOverDialog.setCancelable(false);
+		licenseOverDialog.show(getSupportFragmentManager(), "licenseOverDialog");
+	}
+	
+	private boolean isNewVersionAvailable() {
+		return Option.Instance().getPalmVersion() != null 
+					&& Integer.parseInt(Option.Instance().getPalmVersion()) > Integer.parseInt(Option.Instance().getVersion());
+	}
+	
+	private void showNewVersionAvilableDialog() {
+		DialogFragment newVersionDialog = new BaseDialog(getString(R.string.dialog_new_version), getString(R.string.dialog_update_program));
+		newVersionDialog.setCancelable(false);
+		newVersionDialog.show(getSupportFragmentManager(), "newVersionDialog");
+	}
+	
 }

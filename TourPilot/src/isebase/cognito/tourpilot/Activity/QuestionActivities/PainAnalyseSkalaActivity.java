@@ -1,26 +1,20 @@
 package isebase.cognito.tourpilot.Activity.QuestionActivities;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Data.Answer.Answer;
+import isebase.cognito.tourpilot.Data.AnsweredCategory.AnsweredCategory;
+import isebase.cognito.tourpilot.Data.Category.Category;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
-import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
-import isebase.cognito.tourpilot.Data.Patient.PatientManager;
-import isebase.cognito.tourpilot.Data.Question.Answer.Answer;
-import isebase.cognito.tourpilot.Data.Question.Answer.AnswerManager;
-import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategory;
-import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategoryManager;
-import isebase.cognito.tourpilot.Data.Question.Category.Category;
-import isebase.cognito.tourpilot.Data.Question.Category.CategoryManager;
 import isebase.cognito.tourpilot.Data.Relative.Relative;
-import isebase.cognito.tourpilot.Data.Relative.RelativeManager;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
-import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
 
 import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -39,7 +33,7 @@ public class PainAnalyseSkalaActivity extends Activity {
 
 	Category category;
 	Patient patient;
-	Employment employment;
+	Employment newEmployment;
 	
 	LinearLayout llAbleGiveData;	
 	LinearLayout llHasAnyPain;
@@ -88,16 +82,24 @@ public class PainAnalyseSkalaActivity extends Activity {
 			fillUpIfAnswered();
 	}
 	
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return false;
+    }
+	
     private void setTitle() {
     	setTitle(R.string.pain_analyse);
     }
 
 	private void reloadData() {
-		category = CategoryManager.Instance().loadByCategoryName(getString(R.string.pain_analyse));
-		employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
-		patient = PatientManager.Instance().load(employment.getPatientID());
+		category = HelperFactory.getHelper().getCategoryDAO().loadByCategoryName(getString(R.string.pain_analyse));
 
-		List<Answer> answers = AnswerManager.Instance().loadByCategoryID(category.getID());
+		newEmployment = HelperFactory.getHelper().getEmploymentDAO().load((int)Option.Instance().getEmploymentID());
+		patient = HelperFactory.getHelper().getPatientDAO().load(newEmployment.getPatientID());
+
+
+//		List<Answer> answers = HelperFactory.getHelper().getAnswerDAO().loadByCategoryID(category.getId());
+		List<Answer> answers = HelperFactory.getHelper().getAnswerDAO().loadByCategoryIDAndType(category.getId(), Category.type.schmerzermittlung);
 		if (answers.size() > 0)
 			answer = answers.get(0);
 	}
@@ -114,7 +116,7 @@ public class PainAnalyseSkalaActivity extends Activity {
 		llGrade = (LinearLayout) findViewById(R.id.linear_layout_grade);
 		
 		spRelatives = (Spinner) findViewById(R.id.sp_relative);
-		List<Relative> relatives = RelativeManager.Instance().loadByIDs(patient.getStrRelativeIDs());
+		List<Relative> relatives = HelperFactory.getHelper().getRelativeDAO().loadByIds(patient.getStrRelativeIDs());
 		String[] relativesArr = new String[relatives.size()];
 		for (int i = 0; i < relatives.size(); i++)
 			relativesArr[i] = relatives.get(i).getFullName();
@@ -202,7 +204,7 @@ public class PainAnalyseSkalaActivity extends Activity {
 			for (int j = 0; j < ((LinearLayout)llTest.getChildAt(i)).getChildCount(); j++)
 				if (((LinearLayout)llTest.getChildAt(i)).getChildAt(j) instanceof RadioGroup)
 					for (int k = 0; k < ((RadioGroup)((LinearLayout)llTest.getChildAt(i)).getChildAt(j)).getChildCount(); k++)
-						((CheckBox)((RadioGroup)((LinearLayout)llTest.getChildAt(i)).getChildAt(j)).getChildAt(k)).setEnabled(isEmploymentDone());
+						((CheckBox)((RadioGroup)((LinearLayout)llTest.getChildAt(i)).getChildAt(j)).getChildAt(k)).setEnabled(!isEmploymentDone());
 	}
 	
 	private int getSelectedRelativeIndex() {
@@ -497,12 +499,12 @@ public class PainAnalyseSkalaActivity extends Activity {
 	public void saveAnswer() {
 		getAnswerKey();
 		if (answer == null)
-			answer = new Answer(patient, -1, "painAnalyse", grade, category.getID(), answerKey, Category.type.schmerzermittlung.ordinal());
+			answer = new Answer(patient.getId(), -1, "painAnalyse", grade, category.getId(), answerKey, Category.type.schmerzermittlung.ordinal());
 		answer.setAnswerID(grade);		
 		answer.setAddInfo(additionalInfo);
 		answer.setAnswerKey(answerKey);
-		AnswerManager.Instance().save(answer);
-		AnsweredCategoryManager.Instance().save(new AnsweredCategory(category.getID(), Option.Instance().getEmploymentID()));
+		HelperFactory.getHelper().getAnswerDAO().save(answer);
+		HelperFactory.getHelper().getAnsweredCategoryDAO().save(new AnsweredCategory(category.getId(), Option.Instance().getEmploymentID()));
 		onBackPressed();
 	}
 	
@@ -550,13 +552,12 @@ public class PainAnalyseSkalaActivity extends Activity {
 
 		@Override
 		public void onNothingSelected(AdapterView<?> arg0) {
-			// TODO Auto-generated method stub
 			
 		}
 	}
 	
 	private boolean isEmploymentDone() {
-		return employment.isDone();
+		return newEmployment.isDone();
 	}
 
 }

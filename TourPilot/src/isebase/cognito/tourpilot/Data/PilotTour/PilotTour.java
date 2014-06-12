@@ -1,48 +1,72 @@
 package isebase.cognito.tourpilot.Data.PilotTour;
 
-import java.util.Date;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
+import java.util.Date;
+
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "PilotTours")
 public class PilotTour extends BaseObject {
 
-	public static final String PlanDateField = "plan_date";
-	public static final String IsCommonTourField = "is_common_tour";
-	public static final String TourIDField = "tour_id";
+	public static final String PLAN_DATE_FIELD = "plan_date";
+	public static final String IS_COMMON_TOUR_FIELD = "is_common_tour";
+	public static final String TOUR_ID_FIELD = "tour_id";
 
+	@DatabaseField(dataType = DataType.DATE_LONG, columnName = PLAN_DATE_FIELD)
 	private Date planDate;
-	private boolean isCommonTour;
-	private int tourID;
 	
-	@MapField(DatabaseField = IsCommonTourField)
-	public boolean getIsCommonTour() {
-		return isCommonTour;
-	}
-
-	@MapField(DatabaseField = IsCommonTourField)
-	public void setIsCommonTour(boolean isCommonTour) {
-		this.isCommonTour = isCommonTour;
-	}
-	
-	@MapField(DatabaseField = PlanDateField)
 	public Date getPlanDate() {
-		return planDate;
+		return planDate == null ? planDate = DateUtils.EmptyDate : planDate;
 	}
 	
-	@MapField(DatabaseField = PlanDateField)
 	public void setPlanDate(Date planDate) {
 		this.planDate = planDate;
 	}
 	
-	@MapField(DatabaseField = TourIDField)
+	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_COMMON_TOUR_FIELD)
+	private boolean isCommonTour;
+	
+	public boolean getIsCommonTour() {
+		return isCommonTour;
+	}
+
+	public void setIsCommonTour(boolean isCommonTour) {
+		this.isCommonTour = isCommonTour;
+	}
+	
+	@DatabaseField(dataType = DataType.INTEGER, columnName = TOUR_ID_FIELD)
+	private int tourID;
+	
 	public int getTourID() {
 		return tourID;
 	}
 	
-	@MapField(DatabaseField = TourIDField)
 	public void setTourID(int tourID) {
 		this.tourID = tourID;
+	}
+	
+	public PilotTour() {
+		clear();
+	}
+	
+	public PilotTour(String[] resultArray) {
+		clear();
+		setId(Integer.parseInt(resultArray[0]));
+		setTourID(Integer.parseInt(resultArray[1]));
+		setIsCommonTour(resultArray[2].equals("1"));
+		setPlanDate(new Date(Long.parseLong(resultArray[3])));
+		setName(resultArray[4]);
+		setCheckSum(Long.parseLong(resultArray[5]));
+		setWasSent(resultArray[6].equals("1"));
+		setServerTime(resultArray[7].equals("1"));
+	}
+	
+	public boolean isActual() {
+		return getPlanDate().getTime() >= DateUtils.getStartOfDay(DateUtils.getSynchronizedTime()).getTime();
 	}
 	
 	@Override
@@ -54,6 +78,7 @@ public class PilotTour extends BaseObject {
 	@Override
 	public String forServer() {
 		return "";
-	}	
+	}
+	
 
 }

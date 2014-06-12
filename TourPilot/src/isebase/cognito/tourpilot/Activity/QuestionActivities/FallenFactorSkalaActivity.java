@@ -1,25 +1,21 @@
 package isebase.cognito.tourpilot.Activity.QuestionActivities;
 
-import java.util.List;
-
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
-import isebase.cognito.tourpilot.Activity.QuestionActivities.NortonSkalaActivity.ChangedAnswer;
+import isebase.cognito.tourpilot.Data.Answer.Answer;
+import isebase.cognito.tourpilot.Data.AnsweredCategory.AnsweredCategory;
+import isebase.cognito.tourpilot.Data.Category.Category;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
-import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.Data.Question.Answer.Answer;
-import isebase.cognito.tourpilot.Data.Question.Answer.AnswerManager;
-import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategory;
-import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategoryManager;
-import isebase.cognito.tourpilot.Data.Question.Category.Category;
-import isebase.cognito.tourpilot.Data.Question.Category.CategoryManager;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
-import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
+
+import java.util.List;
+
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.view.Menu;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -30,7 +26,7 @@ public class FallenFactorSkalaActivity extends BaseActivity implements BaseDialo
 
 	Category category;
 	List<Answer> answers;
-	Employment employment;
+	Employment newEmployment;
 	ToggleButton toggleButton;
 	LinearLayout llMain;
 	BaseDialog changeAnswerDialog;
@@ -50,15 +46,21 @@ public class FallenFactorSkalaActivity extends BaseActivity implements BaseDialo
 		initControls();
 	}
 	
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return false;
+    }
+	
     private void setTitle() {
     	setTitle(R.string.fallenFactor);
     }
 
 	private void reloadData() {
-		category = CategoryManager.Instance().loadByCategoryName(getString(R.string.fallenFactor));
-		answers = AnswerManager.Instance().loadByCategoryID(category.getID());
-		isCategoryAnswered = AnsweredCategoryManager.Instance().loadByCategoryID(category.getID()) != null;
-		employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
+		category = HelperFactory.getHelper().getCategoryDAO().loadByCategoryName(getString(R.string.fallenFactor));
+//		answers = HelperFactory.getHelper().getAnswerDAO().loadByCategoryID(category.getId());
+		answers = HelperFactory.getHelper().getAnswerDAO().loadByCategoryIDAndType(category.getId(), Category.type.sturzrisiko);
+		isCategoryAnswered = HelperFactory.getHelper().getAnsweredCategoryDAO().loadByCategoryID(category.getId()) != null;
+		newEmployment = HelperFactory.getHelper().getEmploymentDAO().loadAll((int)Option.Instance().getEmploymentID());
 	}
 		
 	private void initControls() {
@@ -112,7 +114,7 @@ public class FallenFactorSkalaActivity extends BaseActivity implements BaseDialo
 			if (i == findAnswerByQuestionId(questionIndex).getAnswerID() 
 					|| (i == (radioGroup.getChildCount() - 1) && findAnswerByQuestionId(questionIndex).getAnswerID() == -1))
 				((RadioButton)radioGroup.getChildAt(i)).setChecked(true);
-			((RadioButton)radioGroup.getChildAt(i)).setEnabled(!employment.isDone());
+			((RadioButton)radioGroup.getChildAt(i)).setEnabled(!newEmployment.isDone());
 		}
 	}
 	
@@ -131,7 +133,7 @@ public class FallenFactorSkalaActivity extends BaseActivity implements BaseDialo
 		getAnswerFromMainLayout((LinearLayout)view.getParent().getParent().getParent(), (RadioButton)view);
 		if (answers.size() < 8 || isCategoryAnswered)
 			return;
-		AnsweredCategoryManager.Instance().save(new AnsweredCategory(category.getID(), employment.getID()));
+		HelperFactory.getHelper().getAnsweredCategoryDAO().save(new AnsweredCategory(category.getId(), newEmployment.getId()));
 		onBackPressed();
 	}
 	
@@ -174,7 +176,7 @@ public class FallenFactorSkalaActivity extends BaseActivity implements BaseDialo
 			return;
 		}
 		Answer answer = getAnswer(questionIndex, answerIndex);
-		AnswerManager.Instance().save(answer);
+		HelperFactory.getHelper().getAnswerDAO().save(answer);
 	}
 	
 	private Answer getAnswer(int questionIndex, int answerIndex) {
@@ -183,7 +185,7 @@ public class FallenFactorSkalaActivity extends BaseActivity implements BaseDialo
 			answer.setAnswerID(answerIndex);
 			return answer;
 		}
-		answer = new Answer(employment.getPatient(), questionIndex, "", answerIndex, category.getID(), "", Category.type.sturzrisiko.ordinal());
+		answer = new Answer(newEmployment.getPatient().getId(), questionIndex, "", answerIndex, category.getId(), "", Category.type.sturzrisiko.ordinal());
 		answers.add(answer);
 		return answer;
 	}
@@ -200,7 +202,7 @@ public class FallenFactorSkalaActivity extends BaseActivity implements BaseDialo
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog) {
 		changedAnswer.answer.setAnswerID(changedAnswer.answerIndex);
-		AnswerManager.Instance().save(changedAnswer.answer);
+		HelperFactory.getHelper().getAnswerDAO().save(changedAnswer.answer);
 	}
 
 	@Override

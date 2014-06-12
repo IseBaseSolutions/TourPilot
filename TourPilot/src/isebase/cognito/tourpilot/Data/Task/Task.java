@@ -2,163 +2,49 @@ package isebase.cognito.tourpilot.Data.Task;
 
 import isebase.cognito.tourpilot.Connection.ServerCommandParser;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
-import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
-import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
-import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
-import isebase.cognito.tourpilot.DataBase.MapField;
-import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 import isebase.cognito.tourpilot.Utils.StringParser;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "Tasks")
 public class Task extends BaseObject {
 
-	public static final String StateField = "task_state";
-	public static final String WorkerIDField = "worker_id";
-	public static final String PlanDateField = "plan_date";
-	public static final String LeistungsField = "leistungs";
-	public static final String MinutePriceField = "minute_price";
-	public static final String TourIDField = "tour_id";
-	public static final String PatientIDField = "patient_id";
-	public static final String IsAdditionalTaskField = "additional_task";
-	public static final String AdditionalTaskIDField = "additional_task_id";
-	public static final String EmploymentIDField = "employment_id";
-	public static final String PilotTourIDField = "pilot_tour_id";
-	public static final String RealDateField = "real_date";
-	public static final String ManualDateField = "manual_date";
-	public static final String QualityField = "quality";
-	public static final String QualityResultField = "quality_result";
-	public static final String CatalogField = "catalog";
+	public static final String STATE_FIELD = "task_state";
+	public static final String WORKER_ID_FIELD = "worker_id";
+	public static final String PLAN_DATE_FIELD = "plan_date";
+	public static final String LEISTUNGS_FIELD = "leistungs";
+	public static final String MINUTE_PRICE_FIELD = "minute_price";
+	public static final String TOUR_ID_FIELD = "tour_id";
+	public static final String PATIENT_ID_FIELD = "patient_id";
+	public static final String IS_ADDITIONAL_TASK = "additional_task";
+	public static final String ADDITIONAL_TASK_ID = "additional_task_id";
+	public static final String EMPLOYMENT_ID_FIELD = "employment_id";
+	public static final String PILOT_TOUR_ID = "pilot_tour_id";
+	public static final String REAL_DATE_FIELD = "real_date";
+	public static final String MANUAL_DATE_FIELD = "manual_date";
+	public static final String QUALITY_FIELD = "quality";
+	public static final String QUALITY_RESULT_FIELD = "quality_result";
+	public static final String CATALOG_FIELD = "catalog";
 
-	public String getDayPart(){
-		return getName().substring(15, getName().length()-1);
-	}
-	
 	public enum eTaskState {
 		Empty, Done, UnDone
 	}
 
+	@DatabaseField(dataType = DataType.ENUM_STRING, columnName = STATE_FIELD, unknownEnumName = "Empty")
 	private eTaskState taskState = eTaskState.Empty;
-
-	private Date planDate;
-
-	private Date realDate;
-	private Date manualDate;
-
-	private String leistungs;
-	private String qualityResult;
 	
-	private int workerID;
-	private int minutePrice;
-	private int additionalTaskID;
-	private int pilotTourID;
-	private int quality;
-	private int catalog;
-		
-	private long employmentID;
-	private long tourID;
-	private long patientID;
-
-	private boolean isAdditionaltask;
-
-	@MapField(DatabaseField = CatalogField)
-	public void setCatalog(int catalog){
-		this.catalog = catalog;
-	}
-
-	@MapField(DatabaseField = CatalogField)
-	public int getCatalog(){
-		return this.catalog;
-	}
-	
-	@MapField(DatabaseField = QualityResultField)
-	public void setQualityResult(String qualityResult){
-		this.qualityResult = qualityResult;
-	}
-	
-	@MapField(DatabaseField = QualityResultField)
-	public String getQualityResult(){
-		return qualityResult;
-	}
-	
-	@MapField(DatabaseField = QualityField)
-	public void setQuality(int quality){
-		this.quality = quality;
-	}
-
-	@MapField(DatabaseField = QualityField)
-	public int getQuality(){
-		return quality;
-	}
-	
-	@MapField(DatabaseField = RealDateField)
-	public Date getRealDate() {
-		return realDate;
-	}
-
-	@MapField(DatabaseField = RealDateField)
-	public void setRealDate(Date realDate) {
-		this.realDate = realDate;
-	}
-
-	@MapField(DatabaseField = ManualDateField)
-	public Date getManualDate() {
-		return manualDate;
-	}
-
-	@MapField(DatabaseField = ManualDateField)
-	public void setManualDate(Date manualDate) {
-		this.manualDate = manualDate;
-	}
-	
-	@MapField(DatabaseField = AdditionalTaskIDField)
-	public int getAditionalTaskID () {
-		return additionalTaskID;
-	}
-
-	@MapField(DatabaseField = AdditionalTaskIDField)
-	public void setAditionalTaskID(int additionalTaskID) {
-		this.additionalTaskID = additionalTaskID;
-	}		
-	
-	@MapField(DatabaseField = EmploymentIDField)
-	public long getEmploymentID() {
-		return employmentID;
-	}
-
-	@MapField(DatabaseField = EmploymentIDField)
-	public void setEmploymentID(long employmentID) {
-		this.employmentID = employmentID;
-	}	
-
-	@MapField(DatabaseField = WorkerIDField)
-	public int getWorkerID() {
-		return workerID;
-	}
-
-	@MapField(DatabaseField = WorkerIDField)
-	public void setWorkerID(int workerID) {
-		this.workerID = workerID;
-	}
-
-	@MapField(DatabaseField = StateField)
-	public int getStateIndex() {
-		return taskState.ordinal();
-	}
-
-	@MapField(DatabaseField = StateField)
-	public void setStateIndex(int taskStateIndex) {
-		this.taskState = eTaskState.values()[taskStateIndex];
-	}
-
 	public eTaskState getState() {
 		return taskState;
 	}
@@ -167,74 +53,169 @@ public class Task extends BaseObject {
 		this.taskState = taskState;
 	}
 
-	@MapField(DatabaseField = PlanDateField)
+	@DatabaseField(dataType = DataType.DATE_LONG, columnName = PLAN_DATE_FIELD)
+	private Date planDate;
+	
 	public Date getPlanDate() {
-		return planDate;
+		return planDate == null ? planDate = DateUtils.EmptyDate : planDate;
 	}
 
-	@MapField(DatabaseField = PlanDateField)
 	public void setPlanDate(Date planDate) {
 		this.planDate = planDate;
 	}
 
-	@MapField(DatabaseField = LeistungsField)
+	@DatabaseField(dataType = DataType.DATE_LONG, columnName = REAL_DATE_FIELD)
+	private Date realDate;
+	
+	public Date getRealDate() {
+		return realDate == null ? realDate = DateUtils.EmptyDate : realDate;
+	}
+
+	public void setRealDate(Date realDate) {
+		this.realDate = realDate;
+	}
+	
+	@DatabaseField(dataType = DataType.DATE_LONG, columnName = MANUAL_DATE_FIELD)
+	private Date manualDate;
+	
+	public Date getManualDate() {
+		return manualDate == null ? manualDate = DateUtils.EmptyDate : manualDate;
+	}
+
+	public void setManualDate(Date manualDate) {
+		this.manualDate = manualDate;
+	}
+
+	@DatabaseField(dataType = DataType.STRING, columnName = LEISTUNGS_FIELD)
+	private String leistungs;
+	
 	public String getLeistungs() {
 		return leistungs;
 	}
 
-	@MapField(DatabaseField = LeistungsField)
 	public void setLeistungs(String leistungs) {
 		this.leistungs = leistungs;
 	}
+	
+	@DatabaseField(dataType = DataType.STRING, columnName = QUALITY_RESULT_FIELD)
+	private String qualityResult;
+	
+	public void setQualityResult(String qualityResult){
+		this.qualityResult = qualityResult;
+	}
+	
+	public String getQualityResult(){
+		return qualityResult;
+	}
+	
+	@DatabaseField(dataType = DataType.INTEGER, columnName = WORKER_ID_FIELD)
+	private int workerID;
+	
+	public int getWorkerID() {
+		return workerID;
+	}
 
-	@MapField(DatabaseField = MinutePriceField)
+	public void setWorkerID(int workerID) {
+		this.workerID = workerID;
+	}
+	
+	@DatabaseField(dataType = DataType.INTEGER, columnName = MINUTE_PRICE_FIELD)
+	private int minutePrice;
+	
 	public int getMinutePrice() {
 		return minutePrice;
 	}
 
-	@MapField(DatabaseField = MinutePriceField)
 	public void setMinutePrice(int minutePrice) {
 		this.minutePrice = minutePrice;
 	}
+	
+	@DatabaseField(dataType = DataType.INTEGER, columnName = ADDITIONAL_TASK_ID)
+	private int additionalTaskID;
+	
+	public int getAditionalTaskID () {
+		return additionalTaskID;
+	}
 
-	@MapField(DatabaseField = TourIDField)
+	public void setAditionalTaskID(int additionalTaskID) {
+		this.additionalTaskID = additionalTaskID;
+	}	
+	
+	@DatabaseField(dataType = DataType.LONG, columnName = PILOT_TOUR_ID)
+	private long pilotTourID;
+	
+	public long getPilotTourID() {
+		return pilotTourID;
+	}
+
+	public void setPilotTourID(long pilotTourID) {
+		this.pilotTourID = pilotTourID;
+	}
+	
+	@DatabaseField(dataType = DataType.INTEGER, columnName = QUALITY_FIELD)
+	private int quality;
+	
+	public void setQuality(int quality){
+		this.quality = quality;
+	}
+
+	public int getQuality(){
+		return quality;
+	}
+	
+	@DatabaseField(dataType = DataType.INTEGER, columnName = CATALOG_FIELD)
+	private int catalog;
+	
+	public void setCatalog(int catalog){
+		this.catalog = catalog;
+	}
+
+	public int getCatalog(){
+		return this.catalog;
+	}
+	
+	@DatabaseField(dataType = DataType.LONG, columnName = EMPLOYMENT_ID_FIELD)
+	private long employmentID;
+	
+	public long getEmploymentID() {
+		return employmentID;
+	}
+
+	public void setEmploymentID(long employmentID) {
+		this.employmentID = employmentID;
+	}	
+	
+	@DatabaseField(dataType = DataType.LONG, columnName = TOUR_ID_FIELD)
+	private long tourID;
+	
 	public long getTourID() {
 		return tourID;
 	}
 
-	@MapField(DatabaseField = TourIDField)
 	public void setTourID(long tourID) {
 		this.tourID = tourID;
 	}
-
-	@MapField(DatabaseField = PatientIDField)
-	public long getPatientID() {
+	
+	@DatabaseField(dataType = DataType.INTEGER, columnName = PATIENT_ID_FIELD)
+	private int patientID;
+	
+	public int getPatientID() {
 		return patientID;
 	}
 
-	@MapField(DatabaseField = PatientIDField)
-	public void setPatientID(long patientID) {
+	public void setPatientID(int patientID) {
 		this.patientID = patientID;
 	}
 
-	@MapField(DatabaseField = IsAdditionalTaskField)
+	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_ADDITIONAL_TASK)
+	private boolean isAdditionaltask;
+	
 	public boolean getIsAdditionalTask() {
 		return isAdditionaltask;
 	}
 
-	@MapField(DatabaseField = IsAdditionalTaskField)
 	public void setIsAdditionalTask(boolean isAdditionaltask) {
 		this.isAdditionaltask = isAdditionaltask;
-	}
-	
-	@MapField(DatabaseField = PilotTourIDField)
-	public int getPilotTourID() {
-		return pilotTourID;
-	}
-
-	@MapField(DatabaseField = PilotTourIDField)
-	public void setPilotTourID(int pilotTourID) {
-		this.pilotTourID = pilotTourID;
 	}
 
 	public Task() {
@@ -249,47 +230,43 @@ public class Task extends BaseObject {
 		setPilotTourID(Option.Instance().getPilotTourID());
 		setEmploymentID(employmentID);
 		setTourID(tourID);
-		setPatientID(patient.getID());
+		setPatientID(patient.getId());
 		setLeistungs(isFirst ? String.format("Anfang-%d-%d-%d", tourID, employmentID, 0) : String.format("Ende-%d-%d-%d", tourID, employmentID, 0));
 		setState(eTaskState.Empty);
-		setIsServerTime(false);
+		setServerTime(false);
 	}
 
 	public Task(AdditionalTask additionalTask){
 		clear();
-		setAditionalTaskID(additionalTask.getID());
+		setAditionalTaskID(additionalTask.getId());
 		setIsAdditionalTask(true);
 		setName(additionalTask.getName());
 		setPlanDate(new Date());
 		setWorkerID(Option.Instance().getWorkerID());
-//		setPilotTourID(Option.Instance().getPilotTourID());
 		setEmploymentID(Option.Instance().getEmploymentID());
-		PilotTour pilotTour = PilotTourManager.Instance().loadPilotTour(Option.Instance().getPilotTourID());
+		PilotTour pilotTour = HelperFactory.getHelper().getPilotTourDAO().loadPilotTour(Option.Instance().getPilotTourID());
 		setTourID(pilotTour.getTourID());
-		Employment employment = EmploymentManager.Instance().load(getEmploymentID());
-		NewEmployment newEmployment = HelperFactory.getHelper().getEmploymentDAO().load((int)getEmploymentID());
-		setPatientID(employment == null ? newEmployment.getPatientID() : employment.getPatientID());
+		Employment employment = HelperFactory.getHelper().getEmploymentDAO().load((int)getEmploymentID());
+		setPatientID(employment.getPatientID());
 		setQuality(additionalTask.getQuality());
 		setQualityResult("");
 		setMinutePrice(-1);
 		SimpleDateFormat ddMMyyyyFormat = new SimpleDateFormat("ddMMyyyy");
 		String lstStr = "";
-		if (employment == null)
-			lstStr = newEmployment.isFromMobile() ? newEmployment.getDayPart() : TaskManager.Instance().getFirstSymbol(newEmployment.getId()) + "";
-		else
-			lstStr = employment.isFromMobile() ? employment.getDayPart() : TaskManager.Instance().getFirstSymbol(employment.getID()) + "";
+		lstStr = employment.isFromMobile() ? employment.getDayPart() : HelperFactory.getHelper().getTaskDAO().getFirstSymbol(employment.getId()) + "";
 		lstStr += additionalTask.getCatalogType();
 		lstStr += "Z";
 		if ( additionalTask.getCatalogType() < 10 ) lstStr += "0";
 		lstStr += additionalTask.getCatalogType();
-        if ( additionalTask.getID() < 100 ) lstStr += "0";
-        if ( additionalTask.getID() < 10 ) lstStr += "0";
-        lstStr += additionalTask.getID();
+        if ( additionalTask.getId() < 100 ) lstStr += "0";
+        if ( additionalTask.getId() < 10 ) lstStr += "0";
+        lstStr += additionalTask.getId();
         lstStr += ddMMyyyyFormat.format(getPlanDate());
 		setLeistungs(lstStr);
 	}
 	
 	public Task(String initString) {
+		clear();
 		StringParser parsingString = new StringParser(initString);
 		setQuality(0);
 		setQualityResult("");
@@ -330,7 +307,8 @@ public class Task extends BaseObject {
 			setAditionalTaskID(getAddTaskIDFromLeist());
 			setQuality(getQualityFromLeist());
 			setCatalog(getCatalogFromLeist());
-			setName(AdditionalTaskManager.Instance().load(getAddTaskIDFromLeist()).getName());
+			AdditionalTask additionalTask = HelperFactory.getHelper().getAdditionalTaskDAO().load(getAddTaskIDFromLeist());
+			setName(additionalTask != null ? additionalTask.getName() : "NO_NAME");
 		}
 		setTourID(Long.parseLong(parsingString.next(";")));
 		setEmploymentID(Long.parseLong(parsingString.next("~")));
@@ -357,7 +335,7 @@ public class Task extends BaseObject {
 		if (getWasSent())
 			return new String();
 		String strValue = new String(ServerCommandParser.TASK + ";");
-		strValue += getID() + ";";
+		strValue += getId() + ";";
 		strValue += getCheckSum();
 		return strValue;
 	}
@@ -396,6 +374,10 @@ public class Task extends BaseObject {
     	return Integer.parseInt(strArr[1]);
     }
     
+	public String getDayPart(){
+		return getName().substring(15, getName().length()-1);
+	}
+    
     public boolean isLastTask() {
     	return getLeistungs().contains("Ende");
     }
@@ -403,4 +385,5 @@ public class Task extends BaseObject {
     public boolean isFirstTask() {
     	return getLeistungs().contains("Anfang");
     }
+
 }

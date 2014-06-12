@@ -61,7 +61,7 @@ public class PatientsDialog extends BaseDialog {
 		String patientIDs = "";
 		for (int i = 0; i < selectedPatients.length; i++)
 			if (selectedPatients[i])
-				patientIDs += (patientIDs.equals("") ? "" : ",") + patients.get(i).getID();
+				patientIDs += (patientIDs.equals("") ? "" : ",") + patients.get(i).getId();
 		return patientIDs;
 	}
 	

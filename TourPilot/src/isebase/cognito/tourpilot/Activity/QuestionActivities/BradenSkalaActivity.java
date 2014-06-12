@@ -2,19 +2,15 @@ package isebase.cognito.tourpilot.Activity.QuestionActivities;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
+import isebase.cognito.tourpilot.Data.Answer.Answer;
+import isebase.cognito.tourpilot.Data.AnsweredCategory.AnsweredCategory;
+import isebase.cognito.tourpilot.Data.Category.Category;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
-import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.Data.Question.Answer.Answer;
-import isebase.cognito.tourpilot.Data.Question.Answer.AnswerManager;
-import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategory;
-import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategoryManager;
-import isebase.cognito.tourpilot.Data.Question.Category.Category;
-import isebase.cognito.tourpilot.Data.Question.Category.CategoryManager;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
+import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.BradenDialog;
-import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
 import isebase.cognito.tourpilot.Templates.ExpandableListAdapter;
 
 import java.util.ArrayList;
@@ -22,10 +18,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.DisplayMetrics;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ExpandableListView;
@@ -47,6 +45,7 @@ public class BradenSkalaActivity extends BaseActivity implements BaseDialogListe
     Employment employment;
     Category category;
     ExpandableListAdapter expListAdapter;
+    BaseDialog leavingDialog;
  
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +58,19 @@ public class BradenSkalaActivity extends BaseActivity implements BaseDialogListe
         setSubAnswers();
         fillUpList();
     }
+    
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    	switch (item.getItemId()) {
+		case R.id.action_set_braden:
+			Intent intent  = new Intent(getBaseContext(), BradenSkalaPictureInfoActivity.class);
+			startActivity(intent);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+    }
+    
     
     private void setTitle() {
     	setTitle(R.string.braden);
@@ -85,12 +97,13 @@ public class BradenSkalaActivity extends BaseActivity implements BaseDialogListe
     
     private void createBradenDialog(int groupPosition, int childPosition) {
 		bradenDialog = new BradenDialog(answersNameMap.get(questionsName.get(groupPosition)).get(childPosition), 
-				subAnswersNameMap, AnswerManager.Instance().loadByQuestionIDAndType(groupPosition, 
+				subAnswersNameMap, HelperFactory.getHelper().getAnswerDAO().loadByQuestionIDAndType(groupPosition, 
 						Category.type.braden.ordinal()), childPosition);
 		bradenDialog.setCancelable(false);
 		bradenDialog.show(getSupportFragmentManager(), "bradenDialog");
 		questionNumber = groupPosition;
 		answerNumber = childPosition;
+		leavingDialog = new BaseDialog(getString(R.string.attention), getString(R.string.dialog_braden_point_marking));
     }
     
     public void setQuestions() {
@@ -322,10 +335,15 @@ public class BradenSkalaActivity extends BaseActivity implements BaseDialogListe
     }
     
     private void reloadData() {
-   		employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
-    	category = CategoryManager.Instance().loadByCategoryName(getString(R.string.braden));
-    	answers = AnswerManager.Instance().loadByCategoryID(category.getID());
-
+		employment = HelperFactory.getHelper().getEmploymentDAO().loadAll((int)Option.Instance().getEmploymentID());
+    	category = HelperFactory.getHelper().getCategoryDAO().loadByCategoryName(getString(R.string.braden));
+//    	answers = HelperFactory.getHelper().getAnswerDAO().loadByCategoryID(category.getId());
+    	answers = HelperFactory.getHelper().getAnswerDAO().loadByCategoryIDAndType(category.getId(), Category.type.braden);
+    	for (int i = 0; i < answers.size(); i++)
+    		if (answers.get(i).getQuestionID() == 6) {
+    			answers.remove(i);
+    			break;
+    		}
     }
  
     // Convert pixel to dip
@@ -338,26 +356,35 @@ public class BradenSkalaActivity extends BaseActivity implements BaseDialogListe
  
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.activity_main, menu);
+        getMenuInflater().inflate(R.menu.braden_skala, menu);
         return true;
     }
 
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog) {
 		if (dialog.getTag() == "bradenDialog" && ((BradenDialog)dialog).getCurrentLayout() != null)	{
-			String answerKey = getAnswerKey(getSelectedCheckBoxes(((BradenDialog)dialog).getCurrentLayout()), 
+			String selectedCheckBoxes = getSelectedCheckBoxes(((BradenDialog)dialog).getCurrentLayout());
+			if (selectedCheckBoxes.equals(""))
+				return;
+			String answerKey = getAnswerKey(selectedCheckBoxes, 
 					getCurrentLevel(((BradenDialog)dialog).getCurrentLayout()));
-			saveAnswer(AnswerManager.Instance().loadByQuestionIDAndType(questionNumber, Category.type.braden.ordinal()), answerKey);
+			saveAnswer(HelperFactory.getHelper().getAnswerDAO().loadByQuestionIDAndType(questionNumber, Category.type.braden.ordinal()), answerKey);
 			updateList();
 			lastQuestionCheck();
+		}
+		
+		if (dialog.getTag() == "leavingDialog") {
+			Intent intent  = new Intent(getBaseContext(), BradenSkalaPictureInfoActivity.class);
+			startActivity(intent);
 		}
 		
 	}
 	
 	@Override
 	public void onDialogNegativeClick(DialogFragment dialog) {
-		// TODO Auto-generated method stub		
+		if (dialog.getTag() == "leavingDialog") {
+			onBackPressed();
+		}	
 	}
 	
 	private String getSelectedCheckBoxes(LinearLayout linearLayout) {
@@ -385,25 +412,40 @@ public class BradenSkalaActivity extends BaseActivity implements BaseDialogListe
 	
 	private void saveAnswer(Answer answer, String answerKey) {
 		if (answer == null)
-			answer = new Answer(employment.getPatient(), questionNumber, 
-					questionsName.get(questionNumber), answerNumber, category.getID(), answerKey, Category.type.braden.ordinal());
+			answer = new Answer(employment.getPatient().getId(), questionNumber, 
+					questionsName.get(questionNumber), answerNumber, category.getId(), answerKey, Category.type.braden.ordinal());
 		else
 			answer.setAnswerKey(answerKey);
-		AnswerManager.Instance().save(answer);
+		HelperFactory.getHelper().getAnswerDAO().save(answer);
 	}
 	
 	private void updateList() {
-		expListAdapter.answers = answers = AnswerManager.Instance().loadByCategoryID(category.getID());
+//		expListAdapter.answers = answers = HelperFactory.getHelper().getAnswerDAO().loadByCategoryID(category.getId());
+		expListAdapter.answers = answers = HelperFactory.getHelper().getAnswerDAO().loadByCategoryIDAndType(category.getId(), Category.type.braden);
 		expListAdapter.notifyDataSetChanged();
 	}
 	
 	private void lastQuestionCheck() {
-		if (AnsweredCategoryManager.Instance().loadByCategoryID(category.getID()) == null && answers.size() == 6)
+		if (HelperFactory.getHelper().getAnsweredCategoryDAO().loadByCategoryID(category.getId()) == null && (answers.size() == 7 || allQuestionsAnswered()))
 		{
-			AnsweredCategoryManager.Instance().save(new AnsweredCategory(category.getID(), employment.getID()));
-			onBackPressed();
+			HelperFactory.getHelper().getAnsweredCategoryDAO().save(new AnsweredCategory(category.getId(), employment.getId()));
+			Answer bradenSkalaPointAnswer = HelperFactory.getHelper().getAnswerDAO().loadByQuestionIDAndType(6, Category.type.braden.ordinal());
+			if (bradenSkalaPointAnswer != null)
+				onBackPressed();
+			else
+				leavingDialog.show(getSupportFragmentManager(), "leavingDialog");
 		}
 	}
 
+	
+	private boolean allQuestionsAnswered() {
+		if (answers.size() != 6)
+				return false;
+		for (Answer answer : answers) {
+			if (answers.size() == 6 && answer.getQuestionID() == 6)
+				return false;
+		}
+		return true;
+	}
 
 }

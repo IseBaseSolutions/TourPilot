@@ -1,16 +1,13 @@
 package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseTimeSyncActivity;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWork;
-import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWorkManager;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
-import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.Work.Work;
-import isebase.cognito.tourpilot.Data.Work.WorkManager;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.PatientsDialog;
 import isebase.cognito.tourpilot.Dialogs.WorkStopDialog;
@@ -87,10 +84,10 @@ public class AdditionalWorksActivity extends BaseTimeSyncActivity implements Bas
 	}
 
 	private void reloadData() {
-		additionalWorks = AdditionalWorkManager.Instance().load();
-		patients = PatientManager.Instance().loadByPilotTourID(Option.Instance().getPilotTourID());
+		additionalWorks = HelperFactory.getHelper().getAdditionalWorkDAO().load();
+		patients = HelperFactory.getHelper().getPatientDAO().loadPatientsByPilotTourID(Option.Instance().getPilotTourID());
 		if (Option.Instance().getWorkID() != -1)
-			work = WorkManager.Instance().load(Option.Instance().getWorkID());
+			work = HelperFactory.getHelper().getWorkDAO().load(Option.Instance().getWorkID());
 	}
 
 	private void switchTolatest() { 
@@ -107,17 +104,17 @@ public class AdditionalWorksActivity extends BaseTimeSyncActivity implements Bas
 		{
 			work.setPatientIDs(patientsDialog.getSelectedPatientIDs());
 			work.setIsDone(true);
-			WorkManager.Instance().save(work);
+			HelperFactory.getHelper().getWorkDAO().save(work);
 			Option.Instance().setWorkID(BaseObject.EMPTY_ID);
 			Option.Instance().save();
 			startPatientsActivity();
 		}
 		if (dialog == workInputDialog)
 		{
-			work = new Work(DateUtils.getSynchronizedTime(), addWork.getID(), Option.Instance().getPilotTourID(), addWork.getName());
-			work.setIsServerTime(Option.Instance().isTimeSynchronised());
-			WorkManager.Instance().save(work);
-			Option.Instance().setWorkID(work.getID());
+			work = new Work(DateUtils.getSynchronizedTime(), addWork.getId(), Option.Instance().getPilotTourID(), addWork.getName());
+			work.setServerTime(Option.Instance().isTimeSynchronised());
+			HelperFactory.getHelper().getWorkDAO().save(work);
+			Option.Instance().setWorkID(work.getId());
 			Option.Instance().save();
 			workStopDialog = new WorkStopDialog(addWork.getName(), work.startTime());
 			workStopDialog.setCancelable(false);
@@ -126,8 +123,8 @@ public class AdditionalWorksActivity extends BaseTimeSyncActivity implements Bas
 		if (dialog == workStopDialog)
 		{
 			work.setStopTime(DateUtils.getSynchronizedTime());
-			work.setIsServerTime(Option.Instance().isTimeSynchronised());
-			WorkManager.Instance().save(work);
+			work.setServerTime(Option.Instance().isTimeSynchronised());
+			HelperFactory.getHelper().getWorkDAO().save(work);
 			patientsDialog = new PatientsDialog(patients, work.getName());
 			patientsDialog.setCancelable(false);
 			patientsDialog.show(getSupportFragmentManager(), "patientsDialog");
@@ -144,7 +141,7 @@ public class AdditionalWorksActivity extends BaseTimeSyncActivity implements Bas
 	@Override
 	protected void startManualInputActivity() {
 		Intent manualInputActivity = new Intent(getApplicationContext(), ManualInputActivity.class);
-		manualInputActivity.putExtra("addWorkID", addWork.getID());
+		manualInputActivity.putExtra("addWorkID", addWork.getId());
 		startActivity(manualInputActivity);
 	}
 

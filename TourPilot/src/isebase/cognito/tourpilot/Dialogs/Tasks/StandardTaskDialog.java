@@ -1,19 +1,18 @@
 package isebase.cognito.tourpilot.Dialogs.Tasks;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;

@@ -1,126 +1,135 @@
 package isebase.cognito.tourpilot.Data.EmploymentVerification;
 
-import java.util.Date;
-
 import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
+import java.util.Date;
+
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "EmploymentVerifications")
 public class EmploymentVerification extends BaseObject {
 
-	public static final String EmploymentIDField = "employment_id";
-	public static final String WorkerIDField = "worker_id";
-	public static final String PatientIDField = "patient_id";
-	public static final String DateBeginField = "date_begin";
-	public static final String DateEndField = "date_end";
-	public static final String DoneTasksIDsField = "done_tasks_ids";
-	public static final String UnDoneTasksIDsField = "undone_tasks_ids";
-	public static final String UserRemarksMarksField = "user_remarks_marks";
-	public static final String PflegeField = "pflege";
+	public static final String EMPLOYMENT_ID_FIELD = "employment_id";
+	public static final String WORKER_ID_FIELD = "worker_id";
+	public static final String PATIENT_ID_FIELD = "patient_id";
+	public static final String DATE_BEGIN_FIELD = "date_begin";
+	public static final String DATE_END_FIELD = "date_end";
+	public static final String DONE_TASKS_ID_FIELD = "done_tasks_ids";
+	public static final String UNDONE_TASKS_ID_FIELD = "undone_tasks_ids";
+	public static final String MARKS_FIELD = "user_remarks_marks";
+	public static final String PFLEGE_FIELD = "pflege";
 
+	@DatabaseField(dataType = DataType.LONG, columnName = EMPLOYMENT_ID_FIELD)
 	private long employmentID;
-	private long workerID;
-	private long patientID;
-	private Date dateBegin;
-	private Date dateEnd;
-	private String doneTasksIDs;
-	private String undoneTasksIDs;
-	private String userRemarksMarks;
-	private boolean isPflege;
-
-	@MapField(DatabaseField = EmploymentIDField)
+	
 	public long getEmploymentID() {
 		return employmentID;
 	}
 
-	@MapField(DatabaseField = EmploymentIDField)
 	public void setEmploymentID(long employmentID) {
 		this.employmentID = employmentID;
 	}
-
-	@MapField(DatabaseField = WorkerIDField)
-	public long getWorkerID() {
+	
+	@DatabaseField(dataType = DataType.INTEGER, columnName = WORKER_ID_FIELD)
+	private int workerID;
+	
+	public int getWorkerID() {
 		return workerID;
 	}
 
-	@MapField(DatabaseField = WorkerIDField)
-	public void setWorkerID(long workerID) {
+	public void setWorkerID(int workerID) {
 		this.workerID = workerID;
 	}
-
-	@MapField(DatabaseField = PatientIDField)
-	public long getPatientID() {
+	
+	@DatabaseField(dataType = DataType.INTEGER, columnName = PATIENT_ID_FIELD)
+	private int patientID;
+	
+	public int getPatientID() {
 		return patientID;
 	}
 
-	@MapField(DatabaseField = PatientIDField)
-	public void setPatientID(long patientID) {
+	public void setPatientID(int patientID) {
 		this.patientID = patientID;
 	}
-
-	@MapField(DatabaseField = DateBeginField)
-	public long getDateBegin() {
-		return dateBegin.getTime();
+	
+	@DatabaseField(dataType = DataType.DATE_LONG, columnName = DATE_BEGIN_FIELD)
+	private Date dateBegin;
+	
+	public Date getDateBegin() {
+//		if (dateBegin == null)
+//			dateBegin = DateUtils.EmptyDate;
+//		return dateBegin.getTime();
+		return dateBegin == null ? dateBegin = DateUtils.EmptyDate : dateBegin;
 	}
 
-	@MapField(DatabaseField = DateBeginField)
 	public void setDateBegin(Date dateBegin) {
 		this.dateBegin = dateBegin;
 	}
-
-	@MapField(DatabaseField = DateEndField)
-	public long getDateEnd() {
-		return dateEnd.getTime();
+	
+	@DatabaseField(dataType = DataType.DATE_LONG, columnName = DATE_END_FIELD)
+	private Date dateEnd;
+	
+	public Date getDateEnd() {
+//		if (dateEnd == null)
+//			dateEnd = DateUtils.EmptyDate;
+//		return dateEnd.getTime();
+		return dateEnd == null ? dateEnd = DateUtils.EmptyDate : dateEnd;
 	}
 
-	@MapField(DatabaseField = DateEndField)
 	public void setDateEnd(Date dateEnd) {
 		this.dateEnd = dateEnd;
 	}
-
-	@MapField(DatabaseField = DoneTasksIDsField)
+	
+	@DatabaseField(dataType = DataType.STRING, columnName = DONE_TASKS_ID_FIELD)
+	private String doneTasksIDs;
+	
 	public String getDoneTasksIDs() {
 		return doneTasksIDs;
 	}
 
-	@MapField(DatabaseField = DoneTasksIDsField)
 	public void setDoneTasksIDs(String doneTasksIDs) {
 		this.doneTasksIDs = doneTasksIDs;
 	}
-
-	@MapField(DatabaseField = UnDoneTasksIDsField)
+	
+	@DatabaseField(dataType = DataType.STRING, columnName = UNDONE_TASKS_ID_FIELD)
+	private String undoneTasksIDs;
+	
 	public String getUnDoneTasksIDs() {
 		return undoneTasksIDs;
 	}
 
-	@MapField(DatabaseField = UnDoneTasksIDsField)
 	public void setUnDoneTasksIDs(String undoneTasksIDs) {
 		this.undoneTasksIDs = undoneTasksIDs;
 	}
-
-	@MapField(DatabaseField = UserRemarksMarksField)
+	
+	@DatabaseField(dataType = DataType.STRING, columnName = MARKS_FIELD)
+	private String userRemarksMarks;
+	
 	public String getUserRemarksMarks() {
 		return userRemarksMarks;
 	}
 
-	@MapField(DatabaseField = UserRemarksMarksField)
 	public void setUserRemarksMarks(String userRemarksMarks) {
 		this.userRemarksMarks = userRemarksMarks;
 	}
+	
+	@DatabaseField(dataType = DataType.BOOLEAN, columnName = PFLEGE_FIELD)
+	private boolean isPflege;
 
-	@MapField(DatabaseField = PflegeField)
 	public boolean isPflege() {
 		return isPflege;
 	}
 
-	@MapField(DatabaseField = PflegeField)
 	public void setPflege(boolean isPflege) {
 		this.isPflege = isPflege;
 	}
 
-	public EmploymentVerification(long employmentID, long workerID, long patientID,
+	public EmploymentVerification(long employmentID, int workerID, int patientID,
 			Date dateBegin, Date dateEnd,
 			String doneTasksIDs, String undoneTasksIDs, String userRemarksMarks, boolean pflege) {
 		setEmploymentID(employmentID);
@@ -145,8 +154,6 @@ public class EmploymentVerification extends BaseObject {
 		strValue += employmentID + ";";
 		strValue += workerID + ";";
 		strValue += patientID + ";";
-//		strValue += dateBegin.getTime() + ";";
-//		strValue += dateEnd.getTime() + ";";
 		strValue += DateUtils.DateFormat.format(dateBegin) + " " + DateUtils.HourMinutesFormat.format(dateBegin) + ";";
 		strValue += DateUtils.DateFormat.format(dateEnd) + " " + DateUtils.HourMinutesFormat.format(dateEnd) + ";";
 		strValue += doneTasksIDs + ";";

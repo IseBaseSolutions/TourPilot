@@ -3,16 +3,13 @@ package isebase.cognito.tourpilot.Activity.QuestionActivities;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Activity.TasksAssessmentsActivity.TasksAssessementsActivity;
+import isebase.cognito.tourpilot.Data.Answer.Answer;
+import isebase.cognito.tourpilot.Data.AnsweredCategory.AnsweredCategory;
+import isebase.cognito.tourpilot.Data.Category.Category;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.Data.Question.Answer.Answer;
-import isebase.cognito.tourpilot.Data.Question.Answer.AnswerManager;
-import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategory;
-import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategoryManager;
-import isebase.cognito.tourpilot.Data.Question.Category.Category;
-import isebase.cognito.tourpilot.Data.Question.Category.CategoryManager;
-import isebase.cognito.tourpilot.Data.Question.Interfaces.IQuestionable;
-import isebase.cognito.tourpilot.Data.Question.Question.Question;
-import isebase.cognito.tourpilot.Data.Question.Question.QuestionManager;
+import isebase.cognito.tourpilot.Data.Question.IQuestionable;
+import isebase.cognito.tourpilot.Data.Question.Question;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Templates.QuestionAdapter;
@@ -24,6 +21,8 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -45,6 +44,8 @@ public class QuestionsActivity extends BaseActivity implements BaseDialogListene
 	BaseDialog changeAnswerDialog;
 	ChangedAnswer changedAnswer;
 	
+	BaseDialog leavingDialog;
+	
 	boolean isCategoryAnswered;
 	
 	public boolean isCategoryAnswered() {
@@ -60,6 +61,26 @@ public class QuestionsActivity extends BaseActivity implements BaseDialogListene
 		fillUpTitle();
 		fillUp();
 		setVisibility();
+	}
+	
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+		if (!category.getName().equals("Kontrakturrisikoerfassung"))
+			return false;
+    	getMenuInflater().inflate(R.menu.kontraktur_picture_info, menu);
+        return true;
+    }
+    
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_set_kontraktur_points:
+			Intent intent = new Intent(getBaseContext(), KontrakturPictureInfoActivity.class);
+			startActivity(intent);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	protected void startTasksActivity() {
@@ -79,10 +100,11 @@ public class QuestionsActivity extends BaseActivity implements BaseDialogListene
 		Bundle bundle = intentFlege.getExtras();
 		if(bundle != null)
 			categoryID = bundle.getInt("categoryID");		
-		category = CategoryManager.Instance().load(categoryID);
-		answers.addAll(AnswerManager.Instance().loadByCategoryID(categoryID));
-		isCategoryAnswered = AnsweredCategoryManager.Instance().loadByCategoryID(category.getID()) != null;
-		initQuestions(QuestionManager.Instance().loadActualsByCategory(categoryID));
+		category = HelperFactory.getHelper().getCategoryDAO().load(categoryID);
+//		answers.addAll(HelperFactory.getHelper().getAnswerDAO().loadByCategoryID(categoryID));
+		answers.addAll(HelperFactory.getHelper().getAnswerDAO().loadByCategoryIDAndType(category.getId(), Category.type.normal));
+		isCategoryAnswered = HelperFactory.getHelper().getAnsweredCategoryDAO().loadByCategoryID(category.getId()) != null;
+		initQuestions(HelperFactory.getHelper().getQuestionDAO().loadActualsByCategory(categoryID));
 	}
 	
 	private void fillUpTitle() {
@@ -123,13 +145,23 @@ public class QuestionsActivity extends BaseActivity implements BaseDialogListene
 			answerRadioButtonClicked(questionHolder, answerIndex);
 		if (questions.size() > 0 || isCategoryAnswered())
 			return;
-		onBackPressed();
-		AnsweredCategoryManager.Instance().save(new AnsweredCategory(category.getID(), Option.Instance().getEmploymentID()));
+		HelperFactory.getHelper().getAnsweredCategoryDAO().save(new AnsweredCategory(category.getId(), Option.Instance().getEmploymentID()));
+		if (!category.getName().equals("Kontrakturrisikoerfassung"))
+			onBackPressed();
+		else {
+			Answer pointAnswer = HelperFactory.getHelper().getAnswerDAO().loadByQuestionIDAndType(-1, Category.type.normal.ordinal());
+			if (pointAnswer != null) {
+				onBackPressed();
+				return;
+			}
+			leavingDialog = new BaseDialog(getString(R.string.attention), getString(R.string.dialog_kontraktur_point_marking));
+			leavingDialog.show(getSupportFragmentManager(), "leavingDialog");
+		}
 	}
 	
 	private void questionRadioButtonClicked(QuestionHolder questionHolder, int answerIndex) {
 		Question question = (Question) questionHolder.item;
-		saveAnswer(new Answer(questionAdapter.patient, question, answerIndex, category.getID(), Category.type.normal.ordinal()));
+		saveAnswer(new Answer(questionAdapter.patient, question, answerIndex, category.getId(), Category.type.normal.ordinal()));
 		if (!question.isSubQuestion())
 			addSubQuestions(question);
 		removeQuestionFromList(questionHolder);			
@@ -156,7 +188,7 @@ public class QuestionsActivity extends BaseActivity implements BaseDialogListene
 	
 	private void saveAnswer(Answer answer) {
 		answers.add(answer);
-		AnswerManager.Instance().save(answer);
+		HelperFactory.getHelper().getAnswerDAO().save(answer);
 	}
 	
 	private void initChangeAnswerDialog(Answer answer) {
@@ -209,20 +241,28 @@ public class QuestionsActivity extends BaseActivity implements BaseDialogListene
 	}
 	
 	private boolean isSubQuestionIsAnswered(Question subQuestion) {		
-		return AnswerManager.Instance().isSubQuestionAnswered(subQuestion);
+		return HelperFactory.getHelper().getAnswerDAO().isSubQuestionAnswered(subQuestion);
 	}
 
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog) {
-		changedAnswer.answer.setAnswerID(changedAnswer.answerIndex);
-		AnswerManager.Instance().save(changedAnswer.answer);
-		answerAdapter.notifyDataSetChanged();
+		if (dialog.getTag() == "changeAnswerDialog") {
+			changedAnswer.answer.setAnswerID(changedAnswer.answerIndex);
+			HelperFactory.getHelper().getAnswerDAO().save(changedAnswer.answer);
+			answerAdapter.notifyDataSetChanged();
+		}
+		if (dialog.getTag() == "leavingDialog") {
+			Intent intent = new Intent(getBaseContext(), KontrakturPictureInfoActivity.class);
+			startActivity(intent);
+		}	
+		
 	}
 
 	@Override
 	public void onDialogNegativeClick(DialogFragment dialog) {
-		// TODO Auto-generated method stub
-		
+		if (dialog.getTag() == "leavingDialog") {
+			onBackPressed();
+		}			
 	}
 	
 	public class ChangedAnswer {

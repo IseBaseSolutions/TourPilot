@@ -2,94 +2,98 @@ package isebase.cognito.tourpilot.Data.Information;
 
 import isebase.cognito.tourpilot.Connection.ServerCommandParser;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 import isebase.cognito.tourpilot.Utils.StringParser;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "Informations")
 public class Information extends BaseObject {
 
-	public static final String EmploymentIDField = "employment_id";
-	public static final String InformationIDField = "information_id";
-	public static final String FromDateField = "from_date";
-	public static final String TilldateField = "till_date";
-	public static final String ReadTimeField = "read_time";
-	public static final String IsFromServerField = "is_from_server";
+	public static final String EMPLOYMENT_ID_FIELD = "employment_id";
+	public static final String INFORMATION_ID_FIELD = "information_id";
+	public static final String FROM_DATE_FIELD = "from_date";
+	public static final String TILL_DATE_FIELD = "till_date";
+	public static final String READ_TIME_FIELD = "read_time";
+	public static final String IS_FROM_SERVER_FIELD = "is_from_server";
 
+	@DatabaseField(dataType = DataType.LONG, columnName = EMPLOYMENT_ID_FIELD)
 	private long employmentID;
-	private int informationID;
-	private Date fromDate;
-	private Date tillDate;
-	private Date readTime;
-	private boolean isFromServer;
 	
-	@MapField(DatabaseField = EmploymentIDField)
 	public long getEmploymentID() {
 		return employmentID;
 	}
 
-	@MapField(DatabaseField = EmploymentIDField)
 	public void setEmploymentID(long employmentID) {
 		this.employmentID = employmentID;
 	}
-
-	@MapField(DatabaseField = InformationIDField)
+	
+	@DatabaseField(dataType = DataType.INTEGER, columnName = INFORMATION_ID_FIELD)
+	private int informationID;
+	
 	public int getInformationID() {
 		return informationID;
 	}
 
-	@MapField(DatabaseField = InformationIDField)
 	public void setInformationID(int informationID) {
 		this.informationID = informationID;
 	}
-
-	@MapField(DatabaseField = FromDateField)
+	
+	@DatabaseField(dataType = DataType.DATE_LONG, columnName = FROM_DATE_FIELD)
+	private Date fromDate;
+	
 	public Date getFromDate() {
-		return fromDate;
+		return fromDate == null ? fromDate = DateUtils.EmptyDate : fromDate;
 	}
 
-	@MapField(DatabaseField = FromDateField)
 	public void setFromDate(Date fromDate) {
 		this.fromDate = fromDate;
 	}
-
-	@MapField(DatabaseField = TilldateField)
+	
+	@DatabaseField(dataType = DataType.DATE_LONG, columnName = TILL_DATE_FIELD)
+	private Date tillDate;
+	
 	public Date getTillDate() {
-		return tillDate;
+		return tillDate == null ? tillDate = DateUtils.EmptyDate : tillDate;
 	}
 
-	@MapField(DatabaseField = TilldateField)
 	public void setTillDate(Date tillDate) {
 		this.tillDate = tillDate;
 	}
-
-	@MapField(DatabaseField = ReadTimeField)
+	
+	@DatabaseField(dataType = DataType.DATE_LONG, columnName = READ_TIME_FIELD)
+	private Date readTime;
+	
 	public Date getReadTime() {
-		return readTime;
+		return readTime == null ? readTime = DateUtils.EmptyDate : readTime;
 	}
 
-	@MapField(DatabaseField = ReadTimeField)
 	public void setReadTime(Date readTime) {
 		this.readTime = readTime;
 	}
+	
+	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_FROM_SERVER_FIELD)
+	private boolean isFromServer;
 
-	@MapField(DatabaseField = IsFromServerField)
 	public boolean getIsFromServer() {
 		return isFromServer;
 	}
 
-	@MapField(DatabaseField = IsFromServerField)
 	public void setIsFromServer(boolean isFromServer) {
 		this.isFromServer = isFromServer;
 	}
 
-	public Information(){
+	public Information() {
 		clear();
 	}
-	
+
 	public Information(String initString) {
+		clear();
 		StringParser parsingString = new StringParser(initString);
 		parsingString.next(";");
 		setIsFromServer(true);
@@ -109,7 +113,7 @@ public class Information extends BaseObject {
 	@Override
 	public String forServer() {
 		String strValue = new String(ServerCommandParser.INFORMATION + ";");
-		strValue += String.format("%d;%d", getID(), getEmploymentID()) + ";";
+		strValue += String.format("%d;%d", getId(), getEmploymentID()) + ";";
 		strValue += getCheckSum();
 		return strValue;
 	}
@@ -122,12 +126,12 @@ public class Information extends BaseObject {
 		setTillDate(DateUtils.EmptyDate);
 		setReadTime(DateUtils.EmptyDate);
 		setIsFromServer(false);
-		
+
 	}
-	
+
 	public boolean isActualInfo(Date date) {
-		return date.getTime() >= getFromDate().getTime() 
-				&& date.getTime() <= getTillDate().getTime();		
+		return date.getTime() >= getFromDate().getTime()
+				&& date.getTime() <= getTillDate().getTime();
 	}
-	
+
 }

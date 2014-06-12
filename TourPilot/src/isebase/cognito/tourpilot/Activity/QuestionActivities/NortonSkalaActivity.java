@@ -2,24 +2,20 @@ package isebase.cognito.tourpilot.Activity.QuestionActivities;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
+import isebase.cognito.tourpilot.Data.Answer.Answer;
+import isebase.cognito.tourpilot.Data.AnsweredCategory.AnsweredCategory;
+import isebase.cognito.tourpilot.Data.Category.Category;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
-import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.Data.Question.Answer.Answer;
-import isebase.cognito.tourpilot.Data.Question.Answer.AnswerManager;
-import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategory;
-import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategoryManager;
-import isebase.cognito.tourpilot.Data.Question.Category.Category;
-import isebase.cognito.tourpilot.Data.Question.Category.CategoryManager;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
-import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
 
 import java.util.List;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.view.Menu;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -30,7 +26,7 @@ public class NortonSkalaActivity extends BaseActivity implements BaseDialogListe
 
 	Category category;
 	List<Answer> answers;
-	Employment employment;
+	Employment newEmployment;
 	ToggleButton toggleButton;
 	LinearLayout llMain;	
 	BaseDialog changeAnswerDialog;
@@ -50,15 +46,21 @@ public class NortonSkalaActivity extends BaseActivity implements BaseDialogListe
 		initControls();
 	}
 	
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return false;
+    }
+	
     private void setTitle() {
     	setTitle(R.string.norton);
     }
 
 	private void reloadData() {
-		category = CategoryManager.Instance().loadByCategoryName(getString(R.string.norton));
-		answers = AnswerManager.Instance().loadByCategoryID(category.getID());
-		isCategoryAnswered = AnsweredCategoryManager.Instance().loadByCategoryID(category.getID()) != null;
-		employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
+		category = HelperFactory.getHelper().getCategoryDAO().loadByCategoryName(getString(R.string.norton));
+//		answers = HelperFactory.getHelper().getAnswerDAO().loadByCategoryID(category.getId());
+		answers = HelperFactory.getHelper().getAnswerDAO().loadByCategoryIDAndType(category.getId(), Category.type.norton);
+		isCategoryAnswered = HelperFactory.getHelper().getAnsweredCategoryDAO().loadByCategoryID(category.getId()) != null;
+		newEmployment = HelperFactory.getHelper().getEmploymentDAO().loadAll((int)Option.Instance().getEmploymentID());
 	}
 		
 	private void initControls() {
@@ -111,7 +113,7 @@ public class NortonSkalaActivity extends BaseActivity implements BaseDialogListe
 		for (int i = 0; i < radioGroup.getChildCount(); i++) {
 			if (i == findAnswerByQuestionId(questionIndex).getAnswerID())
 				((RadioButton)radioGroup.getChildAt(i)).setChecked(true);
-			((RadioButton)radioGroup.getChildAt(i)).setEnabled(!employment.isDone());
+			((RadioButton)radioGroup.getChildAt(i)).setEnabled(!newEmployment.isDone());
 		}
 	}
 	
@@ -130,7 +132,7 @@ public class NortonSkalaActivity extends BaseActivity implements BaseDialogListe
 		getAnswerFromMainLayout((LinearLayout)view.getParent().getParent().getParent(), (RadioButton)view);
 		if (answers.size() < 9 || isCategoryAnswered())
 			return;
-		AnsweredCategoryManager.Instance().save(new AnsweredCategory(category.getID(), employment.getID()));
+		HelperFactory.getHelper().getAnsweredCategoryDAO().save(new AnsweredCategory(category.getId(), newEmployment.getId()));
 		onBackPressed();
 	}
 	
@@ -168,8 +170,7 @@ public class NortonSkalaActivity extends BaseActivity implements BaseDialogListe
 			changedAnswer = new ChangedAnswer(answerIndex, findAnswerByQuestionId(questionIndex));
 			return;
 		}
-		Answer answer = getAnswer(questionIndex, answerIndex);
-		AnswerManager.Instance().save(answer);
+		HelperFactory.getHelper().getAnswerDAO().save(getAnswer(questionIndex, answerIndex));
 	}
 	
 	private Answer getAnswer(int questionIndex, int answerIndex) {
@@ -178,7 +179,7 @@ public class NortonSkalaActivity extends BaseActivity implements BaseDialogListe
 			answer.setAnswerID(answerIndex);
 			return answer;
 		}
-		answer = new Answer(employment.getPatient(), questionIndex, "", answerIndex, category.getID(), "", Category.type.norton.ordinal());
+		answer = new Answer(newEmployment.getPatient().getId(), questionIndex, "", answerIndex, category.getId(), "", Category.type.norton.ordinal());
 		answers.add(answer);
 		return answer;
 	}
@@ -195,7 +196,7 @@ public class NortonSkalaActivity extends BaseActivity implements BaseDialogListe
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog) {
 		changedAnswer.answer.setAnswerID(changedAnswer.answerIndex);
-		AnswerManager.Instance().save(changedAnswer.answer);
+		HelperFactory.getHelper().getAnswerDAO().save(changedAnswer.answer);
 	}
 
 	@Override

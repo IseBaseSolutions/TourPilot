@@ -6,18 +6,14 @@ import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Connection.ConnectionAsyncTask;
 import isebase.cognito.tourpilot.Connection.ConnectionStatus;
 import isebase.cognito.tourpilot.Data.AdditionalEmployment.AdditionalEmployment;
+import isebase.cognito.tourpilot.Data.Employment.EmploymentDAO;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
-import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
-import isebase.cognito.tourpilot.Data.Patient.PatientManager;
-import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
-import isebase.cognito.tourpilot.NewData.NewEmployment.EmploymentDAO;
-import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
 import isebase.cognito.tourpilot.Templates.AdditionalEmploymentAdapter;
 import isebase.cognito.tourpilot.Templates.AdditionalPatientAdapter;
 import isebase.cognito.tourpilot.Utils.StringParser;
@@ -47,7 +43,7 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 	
 	List<AdditionalEmployment> addEmployments = new ArrayList<AdditionalEmployment>();
 	List<Patient> addPatients = new ArrayList<Patient>();
-	List<Employment> employments;
+	List<Employment> newEmployments;
 	
 	DialogFragment noPatientsDialog;
 	ProgressBar pbSync;
@@ -125,7 +121,7 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 		default:
 			break;
 		}
-		requestForServer += PilotTourManager.Instance().loadPilotTour(Option.Instance().getPilotTourID()).getTourID() + ";" + Option.Instance().getVersion();
+		requestForServer += HelperFactory.getHelper().getPilotTourDAO().loadPilotTour(Option.Instance().getPilotTourID()).getTourID() + ";" + Option.Instance().getVersion();
 		connectionStatus.setRequestForServer(requestForServer);
 		connectionTask.execute();
 	}
@@ -135,7 +131,7 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 		connectionStatus.CurrentState = 0;
 		connectionTask = new ConnectionAsyncTask(connectionStatus);
 		String requestForServer = "";
-		String tourID = PilotTourManager.Instance().loadPilotTour(Option.Instance().getPilotTourID()).getTourID() + ";";
+		String tourID = HelperFactory.getHelper().getPilotTourDAO().loadPilotTour(Option.Instance().getPilotTourID()).getTourID() + ";";
 		switch(additionalEmploymentsMode) {
 		case getIP:
 			requestForServer = "SEL_WIP;";
@@ -172,10 +168,10 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 	}
 	
 	private void reloadData() {
-		employments = EmploymentManager.Instance().load(Employment.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID()));
-		for (Employment employment : employments)
-			if (!employment.isDone() && !employment.isAdditionalWork())
-				addEmployments.add(new AdditionalEmployment(employment.getID(), String.format("%s %s\n%s", employment.getTime(), employment.getName(), employment.getDayPart())));
+		newEmployments = HelperFactory.getHelper().getEmploymentDAO().load(Employment.PILOT_TOUR_ID_FIELD, String.valueOf(Option.Instance().getPilotTourID()));
+		for (Employment newEmployment : newEmployments)
+			if (!newEmployment.isDone() && !newEmployment.isAdditionalWork())
+				addEmployments.add(new AdditionalEmployment(newEmployment.getId(), String.format("%s %s\n%s", newEmployment.getTime(), newEmployment.getName(), newEmployment.getDayPart())));
 	}
 	
 	public void btOkClick(View view) {
@@ -294,16 +290,15 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 	}
 	
 	private void createAdditionalEmployment() {
-		Patient patient = PatientManager.Instance().load(patientAdapter.getSelectedAdditionalPatient().getID());
+		Patient patient = HelperFactory.getHelper().getPatientDAO().load(patientAdapter.getSelectedAdditionalPatient().getId());
 		if (patient == null)
 		{
 			patient = patientAdapter.getSelectedAdditionalPatient();
 			patient.setIsAdditional(true);
-			PatientManager.Instance().save(patient);
+			HelperFactory.getHelper().getPatientDAO().save(patient);
 		}
-
-		Employment employment = EmploymentManager.createEmployment(patient);
-		Option.Instance().setEmploymentID(employment.getID());
+		Employment employment = EmploymentDAO.createEmployment(patient);
+		Option.Instance().setEmploymentID(employment.getId());
 		Option.Instance().save();
 	}
 	

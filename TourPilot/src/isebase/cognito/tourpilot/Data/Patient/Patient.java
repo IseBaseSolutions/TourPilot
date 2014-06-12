@@ -1,164 +1,184 @@
 package isebase.cognito.tourpilot.Data.Patient;
 
 import isebase.cognito.tourpilot.Connection.ServerCommandParser;
-import isebase.cognito.tourpilot.Data.Address.Address;
 import isebase.cognito.tourpilot.Data.Address.IAddressable;
+import isebase.cognito.tourpilot.Data.Address.Address;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.DataBase.MapField;
-import isebase.cognito.tourpilot.NewData.NewAddress.NewAddress;
 import isebase.cognito.tourpilot.Utils.NCryptor;
 import isebase.cognito.tourpilot.Utils.StringParser;
 
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "Patients")
 public class Patient extends BaseObject implements IAddressable {
 
-	public static final String IsAdditionalField = "is_additional";
-	public static final String SurnameField = "surname";
-	public static final String AddressIDField = "address_id";
+	public static final String IS_ADDITIONAL_FIELD = "is_additional";
+	public static final String SURNAME_FIELD = "surname";
+	public static final String ADDRESS_ID_FIELD = "address_id";
 		
-	public static final String SexField = "sex";
-	public static final String DoctorIDsField = "doctor_ids";
-	public static final String RelativeIDsField = "relative_ids";
+	public static final String SEX_FIELD = "sex";
+	public static final String DOCTORS_ID_FIELD = "doctor_ids";
+	public static final String RELATIVES_ID_FIELD = "relative_ids";
 	
-	public static final String CatalogKKTypeField = "catalog_kk_type";
-	public static final String CatalogPKTypeField = "catalog_pk_type";
-	public static final String CatalogSATypeField = "catalog_sa_type";
-	public static final String CatalogPRTypeField = "catalog_pr_type";
+	public static final String CATALOG_KK_TYPE_FIELD = "catalog_kk_type";
+	public static final String CATALOG_PK_TYPE_FIELD = "catalog_pk_type";
+	public static final String CATALOG_SA_TYPE_FIELD = "catalog_sa_type";
+	public static final String CATALOG_PR_TYPE_FIELD = "catalog_pr_type";
 
-	public static final int AdditionalWorkCode = 999900;
+	public static final int ADDITIONAL_WORK_CODE = 999900;
 	
 	public Address address;
+	
+	@DatabaseField(dataType = DataType.INTEGER, columnName = ADDRESS_ID_FIELD)
 	private int addressID;
 	
-	private String surname;
-	private String sex;
-	private String strDoctorIDs;
-	private String strRelativeIDs;
-
-	private boolean isAdditional;
-
-	private int btyp_kk;
-	private int btyp_pk;
-	private int btyp_sa;
-	private int btyp_pr;
-
-	@MapField(DatabaseField = AddressIDField)
 	public int getAddressID() {
 		return addressID;
 	}
 
-	@MapField(DatabaseField = AddressIDField)
 	public void setAddressID(int addressID) {
 		this.addressID = addressID;
 	}
-
-	@MapField(DatabaseField = SurnameField)
+	
+	@DatabaseField(dataType = DataType.STRING, columnName = SURNAME_FIELD)
+	private String surname;
+	
 	public String getSurname() {
 		return surname;
 	}
 
-	@MapField(DatabaseField = SurnameField)
 	public void setSurname(String surname) {
 		this.surname = surname;
 	}
+	
+	@DatabaseField(dataType = DataType.STRING, columnName = SEX_FIELD)
+	private String sex;
 
-	@MapField(DatabaseField = IsAdditionalField)
+	public String getSex() {
+		return sex;
+	}
+	
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+	
+	@DatabaseField(dataType = DataType.STRING, columnName = DOCTORS_ID_FIELD)
+	private String doctorIDs;
+	
+	public String getStrDoctorsIDs() {
+		return doctorIDs;
+	}
+
+	public void setStrDoctorsIDs(String doctorIDs) {
+		this.doctorIDs = doctorIDs;
+	}
+	
+	@DatabaseField(dataType = DataType.STRING, columnName = RELATIVES_ID_FIELD)
+	private String relativeIDs;
+	
+	public String getStrRelativeIDs() {
+		return relativeIDs;
+	}
+
+	public void setStrRelativeIDs(String relativeIDs) {
+		this.relativeIDs = relativeIDs;
+	}
+	
+	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_ADDITIONAL_FIELD)
+	private boolean isAdditional;
+	
 	public boolean getIsAdditional() {
 		return isAdditional;
 	}
 
-	@MapField(DatabaseField = IsAdditionalField)
+
 	public void setIsAdditional(boolean isAdditional) {
 		this.isAdditional = isAdditional;
 	}
-
-	@MapField(DatabaseField = SexField)
-	public String getSex() {
-		return sex;
-	}
-
-	@MapField(DatabaseField = SexField)
-	public void setSex(String sex) {
-		this.sex = sex;
-	}
-
-	@MapField(DatabaseField = DoctorIDsField)
-	public String getStrDoctorsIDs() {
-		return strDoctorIDs;
-	}
-
-	@MapField(DatabaseField = DoctorIDsField)
-	public void setStrDoctorsIDs(String doctorIDs) {
-		this.strDoctorIDs = doctorIDs;
-	}
-
-	@MapField(DatabaseField = RelativeIDsField)
-	public String getStrRelativeIDs() {
-		return strRelativeIDs;
-	}
-
-	@MapField(DatabaseField = RelativeIDsField)
-	public void setStrRelativeIDs(String relativeIDs) {
-		this.strRelativeIDs = relativeIDs;
-	}
-
-	@MapField(DatabaseField = CatalogKKTypeField)
+	@DatabaseField(dataType = DataType.INTEGER, columnName = CATALOG_KK_TYPE_FIELD)
+	private int btyp_kk;
+	
 	public int getKK() {
 		return btyp_kk;
 	}
 
-	@MapField(DatabaseField = CatalogKKTypeField)
 	public void setKK(int btyp_kk) {
 		this.btyp_kk = btyp_kk;
 	}
-
-	@MapField(DatabaseField = CatalogPKTypeField)
+	
+	@DatabaseField(dataType = DataType.INTEGER, columnName = CATALOG_PK_TYPE_FIELD)
+	private int btyp_pk;
+	
 	public int getPK() {
 		return btyp_pk;
 	}
 
-	@MapField(DatabaseField = CatalogPKTypeField)
 	public void setPK(int btyp_pk) {
 		this.btyp_pk = btyp_pk;
 	}
-
-	@MapField(DatabaseField = CatalogSATypeField)
-	public int getSA() {
-		return btyp_sa;
-	}
-
-	@MapField(DatabaseField = CatalogSATypeField)
-	public void setSA(int btyp_sa) {
-		this.btyp_sa = btyp_sa;
-	}
-
-	@MapField(DatabaseField = CatalogPRTypeField)
+	
+	@DatabaseField(dataType = DataType.INTEGER, columnName = CATALOG_PR_TYPE_FIELD)
+	private int btyp_pr;
+	
 	public int getPR() {
 		return btyp_pr;
 	}
 
-	@MapField(DatabaseField = CatalogPRTypeField)
 	public void setPR(int btyp_pr) {
 		this.btyp_pr = btyp_pr;
 	}
 	
+	@DatabaseField(dataType = DataType.INTEGER, columnName = CATALOG_SA_TYPE_FIELD)
+	private int btyp_sa;
+
+	public int getSA() {
+		return btyp_sa;
+	}
+
+	public void setSA(int btyp_sa) {
+		this.btyp_sa = btyp_sa;
+	}
+	
 	public boolean isAdditionalWork(){
-		return getID() > AdditionalWorkCode;
+		return getId() > ADDITIONAL_WORK_CODE;
 	}
 	
 	public boolean isMan() {
-		return getSex().equals("Herr");
+		return getSex().contains("Herr");
 	}
 	
 	public Patient() {
 		clear();
 	}
 	
+	public Patient(String[] resultArray) {
+		clear();
+		setSurname(resultArray[0]);
+		setSex(resultArray[1]);
+		setStrRelativeIDs(resultArray[2]);
+		setStrDoctorsIDs(resultArray[3]);
+		setSA(Integer.parseInt(resultArray[4]));
+		setPR(Integer.parseInt(resultArray[5]));
+		setIsAdditional(resultArray[6].equals("1"));
+		setPK(Integer.parseInt(resultArray[7]));
+		setKK(Integer.parseInt(resultArray[8]));
+		setAddressID(Integer.parseInt(resultArray[9]));
+		setName(resultArray[10]);
+		setId(Integer.parseInt(resultArray[11]));
+		setCheckSum(Long.parseLong(resultArray[12]));
+		setServerTime(resultArray[13].equals("1"));
+		setWasSent(resultArray[14].equals("1"));
+	}
+	
 	public Patient(String initString) {
+		clear();
 		address = new Address();
 		NCryptor ncryptor = new NCryptor();
 		StringParser parsingString = new StringParser(initString);
 		parsingString.next(";");
-		setID(Integer.parseInt(parsingString.next(";")));
+		setId(Integer.parseInt(parsingString.next(";")));
 		setSurname(parsingString.next(";"));
 		setName(parsingString.next(";"));
 		String sexStr = parsingString.next(";");
@@ -198,7 +218,7 @@ public class Patient extends BaseObject implements IAddressable {
 			return "";
 		NCryptor ncryptor = new NCryptor();
 		String strValue = new String(ServerCommandParser.PATIENT + ";");
-		strValue += ncryptor.LToNcode(getID()) + ";";
+		strValue += ncryptor.LToNcode(getId()) + ";";
 		strValue += ncryptor.LToNcode(getCheckSum());
 		return strValue;
 	}
@@ -239,11 +259,5 @@ public class Patient extends BaseObject implements IAddressable {
 	@Override
 	public Address getAddress() {
 		return address;
-	}
-
-	@Override
-	public NewAddress getNewAddress() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

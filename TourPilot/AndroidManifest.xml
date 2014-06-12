@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="isebase.cognito.tourpilot"
     android:versionCode="1"
-    android:versionName="1046" >
+    android:versionName="1054" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -16,20 +16,13 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.SET_TIME" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-
-        <!--
-            <activity
-            android:name="isebase.cognito.tourpilot.Activity.NewUserRemarksActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" >
-        -->
+        android:theme="@style/MyAppTheme" >
         <activity
             android:name="isebase.cognito.tourpilot.Activity.WorkersOptionActivity.WorkerOptionActivity"
             android:label="@string/app_name"
@@ -115,7 +108,7 @@
         </service>
 
         <activity
-            android:name="isebase.cognito.tourpilot.Activity.NewUserRemarksActivity"
+            android:name="isebase.cognito.tourpilot.Activity.UserRemarksActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="isebase.cognito.tourpilot.Activity.TasksAssessmentsActivity.TasksAssessementsActivity"
@@ -134,6 +127,21 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="isebase.cognito.tourpilot.Activity.QuestionActivities.NortonSkalaActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.ActualWorkersActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.ActualWorkersActivity.WorkerAdditionalInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.QuestionActivities.BradenSkalaPictureInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.QuestionActivities.KontrakturPictureInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="isebase.cognito.tourpilot.Activity.QuestionActivities.RelatedQuestionsActivity"
             android:screenOrientation="portrait" />
     </application>
 

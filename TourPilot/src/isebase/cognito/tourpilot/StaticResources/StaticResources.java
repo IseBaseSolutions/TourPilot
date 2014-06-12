@@ -8,7 +8,10 @@ public class StaticResources {
 	public static TelephonyManager phoneManager;
 	
 	private static Context baseContext;
-
+	
+	public static int width;
+	public static int height;
+	
 	public static void setBaseContext(Context context) {
 		baseContext = context;
 		phoneManager = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);

@@ -1,14 +1,16 @@
 package isebase.cognito.tourpilot.Activity.TasksAssessmentsActivity;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
+import isebase.cognito.tourpilot.Activity.BaseActivities.BaseTimeSyncActivity;
+import isebase.cognito.tourpilot.Activity.QuestionActivities.RelatedQuestionsActivity;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.Data.Question.QuestionSetting.QuestionSettingManager;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.Tasks.StandardTaskDialog;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Utils.DateUtils;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -20,7 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 
-public class TasksAssessementsActivity extends BaseActivity implements BaseDialogListener{
+public class TasksAssessementsActivity extends BaseTimeSyncActivity implements BaseDialogListener{
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -58,6 +60,7 @@ public class TasksAssessementsActivity extends BaseActivity implements BaseDialo
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		reloadData();
+		setTimeSync(true);
 		//switchToLastActivity();
 	}
 
@@ -102,7 +105,7 @@ public class TasksAssessementsActivity extends BaseActivity implements BaseDialo
 			diagnoseMenu.setEnabled(false);
 			addresseMenu.setEnabled(false);
 			doctorsMenu.setEnabled(false);
-			relativesMenu.setEnabled(false);
+			relativesMenu.setEnabled(false);	
 		}
 		return true;
 	}
@@ -257,7 +260,11 @@ public class TasksAssessementsActivity extends BaseActivity implements BaseDialo
 		}
 		else if (dialog.getTag().equals("extraAssessmentsDialog")) {
 			assessmentsFragment.saveExtraAssessments(dialog);
-		}	
+		}
+		else if (dialog.getTag().equals("relatedQuestionsDialog")) {
+			Intent relatedQuestionsActivity = new Intent(getBaseContext(), RelatedQuestionsActivity.class);
+			startActivity(relatedQuestionsActivity);
+		}
 	}
 
 	@Override
@@ -276,7 +283,7 @@ public class TasksAssessementsActivity extends BaseActivity implements BaseDialo
 	}
 	
 	private void reloadData() {
-		hasQuestions = (QuestionSettingManager.Instance().loadAll(Option.Instance().getEmploymentID()) != null);
+		hasQuestions = HelperFactory.getHelper().getQuestionSettingDAO().loadAll((int)Option.Instance().getEmploymentID()) != null;	
 	}
 
 }

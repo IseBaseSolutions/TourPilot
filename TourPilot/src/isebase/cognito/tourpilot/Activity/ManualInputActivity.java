@@ -3,16 +3,11 @@ package isebase.cognito.tourpilot.Activity;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWork;
-import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWorkManager;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
-import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
-import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.SelectionPeriod.SelectionPeriod;
-import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.Work.Work;
-import isebase.cognito.tourpilot.Data.Work.WorkManager;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
 import isebase.cognito.tourpilot.DataInterfaces.Job.JobComparer;
@@ -20,7 +15,6 @@ import isebase.cognito.tourpilot.DataInterfaces.Job.JobComparer.eJobComparerType
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.IntervalInputDialog;
 import isebase.cognito.tourpilot.Dialogs.PatientsDialog;
-import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
 import isebase.cognito.tourpilot.Templates.ManualInputAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
@@ -45,7 +39,8 @@ public class ManualInputActivity extends BaseActivity implements BaseDialogListe
     private PatientsDialog patientsDialog;
     
     private AdditionalWork additionalWork;
-    private Employment employment;
+    
+    private Employment newEmployment;
     
     SelectionPeriod selectedPeriod;
     
@@ -76,7 +71,7 @@ public class ManualInputActivity extends BaseActivity implements BaseDialogListe
         lvJobs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                if ((jobs.get(position) instanceof Employment || jobs.get(position) instanceof NewEmployment) || (jobs.get(position) instanceof Work))
+                if ((jobs.get(position) instanceof Employment) || (jobs.get(position) instanceof Work))
                         return;
                 intervalInputDialog.setSelectedPeriod((SelectionPeriod) jobs.get(position));
                 intervalInputDialog.show(getSupportFragmentManager(), "intervalDialog");
@@ -86,18 +81,18 @@ public class ManualInputActivity extends BaseActivity implements BaseDialogListe
 
     private void reloadData() {
     	jobs = new ArrayList<IJob>();
-   		jobs.addAll(EmploymentManager.Instance().loadDoneByPilotTourID(Option.Instance().getPilotTourID()));
-        jobs.addAll(WorkManager.Instance().loadDoneByPilotTourID(Option.Instance().getPilotTourID()));
+		jobs.addAll(HelperFactory.getHelper().getEmploymentDAO().loadDoneByPilotTourID((int)Option.Instance().getPilotTourID()));
+        jobs.addAll(HelperFactory.getHelper().getWorkDAO().loadDoneByPilotTourID((int)Option.Instance().getPilotTourID()));
         Collections.sort(jobs, new JobComparer(eJobComparerType.ONLY_TIME));
         insertSelectionPeriods();
-        patients = PatientManager.Instance().loadByPilotTourID(Option.Instance().getPilotTourID());
+        patients = HelperFactory.getHelper().getPatientDAO().loadPatientsByPilotTourID(Option.Instance().getPilotTourID());
         
         manualInputType = Option.Instance().getEmploymentID() != -1 ? eManualInputType.employment : eManualInputType.work;                
-        if (manualInputType == eManualInputType.employment)
-       		employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
+        if (manualInputType == eManualInputType.employment) 
+    		newEmployment = HelperFactory.getHelper().getEmploymentDAO().load((int)Option.Instance().getEmploymentID());
       	if (getIntent().getExtras() == null)
        		return;
-   		additionalWork = AdditionalWorkManager.Instance().load(getIntent().getExtras().getInt("addWorkID"));
+   		additionalWork = HelperFactory.getHelper().getAdditionalWorkDAO().load(getIntent().getExtras().getInt("addWorkID"));
     }
     
     private void insertSelectionPeriods() {                
@@ -117,7 +112,7 @@ public class ManualInputActivity extends BaseActivity implements BaseDialogListe
     private void fillPeriods() {
         Date today = new Date();
         for (int i = 0; i < jobs.size(); i++) {
-            if ((jobs.get(i) instanceof Employment || jobs.get(i) instanceof NewEmployment) || (jobs.get(i) instanceof Work))
+            if (jobs.get(i) instanceof Employment || jobs.get(i) instanceof Work)
             	continue;
             else if (jobs.size() == 1) {
                 ((SelectionPeriod)jobs.get(i)).setStartTime(DateUtils.getStartOfDay(today));
@@ -140,7 +135,7 @@ public class ManualInputActivity extends BaseActivity implements BaseDialogListe
     
     private void initDialogs() {
     	String title = "";
-   		title = (manualInputType == eManualInputType.employment) ? employment.getName() : additionalWork.getName();
+    		title = (manualInputType == eManualInputType.employment) ? newEmployment.getName() : additionalWork.getName();
         intervalInputDialog = new IntervalInputDialog(title);
         patientsDialog = new PatientsDialog(patients, title);
     }
@@ -152,11 +147,11 @@ public class ManualInputActivity extends BaseActivity implements BaseDialogListe
                 patientsDialog.show(getSupportFragmentManager(), "patientsDialog");
             else
             {
-                employment = EmploymentManager.Instance().loadAll(employment.getID());
-                employment.getFirstTask().setManualDate(intervalInputDialog.getStartDate());
-                employment.getLastTask().setManualDate(intervalInputDialog.getStopDate());
-                TaskManager.Instance().save(employment.getTasks());
-                startTasksActivity();
+                    newEmployment = HelperFactory.getHelper().getEmploymentDAO().loadAll(newEmployment.getId());
+                    newEmployment.getFirstTask().setManualDate(intervalInputDialog.getStartDate());
+                    newEmployment.getLastTask().setManualDate(intervalInputDialog.getStopDate());
+                    HelperFactory.getHelper().getTaskDAO().save(newEmployment.getTasks());
+                    startTasksActivity();
             }
         if (dialog == patientsDialog) {
             saveWork();
@@ -169,14 +164,14 @@ public class ManualInputActivity extends BaseActivity implements BaseDialogListe
             
     }
     
-    private void saveWork() {        Work work = new Work(intervalInputDialog.getStartDate(),
+    private void saveWork() {    	Work work = new Work(intervalInputDialog.getStartDate(),
         		intervalInputDialog.getStopDate(), 
         		new Date(),
-        		additionalWork.getID(),
+        		additionalWork.getId(),
         		Option.Instance().getPilotTourID(),
         		additionalWork.getName());
     	work.setPatientIDs(patientsDialog.getSelectedPatientIDs());
         work.setIsDone(true);
-        WorkManager.Instance().save(work);
+        HelperFactory.getHelper().getWorkDAO().save(work);
     }
 }

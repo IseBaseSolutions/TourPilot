@@ -3,33 +3,30 @@ package isebase.cognito.tourpilot.Activity.BaseActivities;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.AdditionalWorksActivity;
 import isebase.cognito.tourpilot.Activity.ManualInputActivity;
-import isebase.cognito.tourpilot.Activity.NewUserRemarksActivity;
 import isebase.cognito.tourpilot.Activity.PatientsActivity;
 import isebase.cognito.tourpilot.Activity.SynchronizationActivity;
 import isebase.cognito.tourpilot.Activity.ToursActivity;
+import isebase.cognito.tourpilot.Activity.UserRemarksActivity;
 import isebase.cognito.tourpilot.Activity.VerificationActivity;
 import isebase.cognito.tourpilot.Activity.TasksAssessmentsActivity.TasksAssessementsActivity;
 import isebase.cognito.tourpilot.Activity.WorkersOptionActivity.WorkerOptionActivity;
 import isebase.cognito.tourpilot.Connection.ConnectionAsyncTask;
 import isebase.cognito.tourpilot.Connection.ConnectionStatus;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
-import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
+import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 public class BaseTimeSyncActivity extends FragmentActivity {
 
-	protected DialogFragment versionFragmentDialog;
 	private ConnectionStatus connectionStatus;
 	private ConnectionAsyncTask connectionTask;
-	
+	protected BaseDialog closeDialog;
 	private boolean timeSync;
 	
 	public void setTimeSync(boolean timeSync) {
@@ -41,14 +38,7 @@ public class BaseTimeSyncActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		StaticResources.setBaseContext(getBaseContext());
 		if(!isMainActivity())
-			versionFragmentDialog = new InfoBaseDialog(
-					getString(R.string.menu_program_info), 
-					String.format("%s %s\n%s %s"
-							, getString(R.string.program_version)
-							, Option.Instance().getVersion()
-							, getString(R.string.data_base_version)
-							, DataBaseWrapper.DATABASE_VERSION)
-					);
+			closeDialog = new BaseDialog(getString(R.string.dialog_close), getString(R.string.dialog_closing));
 	}
 
 	protected boolean isMainActivity(){
@@ -113,8 +103,8 @@ public class BaseTimeSyncActivity extends FragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_show_program_info:
-				versionFragmentDialog.show(getSupportFragmentManager(),
-						"versionDialog");
+				closeDialog.show(getSupportFragmentManager(),
+						"closeDialog");
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -166,7 +156,7 @@ public class BaseTimeSyncActivity extends FragmentActivity {
 	
 
 	protected void startUserRemarksActivity() {
-		Intent userRemarksActivity = new Intent(getApplicationContext(), NewUserRemarksActivity.class);
+		Intent userRemarksActivity = new Intent(getApplicationContext(), UserRemarksActivity.class);
 		startActivity(userRemarksActivity);
 	}
 

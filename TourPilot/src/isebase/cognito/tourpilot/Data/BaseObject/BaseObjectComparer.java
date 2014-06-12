@@ -1,5 +1,6 @@
 package isebase.cognito.tourpilot.Data.BaseObject;
 
+
 import java.text.Collator;
 import java.util.Comparator;
 import java.util.Locale;

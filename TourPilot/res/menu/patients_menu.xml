@@ -27,7 +27,8 @@
 		android:title="@string/menu_all_patients"/>  
     <item
         android:id="@+id/tour_info"
-        android:orderInCategory="100"
-        android:menuCategory="system"
-        android:title="@string/menu_info" />
+        android:title="@string/menu_info" />    
+    <item
+        android:id="@+id/action_actual_workers"
+        android:title="@string/menu_actual_workers" />
 </menu>

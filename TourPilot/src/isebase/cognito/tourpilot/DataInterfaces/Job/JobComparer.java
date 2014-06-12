@@ -1,5 +1,7 @@
 package isebase.cognito.tourpilot.DataInterfaces.Job;
 
+import isebase.cognito.tourpilot.Utils.DateUtils;
+
 import java.util.Comparator;
 
 /**
@@ -30,17 +32,23 @@ public class JobComparer implements Comparator<IJob> {
 				if(retVal == 0){
 					retVal = compareIsDone(lhs, rhs);
 					if(retVal == 0)
-						retVal = compareTime(lhs, rhs);
+//						retVal = compareTime(lhs, rhs);
+						retVal = compareDate(lhs, rhs);
 				}		
 				return retVal;
 			case ONLY_TIME:
-				return compareTime(lhs, rhs);
+//				return compareTime(lhs, rhs);
+				return compareDate(lhs, rhs);
 			default: return 0;
 		}
 	}
 	
-	private int compareTime(IJob lhs, IJob rhs){
-		return lhs.time().compareTo(rhs.time());
+//	private int compareTime(IJob lhs, IJob rhs){
+//		return lhs.time().compareTo(rhs.time());
+//	}
+	
+	private int compareDate(IJob lhs, IJob rhs){
+		return lhs.startTime().compareTo(rhs.startTime());		
 	}
 	
 	private int compareIsDone(IJob lhs, IJob rhs){

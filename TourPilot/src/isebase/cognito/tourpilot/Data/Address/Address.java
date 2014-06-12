@@ -1,102 +1,106 @@
 package isebase.cognito.tourpilot.Data.Address;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "Address")
 public class Address {
 
-	public static final String StreetField = "street";
-	public static final String ZipField = "zip";
-	public static final String CityField = "city";
-	public static final String PhoneField = "phone";
-	public static final String PrivatePhoneField = "private_phone";
-	public static final String MobilePhoneField = "mobile_phone";
-
-	private String street;
-	private String zip;
-	private String city;
-	private String phone;
-	private String privatePhone;
-	private String mobilePhone;
+	public static final String ID_FIELD = "_id";
+	public static final String STREET_FIELD = "street";
+	public static final String ZIP_FIELD = "zip";
+	public static final String CITY_FIELD = "city";
+	public static final String PHONE_FIELD = "phone";
+	public static final String PRIVATE_PHONE_FIELD = "private_phone";
+	public static final String MOBILE_PHONE_FIELD = "mobile_phone";
+	
+	@DatabaseField(generatedId = true, columnName = ID_FIELD)
 	private int id;
 
-	@MapField(DatabaseField = BaseObject.IDField)
-	public int getID() {
-		return id;}
-		
-	@MapField(DatabaseField = BaseObject.IDField)
-	public void setID(int id) {
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
 		this.id = id;
 	}
+
+	@DatabaseField(dataType = DataType.STRING, columnName = STREET_FIELD)
+	private String street;
 	
-	@MapField(DatabaseField = StreetField)
 	public String getStreet() {
 		return street;
 	}
 	
-	@MapField(DatabaseField = StreetField)
 	public void setStreet(String street) {
 		this.street = street;
 	}
 	
-	@MapField(DatabaseField = ZipField)
+	@DatabaseField(dataType = DataType.STRING, columnName = ZIP_FIELD)
+	private String zip;
+	
 	public String getZip() {
 		return zip;
 	}
 	
-	@MapField(DatabaseField = ZipField)
 	public void setZip(String zip) {
 		this.zip = zip;
 	}
 	
-	@MapField(DatabaseField = CityField)
+	@DatabaseField(dataType = DataType.STRING, columnName = CITY_FIELD)
+	private String city;
+	
 	public String getCity() {
 		return city;
 	}
 	
-	@MapField(DatabaseField = CityField)
 	public void setCity(String city) {
 		this.city = city;
 	}
 	
-	@MapField(DatabaseField = PhoneField)
+	@DatabaseField(dataType = DataType.STRING, columnName = PHONE_FIELD)
+	private String phone;
+	
 	public String getPhone() {
 		return phone;
 	}
 	
-	@MapField(DatabaseField = PhoneField)
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
 	
-	@MapField(DatabaseField = PrivatePhoneField)
+	@DatabaseField(dataType = DataType.STRING, columnName = PRIVATE_PHONE_FIELD)
+	private String privatePhone;
+	
 	public String getPrivatePhone() {
 		return privatePhone;
 	}
 	
-	@MapField(DatabaseField = PrivatePhoneField)
 	public void setPrivatePhone(String privatePhone) {
 		this.privatePhone = privatePhone;
 	}
 	
-	@MapField(DatabaseField = MobilePhoneField)
+	@DatabaseField(dataType = DataType.STRING, columnName = MOBILE_PHONE_FIELD)
+	private String mobilePhone;
+	
 	public String getMobilePhone() {
 		return mobilePhone;
 	}
 	
-	@MapField(DatabaseField = MobilePhoneField)
 	public void setMobilePhone(String mobilePhone) {
 		this.mobilePhone = mobilePhone;
 	}
-		
+	
 	public Address(){
 		clear();
 	}
 	
 	private void clear(){
-		setID(BaseObject.EMPTY_ID);
+		setId(0);//NewBaseObject.EMPTY_ID);
 		setStreet("");
 		setCity("");
 		setPhone("");
@@ -141,4 +145,5 @@ public class Address {
 			address = StaticResources.getBaseContext().getString(R.string.err_no_address);
 		return address;
 	}
+	
 }

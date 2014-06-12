@@ -1,26 +1,31 @@
 package isebase.cognito.tourpilot.Data.CustomRemark;
 
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.NCryptor;
 import isebase.cognito.tourpilot.Utils.StringParser;
 
-public class CustomRemark extends BaseObject {
-	
-	public static final String PosNumberField = "pos_number";
-	
-	int posNumber;
-	boolean textInput;
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
-	@MapField(DatabaseField = PosNumberField)
+@DatabaseTable(tableName = "CustomRemarks")
+public class CustomRemark extends BaseObject {
+
+public static final String POSITION_NUMBER_FIELD = "pos_number";
+	
+	@DatabaseField(dataType = DataType.INTEGER, columnName = POSITION_NUMBER_FIELD)
+	int posNumber;
+	
 	public int getPosNumber() {
 		return posNumber;
 	}
 
-	@MapField(DatabaseField = PosNumberField)
 	public void setPosNumber(int posNumber) {
 		this.posNumber = posNumber;
 	}
+	
+	boolean textInput;
+
 	
 	public CustomRemark(){
 		clear();
@@ -28,31 +33,30 @@ public class CustomRemark extends BaseObject {
 	
 	public CustomRemark(int id, String name, int posNumber){
 		clear();
-		setID(id);
+		setId(id);
 		setName(name);
 		setPosNumber(posNumber);
 	}
 	
-	public CustomRemark(String strInitString){
+	public CustomRemark(String strInitString) {
+		clear();
 		StringParser InitString = new StringParser(strInitString);
 		InitString.next(";");
-		setID(Integer.parseInt(InitString.next(";")));
+		setId(Integer.parseInt(InitString.next(";")));
 		setName(InitString.next(";"));
 		setPosNumber(Integer.parseInt(InitString.next("~")));
 		setCheckSum(Integer.parseInt(InitString.next()));
 	}
     
     public String toString(){
-    	String strValue = "";
-        return strValue;
-    }    
-
+        return getName();
+    }
     
 	@Override
 	public String forServer() {       
     	NCryptor ncryptor = new NCryptor();
     	String strValue = new String("#;");
-        strValue += ncryptor.LToNcode(getID()) + ";";
+        strValue += ncryptor.LToNcode(getId()) + ";";
         strValue += ncryptor.LToNcode(getCheckSum());
         return strValue;
 	}
@@ -62,5 +66,5 @@ public class CustomRemark extends BaseObject {
 		super.clear();
 		setPosNumber(EMPTY_ID);
 	}
-	
+
 }

@@ -1,12 +1,10 @@
 package isebase.cognito.tourpilot.Dialogs;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Data.Answer.Answer;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
-import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.Data.Question.Answer.Answer;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
-import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
 import java.util.ArrayList;
@@ -46,7 +44,7 @@ public class BradenDialog extends DialogFragment{
 	private CheckBoxListener chbListener;
 	private TextView tvOther1;
 	private TextView tvOther2;
-	private Employment employment;
+	private Employment newEmployment;
 	public LinearLayout getCurrentLayout() {
 		return currentLayout;
 	}
@@ -56,7 +54,8 @@ public class BradenDialog extends DialogFragment{
 		this.subQuestions = subQuestions;
 		this.answer = answer;
 		this.answerNumber = answerNumber;
-		employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
+		newEmployment = HelperFactory.getHelper().getEmploymentDAO().loadAll((int)Option.Instance().getEmploymentID());
+
 	}
 	
 	@Override
@@ -182,11 +181,12 @@ public class BradenDialog extends DialogFragment{
 			checkBoxes.get(totalCount).setText(subQuestions.get(answerName).get(totalCount));
 			checkBoxes.get(totalCount).setGravity(Gravity.FILL);
 			checkBoxes.get(totalCount).setOnCheckedChangeListener(chbListener);
+			checkBoxes.get(totalCount).setTextColor(tvOther1.getHintTextColors().getDefaultColor());
 			if (answer != null && ((RelativeLayout)linearLayout.getParent()).getChildAt(answer.getBradenLevel()).equals(linearLayout) && answerNumber == answer.getBradenAnswer())
 				for (int j = 0; j < answer.getBradenCheckedIndexes().length; j++)
 					if (i == answer.getBradenCheckedIndexes()[j])
 						checkBoxes.get(totalCount).setChecked(true);
-			checkBoxes.get(totalCount).setEnabled(!employment.isDone());
+			checkBoxes.get(totalCount).setEnabled(!newEmployment.isDone());
 			linearLayout.addView(checkBoxes.get(totalCount));
 			totalCount++;
 		}

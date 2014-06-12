@@ -1,13 +1,13 @@
 package isebase.cognito.tourpilot.Templates;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Data.Answer.Answer;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
-import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
-import isebase.cognito.tourpilot.Data.Question.Answer.Answer;
-import isebase.cognito.tourpilot.Data.Question.Interfaces.IQuestionable;
-import isebase.cognito.tourpilot.Data.Question.Question.Question;
+import isebase.cognito.tourpilot.Data.Question.IQuestionable;
+import isebase.cognito.tourpilot.Data.Question.Question;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
 
 import java.util.List;
 
@@ -27,15 +27,15 @@ public class QuestionAdapter extends ArrayAdapter<IQuestionable> {
 		private int layoutResourceId;
 		private Context context;
 		public Patient patient;
-		private Employment employment;
+		private Employment newEmployment;
 
 		public QuestionAdapter(Context context, int layoutResourceId, List<IQuestionable> items) {
 			super(context, layoutResourceId, items);
 			this.layoutResourceId = layoutResourceId;
 			this.context = context;
 			this.items = items;
-			employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
-			patient = employment.getPatient();
+			newEmployment = HelperFactory.getHelper().getEmploymentDAO().loadAll((int)Option.Instance().getEmploymentID());
+			patient = newEmployment.getPatient();
 		}
 
 		@Override
@@ -50,7 +50,7 @@ public class QuestionAdapter extends ArrayAdapter<IQuestionable> {
 					? ((Question)items.get(position)).getNameWithKeyWords(patient) 
 							: items.get(position).name());						
 			questionHolder.rgAnswers = (RadioGroup) row.findViewById(R.id.rg_1);
-			if (employment.isDone())
+			if (newEmployment.isDone())
 				disableRadioButtons(questionHolder.rgAnswers);
 			if (items.get(position) instanceof Answer)
 			{

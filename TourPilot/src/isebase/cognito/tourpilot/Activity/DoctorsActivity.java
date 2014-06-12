@@ -1,23 +1,23 @@
 package isebase.cognito.tourpilot.Activity;
 
-import java.util.List;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Data.Doctor.Doctor;
-import isebase.cognito.tourpilot.Data.Doctor.DoctorManager;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
-import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
-import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
 import isebase.cognito.tourpilot.Templates.AddressAdapter;
+
+import java.util.List;
+
 import android.os.Bundle;
+import android.view.Menu;
 import android.widget.ListView;
 
 public class DoctorsActivity extends BaseActivity {
 
 	private List<Doctor> addressable;
-	private Employment employment;
+	private Employment newEmployment;
 	AddressAdapter<Doctor> adapter;
 	
 	@Override
@@ -34,6 +34,12 @@ public class DoctorsActivity extends BaseActivity {
 			criticalClose();
 		}
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+//		getMenuInflater().inflate(R.menu.base_menu, menu);
+		return true;
+	}
 
 	private void fillUp(){
 		adapter = new AddressAdapter<Doctor>(this
@@ -43,12 +49,12 @@ public class DoctorsActivity extends BaseActivity {
 	}
 	
 	public void reloadData() {
-		employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
-		addressable = DoctorManager.Instance().sortByStrIDs(DoctorManager.Instance().loadAllByIDs(employment.getPatient().getStrDoctorsIDs()), employment.getPatient().getStrDoctorsIDs());
+		newEmployment = HelperFactory.getHelper().getEmploymentDAO().loadAll((int)Option.Instance().getEmploymentID());
+		addressable = HelperFactory.getHelper().getDoctorODA().sortByStrIDs(HelperFactory.getHelper().getDoctorODA().loadAllByIDs(newEmployment.getPatient().getStrDoctorsIDs()), newEmployment.getPatient().getStrDoctorsIDs());
 	}
 
 	private void fillUpTitle(){
-		setTitle(getString(R.string.menu_doctors) + ", " + employment.getName());
+		setTitle(getString(R.string.menu_doctors) + ", " + newEmployment.getName());
 	}
 	
 

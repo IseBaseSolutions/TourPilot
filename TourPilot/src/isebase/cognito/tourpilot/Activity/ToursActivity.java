@@ -6,8 +6,7 @@ import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTourComparer;
-import isebase.cognito.tourpilot.Data.PilotTour.PilotTourManager;
-import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
@@ -36,6 +35,7 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 		try {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_tours);
+			saveTourActivity(true);
 			reloadData();		
 			fillUpTitle();
 			fillUp();
@@ -67,6 +67,9 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 			case R.id.action_clear_darabase:
 				clearDatabase();
 				return true;
+			case R.id.action_close_program:
+				close();
+				return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -87,6 +90,7 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
 				saveSelectedTour(pilotTours.get(position));
+				saveTourActivity(false);
 				startPatientsActivity();
 			}
 		});
@@ -118,12 +122,12 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	}
 
 	private void reloadData(){
-		pilotTours = PilotTourManager.Instance().loadPilotTours();
+		pilotTours = HelperFactory.getHelper().getPilotTourDAO().loadPilotTours();
 		Collections.sort(pilotTours, new PilotTourComparer());
 	}
 	
 	private void saveSelectedTour(PilotTour pilotTour) {
-		Option.Instance().setPilotTourID(pilotTour.getID());
+		Option.Instance().setPilotTourID(pilotTour.getId());
 		Option.Instance().save();
 	}
 
@@ -135,10 +139,13 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog) {
-		if(dialog.getTag().equals("dialogBack"))
+		if(dialog.getTag().equals("dialogBack")) {
+			saveTourActivity(false);
 			logOut();
+		}
 		else if (dialog.getTag().equals("clearDatabase")) {
 			clearDB();
+			saveTourActivity(false);
 		}
 	}
 
@@ -162,7 +169,7 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 			@Override
 			protected Void doInBackground(Void... params) {
 				try{
-					DataBaseWrapper.Instance().clearWorkerData();
+					HelperFactory.getHelper().clearWorkerData();
 				}
 				catch(Exception e){
 					e.printStackTrace();
@@ -177,6 +184,11 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 			}
 		}.execute();
 		startWorkersActivity();
+	}
+	
+	private void saveTourActivity(boolean state) {
+		Option.Instance().setTourActivity(state);
+		Option.Instance().save();
 	}
 	
 }

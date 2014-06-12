@@ -4,7 +4,7 @@ import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.AddressPatientActivity;
 import isebase.cognito.tourpilot.Activity.DoctorsActivity;
 import isebase.cognito.tourpilot.Activity.ManualInputActivity;
-import isebase.cognito.tourpilot.Activity.NewUserRemarksActivity;
+import isebase.cognito.tourpilot.Activity.UserRemarksActivity;
 import isebase.cognito.tourpilot.Activity.PatientsActivity;
 import isebase.cognito.tourpilot.Activity.RelativesActivity;
 import isebase.cognito.tourpilot.Activity.SynchronizationActivity;
@@ -13,27 +13,19 @@ import isebase.cognito.tourpilot.Activity.AdditionalTasks.CatalogsActivity;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Diagnose.Diagnose;
-import isebase.cognito.tourpilot.Data.Diagnose.DiagnoseManager;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
-import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentInterval;
-import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentIntervalManager;
+import isebase.cognito.tourpilot.Data.Information.InformationDAO;
 import isebase.cognito.tourpilot.Data.Information.Information;
-import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemark;
-import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemarkManager;
-import isebase.cognito.tourpilot.Data.Question.Answer.AnswerManager;
-import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategoryManager;
-import isebase.cognito.tourpilot.Data.Question.ExtraCategory.ExtraCategoryManager;
-import isebase.cognito.tourpilot.Data.Question.QuestionSetting.QuestionSetting;
-import isebase.cognito.tourpilot.Data.Question.QuestionSetting.QuestionSettingManager;
+import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
+import isebase.cognito.tourpilot.Data.QuestionSetting.QuestionSetting;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
-import isebase.cognito.tourpilot.Data.Task.TaskManager;
-import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
 import isebase.cognito.tourpilot.Data.Work.Work;
-import isebase.cognito.tourpilot.Data.Work.WorkManager;
+import isebase.cognito.tourpilot.Data.Worker.Worker;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
@@ -47,6 +39,7 @@ import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Templates.TaskAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -70,6 +63,8 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 
 	private TaskAdapter taskAdapter;
 	public Employment employment;
+	private PilotTour pilotTour;
+	private Worker worker;
 	private Diagnose diagnose;
 
 	private List<Task> tasks;
@@ -144,10 +139,8 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 			checkAllIsDone();
 			checkEmploymentIsDone();
 			showPatientInfo(false);
-			//setTimeSync(true);		
 		} catch(Exception e){
 			e.printStackTrace();
-			//criticalClose();
 		}	
 		return rootView;
 	}
@@ -184,8 +177,8 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 			break;
 		}		
 		List<IJob> jobs = new ArrayList<IJob>();
-		jobs.addAll(EmploymentManager.Instance().load(Employment.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID())));
-		jobs.addAll(WorkManager.Instance().loadAll(Work.PilotTourIDField, String.valueOf(Option.Instance().getPilotTourID())));
+		jobs.addAll(HelperFactory.getHelper().getEmploymentDAO().load(Employment.PILOT_TOUR_ID_FIELD, Option.Instance().getPilotTourID()));
+		jobs.addAll(HelperFactory.getHelper().getWorkDAO().loadAll(Work.PILOT_TOUR_ID_FIELD, String.valueOf(Option.Instance().getPilotTourID()), null));
 		boolean allIsDone = true;
 		for (IJob job : jobs)
 			if(!job.isDone())
@@ -193,13 +186,14 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 				allIsDone = false;
 				break;
 			}
-		if(allIsDone)
-			activity.stopService(new Intent(activity, GPSLogger.class));
+		if (!allIsDone)
+			return;
+		activity.stopService(new Intent(activity, GPSLogger.class));
+		Option.Instance().isGPSRunning = false;
 	}
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		// TODO Auto-generated method stub
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -265,10 +259,12 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	}	
 
 	public void reloadData() {
-		employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
-		patientRemark = PatientRemarkManager.Instance().load(employment.getPatientID());
-		tasks = TaskManager.Instance().load(Task.EmploymentIDField, String.valueOf(Option.Instance().getEmploymentID()));
-		diagnose = DiagnoseManager.Instance().load(employment.getPatientID());
+		employment = HelperFactory.getHelper().getEmploymentDAO().load((int)Option.Instance().getEmploymentID());
+		patientRemark = HelperFactory.getHelper().getPatientRemarkDAO().load( employment.getPatientID());
+		tasks = HelperFactory.getHelper().getTaskDAO().load(Task.EMPLOYMENT_ID_FIELD, String.valueOf(Option.Instance().getEmploymentID()));
+		diagnose = HelperFactory.getHelper().getDiagnoseDAO().load(employment.getPatientID());
+		pilotTour = HelperFactory.getHelper().getPilotTourDAO().loadPilotTour(Option.Instance().getPilotTourID());
+		worker = HelperFactory.getHelper().getWorkerDAO().load(Option.Instance().getWorkerID());
 		initHeadTasks();		
 	}
 	
@@ -283,15 +279,21 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 		checkAllTasksAndFillUp(eTaskState.Empty);
 		startTask.setRealDate(DateUtils.getSynchronizedTime());
 		startTask.setState(eTaskState.Done);
-		startTask.setIsServerTime(Option.Instance().isTimeSynchronised());
+		startTask.setServerTime(Option.Instance().isTimeSynchronised());
 		endTask.setRealDate(DateUtils.EmptyDate);
-		TaskManager.Instance().save(startTask);
-		TaskManager.Instance().save(endTask);
+		HelperFactory.getHelper().getTaskDAO().save(startTask);
+		HelperFactory.getHelper().getTaskDAO().save(endTask);
 		fillUpStartTask();
 		fillUpEndTask();		
 		fillUpEndButtonEnabling();
-	//if (Build.VERSION.SDK_INT > 10)
 		activity.supportInvalidateOptionsMenu();
+		if(Option.Instance().isGPSRunning || !worker.isUseGPS())
+			return;
+		Option.Instance().isGPSRunning = true;
+		Option.Instance().gpsStartTime = System.nanoTime();
+		Intent gpsLoggerServiceIntent = new Intent(activity, GPSLogger.class);
+		gpsLoggerServiceIntent.putExtra("track_id", 0);
+		activity.startService(gpsLoggerServiceIntent);
 	}
 	
 
@@ -408,11 +410,12 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	
 	public void setTaskState(Task task) {
 		task.setRealDate(DateUtils.getSynchronizedTime());
-		task.setIsServerTime(Option.Instance().isTimeSynchronised());
+		task.setServerTime(Option.Instance().isTimeSynchronised());
+		if (task.getIsAdditionalTask())
+			task.setPlanDate(startTask.getRealDate());
 		if (!startTask.getManualDate().equals(DateUtils.EmptyDate))
 			task.setManualDate(DateUtils.getAverageDate(startTask.getManualDate(), endTask.getManualDate()));
-		if(!(task.getQuality() < 1 || task.getQuality() > 7))
-		{
+		if(!(task.getQuality() < 1 || task.getQuality() > 7)) {
 			if (task.getQualityResult().equals(""))
 				task.setState(eTaskState.UnDone);
 			else
@@ -427,7 +430,7 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 				.getResources().getDrawable((task.getState() == eTaskState.UnDone) 
 						? R.drawable.ic_action_cancel
 						: R.drawable.ic_action_accept));
-			TaskManager.Instance().save(task);
+			HelperFactory.getHelper().getTaskDAO().save(task);
 			fillUpEndButtonEnabling();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -462,10 +465,10 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 		for(Task task : tasks) {
 			task.setState(state);
 			task.setRealDate(date);
-			task.setIsServerTime(Option.Instance().isTimeSynchronised());
+			task.setServerTime(Option.Instance().isTimeSynchronised());
 			task.setQualityResult("");
 		}
-		TaskManager.Instance().save(tasks);	
+		HelperFactory.getHelper().getTaskDAO().save(tasks);	
 	}
 	
 	private void checkAllTasksAndFillUp(eTaskState state){
@@ -476,20 +479,21 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	private void saveEmployment() {
 		if (Option.Instance().getEmploymentID() == BaseObject.EMPTY_ID)
 			return;
-		Employment empl = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
-		EmploymentInterval emplInterval = new EmploymentInterval(empl.getID(), 
+
+		Employment empl = HelperFactory.getHelper().getEmploymentDAO().load((int)Option.Instance().getEmploymentID());
+		EmploymentInterval emplInterval = new EmploymentInterval(empl.getId(), 
 				(startTask.getManualDate().equals(DateUtils.EmptyDate) 
 						? startTask.getRealDate()
 						: startTask.getManualDate()), 
 							(endTask.getManualDate().equals(DateUtils.EmptyDate) 
 								? endTask.getRealDate()
 								: endTask.getManualDate()));
-		EmploymentIntervalManager.Instance().save(emplInterval);
+		HelperFactory.getHelper().getEmploymentIntervalDAO().save(emplInterval);
 		empl.setStartTime(emplInterval.getStartTime());
 		empl.setStopTime(emplInterval.getStopTime());
 		empl.setIsDone(true);
-//		EmploymentIntervalManager.Instance().save(new EmploymentInterval(empl.getID(), empl.getStartTime(), empl.getStopTime()));
-		EmploymentManager.Instance().save(empl);
+//		HelperFactory.getHelper().getEmploymentIntervalDAO().save(new EmploymentInterval(empl.getId(), empl.getStartTime(), empl.getStopTime()));
+		HelperFactory.getHelper().getEmploymentDAO().save(empl);
 	}
 	
 	public void clearEmployment() {
@@ -498,11 +502,11 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	}
 	
 	public void clearAnswers() {
-		AnswerManager.Instance().delete(AnswerManager.Instance().loadByEmploymentID(Option.Instance().getEmploymentID()));
-		AnsweredCategoryManager.Instance().delete(AnsweredCategoryManager.Instance().LoadByEmploymentID(Option.Instance().getEmploymentID()));
-		QuestionSetting questionSetting = QuestionSettingManager.Instance().load(employment.getID());
-		questionSetting.setExtraCategoryIDsString("");
-		ExtraCategoryManager.Instance().delete(employment.getID());
+		HelperFactory.getHelper().getAnswerDAO().delete(HelperFactory.getHelper().getAnswerDAO().loadByEmploymentID(Option.Instance().getEmploymentID()));
+		HelperFactory.getHelper().getAnsweredCategoryDAO().delete(HelperFactory.getHelper().getAnsweredCategoryDAO().LoadByEmploymentID((int)Option.Instance().getEmploymentID()));
+		QuestionSetting questionSetting = HelperFactory.getHelper().getQuestionSettingDAO().load(employment.getId());
+		questionSetting.setExtraCategoriesID("");
+		HelperFactory.getHelper().getExtraCategoryDAO().delete(employment.getId());
 	}	
 
 	@Override
@@ -524,10 +528,6 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 		case R.id.info:
 			showPatientInfo(true);
 			return true;
-//		case R.id.gps:
-//			//GpsNavigator.startGpsNavigation(PatientManager.Instance().loadAll(employment.getPatientID()).getAddress());
-//
-//			return true;
 		case R.id.manualInput:
 			startManualInputActivity();
 			return true;
@@ -567,7 +567,12 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	private void removeAdditionalTasks() {
 		for(Task task : tasks)
 			if(task.getIsAdditionalTask())
-				TaskManager.Instance().delete(task.getID());
+				try {
+					HelperFactory.getHelper().getTaskDAO().deleteById(task.getId());
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 	}
 	
 	@Override
@@ -604,11 +609,11 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	}
 
 	protected void showPatientInfo(boolean isFromMenu){
-		infos = InformationManager.Instance().load(Information.EmploymentIDField, String.valueOf(employment.getID()));
-		String strInfos = InformationManager.getInfoStr(infos, DateUtils.getSynchronizedTime(), isFromMenu);
+		infos = HelperFactory.getHelper().getInformationDAO().load(Information.EMPLOYMENT_ID_FIELD, String.valueOf(employment.getId()));
+		String strInfos = InformationDAO.getInfoStr(infos, DateUtils.getSynchronizedTime(), isFromMenu);
 		if (strInfos.equals(""))
 			return;
-		InformationManager.Instance().save(infos);
+		HelperFactory.getHelper().getInformationDAO().save(infos);
 		InfoBaseDialog dialog = new InfoBaseDialog(getString(R.string.menu_info), strInfos);
 		dialog.show(getFragmentManager(), "");
 	}
@@ -630,8 +635,8 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 		if(!isEmploymentDone()) {
 			endTask.setRealDate(DateUtils.getSynchronizedTime());
 			endTask.setState(eTaskState.Done);
-			endTask.setIsServerTime(Option.Instance().isTimeSynchronised());
-			TaskManager.Instance().save(endTask);
+			endTask.setServerTime(Option.Instance().isTimeSynchronised());
+			HelperFactory.getHelper().getTaskDAO().save(endTask);
 			fillUpEndTask();			
 		}
 		if(clearEmployment)
@@ -642,11 +647,10 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	}
 	
 	private void initHeadTasks() {
-		startTask = tasks.get(0);
-		int i = 1;
-		while(endTask == null) {
-			Task task = tasks.get(tasks.size() - i++);
-			if(!task.getIsAdditionalTask())
+		for (Task task : tasks) {
+			if (task.isFirstTask())
+				startTask = task;
+			else if (task.isLastTask())
 				endTask = task;
 		}
 		startTask.setState(eTaskState.Done);
@@ -656,11 +660,11 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	public void clearTasks() {
 		checkAllTasks(eTaskState.Empty, DateUtils.EmptyDate);
 		startTask.setManualDate(DateUtils.EmptyDate);
-		TaskManager.Instance().save(startTask);
+		HelperFactory.getHelper().getTaskDAO().save(startTask);
 		endTask.setManualDate(DateUtils.EmptyDate);
-		TaskManager.Instance().save(endTask);
+		HelperFactory.getHelper().getTaskDAO().save(endTask);
 		removeAdditionalTasks();
-		UserRemarkManager.Instance().delete(Option.Instance().getEmploymentID());
+		HelperFactory.getHelper().getUserRemarkDAO().delete((int)Option.Instance().getEmploymentID());
 		if (activity.hasQuestions)
 			clearAnswers();
 		clearEmployment();
@@ -684,7 +688,7 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	}
 
 	public void startUserRemarksActivity(Integer mode, int activityCode) {
-		Intent userRemarksActivity = new Intent(activity.getApplicationContext(), NewUserRemarksActivity.class);
+		Intent userRemarksActivity = new Intent(activity.getApplicationContext(), UserRemarksActivity.class);
 		userRemarksActivity.putExtra("Mode", mode);
 		userRemarksActivity.putExtra("ViewMode", isEmploymentDone());
 		if (mode == SIMPLE_MODE)
@@ -730,9 +734,9 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	}
 	
 	private void startVerificationActivity(Integer requestCode,boolean isAllOK) {
-		Intent VerificationActivity = new Intent(activity.getApplicationContext(), VerificationActivity.class);
-		VerificationActivity.putExtra("isAllOK", isAllOK);
-		startActivityForResult(VerificationActivity, requestCode);
+		Intent verificationActivity = new Intent(activity.getApplicationContext(), VerificationActivity.class);
+		verificationActivity.putExtra("isAllOK", isAllOK);
+		startActivityForResult(verificationActivity, requestCode);
 	}
 		
 	protected void showUndoneDialog() {
@@ -753,7 +757,7 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	private boolean isAllDone(){
 		  return (!startTask.getRealDate().equals(DateUtils.EmptyDate) 
 		    && !endTask.getRealDate().equals(DateUtils.EmptyDate) && isEmploymentDone())
-		    || DateUtils.getTodayDateOnly().getTime() < DateUtils.getDateOnly(startTask.getPlanDate()).getTime();
+		    || (DateUtils.getTodayDateOnly().getTime() < DateUtils.getDateOnly(pilotTour.getPlanDate()).getTime());
 	}
 	private void checkAllIsDone(){
 		if(isAllDone()){
@@ -765,6 +769,6 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	private void clearEndTask() {
 		endTask.setRealDate(DateUtils.EmptyDate);
 		endTask.setState(eTaskState.UnDone);
-		TaskManager.Instance().save(endTask);
+		HelperFactory.getHelper().getTaskDAO().save(endTask);
 	}
 }

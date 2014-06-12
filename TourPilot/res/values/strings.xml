@@ -6,6 +6,7 @@
     <string name="menu_catalogs">Zusätzliche Leistungen</string>
     <string name="menu_notes">Besuchsvermerke</string>
     <string name="menu_info">Info</string>
+    <string name="menu_actual_workers">MA, zus. Info</string>
     <string name="menu_gps">Gps</string>
     <string name="menu_extra_assessments">Zusätzliche Assessments</string>
     <string name="menu_manual_input">Manuelle Eingabe</string>
@@ -18,6 +19,7 @@
     <string name="menu_db_backup">DB Backup</string>
     <string name="menu_db_restore">DB entpacken</string>
     <string name="menu_clear_darabase">Daten leeren</string>
+    <string name="menu_close_program">Programm schließen</string>
     <string name="menu_program_info">Programm Info</string>
     <string name="menu_settings">Einstellungen</string>
     <string name="menu_add_additional_work">Zusätzliche Einsätze</string>
@@ -27,6 +29,9 @@
     <string name="menu_add_patient">Hinzufügen</string>
     <string name="menu_remove_patient">Abgeben</string>
     <string name="menu_all_patients">Alle Patienten anzeigen</string>
+    <string name="menu_undo">Rückgängig</string>
+    <string name="menu_set_braden">dekubitusgefährdete Stellen</string>
+    <string name="action_settings">Settings</string>
 
     <!-- Option -->
     <string name="program_options">Programmoptionen</string>
@@ -62,11 +67,11 @@
     <string name="waitng_sockets_to_close">Warten auf den Socketsabschluss...</string>
     <string name="enter_pin">Geben Sie bitte Ihre PIN hier...</string>
     <string name="connection_try">Verbindung herstellen</string>
-    <string name="connection_ok">Verbindung OK. Invintation empfangen...</string>
+    <string name="connection_ok">Verbindung OK. Invitation empfangen...</string>
     <string name="invitation_ok">Invitation OK. Synchronization...</string>
     <string name="invitation_fail">Invitation fehlgeschlagen</string>
-    <string name="sycnhronizing_ok">Synchronization OK. Initialisierung...</string>
-    <string name="sycnhronizing_fail">Synchronization fehlgeschlagen</string>
+    <string name="sycnhronizing_ok">Synchronisation OK. Initialisierung...</string>
+    <string name="sycnhronizing_fail">Synchronisation fehlgeschlagen</string>
     <string name="hello_request_ok">Initialisierung OK. Kalkulation der Prüfsummen...</string>
     <string name="hello_request_fail">Initialisierung fehlgeschlagen</string>
     <string name="checksum_ok">Prüfsummen OK. Datenbearbeitung...</string>
@@ -145,10 +150,16 @@
     <string name="dialog_reached_patient">Haben Sie den Patienten erreicht?</string>
     <string name="dialog_send">Klicken Sie auf Senden, um Daten zu verschicken. Wenn Sie Daten noch überprüfen möchten, klicken Sie auf Bearbeiten.</string>
     <string name="dialog_license_over">Kein Datenabgleich möglich. Alle Lizenzen werden bereits benutzt. Das Programm wird geschlossen.</string>
+    <string name="dialog_interrupt">Datenabglieich zur Zeit ist nicht möglich. Versuchen Sie bitte später.</string>
     <string name="dialog_new_version">Neue Version</string>
     <string name="dialog_update_program">Neue Programmversion liegt vor. Soll sie installiert werden?</string>
     <string name="dialog_start_gps">Soll die Route zu dem gewählten Patienten verlegt werden?</string>
     <string name="dialog_clear_tasks">Wollen Sie die Zeiten für den Einsatzbeginn verwerfen. Wenn Sie diese Meldung mit ja bestätigen, werden die Zeiten gelöscht</string>
+    <string name="dialog_close">Programm schließen</string>
+    <string name="dialog_closing">Es empfiehlt sich nicht das Programm während der Synchronisation zu schließen. Wenn Sie Störungen beim Datenabgleich sind, klicken Sie auf ja. Wenn bei der Verbindung keine Störungen gibt, klicken Sie auf Abbruch und warten Sie bitte bis der Datenabgleich zu Ende ist.</string>
+    <string name="dialog_braden_point_marking">Sie haben die dekubitusgefährdete Stellen nicht markiert.</string>
+    <string name="dialog_kontraktur_point_marking">Sie haben die Lokalisation der Kontraktur nicht markiert.</string>
+    <string name="dialog_related_questions">Bevor Sie die Assessments erfassen, beantworten Sie bitte die Fragen, die eine Beziehung mit anderen Fragen haben.</string>
 
     <!-- Errors -->
     <string name="err_not_db_file">Wählen Sie bitte die Datei mit der Erweiterung .db</string>
@@ -158,7 +169,6 @@
     <string name="err_no_patients">Keine Patienten</string>
     <string name="no_any_patient">Keine Patienten ausgewählt</string>
     <string name="title_activity_verification">VerificationActivity</string>
-    <string name="action_settings">Settings</string>
 
     <!-- Verification -->
     <string name="minuten_einen">Minuten einen Einsatz durchgeführt.</string>
@@ -417,15 +427,12 @@
     <string name="norton_skala_answer_8_1">&lt; 30</string>
     <string name="norton_skala_answer_8_2">&lt; 60</string>
     <string name="norton_skala_answer_8_3">&gt; 60</string>
-    
     <string name="show_questions">Zeige Fragen</string>
     <string name="show_answers">Zeige Ergebnisse</string>
-    
     <string name="do_you_want_change_answer">Möchten Sie wirklich die Antwort ändern?</string>
     <string name="answer_changing">Antwort ändern</string>
-    
-    <string name ="extra_assessments">Zusätzliche Assessments hinzufügen</string>
-    
-    <string name ="new_DB_version">1045</string>
+    <string name="extra_assessments">Zusätzliche Assessments hinzufügen</string>
+    <string name="new_DB_version">1045</string>
+    <string name="title_activity_related_questions">RelatedQuestionsActivity</string>
 
 </resources>

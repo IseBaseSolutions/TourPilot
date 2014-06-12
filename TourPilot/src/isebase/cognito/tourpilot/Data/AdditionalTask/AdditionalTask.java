@@ -2,10 +2,14 @@ package isebase.cognito.tourpilot.Data.AdditionalTask;
 
 import isebase.cognito.tourpilot.Connection.ServerCommandParser;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.NCryptor;
 import isebase.cognito.tourpilot.Utils.StringParser;
 
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "AdditionalTasks")
 public class AdditionalTask extends BaseObject {
 
 	public static final int WEIGHT = 1;
@@ -18,32 +22,27 @@ public class AdditionalTask extends BaseObject {
 	
 	public static final int PULS = 6;
 	
-	public static final String CatalogTypeField = "catalog_type";
-	public static final String QualityField = "quality"; 
-	
-    private int catalogType;
-    private int quality;
-
-	public String IdentID() { 
-    	return catalogType + ";" + getID(); 
-	}
+	public static final String CATALOG_TYPE_FIELD = "catalog_type";
+	public static final String QUALITY_FIELD = "quality"; 
     
-    @MapField(DatabaseField = CatalogTypeField)
+	@DatabaseField(dataType = DataType.INTEGER, columnName = CATALOG_TYPE_FIELD)
+    private int catalogType;
+	
     public int getCatalogType() {
     	return catalogType;
     }
     
-    @MapField(DatabaseField = CatalogTypeField)
     public void setCatalogType(int catalogType) {
     	this.catalogType = catalogType;  
     }
+
+    @DatabaseField(dataType = DataType.INTEGER, columnName = QUALITY_FIELD)
+    private int quality;
     
-    @MapField(DatabaseField = QualityField)
     public int getQuality() {
     	return quality;
     }
-    
-    @MapField(DatabaseField = QualityField)
+
     public void setQuality(int quality) {
     	this.quality = quality;
     }
@@ -53,10 +52,11 @@ public class AdditionalTask extends BaseObject {
     }
     
 	public AdditionalTask(String initString) {
+		clear();
 		StringParser parsingString = new StringParser(initString);
 		parsingString.next(";");
 		setCatalogType(Integer.parseInt(parsingString.next(";")));
-        setID(Integer.parseInt(parsingString.next(";")));
+        setId(Integer.parseInt(parsingString.next(";")));
         setName(parsingString.next(";"));
         setQuality(Integer.parseInt(parsingString.next("~")));
         setCheckSum(Long.parseLong(parsingString.next()));
@@ -67,7 +67,7 @@ public class AdditionalTask extends BaseObject {
     {
     	NCryptor nCryptor = new NCryptor();
         String strValue = new String(ServerCommandParser.ADDITIONAL_TASK_Z + ";");
-        strValue += IdentID() + ";";
+        strValue += catalogType + ";" + getId() + ";";
         strValue += nCryptor.LToNcode(getCheckSum());
         return strValue;
     }
@@ -83,5 +83,5 @@ public class AdditionalTask extends BaseObject {
     	setCatalogType(EMPTY_ID);
     	setQuality(EMPTY_ID);
     }
-	
+
 }

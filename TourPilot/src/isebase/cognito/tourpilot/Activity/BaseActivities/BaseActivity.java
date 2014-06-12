@@ -3,42 +3,35 @@ package isebase.cognito.tourpilot.Activity.BaseActivities;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.AdditionalWorksActivity;
 import isebase.cognito.tourpilot.Activity.ManualInputActivity;
-import isebase.cognito.tourpilot.Activity.NewUserRemarksActivity;
 import isebase.cognito.tourpilot.Activity.PatientsActivity;
 import isebase.cognito.tourpilot.Activity.SynchronizationActivity;
 import isebase.cognito.tourpilot.Activity.ToursActivity;
+import isebase.cognito.tourpilot.Activity.UserRemarksActivity;
 import isebase.cognito.tourpilot.Activity.VerificationActivity;
 import isebase.cognito.tourpilot.Activity.TasksAssessmentsActivity.TasksAssessementsActivity;
 import isebase.cognito.tourpilot.Activity.WorkersOptionActivity.WorkerOptionActivity;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
-import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
+import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 public class BaseActivity extends FragmentActivity {
 
-	protected DialogFragment versionFragmentDialog;
-
+	protected BaseDialog closeDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);	
 		StaticResources.setBaseContext(getBaseContext());
+		HelperFactory.setHelper(getBaseContext());		
 		if(!isMainActivity())
-			versionFragmentDialog = new InfoBaseDialog(
-					getString(R.string.menu_program_info), 
-					String.format("%s %s\n%s %s"
-							, getString(R.string.program_version)
-							, Option.Instance().getVersion()
-							, getString(R.string.data_base_version)
-							, DataBaseWrapper.DATABASE_VERSION)
-					);
+			closeDialog = new BaseDialog(getString(R.string.dialog_close), getString(R.string.dialog_closing));
 	}
 
 	protected boolean isMainActivity(){
@@ -54,20 +47,23 @@ public class BaseActivity extends FragmentActivity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.version_menu, menu);
+		getMenuInflater().inflate(R.menu.base_menu, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.action_show_program_info:
-				versionFragmentDialog.show(getSupportFragmentManager(),
-						"versionDialog");
+			case R.id.action_close_program:
+				showCloseDialog();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 			}
+	}
+	
+	private void showCloseDialog() {
+		closeDialog.show(getSupportFragmentManager(), "closeDialog");
 	}
 
 	protected void startWorkersActivity() {
@@ -116,7 +112,7 @@ public class BaseActivity extends FragmentActivity {
 	
 
 	protected void startUserRemarksActivity() {
-		Intent userRemarksActivity = new Intent(getApplicationContext(), NewUserRemarksActivity.class);
+		Intent userRemarksActivity = new Intent(getApplicationContext(), UserRemarksActivity.class);
 		startActivity(userRemarksActivity);
 	}
 
@@ -124,6 +120,31 @@ public class BaseActivity extends FragmentActivity {
 		Intent VerificationActivity = new Intent(getApplicationContext(), VerificationActivity.class);
 		VerificationActivity.putExtra("isAllOK", isAllOK);
 		startActivityForResult(VerificationActivity, requestCode);
+	}
+	
+	public void close() {
+		Intent intent = new Intent(this, WorkerOptionActivity.class);
+	    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	    startActivity(intent);
+		finish();
+		moveTaskToBack(true);
+	}
+	
+	protected boolean isPilotTourPresent() {
+		return Option.Instance().getPilotTourID() != BaseObject.EMPTY_ID;
+	}
+	
+	protected boolean isWorkerPresent() {
+		return Option.Instance().getWorkerID() != BaseObject.EMPTY_ID;
+	}
+	
+	protected void switchToNextActivity() {
+		Intent nextActivity = isPilotTourPresent() 
+				? new Intent(getApplicationContext(), PatientsActivity.class) 
+				: isWorkerPresent()
+						? new Intent(getApplicationContext(), ToursActivity.class)
+						: new Intent(getApplicationContext(), WorkerOptionActivity.class);
+		startActivity(nextActivity);
 	}
 	
 }

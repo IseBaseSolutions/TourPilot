@@ -4,136 +4,140 @@ import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentInterval;
-import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentIntervalManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
-import isebase.cognito.tourpilot.Data.Task.TaskManager;
-import isebase.cognito.tourpilot.Data.Work.WorkManager;
-import isebase.cognito.tourpilot.DataBase.MapField;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Utils.DateUtils;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "Employments")
 public class Employment extends BaseObject implements IJob {
-	
-	public static final String PatientIDField = "patient_id";
-	public static final String PilotTourIDField = "pilot_tour_id";
-	public static final String TourIDField = "tour_id"; 
-	public static final String DateField = "date";
-	public static final String IsDoneField = "is_done";
-	public static final String StartTimeField = "start_time";
-	public static final String StopTimeField = "stop_time";
-	public static final String DayPartField = "day_part";
-	public static final String IsAddedFromMobileField = "from_mobile";
-	
-	private boolean isDone;
-	
-	private int patientID;	
-	private int pilotTourID;
-	
-	private Date date;
-	private Date startTime;
-	private Date stopTime;
 
-	private int tourID;
-		
-	private List<Task> tasks;
+	public static final String PATIENT_ID_FIELD = "patient_id";
+	public static final String PILOT_TOUR_ID_FIELD = "pilot_tour_id";
+	public static final String TOUR_ID_FIELD = "tour_id"; 
+	public static final String DATE_FIELD = "date";
+	public static final String IS_DONE_FIELD = "is_done";
+	public static final String START_TIME_FIELD = "start_time";
+	public static final String STOP_TIME_FIELD = "stop_time";
+	public static final String DAY_PART_FIELD = "day_part";
+	public static final String IS_FROM_MOBILE_FIELD = "from_mobile";
 	
-	private Patient patient;
-
-	private PilotTour pilotTour;
-	
-	private String dayPart;
-	
+	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_FROM_MOBILE_FIELD)
 	private boolean isFromMobile;
-
-	@MapField(DatabaseField = IsAddedFromMobileField)
+	
 	public boolean isFromMobile() {
 		return isFromMobile;
 	}
-
-	@MapField(DatabaseField = IsAddedFromMobileField)
+	
 	public void setFromMobile(boolean isFromMobile) {
 		this.isFromMobile = isFromMobile;
 	}
 
-	@MapField(DatabaseField = IsDoneField)
+	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_DONE_FIELD)
+	private boolean isDone;
+	
 	public boolean getIsDone() {
 		return isDone;
 	}
 
-	@MapField(DatabaseField = IsDoneField)
 	public void setIsDone(boolean isDone) {
 		this.isDone = isDone;
 	}
 	
-	@MapField(DatabaseField = DateField)
+	@DatabaseField(dataType = DataType.DATE_LONG, columnName = DATE_FIELD)
+	private Date date;
+	
 	public Date getDate() {
-		return date;
+		return date == null ? date = DateUtils.EmptyDate : date;
 	}
 
-	@MapField(DatabaseField = DateField)
 	public void setDate(Date date) {
 		this.date = date;
 	}
 	
-	@MapField(DatabaseField = TourIDField)
+	@DatabaseField(dataType = DataType.INTEGER, columnName = TOUR_ID_FIELD)
+	private int tourID;
+	
 	public int getTourID() {
 		return tourID;
 	}
 
-	@MapField(DatabaseField = TourIDField)
 	public void setTourID(int id) {
 		this.tourID = id;
 	}
+
+	@DatabaseField(dataType = DataType.LONG, columnName = PILOT_TOUR_ID_FIELD)
+	private long pilotTourID;
 	
-	@MapField(DatabaseField = PatientIDField)
+	public long getPilotTourID() {
+		return pilotTourID;
+	}
+
+	public void setPilotTourID(long pilotTourID) {
+		this.pilotTourID = pilotTourID;
+	}
+	
+	@DatabaseField(dataType = DataType.INTEGER, columnName = PATIENT_ID_FIELD)
+	private int patientID;	
+
 	public int getPatientID() {
 		return patientID;
 	}
 
-	@MapField(DatabaseField = PatientIDField)
 	public void setPatientID(int patientID) {
 		this.patientID = patientID;
 	}
 
-	@MapField(DatabaseField = PilotTourIDField)
-	public int getPilotTourID() {
-		return pilotTourID;
-	}
+	@DatabaseField(dataType = DataType.DATE_LONG, columnName = START_TIME_FIELD)	
+	private Date startTime;
 
-	@MapField(DatabaseField = PilotTourIDField)
-	public void setPilotTourID(int pilotTourID) {
-		this.pilotTourID = pilotTourID;
-	}
 	
-	@MapField(DatabaseField = StartTimeField)
 	public Date getStartTime() {
-		return startTime;
+		return startTime == null ? startTime = DateUtils.EmptyDate : startTime;
 	}
 
-	@MapField(DatabaseField = StartTimeField)
 	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
 	}
+	
+	@DatabaseField(dataType = DataType.DATE_LONG, columnName = STOP_TIME_FIELD)	
+	private Date stopTime;
 
-	@MapField(DatabaseField = StopTimeField)
 	public Date getStopTime() {
-		return stopTime;
+		return stopTime == null ? stopTime = DateUtils.EmptyDate : stopTime;
 	}
 
-	@MapField(DatabaseField = StopTimeField)
 	public void setStopTime(Date stopTime) {
 		this.stopTime = stopTime;
+	}	
+	
+	@DatabaseField(dataType = DataType.STRING, columnName = DAY_PART_FIELD)	
+	private String dayPart;
+	
+	public String getDayPart() {
+		return dayPart.contains("Einsatzende") ? (dayPart = dayPart.replace("Einsatzende ", "")) : (dayPart = dayPart.replace("Einsatzbeginn ", ""));
 	}
 
+	public void setDayPart(String dayPart) {
+		this.dayPart = dayPart;
+	}
+
+	private List<Task> tasks;
+	
 	public List<Task> getTasks() {
 		return tasks;
 	}
@@ -142,6 +146,8 @@ public class Employment extends BaseObject implements IJob {
 		this.tasks = tasks;
 	}
 
+	private Patient patient;
+	
 	public Patient getPatient() {
 		return patient;
 	}
@@ -149,6 +155,8 @@ public class Employment extends BaseObject implements IJob {
 	public void setPatient(Patient patient) {
 		this.patient = patient;
 	}
+	
+	private PilotTour pilotTour;
 
 	public PilotTour getPilotTour() {
 		return pilotTour;
@@ -156,16 +164,6 @@ public class Employment extends BaseObject implements IJob {
 
 	public void setPilotTour(PilotTour pilotTour) {
 		this.pilotTour = pilotTour;
-	}
-	
-	@MapField(DatabaseField = DayPartField)
-	public String getDayPart() {
-		return dayPart.contains("Einsatzende") ? (dayPart = dayPart.replace("Einsatzende ", "")) : (dayPart = dayPart.replace("Einsatzbeginn ", ""));
-	}
-
-	@MapField(DatabaseField = DayPartField)
-	public void setDayPart(String dayPart) {
-		this.dayPart = dayPart;
 	}
 	
 	public Employment() {
@@ -197,24 +195,24 @@ public class Employment extends BaseObject implements IJob {
         SimpleDateFormat format = new SimpleDateFormat("ddMMyyyy");
         for (Task task : tasks)
         {
-    		if (!getIsServerTime() && Option.Instance().isTimeSynchronised())
-    		{
+    		if (!task.isServerTime() && Option.Instance().isTimeSynchronised()) {
             	task.setRealDate(Option.Instance().isTimeSynchronised() 
             			? task.getRealDate() 
             			: DateUtils.getSynchronizedTime(task.getRealDate()));
-            	task.setIsServerTime(true);
-    			TaskManager.Instance().save(task);
-    			if (task.isFirstTask())
-    			{
-	    			EmploymentInterval emplInt = EmploymentIntervalManager.Instance().load(getID());
-	    			emplInt.setStartTime(task.getManualDate().equals(DateUtils.EmptyDate) ? task.getRealDate() : task.getManualDate());
-	    			EmploymentIntervalManager.Instance().save(emplInt);
+            	task.setServerTime(true);
+    			if (task.isFirstTask())	{
+    		        EmploymentInterval emplInt = HelperFactory.getHelper().getEmploymentIntervalDAO().load(getId());
+    		        if (emplInt != null) {
+		    			emplInt.setStartTime(task.getManualDate().equals(DateUtils.EmptyDate) ? task.getRealDate() : task.getManualDate());
+		    			HelperFactory.getHelper().getEmploymentIntervalDAO().save(emplInt);
+    		        }
     			}
-    			if (task.isLastTask())
-    			{
-	    			EmploymentInterval emplInt = EmploymentIntervalManager.Instance().load(getID());
-	    			emplInt.setStopTime(task.getManualDate().equals(DateUtils.EmptyDate) ? task.getRealDate() : task.getManualDate());
-	    			EmploymentIntervalManager.Instance().save(emplInt);
+    			if (task.isLastTask()) {
+    		        EmploymentInterval emplInt = HelperFactory.getHelper().getEmploymentIntervalDAO().load(getId());
+    		        if (emplInt != null) {
+		    			emplInt.setStopTime(task.getManualDate().equals(DateUtils.EmptyDate) ? task.getRealDate() : task.getManualDate());
+		    			HelperFactory.getHelper().getEmploymentIntervalDAO().save(emplInt);
+    		        }
     			}
     		}    		
         	String strTask = strEmpl;
@@ -231,13 +229,13 @@ public class Employment extends BaseObject implements IJob {
             strTask += (DateUtils.EmptyDate.equals(task.getManualDate()) ? "" : DateUtils.toDateTime(task.getRealDate()));
 
             strTask += (isFromMobile() && task.isFirstTask())
-            		? (";" + getID()+ "" + Option.Instance().getWorkerID() + "" + Option.Instance().getPilotTourID() + "" + getPatientID() +""+ DateUtils.HourMinutesSecondsFormat.format(startTime) +""+ DateUtils.HourMinutesSecondsFormat.format(stopTime)) 
+            		? (";" + getId()+ "" + Option.Instance().getWorkerID() + "" + Option.Instance().getPilotTourID() + "" + getPatientID() +""+ DateUtils.HourMinutesSecondsFormat.format(startTime) +""+ DateUtils.HourMinutesSecondsFormat.format(stopTime)) 
             				: "";
     		strTask += "\0";
             strValue += strTask;
             SentObjectVerification.Instance().sentTasks.add(task);
         }
-        TaskManager.Instance().save(tasks);
+        HelperFactory.getHelper().getTaskDAO().save(tasks);
         SentObjectVerification.Instance().sentEmployments.add(this);
         return strValue;
     }
@@ -263,6 +261,18 @@ public class Employment extends BaseObject implements IJob {
     			return task;
     	return null;
     }
+    
+    public void clearConnectedData() {
+		HelperFactory.getHelper().getTaskDAO().deleteByEmploymentID(getId());
+		HelperFactory.getHelper().getUserRemarkDAO().deleteByEmploymentID(getId());
+		HelperFactory.getHelper().getEmploymentVerificationDAO().deleteByEmploymentID(getId());
+		HelperFactory.getHelper().getEmploymentIntervalDAO().deleteByEmploymentID(getId());
+		HelperFactory.getHelper().getAnswerDAO().deleteByEmploymentID(getId());
+		HelperFactory.getHelper().getAnsweredCategoryDAO().deleteByEmploymentID(getId());
+		HelperFactory.getHelper().getExtraCategoryDAO().deleteByEmploymentID(getId());
+		HelperFactory.getHelper().getQuestionSettingDAO().deleteByEmploymentID(getId());
+		HelperFactory.getHelper().getInformationDAO().deleteByEmploymentID(getId());
+    }
 
 	@Override
 	public String timeInterval() {
@@ -280,7 +290,7 @@ public class Employment extends BaseObject implements IJob {
 	}
 
 	public boolean isAdditionalWork(){
-		return getPatientID() > Patient.AdditionalWorkCode;
+		return getPatientID() > Patient.ADDITIONAL_WORK_CODE;
 	}
 	
 	@Override
@@ -305,11 +315,11 @@ public class Employment extends BaseObject implements IJob {
 
 	@Override
 	public Date stopTime() {
-		return getStopTime().equals(DateUtils.EmptyDate) ? DateUtils.EmptyDate : getStopTime();
+		return getStopTime().equals(DateUtils.EmptyDate) ? getDate() : getStopTime();
 	}
 	
 	public boolean isWork() {
 		return getPatientID() > 999900;
 	}
-	
+
 }

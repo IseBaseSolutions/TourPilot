@@ -2,186 +2,213 @@ package isebase.cognito.tourpilot.Data.Option;
 
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
-import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
-import isebase.cognito.tourpilot.DataBase.MapField;
-import isebase.cognito.tourpilot.NewData.NewWorker.NewWorker;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import android.telephony.TelephonyManager;
 
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "Options")
 public class Option {
 
-	public static final String TableName = "Options";
-
-	public static final String WorkerIDField = "worker_id";
-	public static final String PilotTourIDField = "pilot_tour_id";
-	public static final String EmploymentIDField = "employment_id";
-	public static final String PreviousWorkerIDField = "prev_worker_id";
-	public static final String WorkIDField = "work_id";
-	public static final String ServerIPField = "server_ip";
-	public static final String ServerPortField = "server_port";
-	public static final String IsAutoField = "is_auto";
-	public static final String IsWorkerActivityField = "is_worker_activity";
-	public static final String PinField = "pin";
-	public static final String ServerTimeDifferenceField = "server_time_difference";
-	public static final String IsLockOptionsField = "lock_options";
+	public static final String ID_FIELD = "_id";
+	public static final String WORKER_ID_FIELD = "worker_id";
+	public static final String PILOT_TOUR_ID_FIELD = "pilot_tour_id";
+	public static final String EMPLOYMENT_ID_FIELD = "employment_id";
+	public static final String PREVIOUS_WORKER_ID_FIELD = "prev_worker_id";
+	public static final String WORK_ID_FIELD = "work_id";
+	public static final String SERVER_IP_FIELD = "server_ip";
+	public static final String SERVER_PORT_FIELD = "server_port";
+	public static final String IS_AUTO_FIELD = "is_auto";
+	public static final String IS_WORKER_ACTIVITY_FIELD = "is_worker_activity";
+	public static final String IS_TOUR_ACTIVITY_FIELD = "is_tour_activity";
+	public static final String PIN_FIELD = "pin";
+	public static final String SERVER_TIME_DIFFERENCE_FIELD = "server_time_difference";
+	public static final String IS_LOCK_OPTIONS_FIELD = "lock_options";
+	public static final String IS_WORKER_PHONES_FIELD = "is_worker_phones";
 	public static boolean testMode = false;
+	public static boolean isGPSRunning = false;
+	
+	public static long gpsStartTime;
 	private Worker worker;
-	private NewWorker newWorker;
 	private TelephonyManager phoneManager = StaticResources.phoneManager;
-	private OptionManager optionManager;
 	private static Option instance;
-
-	private String serverIP;
 	
-	private int prevWorkerID;
-	private int workerID;
-	private int employmentID;
-	private int pilotTourID;
-	private int workID;
-	private int serverPort;
+	public String testPin = "159753";
+
+	@DatabaseField(generatedId = true, allowGeneratedIdInsert = true, columnName = ID_FIELD)
 	private int id;
-	private long serverTimeDifference;
-	private String pin;
 	
-	private String palmVersion;
-	private String versionLink;
-
-	private boolean isAuto;
-	private boolean isWorkerActivity;
-	private boolean isTimeSynchronised;
-	private boolean isLockOptions;
-
-	@MapField(DatabaseField = IsLockOptionsField)
-	public boolean isLockOptions() {
-		return isLockOptions;
+	public int getId() {
+		return id;
 	}
 
-	@MapField(DatabaseField = IsLockOptionsField)
-	public void setLockOptions(boolean isLockOptions) {
-		this.isLockOptions = isLockOptions;
-	}
+	public void setId(int id) {
+		this.id = id;
+	}	
 
-	@MapField(DatabaseField = PinField)
-	public String getPin() {
-		return pin;
-	}
-
-	@MapField(DatabaseField = PinField)
-	public void setPin(String pin) {
-		this.pin = pin;
-	}
+	@DatabaseField(dataType = DataType.INTEGER, columnName = PREVIOUS_WORKER_ID_FIELD)
+	private int prevWorkerID;
 	
-	@MapField(DatabaseField = IsWorkerActivityField)
-	public boolean isWorkerActivity() {
-		return isWorkerActivity;
-	}
-
-	@MapField(DatabaseField = IsWorkerActivityField)
-	public void setWorkerActivity(boolean isWorkerActivity) {
-		this.isWorkerActivity = isWorkerActivity;
-	}
-
-	@MapField(DatabaseField = WorkIDField)
-	public int getWorkID() {
-		return workID;
-	}
-
-	@MapField(DatabaseField = WorkIDField)
-	public void setWorkID(int workID) {
-		this.workID = workID;
-	}
-	
-	@MapField(DatabaseField = PilotTourIDField)
-	public void setPilotTourID(int id){
-		this.pilotTourID = id;
-	}
-
-	@MapField(DatabaseField = PilotTourIDField)
-	public int getPilotTourID(){
-		return pilotTourID;
-	}
-	
-	@MapField(DatabaseField = PreviousWorkerIDField)
 	public void setPrevWorkerID(int id){
 		this.prevWorkerID = id;
 	}
 
-	@MapField(DatabaseField = PreviousWorkerIDField)
 	public int getPrevWorkerID(){
 		return prevWorkerID;
 	}
 	
-	@MapField(DatabaseField = IsAutoField)
-	public void setIsAuto(boolean isAuto) {
-		this.isAuto = isAuto;
-	}
-
-	@MapField(DatabaseField = IsAutoField)
-	public boolean getIsAuto() {
-		return isAuto;
-	}
-		
-	@MapField(DatabaseField = WorkerIDField)
+	@DatabaseField(dataType = DataType.INTEGER, columnName = WORKER_ID_FIELD)
+	private int workerID;
+	
 	public int getWorkerID() {
 		return workerID;
 	}
 
-	@MapField(DatabaseField = WorkerIDField)
 	public void setWorkerID(int workerID) {
 		this.workerID = workerID;
 	}
-
-	@MapField(DatabaseField = EmploymentIDField)
-	public int getEmploymentID() {
+	
+	@DatabaseField(dataType = DataType.LONG, columnName = EMPLOYMENT_ID_FIELD)
+	private long employmentID;
+	
+	public long getEmploymentID() {
 		return employmentID;
 	}
 
-	@MapField(DatabaseField = EmploymentIDField)
-	public void setEmploymentID(int id) {
-		this.employmentID = id;
+	public void setEmploymentID(long employmentID) {
+		this.employmentID = employmentID;
+	}
+	
+	@DatabaseField(dataType = DataType.LONG, columnName = PILOT_TOUR_ID_FIELD)
+	private long pilotTourID;
+	
+	public void setPilotTourID(long id){
+		this.pilotTourID = id;
 	}
 
-	@MapField(DatabaseField = ServerIPField)
+	public long getPilotTourID(){
+		return pilotTourID;
+	}
+	
+	@DatabaseField(dataType = DataType.INTEGER, columnName = WORK_ID_FIELD)
+	private int workID;
+	
+	public int getWorkID() {
+		return workID;
+	}
+
+	public void setWorkID(int workID) {
+		this.workID = workID;
+	}
+	
+	@DatabaseField(dataType = DataType.STRING, columnName = SERVER_IP_FIELD)
+	private String serverIP;
+	
 	public String getServerIP() {
 		return serverIP;
 	}
 
-	@MapField(DatabaseField = ServerIPField)
 	public void setServerIP(String serverIP) {
 		this.serverIP = serverIP;
 	}
-
-	@MapField(DatabaseField = ServerPortField)
+	
+	@DatabaseField(dataType = DataType.INTEGER, columnName = SERVER_PORT_FIELD)
+	private int serverPort;
+	
 	public int getServerPort() {
 		return serverPort;
 	}
 
-	@MapField(DatabaseField = ServerPortField)
 	public void setServerPort(int serverPort) {
 		this.serverPort = serverPort;
-	}
-
-	@MapField(DatabaseField = BaseObject.IDField)
-	public int getID() {
-		return id;
-	}
-
-	@MapField(DatabaseField = BaseObject.IDField)
-	public void setID(int id) {
-		this.id = id;
-	}
+	}	
 	
-	@MapField(DatabaseField = ServerTimeDifferenceField)
+
+	@DatabaseField(dataType = DataType.LONG, columnName = SERVER_TIME_DIFFERENCE_FIELD)
+	private long serverTimeDifference;
+	
 	public long getServerTimeDifference() {
 		return serverTimeDifference;
 	}
 	
-	@MapField(DatabaseField = ServerTimeDifferenceField)
 	public void setServerTimeDifference(long serverTimeDifference) {
 		this.serverTimeDifference = serverTimeDifference;
 	}
 	
+	@DatabaseField(dataType = DataType.STRING, columnName = PIN_FIELD)
+	private String pin;
+	
+	public String getPin() {
+		return pin;
+	}
+
+	public void setPin(String pin) {
+		this.pin = pin;
+	}
+	
+	private String palmVersion;
+	private String versionLink;
+	
+	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_AUTO_FIELD)
+	private boolean isAuto;
+	
+	public void setIsAuto(boolean isAuto) {
+		this.isAuto = isAuto;
+	}
+
+	public boolean getIsAuto() {
+		return isAuto;
+	}
+	
+	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_WORKER_ACTIVITY_FIELD)
+	private boolean isWorkerActivity;
+	
+	public boolean isWorkerActivity() {
+		return isWorkerActivity;
+	}
+
+	public void setWorkerActivity(boolean isWorkerActivity) {
+		this.isWorkerActivity = isWorkerActivity;
+	}
+	
+	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_TOUR_ACTIVITY_FIELD)
+	private boolean isTourActivity;
+	
+	public boolean isTourActivity() {
+		return isTourActivity;
+	}
+
+	public void setTourActivity(boolean isTourActivity) {
+		this.isTourActivity = isTourActivity;
+	}
+	
+	private boolean isTimeSynchronised;
+	
+	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_LOCK_OPTIONS_FIELD)
+	private boolean isLockOptions;
+	
+	public boolean isLockOptions() {
+		return isLockOptions;
+	}
+
+	public void setLockOptions(boolean isLockOptions) {
+		this.isLockOptions = isLockOptions;
+	}
+	
+	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_WORKER_PHONES_FIELD)
+	private boolean isWorkerPhones;
+
+	public boolean isWorkerPhones() {
+		return isWorkerPhones;
+	}
+
+	public void setWorkerPhones(boolean isWorkerPhones) {
+		this.isWorkerPhones = isWorkerPhones;
+	}
+
 	public String getPalmVersion() {
 		return palmVersion;
 	}
@@ -207,21 +234,14 @@ public class Option {
 	}
 
 	public Worker getWorker() {
-		if (worker != null && worker.getID() == getWorkerID())
+		if (worker != null && worker.getId() == getWorkerID())
 			return worker;
-		worker = WorkerManager.Instance().load(workerID);
+		worker = HelperFactory.getHelper().getWorkerDAO().load(workerID);
 		return worker;
-	}
-	
-	public NewWorker getNewWorker() {
-		if (newWorker != null && newWorker.getId() == getWorkerID())
-			return newWorker;
-		newWorker = HelperFactory.getHelper().getWorkerDAO().load(workerID);
-		return newWorker;
 	}
 
 	protected void clear() {
-		setID(BaseObject.EMPTY_ID);	
+		setId(0);//NewBaseObject.EMPTY_ID);	
 		setServerPort(4448);		
 		setServerIP("");
 		setPin("");
@@ -258,10 +278,7 @@ public class Option {
 
 	public static Option Instance() {
 		if (instance == null) {
-			OptionManager optionManager = new OptionManager();
-			optionManager.open();
-			instance = optionManager.loadOption();
-			instance.optionManager = optionManager;
+			instance = HelperFactory.getHelper().getOptionDAO().loadOption();
 		}
 		return instance;
 	}
@@ -269,9 +286,36 @@ public class Option {
 	public Option() {
 		clear();
 	}
-
-	public void save() {
-		optionManager.save(Option.Instance());
+	
+	public Option(String[] arr) {
+		clear();
+		int counter = 0;
+		setId(Integer.parseInt(arr[counter++]));
+		setLockOptions(Integer.parseInt(arr[counter++]) == 1);
+		setWorkerID(Integer.parseInt(arr[counter++]));
+		setWorkID(Integer.parseInt(arr[counter++]));
+		setPrevWorkerID(Integer.parseInt(arr[counter++]));
+		setPilotTourID(Integer.parseInt(arr[counter++]));
+		setEmploymentID(Integer.parseInt(arr[counter++]));
+		setServerIP(arr[counter++]);
+		setServerPort(Integer.parseInt(arr[counter++]));
+		setIsAuto(Integer.parseInt(arr[counter++]) == 1);
+		setWorkerActivity(Integer.parseInt(arr[counter++]) == 1);
+		setPin(arr[counter++]);
+		setServerTimeDifference(Integer.parseInt(arr[counter++]));
+		setWorkerPhones(Integer.parseInt(arr[counter++]) == 1);
+		setTourActivity(Integer.parseInt(arr[counter++]) == 1);
 	}
 	
+	public void resetOptions() {
+		instance = null;
+	}
+
+	public void save() {
+		HelperFactory.getHelper().getOptionDAO().save(instance);
+	}
+	
+	public boolean isTest() {
+		return pin.equals(testPin);
+	}
 }

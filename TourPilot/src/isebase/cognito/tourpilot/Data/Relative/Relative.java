@@ -1,64 +1,66 @@
 package isebase.cognito.tourpilot.Data.Relative;
 
 import isebase.cognito.tourpilot.Connection.ServerCommandParser;
-import isebase.cognito.tourpilot.Data.Address.Address;
 import isebase.cognito.tourpilot.Data.Address.IAddressable;
+import isebase.cognito.tourpilot.Data.Address.Address;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.DataBase.MapField;
-import isebase.cognito.tourpilot.NewData.NewAddress.NewAddress;
 import isebase.cognito.tourpilot.Utils.NCryptor;
 import isebase.cognito.tourpilot.Utils.StringParser;
 
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "Relatives")
 public class Relative extends BaseObject implements IAddressable {
 
-	public static final String SurnameField = "surname";
-	public static final String ShipField = "ship";
-	public static final String AddressIDField = "address_id";
-	public static final String FamilyStateField = "family_state";
+	public static final String SURNAME_FIELD = "surname";
+	public static final String SHIP_FIELD = "ship";
+	public static final String ADDRESS_ID_FIELD = "address_id";
+	public static final String FAMILY_STATE_FIELD = "family_state";
 	
 	public Address address;
+	
+	@DatabaseField(dataType = DataType.INTEGER, columnName = ADDRESS_ID_FIELD)
 	private int addressID;
 	
-	private String surname;
-	private String ship;
-	private String familyState;
-
-	@MapField(DatabaseField = AddressIDField)
 	public int getAddressID() {
 		return addressID;
 	}
 
-	@MapField(DatabaseField = AddressIDField)
 	public void setAddressID(int addressID) {
 		this.addressID = addressID;
 	}
 	
-	@MapField(DatabaseField = SurnameField)
+	@DatabaseField(dataType = DataType.STRING, columnName = SURNAME_FIELD)
+	private String surname;
+	
 	public String getSurname() {
 		return surname;
 	}
 
-	@MapField(DatabaseField = SurnameField)
 	public void setSurname(String surname) {
 		this.surname = surname;
 	}
-
-	@MapField(DatabaseField = ShipField)
+	
+	@DatabaseField(dataType = DataType.STRING, columnName = SHIP_FIELD)
+	private String ship;
+	
 	public String getShip() {
 		return ship;
 	}
 
-	@MapField(DatabaseField = ShipField)
 	public void setShip(String ship) {
 		this.ship = ship;
 	}
 	
-	@MapField(DatabaseField = FamilyStateField)
+	@DatabaseField(dataType = DataType.STRING, columnName = FAMILY_STATE_FIELD)
+	private String familyState;
+
 	public String getFamilyState() {
 		return familyState;
 	}
 
-	@MapField(DatabaseField = FamilyStateField)
 	public void setFamilyState(String familyState) {
 		this.familyState = familyState;
 	}
@@ -68,10 +70,11 @@ public class Relative extends BaseObject implements IAddressable {
 	}
 	
 	public Relative(String initString) {
+		clear();
 		address = new Address();
 		StringParser parsingString = new StringParser(initString);
 		parsingString.next(";");
-		setID(Integer.parseInt(parsingString.next(";")));
+		setId(Integer.parseInt(parsingString.next(";")));
 		setSurname(parsingString.next(";"));
 		setName(parsingString.next(";"));
 		address.setStreet(parsingString.next(";"));
@@ -88,15 +91,12 @@ public class Relative extends BaseObject implements IAddressable {
 	public String getFullName() {
 		return String.format("%s %s", getSurname(), getName());
 	}
-	public Address getAddress(){
-		return address;
-	}
 
 	@Override
 	public String forServer() {
 		NCryptor ncryptor = new NCryptor();
 		String strValue = new String(ServerCommandParser.RELATIVE + ";");
-		strValue += ncryptor.LToNcode(getID()) + ";";
+		strValue += ncryptor.LToNcode(getId()) + ";";
 		strValue += ncryptor.LToNcode(getCheckSum());
 		return strValue;
 	}
@@ -116,9 +116,8 @@ public class Relative extends BaseObject implements IAddressable {
 	}
 
 	@Override
-	public NewAddress getNewAddress() {
-		// TODO Auto-generated method stub
-		return null;
+	public Address getAddress() {
+		return address;
 	}
-	
+
 }

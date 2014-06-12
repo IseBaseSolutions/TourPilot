@@ -11,5 +11,8 @@
     <item
         android:id="@+id/action_db_restore"
         android:title="@string/menu_db_restore"/>
+    <item
+        android:id="@+id/action_close_program"
+        android:title="@string/menu_close_program"/>
     
 </menu>

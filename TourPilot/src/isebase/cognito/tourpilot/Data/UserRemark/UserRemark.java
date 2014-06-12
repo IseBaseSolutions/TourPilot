@@ -1,73 +1,75 @@
 package isebase.cognito.tourpilot.Data.UserRemark;
 
-import java.util.Date;
-
 import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.Data.CustomRemark.CustomRemark;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.DataBase.MapField;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 import isebase.cognito.tourpilot.Utils.StringParser;
 
+import java.util.Date;
+
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "UserRemarks")
 public class UserRemark extends BaseObject {
 
-	public static final String PatientIDField = "patient_id";
-	public static final String WorkerIDField = "worker_id";
-	public static final String DateField = "date";
-	public static final String CheckedIDsField = "checked_ids";
-	public static final String CheckboxField = "checkboxes";
+	public static final String PATIENT_ID_FIELD = "patient_id";
+	public static final String WORKER_ID_FIELD = "worker_id";
+	public static final String DATE_FIELD = "date";
+	public static final String CHECKED_IDS_FIELD = "checked_ids";
+	public static final String CHECKBOXES_FIELD = "checkboxes";
 
+	@DatabaseField(dataType = DataType.INTEGER, columnName = PATIENT_ID_FIELD)
 	private int patientID;
-	private int workerID;
 	
-	private Date date;
-	private int checkboxes;
-	private String checkedIDs;
-	
-	@MapField(DatabaseField = PatientIDField)
 	public int getPatientID() {
 		return patientID;
 	}
-	@MapField(DatabaseField = PatientIDField)
 	public void setPatientID(int patientID) {
 		this.patientID = patientID;
 	}
 	
-	@MapField(DatabaseField = WorkerIDField)
+	@DatabaseField(dataType = DataType.INTEGER, columnName = WORKER_ID_FIELD)
+	private int workerID;
+	
 	public int getWorkerID() {
 		return workerID;
 	}
 	
-	@MapField(DatabaseField = WorkerIDField)
 	public void setWorkerID(int workerID) {
 		this.workerID = workerID;
 	}
-
-	@MapField(DatabaseField = DateField)
+	
+	@DatabaseField(dataType = DataType.DATE_LONG, columnName = DATE_FIELD)
+	private Date date;
+	
 	public Date getDate() {
-		return date;
+		return date == null ? date = DateUtils.EmptyDate : date;
 	}
-	@MapField(DatabaseField = DateField)
 	public void setDate(Date date) {
 		this.date = date;
 	}
-
-	@MapField(DatabaseField = CheckboxField)
+	
+	@DatabaseField(dataType = DataType.INTEGER, columnName = CHECKBOXES_FIELD)
+	private int checkboxes;
+	
 	public int getCheckboxes() {
 		return checkboxes;
 	}
-	@MapField(DatabaseField = CheckboxField)
 	public void setCheckboxes(int checkboxes) {
 		this.checkboxes = checkboxes;
 	}
 	
-	@MapField(DatabaseField = CheckedIDsField)
+	@DatabaseField(dataType = DataType.STRING, columnName = CHECKED_IDS_FIELD, defaultValue = "")
+	private String checkedIDs;
+	
 	public String getCheckedIDs() {
-		return checkedIDs;
+		return checkedIDs == null ?  checkedIDs = "" : checkedIDs;
 	}
 	
-	@MapField(DatabaseField = CheckedIDsField)
 	public void setCheckedIDs(String checkedIDs) {
 		this.checkedIDs = checkedIDs;
 	}
@@ -84,7 +86,7 @@ public class UserRemark extends BaseObject {
     		, boolean chkContact, boolean chkMed, boolean chkVisit
             , boolean chkOther, String strRemark)
     {
-        setID(EmploymentID);
+        setId(EmploymentID);
         setWorkerID(workerID);
         setPatientID(patientID);
         checkboxes = 0;
@@ -101,43 +103,43 @@ public class UserRemark extends BaseObject {
     }
 
     public UserRemark(String strInitString) {
+    	clear();
         StringParser initString = new StringParser(strInitString);
         initString.next(";");
-        setID(Integer.parseInt(initString.next(";")));
+        setId(Integer.parseInt(initString.next(";")));
         setPatientID(Integer.parseInt(initString.next(";")));
         setDate(new Date(Long.parseLong(initString.next(";"))));
         setCheckboxes(Integer.parseInt(initString.next(";")));
         setName(initString.next(";"));
-        setIsServerTime(initString.next(";").equals("True"));
+        setServerTime(initString.next(";").equals("True"));
         setWasSent(initString.next().equals("True"));
     }  
     
     public String toString(){
-		if (!getIsServerTime() && Option.Instance().isTimeSynchronised())
+		if (!isServerTime() && Option.Instance().isTimeSynchronised())
 		{
 			setDate(DateUtils.getSynchronizedTime(getDate()));
-			setIsServerTime(true);
-			UserRemarkManager.Instance().save(this);
+			setServerTime(true);
 		}
-    	UserRemarkManager.Instance().save(this);
+		HelperFactory.getHelper().getUserRemarkDAO().save(this);
         String strValue = new String("O;");
-        strValue += getID() + ";";
+        strValue += getId() + ";";
         strValue += getPatientID() + ";";
         strValue += String.valueOf(DateUtils.getLocalTime(getDate())) + ";";
         strValue += getCheckboxes() + ";";
         strValue += getName() + ";";
-        strValue += (getIsServerTime() ? "True" : "False") + ";";
+        strValue += (isServerTime() ? "True" : "False") + ";";
         strValue += (getWasSent() ? "True" : "False");
         return strValue;
     }    
     
     public String getDone()
     {
-		if (!getIsServerTime() && Option.Instance().isTimeSynchronised())
+		if (!isServerTime() && Option.Instance().isTimeSynchronised())
 		{
 			setDate(DateUtils.getSynchronizedTime(getDate()));
-			setIsServerTime(true);
-			UserRemarkManager.Instance().save(this);
+			setServerTime(true);
+			HelperFactory.getHelper().getUserRemarkDAO().save(this);
 		}
         String strValue = new String("O;");
         strValue += getWorkerID() + ";";

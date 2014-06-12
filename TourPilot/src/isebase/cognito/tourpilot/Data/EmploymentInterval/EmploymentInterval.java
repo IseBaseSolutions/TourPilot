@@ -1,58 +1,50 @@
 package isebase.cognito.tourpilot.Data.EmploymentInterval;
 
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Utils.DateUtils;
+
 import java.util.Date;
 
-import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.DataBase.MapField;
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
+@DatabaseTable(tableName = "EmploymentIntervals")
 public class EmploymentInterval extends BaseObject {
 
-	public static final String EmploymentIDField = "employment_id";
-	public static final String StartTimeField = "start_time";
-	public static final String StopTimeField = "stop_time";
+	public static final String START_TIME_FIELD = "start_time";
+	public static final String STOP_TIME_FIELD = "stop_time";
 
-	private int employmentID;
+	@DatabaseField(dataType = DataType.DATE_LONG, columnName = START_TIME_FIELD)
 	private Date startTime;
-	private Date stopTime;
 	
-	public EmploymentInterval() {
-		
-	}
-	
-	public EmploymentInterval(int employmentID, Date startTime, Date stopTime) {
-		this.employmentID = employmentID;
-		this.startTime = startTime;
-		this.stopTime = stopTime;
-	}
-	
-	@MapField(DatabaseField = EmploymentIDField)
-	public int getEmploymentID() {
-		return employmentID;
-	}
-	
-	@MapField(DatabaseField = EmploymentIDField)
-	public void setEmploymentID(int employmentID) {
-		this.employmentID = employmentID;
-	}
-
-	@MapField(DatabaseField = StartTimeField)
 	public Date getStartTime() {
-		return startTime;
+		return startTime == null ? startTime = DateUtils.EmptyDate : startTime;
 	}
 
-	@MapField(DatabaseField = StartTimeField)
 	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
 	}
-
-	@MapField(DatabaseField = StopTimeField)
+	
+	@DatabaseField(dataType = DataType.DATE_LONG, columnName = STOP_TIME_FIELD)
+	private Date stopTime;
+	
 	public Date getStopTime() {
-		return stopTime;
+		return stopTime == null ? stopTime = DateUtils.EmptyDate : stopTime;
 	}
 
-	@MapField(DatabaseField = StopTimeField)
 	public void setStopTime(Date stopTime) {
 		this.stopTime = stopTime;
 	}
-
+	
+	public EmploymentInterval() {
+		clear();
+	}
+	
+	public EmploymentInterval(int employmentID, Date startTime, Date stopTime) {
+		setId(employmentID);
+		this.startTime = startTime;
+		this.stopTime = stopTime;
+	}
+		
 }

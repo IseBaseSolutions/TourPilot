@@ -3,7 +3,6 @@ package isebase.cognito.tourpilot.Dialogs;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
-import isebase.cognito.tourpilot.NewData.NewWorker.NewWorker;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -19,10 +18,10 @@ public class PinDialog extends BaseDialog {
 
 	private EditText etPin;
 	private CheckBox chbSavePin;
-	private Worker worker;
-
-	public void setWorker(Worker worker) {
-		this.worker = worker;
+	private Worker newWorker;
+	
+	public void setWorker(Worker newWorker) {
+		this.newWorker = newWorker;
 	}
 
 	public String getPin() {
@@ -40,6 +39,7 @@ public class PinDialog extends BaseDialog {
 		etPin = (EditText) view.findViewById(R.id.etPin);
 		etPin.setTextColor(etPin.getHintTextColors().getDefaultColor());
 		chbSavePin = (CheckBox) view.findViewById(R.id.chbSavePin);
+		chbSavePin.setTextColor(etPin.getHintTextColors().getDefaultColor());
 		adb.setPositiveButton(isebase.cognito.tourpilot.R.string.ok,
 				new DialogInterface.OnClickListener() {
 					@Override
@@ -65,7 +65,7 @@ public class PinDialog extends BaseDialog {
 			positiveButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if (worker.checkPIN(getPin())) {
+					if (newWorker.checkPIN(getPin())) {
 						dismiss();
 						if (chbSavePin.isChecked())
 						{

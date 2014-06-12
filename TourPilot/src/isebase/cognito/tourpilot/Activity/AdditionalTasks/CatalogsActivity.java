@@ -6,18 +6,16 @@ import isebase.cognito.tourpilot.Data.AdditionalTask.Catalog;
 import isebase.cognito.tourpilot.Data.AdditionalTask.Catalog.eCatalogType;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
-import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
-import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
-import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,7 +24,7 @@ import android.widget.ListView;
 public class CatalogsActivity extends BaseActivity {
 
 	private List<Catalog> catalogs = new ArrayList<Catalog>();
-	private Employment employment;
+	private Employment newEmployment;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +40,16 @@ public class CatalogsActivity extends BaseActivity {
 			criticalClose();
 		}
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		return false;
+	}
 
 	private void reloadData(){
-		employment = EmploymentManager.Instance().load(Option.Instance().getEmploymentID());
+		newEmployment = HelperFactory.getHelper().getEmploymentDAO().load((int)Option.Instance().getEmploymentID());
 
-		Patient patient = PatientManager.Instance().load(employment.getPatientID());
+		Patient patient = HelperFactory.getHelper().getPatientDAO().load(newEmployment.getPatientID());
 		if(patient.getKK() != BaseObject.EMPTY_ID)
 			catalogs.add(new Catalog(eCatalogType.btyp_kk));
 		if(patient.getPK() != BaseObject.EMPTY_ID)
@@ -67,7 +70,7 @@ public class CatalogsActivity extends BaseActivity {
 	}
 		
 	private void fillUpTitle(){
-		setTitle(employment.getName());
+		setTitle(newEmployment.getName());
 	}
 	
 	private void fillUp(){

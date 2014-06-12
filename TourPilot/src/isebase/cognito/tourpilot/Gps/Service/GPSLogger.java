@@ -2,7 +2,7 @@ package isebase.cognito.tourpilot.Gps.Service;
 
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.WayPoint.WayPoint;
-import isebase.cognito.tourpilot.Data.WayPoint.WayPointManager;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import android.app.NotificationManager;
 import android.app.Service;
@@ -19,7 +19,6 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 public class GPSLogger extends Service implements LocationListener {
 
@@ -250,6 +249,9 @@ public class GPSLogger extends Service implements LocationListener {
 	public void onLocationChanged(Location location) {
 		try {
 	        isGpsEnabled = true;
+	        
+	        if (Option.Instance().gpsStartTime - System.nanoTime() > (2 * 60 * 60 * 1000000000))
+	        	stopSelf();
 
 	        if(((lastGPSTimestamp + gpsLoggingInterval) < System.currentTimeMillis()) /*&& (System.currentTimeMillis() - lastGPSTimestamp) > 6000*/){
 
@@ -257,13 +259,13 @@ public class GPSLogger extends Service implements LocationListener {
 	    
 	            lastLocation = location;
 	            lastNbSatellites = countSatellites();
-	            /*if (previousTime != 0 && (System.currentTimeMillis() - previousTime < 10000))
-	            	return;*/
+	            if (previousTime != 0 && (System.currentTimeMillis() - previousTime < 10000))
+	            	return;
     			if (((location.getLatitude() != prevLat || location.getLongitude() != prevLon) && lastLocation.getAccuracy() < 25))
     			{
     				StaticResources.setBaseContext(this);
         			currentWayPoint = new WayPoint(Option.Instance().getWorkerID(), Option.Instance().getPilotTourID(), lastLocation, lastNbSatellites);
-    				WayPointManager.Instance().save(currentWayPoint);
+    				HelperFactory.getHelper().getWayPointDAO().save(currentWayPoint);
     				prevLat = currentWayPoint.getLatitude();
     				prevLon = currentWayPoint.getLongitude();
     				previousTime = System.currentTimeMillis();

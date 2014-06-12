@@ -3,22 +3,14 @@ package isebase.cognito.tourpilot.Activity;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Data.CustomRemark.CustomRemark;
-import isebase.cognito.tourpilot.Data.CustomRemark.CustomRemarkManager;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
-import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
 import isebase.cognito.tourpilot.Data.EmploymentVerification.EmploymentVerification;
-import isebase.cognito.tourpilot.Data.EmploymentVerification.EmploymentVerificationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
-import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemark;
-import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
-import isebase.cognito.tourpilot.NewData.NewEmployment.NewEmployment;
-import isebase.cognito.tourpilot.NewData.NewWorker.NewWorker;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
 import java.util.Arrays;
@@ -44,7 +36,7 @@ public class VerificationActivity extends BaseActivity {
 	
 	private CheckBox chbCheckVerification;	
 	
-	private Employment employment;
+	private Employment newEmployment;
 	
 	private UserRemark userRemark;		
 	
@@ -77,16 +69,16 @@ public class VerificationActivity extends BaseActivity {
 	}
 	
 	private void fillUpVerification() {
-		dateBegin = employment.getFirstTask().getManualDate().equals(DateUtils.EmptyDate) ? employment.getFirstTask().getRealDate() : employment.getFirstTask().getManualDate();
-		dateEnd = employment.getLastTask().getManualDate().equals(DateUtils.EmptyDate) ? employment.getLastTask().getRealDate() : employment.getLastTask().getManualDate();
+		dateBegin = newEmployment.getFirstTask().getManualDate().equals(DateUtils.EmptyDate) ? newEmployment.getFirstTask().getRealDate() : newEmployment.getFirstTask().getManualDate();
+		dateEnd = newEmployment.getLastTask().getManualDate().equals(DateUtils.EmptyDate) ? newEmployment.getLastTask().getRealDate() : newEmployment.getLastTask().getManualDate();
 
 		String taskVerification = "";
 		taskVerification += "<b>" + getWorker(Option.Instance().getWorker()) + " </b>";
 		taskVerification += "hat am ";
 		
-		taskVerification += "<b>" + DateUtils.DateFormat.format(employment.getDate()) + " </b> ";
+		taskVerification += "<b>" + DateUtils.DateFormat.format(newEmployment.getDate()) + " </b> ";
 		taskVerification += "bei Patient ";
-		taskVerification += "<b>" + getPatientNameWithoutKey(employment.getName()) + " </b>";
+		taskVerification += "<b>" + getPatientNameWithoutKey(newEmployment.getName()) + " </b>";
 		taskVerification += "in der Zeit von: ";
 		taskVerification += "<b>" + DateUtils.HourMinutesFormat.format(dateBegin) + " </b>";
 		taskVerification += "bis ";
@@ -154,11 +146,6 @@ public class VerificationActivity extends BaseActivity {
 		return String.format("%s %s", workerName[0], workerName[1]);
 	}
 	
-	private String getWorker(NewWorker worker) {
-		String[] workerName = worker.getName().split(" ");
-		return String.format("%s %s", workerName[0], workerName[1]);
-	}
-	
 	private String getPatientNameWithoutKey(String patient) {
 		String[] patientName = patient.split(" ") ;
 		return String.format("%s %s", patientName[0], patientName[1]); 
@@ -189,17 +176,17 @@ public class VerificationActivity extends BaseActivity {
 			isFlegeOK = bundle.getBoolean("isAllOK");
 			if(isFlegeOK)
 				flege += getString(R.string.all_ok) + "<br />";
-			userRemark = UserRemarkManager.Instance().load(employment.getID());
+			userRemark = HelperFactory.getHelper().getUserRemarkDAO().load(newEmployment.getId());
 			if(userRemark == null)
 				return flege;	
 			flege += "<b>" + getString(R.string.visit_notes) + ":</b> <br />";
 			if (Integer.parseInt(Option.Instance().getVersion()) > 1042)
 			{
-				List<CustomRemark> cutomRemarks = CustomRemarkManager.Instance().load();
+				List<CustomRemark> cutomRemarks = HelperFactory.getHelper().getCustomRemarkDAO().load();
 				List<String> s = Arrays.asList(userRemark.getCheckedIDsArr());
 				for (CustomRemark customRemark : cutomRemarks) {
 					flege += customRemark.getName() + ": " + "<b>";
-					flege += s.contains(String.valueOf(customRemark.getID())) ? getString(R.string.yes) : getString(R.string.no);
+					flege += s.contains(String.valueOf(customRemark.getId())) ? getString(R.string.yes) : getString(R.string.no);
 					flege += "</b>" + " <br />";
 				}			
 				if(!userRemark.getName().equals(""))
@@ -227,9 +214,9 @@ public class VerificationActivity extends BaseActivity {
 	private void saveVerification() {
 		long employmentID = Option.Instance().getEmploymentID();
 		
-		long workerID = Option.Instance().getWorkerID();
+		int workerID = Option.Instance().getWorkerID();
 		
-		long patientID = PatientManager.Instance().load( employment.getPatientID()).getID();
+		int patientID = HelperFactory.getHelper().getPatientDAO().load(newEmployment.getPatientID()).getId();
 
 		String doneTasksIDs = "", undoneTasksIDs = "";
 		for(Task task : tasks) {
@@ -249,7 +236,7 @@ public class VerificationActivity extends BaseActivity {
 		}		
 		
 		EmploymentVerification verification = new EmploymentVerification(employmentID, workerID, patientID, dateBegin, dateEnd, doneTasksIDs, undoneTasksIDs, userRemarks, isFlegeOK);
-		EmploymentVerificationManager.Instance().save(verification);
+		HelperFactory.getHelper().getEmploymentVerificationDAO().save(verification);
 	}
 
 	private String getFlegeMarks() {
@@ -264,8 +251,8 @@ public class VerificationActivity extends BaseActivity {
 	}
 	
 	private void reloadData() {
-		tasks = TaskManager.Instance().load(Task.EmploymentIDField, String.valueOf(Option.Instance().getEmploymentID()));
-		employment = EmploymentManager.Instance().loadAll(Option.Instance().getEmploymentID());
+		tasks = HelperFactory.getHelper().getTaskDAO().load(Task.EMPLOYMENT_ID_FIELD, String.valueOf(Option.Instance().getEmploymentID()));
+		newEmployment = HelperFactory.getHelper().getEmploymentDAO().loadAll((int)Option.Instance().getEmploymentID());
 	}
 	
 }

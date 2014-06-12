@@ -1,6 +1,6 @@
 package isebase.cognito.tourpilot.Dialogs;
 
-import isebase.cognito.tourpilot.Data.Question.Category.Category;
+import isebase.cognito.tourpilot.Data.Category.Category;
 
 import java.util.List;
 
@@ -68,7 +68,7 @@ private List<Category> Categories;
 		String CategoriesID = "";
 		for (int i = 0; i < selectedCategories.length; i++)
 			if (selectedCategories[i])
-				CategoriesID += (CategoriesID.equals("") ? "" : ",") + Categories.get(i).getID();
+				CategoriesID += (CategoriesID.equals("") ? "" : ",") + Categories.get(i).getId();
 		return CategoriesID;
 	}
 

@@ -2,24 +2,28 @@ package isebase.cognito.tourpilot.Data.Tour;
 
 import isebase.cognito.tourpilot.Connection.ServerCommandParser;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.DataBase.MapField;
 import isebase.cognito.tourpilot.Utils.NCryptor;
 import isebase.cognito.tourpilot.Utils.StringParser;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "Tours")
 public class Tour extends BaseObject {
 
-	public static final String IsCommonTourField = "is_common_tour";
+	public static final String IS_COMMON_TOUR_FIELD = "is_common_tour";
 
+	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_COMMON_TOUR_FIELD)
 	private boolean isCommonTour;
 
-	@MapField(DatabaseField = IsCommonTourField)
 	public boolean getIsCommonTour() {
 		return isCommonTour;
 	}
 
-	@MapField(DatabaseField = IsCommonTourField)
 	public void setIsCommonTour(boolean isCommonTour) {
 		this.isCommonTour = isCommonTour;
 	}
@@ -29,9 +33,10 @@ public class Tour extends BaseObject {
 	}
 
 	public Tour(String strInitString) {
+		clear();
 		StringParser InitString = new StringParser(strInitString);
 		InitString.next(";");
-		setID(Integer.parseInt(InitString.next(";")));
+		setId(Integer.parseInt(InitString.next(";")));
 		setName(InitString.next(";"));
 		setIsCommonTour(Integer.parseInt(InitString.next("~")) == 1 
 				? true : false);
@@ -49,7 +54,7 @@ public class Tour extends BaseObject {
 	public String forServer() {
 		NCryptor ncryptor = new NCryptor();
 		String strValue = new String(ServerCommandParser.TOUR + ";");
-		strValue += getID() + ";";
+		strValue += getId() + ";";
 		strValue += ncryptor.LToNcode(getCheckSum());
 		return strValue;
 	}

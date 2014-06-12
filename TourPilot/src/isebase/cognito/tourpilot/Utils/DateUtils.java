@@ -31,13 +31,14 @@ public class DateUtils {
     public static final SimpleDateFormat DateFormat = new SimpleDateFormat("dd.MM.yyyy");
     public static final SimpleDateFormat BackupDateFormat = new SimpleDateFormat("yyyy.MM.dd");
     public static final SimpleDateFormat WeekDateFormat = new SimpleDateFormat("EEE dd.MM");
+    public static final  SimpleDateFormat DateHourMinutesFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm"); 
     
     public static Date getDateOnly(Date date){
     	return parseDateOnly(date);
     }
     
     public static Date getTodayDateOnly(){
-    	return parseDateOnly(new Date());
+    	return parseDateOnly(getSynchronizedTime());
     }
     
     public static Date getTodayDateTime(){
@@ -116,7 +117,7 @@ public class DateUtils {
     }
     
     public static boolean isToday(Date date){
-    	return new Date().getDate() == date.getDate();
+    	return DateFormat.format(date).equals(DateFormat.format(getSynchronizedTime()));
     }
         
     public static int millisecondsToMinutes(long milliseconds){

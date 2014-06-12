@@ -5,6 +5,7 @@ import isebase.cognito.tourpilot.Data.Address.IAddressable;
 import isebase.cognito.tourpilot.Data.Doctor.Doctor;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Relative.Relative;
+import isebase.cognito.tourpilot.Data.Worker.Worker;
 
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class AddressAdapter<T extends IAddressable> extends ArrayAdapter<T> {
 		addressHolder.address = listAddress.get(position);
 		
 		String additionalInfo = ""; 
-		if (!(addressHolder.address instanceof Patient))
+		if (!(addressHolder.address instanceof Patient || addressHolder.address instanceof Worker))
 			additionalInfo = addressHolder.address instanceof Relative ? ((Relative)addressHolder.address).getFamilyState() : ((Doctor)addressHolder.address).getSpeciality();
 		addressHolder.tvFullname = (TextView) row.findViewById(R.id.tvFullName);		
 		addressHolder.tvFullname.setText(String.format("%s%s", addressHolder.address.getFullName(), (additionalInfo.equals("") ? "" : String.format(" (%s)", additionalInfo))));

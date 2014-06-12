@@ -2,7 +2,6 @@ package isebase.cognito.tourpilot.Templates;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.TasksAssessmentsActivity.AssessmentsFragment.EmploymentCategory;
-import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
 import java.util.List;

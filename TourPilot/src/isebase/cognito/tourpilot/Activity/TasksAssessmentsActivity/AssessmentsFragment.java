@@ -6,15 +6,17 @@ import isebase.cognito.tourpilot.Activity.QuestionActivities.FallenFactorSkalaAc
 import isebase.cognito.tourpilot.Activity.QuestionActivities.NortonSkalaActivity;
 import isebase.cognito.tourpilot.Activity.QuestionActivities.PainAnalyseSkalaActivity;
 import isebase.cognito.tourpilot.Activity.QuestionActivities.QuestionsActivity;
+import isebase.cognito.tourpilot.Data.Answer.Answer;
+import isebase.cognito.tourpilot.Data.AnsweredCategory.AnsweredCategory;
+import isebase.cognito.tourpilot.Data.Category.Category;
+import isebase.cognito.tourpilot.Data.ExtraCategory.ExtraCategory;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategory;
-import isebase.cognito.tourpilot.Data.Question.AnsweredCategory.AnsweredCategoryManager;
-import isebase.cognito.tourpilot.Data.Question.Category.Category;
-import isebase.cognito.tourpilot.Data.Question.Category.CategoryManager;
-import isebase.cognito.tourpilot.Data.Question.ExtraCategory.ExtraCategory;
-import isebase.cognito.tourpilot.Data.Question.ExtraCategory.ExtraCategoryManager;
-import isebase.cognito.tourpilot.Data.Question.QuestionSetting.QuestionSetting;
-import isebase.cognito.tourpilot.Data.Question.QuestionSetting.QuestionSettingManager;
+import isebase.cognito.tourpilot.Data.Patient.Patient;
+import isebase.cognito.tourpilot.Data.Question.Question;
+import isebase.cognito.tourpilot.Data.QuestionSetting.QuestionSetting;
+import isebase.cognito.tourpilot.Data.RelatedQuestionSetting.RelatedQuestionSetting;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
+import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.ExtraCategoriesDialog;
 import isebase.cognito.tourpilot.Templates.EmploymentCategoryAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
@@ -26,7 +28,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -49,6 +50,13 @@ public class AssessmentsFragment extends Fragment {
 	public List<AnsweredCategory> answeredCategories = new ArrayList<AnsweredCategory>();
 	List<EmploymentCategory> employmentCategories = new ArrayList<EmploymentCategory>();
 	EmploymentCategoryAdapter adapter;
+	
+	BaseDialog relatedQuestionsDialog;
+	
+	List<RelatedQuestionSetting> relatedQuestionSettings;
+	List<Question> relatedQuestions;
+	List<Answer> relatedAnswers;
+	
 	public AssessmentsFragment(TasksAssessementsActivity instance) {
 		activity = instance;
 	}
@@ -82,25 +90,46 @@ public class AssessmentsFragment extends Fragment {
 	}
 	
 	public void reloadData() {
-		questionSetting = QuestionSettingManager.Instance().loadAll(Option.Instance().getEmploymentID());
+		questionSetting = HelperFactory.getHelper().getQuestionSettingDAO().loadAll((int)Option.Instance().getEmploymentID());
 		reloadCategories();
 	}
 	
 	public void reloadCategories() {
 		if (questionSetting == null)
 			return;
-		allCategoriesCount = CategoryManager.Instance().load().size();
-		categories = CategoryManager.Instance().loadByQuestionSettings(questionSetting);		
-		answeredCategories = AnsweredCategoryManager.Instance().LoadByEmploymentID(Option.Instance().getEmploymentID());
+		allCategoriesCount = HelperFactory.getHelper().getCategoryDAO().load().size();
+		categories = HelperFactory.getHelper().getCategoryDAO().loadByQuestionSettings(questionSetting);		
+		answeredCategories = HelperFactory.getHelper().getAnsweredCategoryDAO().LoadByEmploymentID((int)Option.Instance().getEmploymentID());
 		employmentCategories.clear();
-		for(Category category : categories)
-			employmentCategories.add(new EmploymentCategory(category.getName(), category.getID(), category.getCategoryType(), isAnswered(category)));
+		relatedQuestionSettings = HelperFactory.getHelper().getRelatedQuestionSettingDAO().load();
+		relatedQuestions = HelperFactory.getHelper().getQuestionDAO().loadByRelatedQuestionSettings(relatedQuestionSettings);
+		relatedAnswers = HelperFactory.getHelper().getAnswerDAO().loadByRelatedQuestionSettings(relatedQuestionSettings);
+		List<Integer> ids = new ArrayList<Integer>();
+		for (Answer relatedAnswer : relatedAnswers) {
+			for (RelatedQuestionSetting relatedQuestionSetting : relatedQuestionSettings) {
+				if (relatedAnswer.getQuestionID() != relatedQuestionSetting.getId())
+					continue;
+				for (RelatedQuestionSetting.RelatedObject relatedObject : relatedQuestionSetting.getRelatedObjects()) {
+					if (relatedObject.ownerAnswer != relatedAnswer.getAnswerID())
+						continue;
+					if (relatedObject.answer != -1)
+						continue;
+					ids.add(relatedObject.id);
+				}
+			}
+		}
+		for(Category category : categories) {
+			if (ids.contains(category.getId()))
+				continue;
+			employmentCategories.add(new EmploymentCategory(category.getName(), category.getId(), category.getCategoryType(), isAnswered(category)));
+		}
 		Collections.sort(employmentCategories, new EmploymentCategoryComparer());
+		
 	}
 	
 	private boolean isAnswered(Category category) {
 		for(AnsweredCategory answeredCategory : answeredCategories)
-			if (answeredCategory.getCategoryID() == category.getID())
+			if (answeredCategory.getCategoryID() == category.getId())
 				return true;
 		return false;
 	}
@@ -119,6 +148,11 @@ public class AssessmentsFragment extends Fragment {
 				{
 					if (activity.tasksFragment.startEmploymentDialog.getFragmentManager() == null)
 						activity.tasksFragment.startEmploymentDialog.show(getFragmentManager(), "");
+					return;
+				}
+				if (relatedQuestions.size() > 0) {
+					relatedQuestionsDialog = new BaseDialog(getString(R.string.attention), getString(R.string.dialog_related_questions));
+					relatedQuestionsDialog.show(getFragmentManager(), "relatedQuestionsDialog");
 					return;
 				}
 				EmploymentCategory employmentCategory = (EmploymentCategory) lvAssessments.getItemAtPosition(position);
@@ -146,18 +180,18 @@ public class AssessmentsFragment extends Fragment {
 	}
 	
 	public void showExtraAssessmentsDialog() {
-		List<Category> ExtraCategories = CategoryManager.Instance().loadExtraCategoriesByQuestionSettings(questionSetting);
+		List<Category> ExtraCategories = HelperFactory.getHelper().getCategoryDAO().loadExtraCategoriesByQuestionSettings(questionSetting);
 		ExtraCategoriesDialog extraCategoriesDialog = new ExtraCategoriesDialog(ExtraCategories, getString(R.string.extra_assessments));
 		extraCategoriesDialog.show(getFragmentManager(), "extraAssessmentsDialog");
 	}
 	
 	public void saveExtraAssessments(DialogFragment dialog) {
-		questionSetting.setExtraCategoryIDsString(questionSetting.getExtraCategoryIDsString() + (questionSetting.getExtraCategoryIDsString().equals("") ? "" : ",") +((ExtraCategoriesDialog)dialog).getSelectedCategoriesID());
-		ExtraCategory extraCategory = ExtraCategoryManager.Instance().load(Option.Instance().getEmploymentID());
+		questionSetting.setExtraCategoriesID(questionSetting.getExtraCategoryIDsString() + (questionSetting.getExtraCategoryIDsString().equals("") ? "" : ",") +((ExtraCategoriesDialog)dialog).getSelectedCategoriesID());
+		ExtraCategory extraCategory = HelperFactory.getHelper().getExtraCategoryDAO().load((int)Option.Instance().getEmploymentID());
 		if (extraCategory == null)
-			extraCategory = new ExtraCategory(Option.Instance().getEmploymentID()); 
+			extraCategory = new ExtraCategory((int)Option.Instance().getEmploymentID()); 
 		extraCategory.setExtraCategoryIDsString(questionSetting.getExtraCategoryIDsString());
-		ExtraCategoryManager.Instance().save(extraCategory);
+		HelperFactory.getHelper().getExtraCategoryDAO().save(extraCategory);
 		reloadCategories();
 		adapter.notifyDataSetChanged();
 	}

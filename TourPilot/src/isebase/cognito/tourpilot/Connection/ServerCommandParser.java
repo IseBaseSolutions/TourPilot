@@ -2,46 +2,29 @@ package isebase.cognito.tourpilot.Connection;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
-import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
 import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWork;
-import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWorkManager;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectManager;
+import isebase.cognito.tourpilot.Data.Category.Category;
 import isebase.cognito.tourpilot.Data.CustomRemark.CustomRemark;
-import isebase.cognito.tourpilot.Data.CustomRemark.CustomRemarkManager;
 import isebase.cognito.tourpilot.Data.Diagnose.Diagnose;
-import isebase.cognito.tourpilot.Data.Diagnose.DiagnoseManager;
 import isebase.cognito.tourpilot.Data.Doctor.Doctor;
-import isebase.cognito.tourpilot.Data.Doctor.DoctorManager;
 import isebase.cognito.tourpilot.Data.Information.Information;
-import isebase.cognito.tourpilot.Data.Information.InformationManager;
+import isebase.cognito.tourpilot.Data.Link.Link;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
-import isebase.cognito.tourpilot.Data.Patient.PatientManager;
 import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemark;
-import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemarkManager;
-import isebase.cognito.tourpilot.Data.Question.Category.Category;
-import isebase.cognito.tourpilot.Data.Question.Category.CategoryManager;
-import isebase.cognito.tourpilot.Data.Question.Link.Link;
-import isebase.cognito.tourpilot.Data.Question.Link.LinkManager;
-import isebase.cognito.tourpilot.Data.Question.Question.Question;
-import isebase.cognito.tourpilot.Data.Question.Question.QuestionManager;
-import isebase.cognito.tourpilot.Data.Question.QuestionSetting.QuestionSetting;
-import isebase.cognito.tourpilot.Data.Question.QuestionSetting.QuestionSettingManager;
+import isebase.cognito.tourpilot.Data.Question.Question;
+import isebase.cognito.tourpilot.Data.QuestionSetting.QuestionSetting;
+import isebase.cognito.tourpilot.Data.RelatedQuestionSetting.RelatedQuestionSetting;
 import isebase.cognito.tourpilot.Data.Relative.Relative;
-import isebase.cognito.tourpilot.Data.Relative.RelativeManager;
 import isebase.cognito.tourpilot.Data.Task.Task;
-import isebase.cognito.tourpilot.Data.Task.TaskManager;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
-import isebase.cognito.tourpilot.Data.Tour.TourManager;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
-import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
-import isebase.cognito.tourpilot.NewData.NewBaseObject.BaseObjectDAO;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
-import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 //import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 //import isebase.cognito.tourpilot.Data.Question.Category.Category;
 //import isebase.cognito.tourpilot.Data.Question.Link.Link;
@@ -83,6 +66,7 @@ public class ServerCommandParser {
 	public static final char AUTO_QUESTION_SETTING = '^';
 	public static final char CUSTOM_REMARK = '#';
 	public static final char WAY_POINT = 'C';
+	public static final char RELATED_QUESTION_SETTING = '?';
 
 	private SynchronizationHandler syncHandler;
 
@@ -123,34 +107,38 @@ public class ServerCommandParser {
 		case WORKER:
 			if (commandActionType == NEED_TO_ADD) {
 				Worker item = new Worker(commandLine);
-				WorkerManager.Instance().save(item);
+				RecievedObjectSaver.Instance().workersToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else
-				removeByID(commandLine, WorkerManager.Instance());
+				//removeByID(commandLine, HelperFactory.getHelper().getWorkerDAO());
+				addToDeleteList(RecievedObjectSaver.Instance().workersToDelete, getIDFromStr(commandLine));
 			break;
 		case PATIENT_REMARK:
 			if (commandActionType == NEED_TO_ADD) {
 				PatientRemark item = new PatientRemark(commandLine);
-				PatientRemarkManager.Instance().save(item);
+				RecievedObjectSaver.Instance().patientRemarksToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else 
-				removeByID(commandLine, PatientRemarkManager.Instance());
+				//removeByID(commandLine, HelperFactory.getHelper().getPatientRemarkDAO());
+				addToDeleteList(RecievedObjectSaver.Instance().patientRemarksToDelete, getIDFromStr(commandLine));
 			break;
 		case DIAGNOSE:
 			if (commandActionType == NEED_TO_ADD) {
 				Diagnose item = new Diagnose(commandLine);
-				DiagnoseManager.Instance().save(item);
+				RecievedObjectSaver.Instance().diagnosesToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else 
-				removeByID(commandLine, DiagnoseManager.Instance());
+//				removeByID(commandLine, HelperFactory.getHelper().getPatientRemarkDAO());
+				addToDeleteList(RecievedObjectSaver.Instance().diagnosesToDelete, getIDFromStr(commandLine));
 			break;
 		case INFORMATION:
 			if (commandActionType == NEED_TO_ADD) {
 				Information item = new Information(commandLine);
-				InformationManager.Instance().save(item);
+				RecievedObjectSaver.Instance().infromationToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else 
-				removeByID(commandLine, InformationManager.Instance());
+//				removeByID(commandLine, HelperFactory.getHelper().getInformationDAO());
+				addToDeleteList(RecievedObjectSaver.Instance().infromationToDelete, getIDFromStr(commandLine));
 			break;
 		case 'F':
 			break;
@@ -160,203 +148,154 @@ public class ServerCommandParser {
 			commandLine = ADDITIONAL_TASK_L + commandLine.substring(1);
 			if (commandActionType == NEED_TO_ADD) {
 				AdditionalTask item = new AdditionalTask(commandLine);
-				AdditionalTaskManager.Instance().save(item);
+				RecievedObjectSaver.Instance().additionalTasksToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else {
 				String[] arr = commandLine.split(";");
 				commandLine = "L" + arr[1] +";"+ arr[2];
- 				removeByID(commandLine, AdditionalTaskManager.Instance());
-			}
-			
+//				removeByID(commandLine, HelperFactory.getHelper().getAdditionalTaskDAO());
+				addToDeleteList(RecievedObjectSaver.Instance().additionalTasksToDelete, getIDFromStr(commandLine));
+			}			
 			break;
 		case DOCTOR:
 			if (commandActionType == NEED_TO_ADD) {
 				Doctor item = new Doctor(commandLine);
-				DoctorManager.Instance().save(item);
+				RecievedObjectSaver.Instance().doctorsToSave.add(item);
 				syncHandler.onProgressUpdate(item.getFullName() + " OK");
 			} else 
-				removeByID(commandLine, DoctorManager.Instance());
+//				removeByID(commandLine, HelperFactory.getHelper().getDoctorODA());
+				addToDeleteList(RecievedObjectSaver.Instance().doctorsToDelete, getIDFromStr(commandLine));
 			break;
 		case PATIENT:
 			if (commandActionType == NEED_TO_ADD) {
 				Patient item = new Patient(commandLine);
-				PatientManager.Instance().save(item);
+				RecievedObjectSaver.Instance().patientsToSave.add(item);
 				syncHandler.onProgressUpdate(item.getFullName() + " OK");
 			} else 
-				removeByID(commandLine, PatientManager.Instance());
+//				removeByID(commandLine, HelperFactory.getHelper().getPatientDAO());
+				addToDeleteList(RecievedObjectSaver.Instance().patientsToDelete, getIDFromStr(commandLine));
 			break;
 		case TASK:
 			if (commandActionType == NEED_TO_ADD) {
 				Task item = new Task(commandLine);
-				TaskManager.Instance().save(item);
+				RecievedObjectSaver.Instance().tasksToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else
-				removeByID (commandLine, TaskManager.Instance());
+//				removeByID (commandLine, HelperFactory.getHelper().getTaskDAO());
+				addToDeleteList(RecievedObjectSaver.Instance().tasksToDelete, getIDFromStr(commandLine));
 			break;
 		case ADDITIONAL_WORK:
 			if (commandActionType == NEED_TO_ADD) {
 				AdditionalWork item = new AdditionalWork(commandLine);
-				AdditionalWorkManager.Instance().save(item);
+				RecievedObjectSaver.Instance().additionalWorksToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else 
-				removeByID(commandLine, AdditionalWorkManager.Instance());
+//				removeByID(commandLine, HelperFactory.getHelper().getTaskDAO());
+				addToDeleteList(RecievedObjectSaver.Instance().additionalWorksToDelete, getIDFromStr(commandLine));
 			break;
 		case TOUR:
 			if (commandActionType == NEED_TO_ADD) {
 				Tour item = new Tour(commandLine);
-				TourManager.Instance().save(item);
+				RecievedObjectSaver.Instance().toursToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else
-				removeByID(commandLine, TourManager.Instance());
+//				removeByID(commandLine, HelperFactory.getHelper().getTourDAO());
+				addToDeleteList(RecievedObjectSaver.Instance().toursToDelete, getIDFromStr(commandLine));
 			break;
 		case RELATIVE:
 			if (commandActionType == NEED_TO_ADD) {
 				Relative item = new Relative(commandLine);
-				RelativeManager.Instance().save(item);
+				RecievedObjectSaver.Instance().relativesToSave.add(item);
 				syncHandler.onProgressUpdate(item.getFullName() + " OK");
 			} else 
-				removeByID(commandLine, RelativeManager.Instance());
+//				removeByID(commandLine, HelperFactory.getHelper().getRelativeDAO());
+				addToDeleteList(RecievedObjectSaver.Instance().relativesToDelete, getIDFromStr(commandLine));
 			break;
 		case CUSTOM_REMARK:
 			if (commandActionType == NEED_TO_ADD) {
 				CustomRemark item = new CustomRemark(commandLine);
-				CustomRemarkManager.Instance().save(item);
+				RecievedObjectSaver.Instance().customRemarksToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else 
-				removeByID(commandLine, CustomRemarkManager.Instance());
+//				removeByID(commandLine, HelperFactory.getHelper().getCustomRemarkDAO());
+				addToDeleteList(RecievedObjectSaver.Instance().customRemarksToDelete, getIDFromStr(commandLine));
 			break;
 		case QUESTION:
 			if (commandActionType == NEED_TO_ADD) {
 				Question item = new Question(commandLine);
-				QuestionManager.Instance().save(item);
+				RecievedObjectSaver.Instance().questionsToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else
-				removeByID(commandLine, QuestionManager.Instance());
+//				removeByID(commandLine, HelperFactory.getHelper().getQuestionDAO());
+				addToDeleteList(RecievedObjectSaver.Instance().questionsToDelete, getIDFromStr(commandLine));
 			break;
 		case CATEGORY:
 			if (commandActionType == NEED_TO_ADD) {
 				Category item = new Category(commandLine);
-				CategoryManager.Instance().save(item);
+				RecievedObjectSaver.Instance().categoriesToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else
-				removeByID(commandLine, QuestionManager.Instance());
+//				removeByID(commandLine, HelperFactory.getHelper().getQuestionDAO());
+				addToDeleteList(RecievedObjectSaver.Instance().categoriesToDelete, getIDFromStr(commandLine));
 			break;
 		case LINK:
 			if (commandActionType == NEED_TO_ADD) {
 				Link item = new Link(commandLine);
-				LinkManager.Instance().save(item);
+				RecievedObjectSaver.Instance().linksToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else
-				removeByID(commandLine, QuestionManager.Instance());
+//				removeByID(commandLine, HelperFactory.getHelper().getQuestionDAO());
+				addToKeyDeleteList(RecievedObjectSaver.Instance().linksToDelete, getKeyFromStr(commandLine));
 			break;
 		case QUESTION_SETTING:
 			if (commandActionType == NEED_TO_ADD) {
 				QuestionSetting item = new QuestionSetting(commandLine);
-				QuestionSettingManager.Instance().save(item);
+				RecievedObjectSaver.Instance().questionSettingsToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
-			} else 
-				removeByID(commandLine, QuestionSettingManager.Instance());
+			} else
+//				removeByID(commandLine, HelperFactory.getHelper().getQuestionSettingDAO());
+				addToDeleteList(RecievedObjectSaver.Instance().questionSettingsToDelete, getIDFromStr(commandLine));
 			break;
-		/*
-		 * case QUESTION: // ANDREW if
-		 * (GetSyncStatus().indexOf(context.getString
-		 * (org.microemu.android.R.string.questions)) == -1)
-		 * setSyncStatus(context
-		 * .getString(org.microemu.android.R.string.questions), 5,
-		 * isAutomaticSync); if (commandActionType == NEED_TO_ADD) { CQuestion
-		 * question = new CQuestion(commandLine);
-		 * CQuestions.Instance().RemoveByIdentID(question.IdentID());
-		 * CQuestions.Instance().addElement(question); } else
-		 * CQuestions.Instance().removeElement(commandLine); break; case TOPIC:
-		 * // ANDREW if
-		 * (GetSyncStatus().indexOf(context.getString(org.microemu.android
-		 * .R.string.categories)) == -1)
-		 * setSyncStatus(context.getString(org.microemu
-		 * .android.R.string.categories), 5, isAutomaticSync); if
-		 * (commandActionType == NEED_TO_ADD) { CTopic category = new
-		 * CTopic(commandLine);
-		 * CTopics.Instance().RemoveByIdentID(category.IdentID());
-		 * CTopics.Instance().addElement(category); } else
-		 * CTopics.Instance().removeElement(commandLine); break; case LINK: //
-		 * ANDREW if
-		 * (GetSyncStatus().indexOf(context.getString(org.microemu.android
-		 * .R.string.links)) == -1)
-		 * setSyncStatus(context.getString(org.microemu.android.R.string.links),
-		 * 5, isAutomaticSync); if (commandActionType == NEED_TO_ADD) { CLink
-		 * link = new CLink(commandLine);
-		 * CLinks.Instance().RemoveByIdentID(link.IdentID());
-		 * CLinks.Instance().addElement(link); } else
-		 * CLinks.Instance().removeElement(commandLine); break; case
-		 * QUESTION_SETTING: // ANDREW if
-		 * (GetSyncStatus().indexOf(context.getString
-		 * (org.microemu.android.R.string.settings)) == -1)
-		 * setSyncStatus(context
-		 * .getString(org.microemu.android.R.string.settings), 5,
-		 * isAutomaticSync); if (commandActionType == NEED_TO_ADD) {
-		 * CQuestionSetting setting = new CQuestionSetting(commandLine);
-		 * CQuestionSettings.Instance().RemoveByIdentID(setting.IdentID());
-		 * CQuestionSettings.Instance().addElement(setting); } else
-		 * CQuestionSettings.Instance().removeElement(commandLine); break; case
-		 * FREE_QUESTION: // ANDREW if
-		 * (GetSyncStatus().indexOf(context.getString
-		 * (org.microemu.android.R.string.free_questions)) == -1)
-		 * setSyncStatus(context
-		 * .getString(org.microemu.android.R.string.free_questions), 5,
-		 * isAutomaticSync); if (commandActionType == NEED_TO_ADD) {
-		 * CFreeQuestion freeQuestion = new CFreeQuestion(commandLine);
-		 * CFreeQuestions.Instance().RemoveByIdentID(freeQuestion.IdentID());
-		 * CFreeQuestions.Instance().addElement(freeQuestion); } else
-		 * CFreeQuestions.Instance().removeElement(commandLine); break; case
-		 * FREE_TOPIC: // ANDREW if
-		 * (GetSyncStatus().indexOf(context.getString(org
-		 * .microemu.android.R.string.free_topics)) == -1)
-		 * setSyncStatus(context.
-		 * getString(org.microemu.android.R.string.free_topics), 5,
-		 * isAutomaticSync); if (commandActionType == NEED_TO_ADD) { CFreeTopic
-		 * freeTopic = new CFreeTopic(commandLine);
-		 * CFreeTopics.Instance().RemoveByIdentID(freeTopic.IdentID());
-		 * CFreeTopics.Instance().addElement(freeTopic); } else
-		 * CFreeTopics.Instance().removeElement(commandLine); break; case
-		 * FREE_QUESTION_SETTING: // ANDREW if
-		 * (GetSyncStatus().indexOf(context.getString
-		 * (org.microemu.android.R.string.free_settings)) == -1)
-		 * setSyncStatus(context
-		 * .getString(org.microemu.android.R.string.free_settings), 5,
-		 * isAutomaticSync); if (commandActionType == NEED_TO_ADD) {
-		 * CFreeQuestionSetting freeSettings = new
-		 * CFreeQuestionSetting(commandLine);
-		 * CFreeQuestionSettings.Instance().RemoveByIdentID
-		 * (freeSettings.IdentID());
-		 * CFreeQuestionSettings.Instance().addElement(freeSettings); } else
-		 * CFreeQuestionSettings.Instance().removeElement(commandLine); break;
-		 * case AUTO_QUESTION_SETTING: // ANDREW if
-		 * (GetSyncStatus().indexOf(context
-		 * .getString(org.microemu.android.R.string.item_links)) == -1)
-		 * setSyncStatus
-		 * (context.getString(org.microemu.android.R.string.item_links), 5,
-		 * isAutomaticSync); if (commandActionType == NEED_TO_ADD) {
-		 * CAutoQuestionSetting itemLinks = new
-		 * CAutoQuestionSetting(commandLine);
-		 * CAutoQuestionSettings.Instance().RemoveByIdentID
-		 * (itemLinks.IdentID());
-		 * CAutoQuestionSettings.Instance().addElement(itemLinks); } else
-		 * CAutoQuestionSettings.Instance().removeElement(commandLine); break;
-		 */
+		case RELATED_QUESTION_SETTING:
+			if (commandActionType == NEED_TO_ADD) {
+				RelatedQuestionSetting item = new RelatedQuestionSetting(commandLine);
+				RecievedObjectSaver.Instance().relatedQuestionSettingsToSave.add(item);
+				syncHandler.onProgressUpdate(item.getName() + " OK");
+			} else
+//				removeByID(commandLine, HelperFactory.getHelper().getQuestionSettingDAO());
+				addToDeleteList(RecievedObjectSaver.Instance().relatedQuestionSettingsToDelete, getIDFromStr(commandLine));
+			break;
 
 		default:
-			// setSyncStatus(context.getString(org.microemu.android.R.string.dirt)
-			// + commandLine.charAt(0) + "= " + count, 0, isAutomaticSync);
 			break;
 		}
 		return blnRes;
 	}
 	
-	private void removeByID(String commandLine, BaseObjectManager<? extends BaseObject> manager){
-		int idToDelete = getIDFromStr(commandLine);
-		if(idToDelete != BaseObject.EMPTY_ID)
-			manager.delete(idToDelete);
-		syncHandler.onProgressUpdate(idToDelete + " Deleted");
+	private void addToDeleteList(List<Integer> list, int id) {
+		if (id == BaseObject.EMPTY_ID)
+			return;
+		list.add(id);
+		syncHandler.onProgressUpdate(id + " Deleted");
 	}
+	
+	private void addToKeyDeleteList(List<String> list, String key) {
+		if (key == "")
+			return;
+		list.add(key);
+		syncHandler.onProgressUpdate(key + " Deleted");
+	}
+	
+//	private void removeByID(String commandLine, BaseObjectDAO<? extends isebase.cognito.tourpilot.NewData.NewBaseObject.NewBaseObject> manager){
+//		int idToDelete = getIDFromStr(commandLine);
+//		if(idToDelete != NewBaseObject.EMPTY_ID)
+//			try {
+//				manager.deleteById(idToDelete);
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
+//		syncHandler.onProgressUpdate(idToDelete + " Deleted");
+//	}
 	
 	private int getIDFromStr(String str) {
 		int retVal = BaseObject.EMPTY_ID;
@@ -369,6 +308,11 @@ public class ServerCommandParser {
 			retVal = BaseObject.EMPTY_ID;
 		}
 		return retVal;
+	}
+	
+	private String getKeyFromStr(String str) {
+		str = str.substring(1, str.length()-1);
+		return str.split(";")[0];
 	}
 	
 }

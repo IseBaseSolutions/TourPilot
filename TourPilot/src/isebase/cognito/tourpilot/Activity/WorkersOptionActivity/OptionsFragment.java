@@ -1,13 +1,11 @@
 package isebase.cognito.tourpilot.Activity.WorkersOptionActivity;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.DataBase.DataBaseWrapper;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Utils.DataBaseUtils;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -36,7 +34,7 @@ public class OptionsFragment extends Fragment {
 	public DialogFragment noConnectionDialog;
 	public DialogFragment noIPEnteredDialog;
 	
-	
+	public WorkerOptionActivity activity;
 	
 	public final int BACKUP_MODE = 0;
 	public final int CLEAR_MODE = 1;
@@ -58,11 +56,15 @@ public class OptionsFragment extends Fragment {
 		
 	}	
 	
+	public OptionsFragment(WorkerOptionActivity activity) {
+		this.activity = activity;
+	}	
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		rootView = inflater.inflate(
-				R.layout.new_activity_options, container, false);
+				R.layout.activity_options, container, false);
 		initControls();
 		fillUp();
 		initDialogs();
@@ -111,7 +113,7 @@ public class OptionsFragment extends Fragment {
 							DataBaseUtils.backup();
 							break;
 						case CLEAR_MODE:
-							DataBaseWrapper.Instance().clearAllData();
+							HelperFactory.getHelper().clearAllData();
 							break;
 						case RESTORE_MODE:
 							DataBaseUtils.restore(data[0]);
@@ -126,8 +128,6 @@ public class OptionsFragment extends Fragment {
 							
 			@Override
 			protected void onPostExecute(Void result) {
-				pbBusy.setVisibility(View.INVISIBLE);
-				//syncButton.setEnabled(true);
 				int textID = 0;
 				switch(mode){
 					case BACKUP_MODE:
@@ -138,11 +138,12 @@ public class OptionsFragment extends Fragment {
 						break;
 					case RESTORE_MODE:
 						textID = R.string.db_backup_restored;
-						fillUp();
-						break;
+						Option.Instance().resetOptions();
+						activity.switchToLastActivity();
 					default:
 						return;
 				}
+				pbBusy.setVisibility(View.INVISIBLE);
 				Toast.makeText(StaticResources.getBaseContext()
 						, textID
 						, Toast.LENGTH_SHORT).show();
@@ -159,7 +160,7 @@ public class OptionsFragment extends Fragment {
 					, getString(R.string.program_version)
 					, Option.Instance().getVersion()
 					, getString(R.string.data_base_version)
-					, DataBaseWrapper.DATABASE_VERSION)
+					, HelperFactory.getHelper().getReadableDatabase().getVersion())
 			);
 		noIPEnteredDialog = new InfoBaseDialog(
 				getString(R.string.dialog_connection_problems),

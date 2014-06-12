@@ -1,29 +1,7 @@
 package isebase.cognito.tourpilot.Connection;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTaskManager;
-import isebase.cognito.tourpilot.Data.AdditionalWork.AdditionalWorkManager;
-import isebase.cognito.tourpilot.Data.CustomRemark.CustomRemarkManager;
-import isebase.cognito.tourpilot.Data.Diagnose.DiagnoseManager;
-import isebase.cognito.tourpilot.Data.Doctor.DoctorManager;
-import isebase.cognito.tourpilot.Data.Employment.EmploymentManager;
-import isebase.cognito.tourpilot.Data.EmploymentVerification.EmploymentVerificationManager;
-import isebase.cognito.tourpilot.Data.Information.InformationManager;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.Data.Patient.PatientManager;
-import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemarkManager;
-import isebase.cognito.tourpilot.Data.Question.Answer.AnswerManager;
-import isebase.cognito.tourpilot.Data.Question.Category.CategoryManager;
-import isebase.cognito.tourpilot.Data.Question.Link.LinkManager;
-import isebase.cognito.tourpilot.Data.Question.Question.QuestionManager;
-import isebase.cognito.tourpilot.Data.Question.QuestionSetting.QuestionSettingManager;
-import isebase.cognito.tourpilot.Data.Relative.RelativeManager;
-import isebase.cognito.tourpilot.Data.Task.TaskManager;
-import isebase.cognito.tourpilot.Data.Tour.TourManager;
-import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkManager;
-import isebase.cognito.tourpilot.Data.WayPoint.WayPointManager;
-import isebase.cognito.tourpilot.Data.Work.WorkManager;
-import isebase.cognito.tourpilot.Data.Worker.WorkerManager;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Utils.StringParser;
@@ -184,9 +162,8 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 			conStatus.OS.flush();
 			String recievedDate = readFromStream(conStatus.IS);
 			conStatus.serverCommandParser.parseElement(recievedDate, true);
-
+			RecievedObjectSaver.Instance().save();
 			Option.Instance().setTimeSynchronised(true);
-			correctTime();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			retVal = false;
@@ -209,8 +186,12 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 			writePack(conStatus.OS, getDataToSend() + "\0.\0");
 			String recievedStatus = readFromStream(conStatus.IS);
 			if (recievedStatus.startsWith("OVER") 
-					|| recievedStatus.equals("")) {
+					/*|| recievedStatus.equals("")*/) {
 				conStatus.setAnswerFromServer("OVER");
+				retVal = false;
+			}
+			else if (recievedStatus.equals("")) {
+				conStatus.setAnswerFromServer("INTERRUPT");
 				retVal = false;
 			}
 			else if(recievedStatus.startsWith("OK")) {
@@ -218,7 +199,8 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 				StringParser stringParser = new StringParser(recievedStatus);
 				String msg = stringParser.next("\0");
 				Option.Instance().setIsAuto(msg.contains("1"));
-				msg.contains("skippflegeok");
+//				msg.contains("skippflegeok");
+				Option.Instance().setWorkerPhones(msg.contains("WorkersInfo"));
 				if (stringParser.contains(ServerCommandParser.SERVER_CURRENT_VERSION))
 					conStatus.serverCommandParser.parseElement(stringParser.next("\0"), false);
 				else
@@ -227,10 +209,12 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 					conStatus.serverCommandParser.parseElement(stringParser.next("\0"), false);
 				else
 					Option.Instance().setVersionLink(null);
+				RecievedObjectSaver.Instance().save();
 			}
 						
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			conStatus.setAnswerFromServer("INTERRUPT");
 			retVal = false;
 		} finally {
 			Option.Instance().save();
@@ -285,6 +269,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 				conStatus.serverCommandParser.parseElement(data, false);
 				publishProgress();
 			}
+			RecievedObjectSaver.Instance().save();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			retVal = false;
@@ -363,25 +348,15 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		strMsg += Option.Instance().getDeviceID() + ";";
 		strMsg += Option.Instance().getPhoneNumber() + "@";
 		strMsg += Option.Instance().getVersion() + "\0R;";
-//		if (Option.Instance().getWorkerID() != BaseObject.EMPTY_ID)
-//			strMsg += "0";//TorubleFlags
-//		else
 			strMsg += "0";
 		strMsg += "\0x1\0";
 		String strDone = "";
-		strDone += EmploymentManager.Instance().getDone();
-		strDone += WorkManager.Instance().getDone();
-		strDone += AnswerManager.Instance().getDone();
-		//
-		// if (User != null)
-		// strDone += CInformations.Instance().GetDone();
-		//
-		// strDone += CLogs.Instance().GetDone();
-		//
-		strDone += UserRemarkManager.Instance().getDone();
-		strDone += EmploymentVerificationManager.Instance().getDone();
-		strDone += WayPointManager.Instance().getDone();
-		//
+		strDone += HelperFactory.getHelper().getEmploymentDAO().getDone();
+		strDone += HelperFactory.getHelper().getWorkDAO().getDone();
+		strDone += HelperFactory.getHelper().getAnswerDAO().getDone();
+		strDone += HelperFactory.getHelper().getUserRemarkDAO().getDone();
+		strDone += HelperFactory.getHelper().getEmploymentVerificationDAO().getDone();
+		strDone += HelperFactory.getHelper().getWayPointDAO().getDone();
 		// strDone += CMergedEmploymentTimes.Instance().GetDone(); // Andrew
 		//
 		// strDone += CCoordinates.Instance().GetDone(); // Andrew
@@ -403,30 +378,30 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 
 	private String getStrChecksums() {
 		String strMsg = "";
-		strMsg += "z" + AdditionalTaskManager.Instance().getCheckSumByRequest() + "\0.\0";
-		strMsg += "a" + WorkerManager.Instance().getCheckSumByRequest() + "\0.\0";
-		strMsg += "u" + AdditionalWorkManager.Instance().getCheckSumByRequest() + "\0.\0";		
+		strMsg += "z" + HelperFactory.getHelper().getAdditionalTaskDAO().getCheckSumByRequest() + "\0.\0";
+		strMsg += "a" + HelperFactory.getHelper().getWorkerDAO().getCheckSumByRequest() + "\0.\0";
+		strMsg += "u" + HelperFactory.getHelper().getAdditionalWorkDAO().getCheckSumByRequest() + "\0.\0";		
 
 		boolean userIsPresent = Option.Instance().getWorkerID() != -1;
-		strMsg += "d" + (userIsPresent ? DiagnoseManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
-		strMsg += "b" + (userIsPresent ? PatientRemarkManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
-		strMsg += "v" + (userIsPresent ? RelativeManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
-		strMsg += "m" + (userIsPresent ? DoctorManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
-		strMsg += "p" + (userIsPresent ? PatientManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
-		strMsg += "i" + (userIsPresent ? InformationManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
-		strMsg += "r" + (userIsPresent ? TourManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
-		strMsg += "t" + (userIsPresent ? TaskManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
+		strMsg += "d" + (userIsPresent ? HelperFactory.getHelper().getDiagnoseDAO().getCheckSumByRequest() : 0) + "\0.\0";
+		strMsg += "b" + (userIsPresent ? HelperFactory.getHelper().getPatientRemarkDAO().getCheckSumByRequest() : 0) + "\0.\0";
+		strMsg += "v" + (userIsPresent ? HelperFactory.getHelper().getRelativeDAO().getCheckSumByRequest() : 0) + "\0.\0";
+		strMsg += "m" + (userIsPresent ? HelperFactory.getHelper().getDoctorODA().getCheckSumByRequest() : 0) + "\0.\0";
+		strMsg += "p" + (userIsPresent ? HelperFactory.getHelper().getPatientDAO().getCheckSumByRequest() : 0) + "\0.\0";
+		strMsg += "i" + (userIsPresent ? HelperFactory.getHelper().getInformationDAO().getCheckSumByRequest() : 0) + "\0.\0";
+		strMsg += "r" + (userIsPresent ? HelperFactory.getHelper().getTourDAO().getCheckSumByRequest() : 0) + "\0.\0";
+		strMsg += "t" + (userIsPresent ? HelperFactory.getHelper().getTaskDAO().getCheckSumByRequest() : 0) + "\0.\0";
+		if (Integer.parseInt(Option.Instance().getVersion()) > 1042)
+			strMsg += "#" + HelperFactory.getHelper().getCustomRemarkDAO().getCheckSumByRequest() + "\0.\0";
 		if (Integer.parseInt(Option.Instance().getVersion()) > 1042)
 		{
-			strMsg += "#" + CustomRemarkManager.Instance().getCheckSumByRequest() + "\0.\0";
+			strMsg += "q" + HelperFactory.getHelper().getQuestionDAO().getCheckSumByRequest() + "\0.\0";
+			strMsg += "y" + HelperFactory.getHelper().getCategoryDAO().getCheckSumByRequest() + "\0.\0";
+			strMsg += "j" + HelperFactory.getHelper().getLinkDAO().getCheckSumByRequest() + "\0.\0";
+			strMsg += "x" + (userIsPresent ? HelperFactory.getHelper().getQuestionSettingDAO().getCheckSumByRequest() : 0) + "\0.\0";
 		}
-		if (Integer.parseInt(Option.Instance().getVersion()) > 1042)
-		{
-			strMsg += "q" + QuestionManager.Instance().getCheckSumByRequest() + "\0.\0";
-			strMsg += "y" + CategoryManager.Instance().getCheckSumByRequest() + "\0.\0";
-			strMsg += "j" + LinkManager.Instance().getCheckSumByRequest() + "\0.\0";
-			strMsg += "x" + (userIsPresent ? QuestionSettingManager.Instance().getCheckSumByRequest() : 0) + "\0.\0";
-		}
+		strMsg += "?" + HelperFactory.getHelper().getRelatedQuestionSettingDAO().getCheckSumByRequest() + "\0.\0";
+		
 //		strMsg += ">" + CFreeQuestions.Instance().getCheckSums() + "\0.\0";
 //		strMsg += "<" + CFreeTopics.Instance().getCheckSums() + "\0.\0";
 //		strMsg += "*" + (userIsPresent ? CFreeQuestionSettings.Instance().getCheckSums() : 0) + "\0.\0";
@@ -444,38 +419,40 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 //			strMsg += CFreeTopics.Instance().forServer();
 //		if (strNeedSend.length() > 15 && strNeedSend.charAt(15) == '1')
 //			strMsg += CFreeQuestions.Instance().forServer();
+		if (strNeedSend.length() > 16 && strNeedSend.charAt(16) == '1')
+			strMsg += HelperFactory.getHelper().getRelatedQuestionSettingDAO().forServer();
 		if (strNeedSend.length() > 15 && strNeedSend.charAt(15) == '1')
-			strMsg += QuestionSettingManager.Instance().forServer();
+			strMsg += HelperFactory.getHelper().getQuestionSettingDAO().forServer();
 		if (strNeedSend.length() > 14 && strNeedSend.charAt(14) == '1')
-			strMsg += LinkManager.Instance().forServer();
+			strMsg += HelperFactory.getHelper().getLinkDAO().forServer();
 		if (strNeedSend.length() > 13 && strNeedSend.charAt(13) == '1')
-			strMsg += CategoryManager.Instance().forServer();
+			strMsg += HelperFactory.getHelper().getCategoryDAO().forServer();
 		if (strNeedSend.length() > 12 && strNeedSend.charAt(12) == '1')
-			strMsg += QuestionManager.Instance().forServer();
+			strMsg += HelperFactory.getHelper().getQuestionDAO().forServer();
 		if (strNeedSend.length() > 11 && strNeedSend.charAt(11) == '1')
-			strMsg += CustomRemarkManager.Instance().forServer();
+			strMsg += HelperFactory.getHelper().getCustomRemarkDAO().forServer();
 		if (strNeedSend.length() > 10 && strNeedSend.charAt(10) == '1')
-			strMsg += TaskManager.Instance().forServer();
+			strMsg += HelperFactory.getHelper().getTaskDAO().forServer();
 		if (strNeedSend.length() > 9 && strNeedSend.charAt(9) == '1')
-			strMsg += AdditionalWorkManager.Instance().forServer();
+			strMsg += HelperFactory.getHelper().getAdditionalWorkDAO().forServer();
 		if (strNeedSend.length() > 8 && strNeedSend.charAt(8) == '1')
-			strMsg += TourManager.Instance().forServer();
+			strMsg += HelperFactory.getHelper().getTourDAO().forServer();
 		if (strNeedSend.length() > 7 && strNeedSend.charAt(7) == '1')
-			strMsg += InformationManager.Instance().forServer();
+			strMsg += HelperFactory.getHelper().getInformationDAO().forServer();
 		if (strNeedSend.length() > 6 && strNeedSend.charAt(6) == '1')
-			strMsg += PatientRemarkManager.Instance().forServer();
+			strMsg += HelperFactory.getHelper().getPatientRemarkDAO().forServer();
 		if (strNeedSend.length() > 5 && strNeedSend.charAt(5) == '1')
-			strMsg += PatientManager.Instance().forServer();
+			strMsg += HelperFactory.getHelper().getPatientDAO().forServer();
 		if (strNeedSend.length() > 4 && strNeedSend.charAt(4) == '1')
-			strMsg += DoctorManager.Instance().forServer();
+			strMsg += HelperFactory.getHelper().getDoctorODA().forServer();
 		if (strNeedSend.length() > 3 && strNeedSend.charAt(3) == '1')
-			strMsg += RelativeManager.Instance().forServer();
+			strMsg += HelperFactory.getHelper().getRelativeDAO().forServer();
 		if (strNeedSend.length() > 2 && strNeedSend.charAt(2) == '1')
-			strMsg += DiagnoseManager.Instance().forServer();
+			strMsg += HelperFactory.getHelper().getDiagnoseDAO().forServer();
 		if (strNeedSend.length() > 1 && strNeedSend.charAt(1) == '1')
-			strMsg += WorkerManager.Instance().forServer();
+			strMsg += HelperFactory.getHelper().getWorkerDAO().forServer();
 		if (strNeedSend.length() > 0 && strNeedSend.charAt(0) == '1')
-			strMsg += AdditionalTaskManager.Instance().forServer();
+			strMsg += HelperFactory.getHelper().getAdditionalTaskDAO().forServer();
 		if (strNeedSend.indexOf("1") == -1)
 			strMsg += ".";
 		return strMsg;
@@ -507,7 +484,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 
 		StringBuffer stringBuffer = new StringBuffer();
 		GZIPInputStream zis = new GZIPInputStream(is);
-		while (zis.available() != 0){
+		while (zis.available() != 0) {
 			if(isTerminated)
 				return "";
 			stringBuffer.append((char) zis.read());
@@ -543,6 +520,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 			conStatus.OS.flush();
 			String recievedDate = readFromStream(conStatus.IS);
 			conStatus.serverCommandParser.parseElement(recievedDate, true);
+			RecievedObjectSaver.Instance().save();
 			Option.Instance().setTimeSynchronised(true);		
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -557,10 +535,6 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		}
 
 		return retVal;
-	}
-	
-	private void correctTime() {
-		
 	}
 
 }

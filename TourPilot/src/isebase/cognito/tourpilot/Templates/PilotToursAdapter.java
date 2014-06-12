@@ -1,9 +1,11 @@
 package isebase.cognito.tourpilot.Templates;
 
-import java.util.List;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.Utils.DateUtils;
+
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;

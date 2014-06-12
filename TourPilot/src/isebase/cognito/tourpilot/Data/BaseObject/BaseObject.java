@@ -1,97 +1,88 @@
 package isebase.cognito.tourpilot.Data.BaseObject;
 
-import isebase.cognito.tourpilot.DataBase.MapField;
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
 
-public abstract class BaseObject {
+public class BaseObject {
 
-	public static final String IDField = "_id";
-	public static final String NameField = "name";
-	public static final String CheckSumField = "checksum";
-	public static final String WasSentField = "was_sent";
-	public static final String IsServerTimeField = "is_server_time";
+	public final static String ID_FIELD = "_id";
+	public final static String NAME_FIELD = "name";
+	public final static String CHECK_SUM_FIELD = "checksum";
+	public final static String WAS_SENT_FIELD = "was_sent";
+	public final static String IS_SERVER_TIME_FIELD = "is_server_time";
 	
 	public static final int EMPTY_ID = -1;
 
-	public BaseObject() {
-		clear();
-	}
-
-	public BaseObject(String name) {
-		clear();
-		setName(name);
-	}
-
+	@DatabaseField(generatedId = true, allowGeneratedIdInsert = true, columnName = ID_FIELD)
 	private int id;
 
-	@MapField(DatabaseField = IDField)
-	public int getID() {
+	public int getId() {
 		return id;
 	}
 
-	@MapField(DatabaseField = IDField)
-	public void setID(int id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
+	@DatabaseField(dataType = DataType.STRING, columnName = NAME_FIELD)
 	private String name;
 
-	@MapField(DatabaseField = NameField)
 	public String getName() {
 		return name;
 	}
 
-	@MapField(DatabaseField = NameField)
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	@Override
-	public String toString() {
-		return name;
-	}
-
+	
+	@DatabaseField(dataType = DataType.LONG, columnName = CHECK_SUM_FIELD)
 	private long checkSum;
 
-	@MapField(DatabaseField = CheckSumField)
 	public long getCheckSum() {
 		return checkSum;
 	}
 
-	@MapField(DatabaseField = CheckSumField)
 	public void setCheckSum(long checkSum) {
 		this.checkSum = checkSum;
 	}
-	
+
+	@DatabaseField(dataType = DataType.BOOLEAN, columnName = WAS_SENT_FIELD)
 	private boolean wasSent;
-	
-	@MapField(DatabaseField = WasSentField)
+
 	public boolean getWasSent() {
 		return wasSent;
 	}
-	
-	@MapField(DatabaseField = WasSentField)
+
 	public void setWasSent(boolean wasSent) {
 		this.wasSent = wasSent;
 	}
 	
-	public boolean isServerTime;
-	
-	@MapField(DatabaseField = IsServerTimeField)
-	public boolean getIsServerTime() {
+	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_SERVER_TIME_FIELD)
+	private boolean isServerTime;
+
+	public boolean isServerTime() {
 		return isServerTime;
 	}
-	
-	@MapField(DatabaseField = IsServerTimeField)
-	public void setIsServerTime(boolean isServerTime) {
+
+	public void setServerTime(boolean isServerTime) {
 		this.isServerTime = isServerTime;
+	}
+
+	public BaseObject() {
+		
 	}
 	
 	protected void clear() {
-		id = EMPTY_ID;
+		id = 0;//EMPTY_ID;
 		name = "";
 		checkSum = 0;
 		wasSent = false;
 		isServerTime = true;
+	}
+	
+	@Override
+	public String toString() {
+		return getName();
 	}
 	
 	public String forServer() {
@@ -101,5 +92,5 @@ public abstract class BaseObject {
 	public String getDone() {
 		return "";
 	}
-	
+
 }
