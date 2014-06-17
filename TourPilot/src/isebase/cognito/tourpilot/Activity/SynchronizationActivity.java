@@ -14,12 +14,14 @@ import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
+import isebase.cognito.tourpilot.Gps.Service.GPSLogger;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.ArrayAdapter;
@@ -170,7 +172,18 @@ import android.widget.TextView;
 	}
 	
 	private void clearOldInfo() {
-		List<PilotTour> pilotTours = HelperFactory.getHelper().getPilotTourDAO().loadPilotTours();
+		List<PilotTour> pilotTours = HelperFactory.getHelper().getPilotTourDAO().loadPilotToursMax();
+		if (pilotTours.size() == 0) {
+			if (Option.Instance().isGPSRunning)
+			{
+				stopService(new Intent(this, GPSLogger.class));
+				Option.Instance().isGPSRunning = false;
+			}
+			Option.Instance().setTourActivity(false);
+			Option.Instance().setPilotTourID(BaseObject.EMPTY_ID);
+			Option.Instance().setWorkerID(BaseObject.EMPTY_ID);
+			return;
+		}
 		for (PilotTour pilotTour : pilotTours) {
 			if (pilotTour.isActual())
 				continue;
@@ -185,6 +198,7 @@ import android.widget.TextView;
 			if (Option.Instance().getPilotTourID() == pilotTour.getId())
 				Option.Instance().setPilotTourID(BaseObject.EMPTY_ID);
 		}
+
 	}
 	
 	private boolean isInterrupted() {

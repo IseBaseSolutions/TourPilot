@@ -68,7 +68,7 @@ public class AnswerDAO extends BaseObjectDAO<Answer> {
 			String strSQL = String
 					.format("SELECT t1.* FROM Answers AS t1 "
 							+ " LEFT JOIN Links AS t2 ON t1.question_id = t2.question_id"
-							+ " WHERE t2._id NOT NULL AND t2.category_id = %d AND t1.employment_id = %d"
+							+ " WHERE t1.type = 0 AND t2._id NOT NULL AND t2.category_id = %d AND t1.employment_id = %d"
 							+ " GROUP BY t1._id "
 							, categoryID
 							, Option.Instance().getEmploymentID());

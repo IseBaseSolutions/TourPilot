@@ -36,7 +36,7 @@ public class VerificationActivity extends BaseActivity {
 	
 	private CheckBox chbCheckVerification;	
 	
-	private Employment newEmployment;
+	private Employment employment;
 	
 	private UserRemark userRemark;		
 	
@@ -69,16 +69,25 @@ public class VerificationActivity extends BaseActivity {
 	}
 	
 	private void fillUpVerification() {
-		dateBegin = newEmployment.getFirstTask().getManualDate().equals(DateUtils.EmptyDate) ? newEmployment.getFirstTask().getRealDate() : newEmployment.getFirstTask().getManualDate();
-		dateEnd = newEmployment.getLastTask().getManualDate().equals(DateUtils.EmptyDate) ? newEmployment.getLastTask().getRealDate() : newEmployment.getLastTask().getManualDate();
+		Task startTask = new Task();
+		Task endTask = new Task();
+		List<Task> tasks = HelperFactory.getHelper().getTaskDAO().load(Task.EMPLOYMENT_ID_FIELD, String.valueOf(Option.Instance().getEmploymentID()));
+		for (Task task : tasks) {
+			if (task.isFirstTask())
+				startTask = task;
+			else if (task.isLastTask())
+				endTask = task;
+		}
+		dateBegin = startTask.getManualDate().equals(DateUtils.EmptyDate) ? startTask.getRealDate() : startTask.getManualDate();
+		dateEnd = endTask.getManualDate().equals(DateUtils.EmptyDate) ? endTask.getRealDate() : endTask.getManualDate();
 
 		String taskVerification = "";
 		taskVerification += "<b>" + getWorker(Option.Instance().getWorker()) + " </b>";
 		taskVerification += "hat am ";
 		
-		taskVerification += "<b>" + DateUtils.DateFormat.format(newEmployment.getDate()) + " </b> ";
+		taskVerification += "<b>" + DateUtils.DateFormat.format(employment.getDate()) + " </b> ";
 		taskVerification += "bei Patient ";
-		taskVerification += "<b>" + getPatientNameWithoutKey(newEmployment.getName()) + " </b>";
+		taskVerification += "<b>" + getPatientNameWithoutKey(employment.getName()) + " </b>";
 		taskVerification += "in der Zeit von: ";
 		taskVerification += "<b>" + DateUtils.HourMinutesFormat.format(dateBegin) + " </b>";
 		taskVerification += "bis ";
@@ -176,7 +185,7 @@ public class VerificationActivity extends BaseActivity {
 			isFlegeOK = bundle.getBoolean("isAllOK");
 			if(isFlegeOK)
 				flege += getString(R.string.all_ok) + "<br />";
-			userRemark = HelperFactory.getHelper().getUserRemarkDAO().load(newEmployment.getId());
+			userRemark = HelperFactory.getHelper().getUserRemarkDAO().load(employment.getId());
 			if(userRemark == null)
 				return flege;	
 			flege += "<b>" + getString(R.string.visit_notes) + ":</b> <br />";
@@ -216,7 +225,7 @@ public class VerificationActivity extends BaseActivity {
 		
 		int workerID = Option.Instance().getWorkerID();
 		
-		int patientID = HelperFactory.getHelper().getPatientDAO().load(newEmployment.getPatientID()).getId();
+		int patientID = HelperFactory.getHelper().getPatientDAO().load(employment.getPatientID()).getId();
 
 		String doneTasksIDs = "", undoneTasksIDs = "";
 		for(Task task : tasks) {
@@ -252,7 +261,7 @@ public class VerificationActivity extends BaseActivity {
 	
 	private void reloadData() {
 		tasks = HelperFactory.getHelper().getTaskDAO().load(Task.EMPLOYMENT_ID_FIELD, String.valueOf(Option.Instance().getEmploymentID()));
-		newEmployment = HelperFactory.getHelper().getEmploymentDAO().loadAll((int)Option.Instance().getEmploymentID());
+		employment = HelperFactory.getHelper().getEmploymentDAO().loadAll((int)Option.Instance().getEmploymentID());
 	}
 	
 }

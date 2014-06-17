@@ -66,7 +66,14 @@ public class PilotTour extends BaseObject {
 	}
 	
 	public boolean isActual() {
-		return getPlanDate().getTime() >= DateUtils.getStartOfDay(DateUtils.getSynchronizedTime()).getTime();
+		Date a = new Date(2014, 6, 13);
+		Date b = new Date(2014, 6, 14);
+		long c = b.getTime() - a.getTime();
+		Date planDate = DateUtils.getStartOfDay(getPlanDate());
+		Date date = DateUtils.getStartOfDay(DateUtils.getSynchronizedTime());
+		if (date.getTime() - planDate.getTime() > c)
+			return false;
+		return true;
 	}
 	
 	@Override

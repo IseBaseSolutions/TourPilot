@@ -63,8 +63,10 @@ public class DateUtils {
 	
     public static Date getLocalDate(long milliseconds)
     {
-    	return new Date(milliseconds - (Calendar.getInstance().get(Calendar.ZONE_OFFSET)
-									  + Calendar.getInstance().get(Calendar.DST_OFFSET)));
+    	Date localDate = new Date(milliseconds - (Calendar.getInstance().get(Calendar.ZONE_OFFSET)
+				  + Calendar.getInstance().get(Calendar.DST_OFFSET)));
+    	localDate.setSeconds(0);
+    	return localDate;
     }
     
     public static long getLocalTime(Date value)
@@ -121,10 +123,12 @@ public class DateUtils {
     }
         
     public static int millisecondsToMinutes(long milliseconds){
-    	return (int) ((milliseconds / (MILLISECONDS_IN_SECOND)) / SECONDS_IN_MINUTE);
+    	return Math.round(((float)milliseconds / (float)MILLISECONDS_IN_SECOND) / (float)SECONDS_IN_MINUTE);
     }
     
     public static int getInterval(Date timeStart, Date timeStop) {
+    	timeStart.setSeconds(0);
+    	timeStop.setSeconds(0);
 		return DateUtils.millisecondsToMinutes(timeStop.getTime() - timeStart.getTime());
 	}
     

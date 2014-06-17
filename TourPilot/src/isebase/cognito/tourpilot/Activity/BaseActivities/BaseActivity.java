@@ -12,6 +12,7 @@ import isebase.cognito.tourpilot.Activity.TasksAssessmentsActivity.TasksAssessem
 import isebase.cognito.tourpilot.Activity.WorkersOptionActivity.WorkerOptionActivity;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
@@ -131,7 +132,7 @@ public class BaseActivity extends FragmentActivity {
 	}
 	
 	protected boolean isPilotTourPresent() {
-		return Option.Instance().getPilotTourID() != BaseObject.EMPTY_ID;
+		return Option.Instance().getPilotTourID() != BaseObject.EMPTY_ID && HelperFactory.getHelper().getPilotTourDAO().loadPilotTour(Option.Instance().getPilotTourID()) != null;
 	}
 	
 	protected boolean isWorkerPresent() {
