@@ -102,7 +102,7 @@ public class WorkersFragment extends Fragment implements BaseDialogListener {
 	public void reloadData() {
 		workers = Option.Instance().isWorkerPhones() ? HelperFactory.getHelper().getWorkerDAO().loadActive() : HelperFactory.getHelper().getWorkerDAO().load();
 		Collections.sort(workers, new BaseObjectComparer());
-		Option.Instance().setWorkerActivity(true);
+//		Option.Instance().setWorkerActivity(true);
 		Option.Instance().save();
 	}
 	

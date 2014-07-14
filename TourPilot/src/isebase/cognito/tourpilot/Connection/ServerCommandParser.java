@@ -110,7 +110,6 @@ public class ServerCommandParser {
 				RecievedObjectSaver.Instance().workersToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else
-				//removeByID(commandLine, HelperFactory.getHelper().getWorkerDAO());
 				addToDeleteList(RecievedObjectSaver.Instance().workersToDelete, getIDFromStr(commandLine));
 			break;
 		case PATIENT_REMARK:
@@ -119,7 +118,6 @@ public class ServerCommandParser {
 				RecievedObjectSaver.Instance().patientRemarksToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else 
-				//removeByID(commandLine, HelperFactory.getHelper().getPatientRemarkDAO());
 				addToDeleteList(RecievedObjectSaver.Instance().patientRemarksToDelete, getIDFromStr(commandLine));
 			break;
 		case DIAGNOSE:
@@ -128,7 +126,6 @@ public class ServerCommandParser {
 				RecievedObjectSaver.Instance().diagnosesToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else 
-//				removeByID(commandLine, HelperFactory.getHelper().getPatientRemarkDAO());
 				addToDeleteList(RecievedObjectSaver.Instance().diagnosesToDelete, getIDFromStr(commandLine));
 			break;
 		case INFORMATION:
@@ -137,7 +134,6 @@ public class ServerCommandParser {
 				RecievedObjectSaver.Instance().infromationToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else 
-//				removeByID(commandLine, HelperFactory.getHelper().getInformationDAO());
 				addToDeleteList(RecievedObjectSaver.Instance().infromationToDelete, getIDFromStr(commandLine));
 			break;
 		case 'F':
@@ -153,7 +149,6 @@ public class ServerCommandParser {
 			} else {
 				String[] arr = commandLine.split(";");
 				commandLine = "L" + arr[1] +";"+ arr[2];
-//				removeByID(commandLine, HelperFactory.getHelper().getAdditionalTaskDAO());
 				addToDeleteList(RecievedObjectSaver.Instance().additionalTasksToDelete, getIDFromStr(commandLine));
 			}			
 			break;
@@ -163,7 +158,6 @@ public class ServerCommandParser {
 				RecievedObjectSaver.Instance().doctorsToSave.add(item);
 				syncHandler.onProgressUpdate(item.getFullName() + " OK");
 			} else 
-//				removeByID(commandLine, HelperFactory.getHelper().getDoctorODA());
 				addToDeleteList(RecievedObjectSaver.Instance().doctorsToDelete, getIDFromStr(commandLine));
 			break;
 		case PATIENT:
@@ -172,7 +166,6 @@ public class ServerCommandParser {
 				RecievedObjectSaver.Instance().patientsToSave.add(item);
 				syncHandler.onProgressUpdate(item.getFullName() + " OK");
 			} else 
-//				removeByID(commandLine, HelperFactory.getHelper().getPatientDAO());
 				addToDeleteList(RecievedObjectSaver.Instance().patientsToDelete, getIDFromStr(commandLine));
 			break;
 		case TASK:
@@ -181,7 +174,6 @@ public class ServerCommandParser {
 				RecievedObjectSaver.Instance().tasksToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else
-//				removeByID (commandLine, HelperFactory.getHelper().getTaskDAO());
 				addToDeleteList(RecievedObjectSaver.Instance().tasksToDelete, getIDFromStr(commandLine));
 			break;
 		case ADDITIONAL_WORK:
@@ -190,7 +182,6 @@ public class ServerCommandParser {
 				RecievedObjectSaver.Instance().additionalWorksToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else 
-//				removeByID(commandLine, HelperFactory.getHelper().getTaskDAO());
 				addToDeleteList(RecievedObjectSaver.Instance().additionalWorksToDelete, getIDFromStr(commandLine));
 			break;
 		case TOUR:
@@ -199,7 +190,6 @@ public class ServerCommandParser {
 				RecievedObjectSaver.Instance().toursToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else
-//				removeByID(commandLine, HelperFactory.getHelper().getTourDAO());
 				addToDeleteList(RecievedObjectSaver.Instance().toursToDelete, getIDFromStr(commandLine));
 			break;
 		case RELATIVE:
@@ -208,7 +198,6 @@ public class ServerCommandParser {
 				RecievedObjectSaver.Instance().relativesToSave.add(item);
 				syncHandler.onProgressUpdate(item.getFullName() + " OK");
 			} else 
-//				removeByID(commandLine, HelperFactory.getHelper().getRelativeDAO());
 				addToDeleteList(RecievedObjectSaver.Instance().relativesToDelete, getIDFromStr(commandLine));
 			break;
 		case CUSTOM_REMARK:
@@ -217,7 +206,6 @@ public class ServerCommandParser {
 				RecievedObjectSaver.Instance().customRemarksToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else 
-//				removeByID(commandLine, HelperFactory.getHelper().getCustomRemarkDAO());
 				addToDeleteList(RecievedObjectSaver.Instance().customRemarksToDelete, getIDFromStr(commandLine));
 			break;
 		case QUESTION:
@@ -226,7 +214,6 @@ public class ServerCommandParser {
 				RecievedObjectSaver.Instance().questionsToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else
-//				removeByID(commandLine, HelperFactory.getHelper().getQuestionDAO());
 				addToDeleteList(RecievedObjectSaver.Instance().questionsToDelete, getIDFromStr(commandLine));
 			break;
 		case CATEGORY:
@@ -235,7 +222,6 @@ public class ServerCommandParser {
 				RecievedObjectSaver.Instance().categoriesToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else
-//				removeByID(commandLine, HelperFactory.getHelper().getQuestionDAO());
 				addToDeleteList(RecievedObjectSaver.Instance().categoriesToDelete, getIDFromStr(commandLine));
 			break;
 		case LINK:
@@ -244,7 +230,6 @@ public class ServerCommandParser {
 				RecievedObjectSaver.Instance().linksToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else
-//				removeByID(commandLine, HelperFactory.getHelper().getQuestionDAO());
 				addToKeyDeleteList(RecievedObjectSaver.Instance().linksToDelete, getKeyFromStr(commandLine));
 			break;
 		case QUESTION_SETTING:
@@ -253,7 +238,6 @@ public class ServerCommandParser {
 				RecievedObjectSaver.Instance().questionSettingsToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else
-//				removeByID(commandLine, HelperFactory.getHelper().getQuestionSettingDAO());
 				addToDeleteList(RecievedObjectSaver.Instance().questionSettingsToDelete, getIDFromStr(commandLine));
 			break;
 		case RELATED_QUESTION_SETTING:
@@ -262,7 +246,6 @@ public class ServerCommandParser {
 				RecievedObjectSaver.Instance().relatedQuestionSettingsToSave.add(item);
 				syncHandler.onProgressUpdate(item.getName() + " OK");
 			} else
-//				removeByID(commandLine, HelperFactory.getHelper().getQuestionSettingDAO());
 				addToDeleteList(RecievedObjectSaver.Instance().relatedQuestionSettingsToDelete, getIDFromStr(commandLine));
 			break;
 
@@ -285,17 +268,6 @@ public class ServerCommandParser {
 		list.add(key);
 		syncHandler.onProgressUpdate(key + " Deleted");
 	}
-	
-//	private void removeByID(String commandLine, BaseObjectDAO<? extends isebase.cognito.tourpilot.NewData.NewBaseObject.NewBaseObject> manager){
-//		int idToDelete = getIDFromStr(commandLine);
-//		if(idToDelete != NewBaseObject.EMPTY_ID)
-//			try {
-//				manager.deleteById(idToDelete);
-//			} catch (SQLException e) {
-//				e.printStackTrace();
-//			}
-//		syncHandler.onProgressUpdate(idToDelete + " Deleted");
-//	}
 	
 	private int getIDFromStr(String str) {
 		int retVal = BaseObject.EMPTY_ID;

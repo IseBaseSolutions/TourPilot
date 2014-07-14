@@ -29,7 +29,6 @@ public class Option {
 	public static final String IS_LOCK_OPTIONS_FIELD = "lock_options";
 	public static final String IS_WORKER_PHONES_FIELD = "is_worker_phones";
 	public static boolean testMode = false;
-	public static boolean isGPSRunning = false;
 	
 	public static long gpsStartTime;
 	private Worker worker;
@@ -163,27 +162,27 @@ public class Option {
 		return isAuto;
 	}
 	
-	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_WORKER_ACTIVITY_FIELD)
-	private boolean isWorkerActivity;
+//	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_WORKER_ACTIVITY_FIELD)
+//	private boolean isWorkerActivity;
+//	
+//	public boolean isWorkerActivity() {
+//		return isWorkerActivity;
+//	}
+//
+//	public void setWorkerActivity(boolean isWorkerActivity) {
+//		this.isWorkerActivity = isWorkerActivity;
+//	}
 	
-	public boolean isWorkerActivity() {
-		return isWorkerActivity;
-	}
-
-	public void setWorkerActivity(boolean isWorkerActivity) {
-		this.isWorkerActivity = isWorkerActivity;
-	}
-	
-	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_TOUR_ACTIVITY_FIELD)
-	private boolean isTourActivity;
-	
-	public boolean isTourActivity() {
-		return isTourActivity;
-	}
-
-	public void setTourActivity(boolean isTourActivity) {
-		this.isTourActivity = isTourActivity;
-	}
+//	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_TOUR_ACTIVITY_FIELD)
+//	private boolean isTourActivity;
+//	
+//	public boolean isTourActivity() {
+//		return isTourActivity;
+//	}
+//
+//	public void setTourActivity(boolean isTourActivity) {
+//		this.isTourActivity = isTourActivity;
+//	}
 	
 	private boolean isTimeSynchronised;
 	
@@ -300,11 +299,11 @@ public class Option {
 		setServerIP(arr[counter++]);
 		setServerPort(Integer.parseInt(arr[counter++]));
 		setIsAuto(Integer.parseInt(arr[counter++]) == 1);
-		setWorkerActivity(Integer.parseInt(arr[counter++]) == 1);
+//		setWorkerActivity(Integer.parseInt(arr[counter++]) == 1);
 		setPin(arr[counter++]);
 		setServerTimeDifference(Integer.parseInt(arr[counter++]));
 		setWorkerPhones(Integer.parseInt(arr[counter++]) == 1);
-		setTourActivity(Integer.parseInt(arr[counter++]) == 1);
+//		setTourActivity(Integer.parseInt(arr[counter++]) == 1);
 	}
 	
 	public void resetOptions() {

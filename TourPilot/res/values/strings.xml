@@ -130,7 +130,7 @@
     <string name="started_at">Gestartet um</string>
     <string name="attention">Achtung!</string>
     <string name="select_period">wählbarer Zeitraum</string>
-    <string name="start_gps">GPS starten</string>
+    <string name="start_navigator">GPS Navigator starten</string>
 
     <!-- Dialogs -->
     <string name="dialog_task_proof_undone">Möchten Sie diesen Einsatz als ausgefallen markieren?</string>

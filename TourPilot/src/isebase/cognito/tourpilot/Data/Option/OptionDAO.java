@@ -1,11 +1,13 @@
 package isebase.cognito.tourpilot.Data.Option;
 
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectDAO;
+import isebase.cognito.tourpilot.Data.Question.Question;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.support.ConnectionSource;
 
 public class OptionDAO extends BaseObjectDAO<Option> {
@@ -36,7 +38,6 @@ public class OptionDAO extends BaseObjectDAO<Option> {
 		Option newOption = new Option();
 		save(newOption);
 		return newOption;
-
 	}
 
 }

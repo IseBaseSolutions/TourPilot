@@ -18,9 +18,9 @@ import isebase.cognito.tourpilot.DataInterfaces.Job.JobComparer;
 import isebase.cognito.tourpilot.DataInterfaces.Job.JobComparer.eJobComparerType;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
+import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
 import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
 import isebase.cognito.tourpilot.Gps.GpsNavigator;
-import isebase.cognito.tourpilot.Gps.Service.GPSLogger;
 import isebase.cognito.tourpilot.Templates.WorkEmploymentAdapter;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
@@ -30,10 +30,15 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -58,6 +63,8 @@ public class PatientsActivity extends BaseActivity implements
 	private Button btTourEnd;
 	private InfoBaseDialog infoDialog;
 	private BaseDialog dialogGPSPatient;
+	private BaseDialog dialogGPSEnabling;
+	private BaseInfoDialog noConnectionDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -153,7 +160,15 @@ public class PatientsActivity extends BaseActivity implements
 			}
 		Option.Instance().setPilotTourID(BaseObject.EMPTY_ID);
 		Option.Instance().save();
-		startSyncActivity();
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo ni = cm.getActiveNetworkInfo();
+		if (ni != null) {
+			startSyncActivity();
+			return;
+		}
+		noConnectionDialog = new BaseInfoDialog("There is no connection!", "Please turn on internet!");
+		noConnectionDialog.show(getSupportFragmentManager(), "noConectionDialog");
+//		startSyncActivity();
 	}
 
 	private void initControls() {
@@ -173,9 +188,16 @@ public class PatientsActivity extends BaseActivity implements
 				if (jobs.get(position) instanceof Employment) {
 					Employment newEmployment = (Employment) jobs.get(position);
 					saveSelectedEmploymentID(newEmployment.getId());
-					if (worker.isUseGPS() && !newEmployment.isDone() && !Option.Instance().isTest()) {
-						dialogGPSPatient.show(getSupportFragmentManager(),
-								"dialogGPSPatient");
+					if (worker.isUseGPS() && !newEmployment.isDone()) {
+						LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+						if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+							dialogGPSPatient.show(getSupportFragmentManager(),
+									"dialogGPSPatient");
+						else {
+							dialogGPSEnabling = new BaseDialog("GPS ist ausgeschaltets", "Möchten sie die Einstellungen öffnen und GPS einschalten?");
+							dialogGPSEnabling.show(getSupportFragmentManager(), "dialogGPSEnabling");
+						}
+							
 					}
 					else
 						startTasksActivity();
@@ -241,7 +263,7 @@ public class PatientsActivity extends BaseActivity implements
 	private void initDialogs() {
 		infoDialog = new InfoBaseDialog(getString(R.string.attention),
 				getString(R.string.dialog_complete_all_tasks));
-		dialogGPSPatient = new BaseDialog(getString(R.string.start_gps),
+		dialogGPSPatient = new BaseDialog(getString(R.string.start_navigator),
 				getString(R.string.dialog_start_gps), getString(R.string.yes),
 				getString(R.string.no));
 	}
@@ -325,9 +347,10 @@ public class PatientsActivity extends BaseActivity implements
 
 			GpsNavigator.startGpsNavigation(getPatientAdress());
 			startTasksActivity();
-//			Intent gpsLoggerServiceIntent = new Intent(this, GPSLogger.class);
-//			gpsLoggerServiceIntent.putExtra("track_id", 0);
-//			startService(gpsLoggerServiceIntent);
+		}
+		else if (dialog.getTag() == "dialogGPSEnabling") {
+		    Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS );
+		    startActivity(myIntent);
 		}
 	}
 

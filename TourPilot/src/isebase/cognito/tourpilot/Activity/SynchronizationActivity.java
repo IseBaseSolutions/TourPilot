@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -68,6 +71,7 @@ import android.widget.TextView;
 				else if (isNewVersionAvailable())
  				{
 					showNewVersionAvilableDialog();
+					return;
  				}
 				else if ((!connectionStatus.lastExecuteOK) && isPilotTourPresent())
 				{
@@ -110,6 +114,12 @@ import android.widget.TextView;
  	@Override
  	public void onBackPressed() {
 		connectionTask.terminate();
+		if (Option.Instance().getPilotTourID() == BaseObject.EMPTY_ID
+				&& Option.Instance().getWorkerID() != -1 
+				&& HelperFactory.getHelper().getPilotTourDAO().loadPilotTours().size() > 0) {
+			Intent intent = new Intent(getBaseContext(), ToursActivity.class);
+			startActivity(intent);
+		}
 		super.onBackPressed();
  	}
  	
@@ -174,12 +184,10 @@ import android.widget.TextView;
 	private void clearOldInfo() {
 		List<PilotTour> pilotTours = HelperFactory.getHelper().getPilotTourDAO().loadPilotToursMax();
 		if (pilotTours.size() == 0) {
-			if (Option.Instance().isGPSRunning)
-			{
+			if (isMyServiceRunning(GPSLogger.class))
 				stopService(new Intent(this, GPSLogger.class));
-				Option.Instance().isGPSRunning = false;
-			}
-			Option.Instance().setTourActivity(false);
+			
+//			Option.Instance().setTourActivity(false);
 			Option.Instance().setPilotTourID(BaseObject.EMPTY_ID);
 			Option.Instance().setWorkerID(BaseObject.EMPTY_ID);
 			return;
@@ -229,6 +237,16 @@ import android.widget.TextView;
 		DialogFragment newVersionDialog = new BaseDialog(getString(R.string.dialog_new_version), getString(R.string.dialog_update_program));
 		newVersionDialog.setCancelable(false);
 		newVersionDialog.show(getSupportFragmentManager(), "newVersionDialog");
+	}
+	
+	private boolean isMyServiceRunning(Class<?> serviceClass) {
+	    ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+	    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+	        if (serviceClass.getName().equals(service.service.getClassName())) {
+	            return true;
+	        }
+	    }
+	    return false;
 	}
 	
 }

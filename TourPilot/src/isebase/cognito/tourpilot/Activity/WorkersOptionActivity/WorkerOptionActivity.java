@@ -1,17 +1,22 @@
 package isebase.cognito.tourpilot.Activity.WorkersOptionActivity;
 
-import java.util.Date;
-
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
+import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
+import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
+import isebase.cognito.tourpilot.Gps.Service.GPSLogger;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
-import isebase.cognito.tourpilot.Utils.DateUtils;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -38,6 +43,8 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 	
 	OptionsFragment optionsFragment;
 	WorkersFragment workersFragment;
+	
+	BaseInfoDialog noConectionDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +73,10 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
         	it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
         	StaticResources.getBaseContext().startActivity(it);
         }
-        setDeviceSettings();
+        initDialogs();
+        setDeviceSettings();       
+		if (isMyServiceRunning(GPSLogger.class))
+			stopService(new Intent(this, GPSLogger.class));
 		switchToLastActivity();
 	}
 
@@ -184,8 +194,19 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 	}
 	
 	public void btSyncClick(View view) {
+		Option.Instance().setServerIP("mde.cognito-service.de");
+		Option.Instance().setServerPort(4448);
 		saveSettings();
-		startSyncActivity();
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo ni = cm.getActiveNetworkInfo();
+		if (ni != null)
+			startSyncActivity();
+		else
+			noConectionDialog.show(getSupportFragmentManager(), "noConectionDialog");
+	}
+	
+	private void initDialogs() {
+		noConectionDialog = new BaseInfoDialog("There is no connection!", "Please turn on internet!");
 	}
 	
 	public void saveSettings() {
@@ -202,7 +223,7 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 			startTasksActivity();
 		else if (Option.Instance().getPilotTourID() != -1)
 			startPatientsActivity();
-		else if (Option.Instance().isTourActivity())
+		else if (Option.Instance().getWorkerID() != -1 && HelperFactory.getHelper().getPilotTourDAO().loadPilotTours().size() > 0)
 			startToursActivity();
 		else if (HelperFactory.getHelper().getWorkerDAO().load().size() > 0)
 			mViewPager.setCurrentItem(1);
@@ -229,6 +250,16 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 		getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
 		StaticResources.height = displaymetrics.heightPixels;
 		StaticResources.width = displaymetrics.widthPixels;
+	}
+	
+	private boolean isMyServiceRunning(Class<?> serviceClass) {
+	    ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+	    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+	        if (serviceClass.getName().equals(service.service.getClassName())) {
+	            return true;
+	        }
+	    }
+	    return false;
 	}
 
 	

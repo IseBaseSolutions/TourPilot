@@ -44,7 +44,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -162,14 +165,14 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 		case ACTIVITY_VERIFICATION_CODE:
 			if(resultCode == activity.RESULT_OK) {
 				saveData(true);
-				if(Option.Instance().getIsAuto())
-				{
+				
+				ConnectivityManager cm = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+				NetworkInfo ni = cm.getActiveNetworkInfo();
+				
+				if(Option.Instance().getIsAuto() && ni != null)
 					startSyncActivity();
-				}
 				else
-				{
 					startPatientsActivity();
-				}
 			} else {
 				clearEndTask();
 				fillUpTasks();
@@ -186,10 +189,8 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 				allIsDone = false;
 				break;
 			}
-		if (!allIsDone)
-			return;
-		activity.stopService(new Intent(activity, GPSLogger.class));
-		Option.Instance().isGPSRunning = false;
+		if (allIsDone && activity.isMyServiceRunning(GPSLogger.class))
+			activity.stopService(new Intent(activity, GPSLogger.class));
 	}
 	
 	@Override
@@ -287,9 +288,8 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 		fillUpEndTask();		
 		fillUpEndButtonEnabling();
 		activity.supportInvalidateOptionsMenu();
-		if(Option.Instance().isGPSRunning || !worker.isUseGPS())
+		if(activity.isMyServiceRunning(GPSLogger.class) || !worker.isUseGPS())
 			return;
-		Option.Instance().isGPSRunning = true;
 		Option.Instance().gpsStartTime = System.nanoTime();
 		Intent gpsLoggerServiceIntent = new Intent(activity, GPSLogger.class);
 		gpsLoggerServiceIntent.putExtra("track_id", 0);
@@ -632,7 +632,7 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	}
 
 	private void saveData(Boolean clearEmployment){
-		if(!isEmploymentDone()) {
+		if(endTask.getState() != eTaskState.Done && !isEmploymentDone()) {
 			endTask.setRealDate(DateUtils.getSynchronizedTime());
 			endTask.setState(eTaskState.Done);
 			endTask.setServerTime(Option.Instance().isTimeSynchronised());
@@ -654,7 +654,8 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 				endTask = task;
 		}
 		startTask.setState(eTaskState.Done);
-		endTask.setState(eTaskState.Done);
+//		endTask.setState(eTaskState.Done);
+		endTask.setState(eTaskState.Empty);
 	}
 	
 	public void clearTasks() {
@@ -771,4 +772,7 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 		endTask.setState(eTaskState.UnDone);
 		HelperFactory.getHelper().getTaskDAO().save(endTask);
 	}
+	
+	
+	
 }

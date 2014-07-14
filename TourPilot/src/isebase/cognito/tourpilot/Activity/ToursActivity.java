@@ -9,6 +9,7 @@ import isebase.cognito.tourpilot.Data.PilotTour.PilotTourComparer;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
+import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Templates.PilotToursAdapter;
 import isebase.cognito.tourpilot.Utils.DataBaseUtils;
@@ -16,6 +17,9 @@ import isebase.cognito.tourpilot.Utils.DataBaseUtils;
 import java.util.Collections;
 import java.util.List;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -29,13 +33,14 @@ import android.widget.Toast;
 public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	
 	private List<PilotTour> pilotTours;
+	BaseInfoDialog noConectionDialog;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		try {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_tours);
-			saveTourActivity(true);
+//			saveTourActivity(true);
 			reloadData();		
 			fillUpTitle();
 			fillUp();
@@ -90,7 +95,7 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
 				saveSelectedTour(pilotTours.get(position));
-				saveTourActivity(false);
+//				saveTourActivity(false);
 				startPatientsActivity();
 			}
 		});
@@ -101,7 +106,14 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	}
 
 	public void btStartSyncClick(View view) {
-		startSyncActivity();
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo ni = cm.getActiveNetworkInfo();
+		if (ni != null) {
+			startSyncActivity();
+		}
+		noConectionDialog = new BaseInfoDialog("There is no connection!", "Please turn on internet!");
+		noConectionDialog.show(getSupportFragmentManager(), "noConectionDialog");
+
 	}
 
 	private void showDialogLogout(){
@@ -140,12 +152,12 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog) {
 		if(dialog.getTag().equals("dialogBack")) {
-			saveTourActivity(false);
+//			saveTourActivity(false);
 			logOut();
 		}
 		else if (dialog.getTag().equals("clearDatabase")) {
 			clearDB();
-			saveTourActivity(false);
+//			saveTourActivity(false);
 		}
 	}
 
@@ -186,9 +198,9 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 		startWorkersActivity();
 	}
 	
-	private void saveTourActivity(boolean state) {
-		Option.Instance().setTourActivity(state);
-		Option.Instance().save();
-	}
+//	private void saveTourActivity(boolean state) {
+//		Option.Instance().setTourActivity(state);
+//		Option.Instance().save();
+//	}
 	
 }

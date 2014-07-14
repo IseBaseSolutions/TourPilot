@@ -250,8 +250,9 @@ public class GPSLogger extends Service implements LocationListener {
 		try {
 	        isGpsEnabled = true;
 	        
-	        if (Option.Instance().gpsStartTime - System.nanoTime() > (2 * 60 * 60 * 1000000000))
+	        if (Option.Instance().gpsStartTime - System.nanoTime() > (2 * 60 * 60 * 1000000000)) {
 	        	stopSelf();
+	        }
 
 	        if(((lastGPSTimestamp + gpsLoggingInterval) < System.currentTimeMillis()) /*&& (System.currentTimeMillis() - lastGPSTimestamp) > 6000*/){
 

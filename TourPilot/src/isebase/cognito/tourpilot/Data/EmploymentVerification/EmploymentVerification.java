@@ -2,7 +2,9 @@ package isebase.cognito.tourpilot.Data.EmploymentVerification;
 
 import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentInterval;
 import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Utils.DateUtils;
 
 import java.util.Date;
@@ -154,13 +156,14 @@ public class EmploymentVerification extends BaseObject {
 		strValue += employmentID + ";";
 		strValue += workerID + ";";
 		strValue += patientID + ";";
-		strValue += DateUtils.DateFormat.format(dateBegin) + " " + DateUtils.HourMinutesFormat.format(dateBegin) + ";";
-		strValue += DateUtils.DateFormat.format(dateEnd) + " " + DateUtils.HourMinutesFormat.format(dateEnd) + ";";
+		EmploymentInterval empl = HelperFactory.getHelper().getEmploymentIntervalDAO().load((int)employmentID);
+		strValue += DateUtils.DateFormat.format(empl.getStartTime()) + " " + DateUtils.HourMinutesFormat.format(empl.getStartTime()) + ";";
+		strValue += DateUtils.DateFormat.format(empl.getStopTime()) + " " + DateUtils.HourMinutesFormat.format(empl.getStopTime()) + ";";
 		strValue += doneTasksIDs + ";";
 		strValue += undoneTasksIDs + ";";
 		strValue += userRemarksMarks + ";";
 		strValue += isPflege + ";";
-		strValue += (employmentID + "" + Option.Instance().getWorkerID() + "" + Option.Instance().getPilotTourID() + "" + patientID +""+ DateUtils.HourMinutesSecondsFormat.format(dateBegin) +""+ DateUtils.HourMinutesSecondsFormat.format(dateEnd));
+		strValue += (employmentID + "" + Option.Instance().getWorkerID() + "" + Option.Instance().getPilotTourID() + "" + patientID +""+ DateUtils.HourMinutesSecondsFormat.format(empl.getStartTime()) +""+ DateUtils.HourMinutesSecondsFormat.format(empl.getStopTime()));
 		SentObjectVerification.Instance().sentEmploymentVerifications.add(this);
 		return strValue;
 	}

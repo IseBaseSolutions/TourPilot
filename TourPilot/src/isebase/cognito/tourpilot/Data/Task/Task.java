@@ -225,7 +225,7 @@ public class Task extends BaseObject {
 	public Task(Patient patient, int employmentID, int tourID, boolean isFirst) {
 		clear();
 		setName(String.format("[Einsatz%s %s]", isFirst ? "beginn" : "ende", patient.FullClearName()));
-		setPlanDate(new Date());
+		setPlanDate(DateUtils.getSynchronizedTime());
 		setWorkerID(Option.Instance().getWorkerID());
 		setPilotTourID(Option.Instance().getPilotTourID());
 		setEmploymentID(employmentID);
@@ -241,7 +241,7 @@ public class Task extends BaseObject {
 		setAditionalTaskID(additionalTask.getId());
 		setIsAdditionalTask(true);
 		setName(additionalTask.getName());
-		setPlanDate(new Date());
+		setPlanDate(DateUtils.getSynchronizedTime());
 		setWorkerID(Option.Instance().getWorkerID());
 		setEmploymentID(Option.Instance().getEmploymentID());
 		PilotTour pilotTour = HelperFactory.getHelper().getPilotTourDAO().loadPilotTour(Option.Instance().getPilotTourID());

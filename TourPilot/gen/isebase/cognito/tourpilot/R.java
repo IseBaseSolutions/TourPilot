@@ -828,7 +828,7 @@ public final class R {
         public static final int show_answers=0x7f060188;
         public static final int show_questions=0x7f060187;
         public static final int start=0x7f06006c;
-        public static final int start_gps=0x7f060070;
+        public static final int start_navigator=0x7f060070;
         /**  Tasks 
          */
         public static final int start_task=0x7f06002c;
