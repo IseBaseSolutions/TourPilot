@@ -62,9 +62,11 @@ public class PatientsActivity extends BaseActivity implements
 
 	private Button btTourEnd;
 	private InfoBaseDialog infoDialog;
-	private BaseDialog dialogGPSPatient;
+	private BaseDialog dialogStartNavigation;
 	private BaseDialog dialogGPSEnabling;
 	private BaseInfoDialog noConnectionDialog;
+
+	private LocationManager locationManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +81,7 @@ public class PatientsActivity extends BaseActivity implements
 			showTourInfos(false);
 		} catch (Exception e) {
 			e.printStackTrace();
-			criticalClose();
+			criticalPatientsClose();
 		}
 	}
 
@@ -166,9 +168,11 @@ public class PatientsActivity extends BaseActivity implements
 			startSyncActivity();
 			return;
 		}
-		noConnectionDialog = new BaseInfoDialog("There is no connection!", "Please turn on internet!");
-		noConnectionDialog.show(getSupportFragmentManager(), "noConectionDialog");
-//		startSyncActivity();
+		noConnectionDialog = new BaseInfoDialog(getString(R.string.attention),
+				getString(R.string.dialog_no_connection_sync));
+		noConnectionDialog.show(getSupportFragmentManager(),
+				"noConectionDialog");
+		// startSyncActivity();
 	}
 
 	private void initControls() {
@@ -186,20 +190,14 @@ public class PatientsActivity extends BaseActivity implements
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
 				if (jobs.get(position) instanceof Employment) {
-					Employment newEmployment = (Employment) jobs.get(position);
-					saveSelectedEmploymentID(newEmployment.getId());
-					if (worker.isUseGPS() && !newEmployment.isDone()) {
-						LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-						if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
-							dialogGPSPatient.show(getSupportFragmentManager(),
-									"dialogGPSPatient");
-						else {
-							dialogGPSEnabling = new BaseDialog("GPS ist ausgeschaltets", "Möchten sie die Einstellungen öffnen und GPS einschalten?");
-							dialogGPSEnabling.show(getSupportFragmentManager(), "dialogGPSEnabling");
-						}
-							
-					}
-					else
+					Employment employment = (Employment) jobs.get(position);
+					saveSelectedEmploymentID(employment.getId());
+					if (worker.isUseGPS() && !employment.isDone()) {
+						if (isGPSEnabled())
+							showStartNavigationDialog();
+						else
+							showGPSEnablingDialog();
+					} else
 						startTasksActivity();
 				} else {
 					initSelectedPatientsDialog();
@@ -220,7 +218,7 @@ public class PatientsActivity extends BaseActivity implements
 		jobs.addAll(HelperFactory
 				.getHelper()
 				.getEmploymentDAO()
-				.load(Employment.PILOT_TOUR_ID_FIELD,
+				.loadAll(Employment.PILOT_TOUR_ID_FIELD,
 						Option.Instance().getPilotTourID()));
 		List<Work> works = HelperFactory
 				.getHelper()
@@ -263,9 +261,11 @@ public class PatientsActivity extends BaseActivity implements
 	private void initDialogs() {
 		infoDialog = new InfoBaseDialog(getString(R.string.attention),
 				getString(R.string.dialog_complete_all_tasks));
-		dialogGPSPatient = new BaseDialog(getString(R.string.start_navigator),
+		dialogStartNavigation = new BaseDialog(getString(R.string.start_navigator),
 				getString(R.string.dialog_start_gps), getString(R.string.yes),
 				getString(R.string.no));
+		dialogGPSEnabling = new BaseDialog("GPS ist ausgeschaltet",
+				"Möchten sie die Einstellungen öffnen und GPS einschalten?");
 	}
 
 	private void initSelectedPatientsDialog() {
@@ -340,17 +340,13 @@ public class PatientsActivity extends BaseActivity implements
 
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog) {
-		if (dialog.getTag() == "dialogGPSPatient") {
-			Intent patientsActivity = new Intent(getApplicationContext(),
-					PatientsActivity.class);
-			startActivity(patientsActivity);
-
+		if (dialog.getTag() == "dialogStartNavigation") {
 			GpsNavigator.startGpsNavigation(getPatientAdress());
 			startTasksActivity();
-		}
-		else if (dialog.getTag() == "dialogGPSEnabling") {
-		    Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS );
-		    startActivity(myIntent);
+		} else if (dialog.getTag() == "dialogGPSEnabling") {
+			Intent myIntent = new Intent(
+					Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+			startActivity(myIntent);
 		}
 	}
 
@@ -370,8 +366,29 @@ public class PatientsActivity extends BaseActivity implements
 
 	@Override
 	public void onDialogNegativeClick(DialogFragment dialog) {
-		if (dialog.getTag() == "dialogGPSPatient") {
+		if (dialog.getTag() == "dialogStartNavigation") {
 			startTasksActivity();
 		}
 	}
+
+	private boolean isGPSEnabled() {
+		if (locationManager == null)
+			locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+		return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+	}
+	
+	private void showStartNavigationDialog() {
+		if (dialogStartNavigation.getFragmentManager() != null)
+			return;
+		dialogStartNavigation.show(getSupportFragmentManager(),
+				"dialogStartNavigation");
+	}
+	
+	private void showGPSEnablingDialog() {
+		if (dialogGPSEnabling.getFragmentManager() != null)
+			return;
+		dialogGPSEnabling.show(getSupportFragmentManager(),
+				"dialogGPSEnabling");
+	}
+
 }

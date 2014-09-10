@@ -112,7 +112,8 @@ public class AdditionalWorksActivity extends BaseTimeSyncActivity implements Bas
 		if (dialog == workInputDialog)
 		{
 			work = new Work(DateUtils.getSynchronizedTime(), addWork.getId(), Option.Instance().getPilotTourID(), addWork.getName());
-			work.setServerTime(Option.Instance().isTimeSynchronised());
+//			work.setServerTime(Option.Instance().isTimeSynchronised());
+			work.setServerTime(true);
 			HelperFactory.getHelper().getWorkDAO().save(work);
 			Option.Instance().setWorkID(work.getId());
 			Option.Instance().save();
@@ -123,7 +124,8 @@ public class AdditionalWorksActivity extends BaseTimeSyncActivity implements Bas
 		if (dialog == workStopDialog)
 		{
 			work.setStopTime(DateUtils.getSynchronizedTime());
-			work.setServerTime(Option.Instance().isTimeSynchronised());
+//			work.setServerTime(Option.Instance().isTimeSynchronised());
+			work.setServerTime(true);
 			HelperFactory.getHelper().getWorkDAO().save(work);
 			patientsDialog = new PatientsDialog(patients, work.getName());
 			patientsDialog.setCancelable(false);

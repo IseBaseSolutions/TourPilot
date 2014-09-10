@@ -155,7 +155,7 @@ public class EmploymentDAO extends BaseObjectDAO<Employment> {
     	employment.setPatientID(patient.getId());
     	employment.setName(String.format("%s, %s", patient.getSurname(), patient.getName()));
     	employment.setPilotTourID(Option.Instance().getPilotTourID());
-    	employment.setDate(new Date());
+    	employment.setDate(DateUtils.getSynchronizedTime());
     	employment.setTourID(HelperFactory.getHelper().getPilotTourDAO().loadPilotTour((int)Option.Instance().getPilotTourID()).getTourID());
     	employment.setDayPart("0");
     	employment.setServerTime(Option.Instance().isTimeSynchronised());

@@ -228,7 +228,7 @@ public class QuestionsActivity extends BaseActivity implements BaseDialogListene
 	private boolean isOwnerAnswered(Question question) {
 		for (IQuestionable answer : answers)
 			for (int i = 0; i < question.getOwnerIDs().length; i++)
-				if (isOwner(question.getOwnerIDs()[i], (Answer)answer) && isRightAnswer(question, (Answer)answer))
+				if (isOwner(question.getOwnerIDs()[i], (Answer)answer) && isRightAnswer(question, (Answer)answer) && !isSubQuestionIsAnswered(question))
 					return true;
 		return false;
 	}

@@ -46,6 +46,15 @@ public class BaseActivity extends FragmentActivity {
 		startActivity(optionActivity);
 	}
 	
+	protected void criticalPatientsClose() {
+		Option.Instance().setWorkID(BaseObject.EMPTY_ID);
+		Option.Instance().setPilotTourID(BaseObject.EMPTY_ID);
+		Option.Instance().setEmploymentID(BaseObject.EMPTY_ID);
+		Option.Instance().save();
+		Intent intent =  new Intent(getApplicationContext(), ToursActivity.class);
+		startActivity(intent);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.base_menu, menu);

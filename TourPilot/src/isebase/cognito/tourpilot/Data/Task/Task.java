@@ -236,12 +236,12 @@ public class Task extends BaseObject {
 		setServerTime(false);
 	}
 
-	public Task(AdditionalTask additionalTask){
+	public Task(AdditionalTask additionalTask, Date planDate){
 		clear();
 		setAditionalTaskID(additionalTask.getId());
 		setIsAdditionalTask(true);
 		setName(additionalTask.getName());
-		setPlanDate(DateUtils.getSynchronizedTime());
+		setPlanDate(planDate);
 		setWorkerID(Option.Instance().getWorkerID());
 		setEmploymentID(Option.Instance().getEmploymentID());
 		PilotTour pilotTour = HelperFactory.getHelper().getPilotTourDAO().loadPilotTour(Option.Instance().getPilotTourID());

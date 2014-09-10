@@ -1,5 +1,7 @@
 package isebase.cognito.tourpilot.Activity.WorkersOptionActivity;
 
+import java.util.Calendar;
+
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
@@ -8,10 +10,13 @@ import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
+import isebase.cognito.tourpilot.Dialogs.MicurasPortDialog;
 import isebase.cognito.tourpilot.Gps.Service.GPSLogger;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
+import android.app.AlarmManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -29,6 +34,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class WorkerOptionActivity extends BaseActivity implements BaseDialogListener {
@@ -50,6 +56,10 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_worker_option);
+//		Intent intent=new Intent();
+//		intent.setComponent(new ComponentName("com.android.settings",
+//		         "com.android.settings.DateTimeSettingsSetupWizard"));      
+//		startActivity(intent);
 		instance = this;
 		StaticResources.setBaseContext(getBaseContext());
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -74,9 +84,7 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
         	StaticResources.getBaseContext().startActivity(it);
         }
         initDialogs();
-        setDeviceSettings();       
-		if (isMyServiceRunning(GPSLogger.class))
-			stopService(new Intent(this, GPSLogger.class));
+        setDeviceSettings();
 		switchToLastActivity();
 	}
 
@@ -194,8 +202,6 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 	}
 	
 	public void btSyncClick(View view) {
-		Option.Instance().setServerIP("mde.cognito-service.de");
-		Option.Instance().setServerPort(4448);
 		saveSettings();
 		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo ni = cm.getActiveNetworkInfo();
@@ -206,7 +212,7 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 	}
 	
 	private void initDialogs() {
-		noConectionDialog = new BaseInfoDialog("There is no connection!", "Please turn on internet!");
+		noConectionDialog = new BaseInfoDialog(getString(R.string.attention), getString(R.string.dialog_no_connection_sync));
 	}
 	
 	public void saveSettings() {
@@ -238,6 +244,11 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 		{
 			workersFragment.logIn();
 		}
+		if (dialog.getTag().equals("micurasPortDialog"))
+		{
+			Option.Instance().setServerPort(Integer.parseInt(((MicurasPortDialog)dialog).port));
+			optionsFragment.etServerPort.setText(((MicurasPortDialog)dialog).port);
+		}
 	}
 
 	@Override
@@ -251,16 +262,5 @@ public class WorkerOptionActivity extends BaseActivity implements BaseDialogList
 		StaticResources.height = displaymetrics.heightPixels;
 		StaticResources.width = displaymetrics.widthPixels;
 	}
-	
-	private boolean isMyServiceRunning(Class<?> serviceClass) {
-	    ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-	    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-	        if (serviceClass.getName().equals(service.service.getClassName())) {
-	            return true;
-	        }
-	    }
-	    return false;
-	}
-
 	
 }

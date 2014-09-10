@@ -2,6 +2,7 @@ package isebase.cognito.tourpilot.Activity.QuestionActivities;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Answer.Answer;
+import isebase.cognito.tourpilot.Data.AnsweredCategory.AnsweredCategory;
 import isebase.cognito.tourpilot.Data.Category.Category;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Option.Option;
@@ -102,9 +103,13 @@ public class RelatedQuestionsActivity extends Activity {
 			if (item.getId() != question.getId())
 				continue;
 			for (RelatedQuestionSetting.RelatedObject relatedObject : item.getRelatedObjects()) {
-				if (relatedObject.ownerAnswer != answerIndex
-						|| relatedObject.answer == -1/* assessment */)
+				if (relatedObject.ownerAnswer != answerIndex)
 					continue;
+				if (relatedObject.answer == -1) {
+					AnsweredCategory answeredCategory = new AnsweredCategory(relatedObject.id, Option.Instance().getEmploymentID());
+					HelperFactory.getHelper().getAnsweredCategoryDAO().save(answeredCategory);
+					continue;
+				}					
 				Question relatedQuestion = HelperFactory.getHelper().getQuestionDAO().load(relatedObject.id);
 				if (relatedQuestion == null)
 					continue;

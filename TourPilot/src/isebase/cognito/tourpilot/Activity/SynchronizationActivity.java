@@ -23,6 +23,7 @@ import java.util.List;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -185,8 +186,7 @@ import android.widget.TextView;
 		List<PilotTour> pilotTours = HelperFactory.getHelper().getPilotTourDAO().loadPilotToursMax();
 		if (pilotTours.size() == 0) {
 			if (isMyServiceRunning(GPSLogger.class))
-				stopService(new Intent(this, GPSLogger.class));
-			
+				stopService(new Intent(this, GPSLogger.class));			
 //			Option.Instance().setTourActivity(false);
 			Option.Instance().setPilotTourID(BaseObject.EMPTY_ID);
 			Option.Instance().setWorkerID(BaseObject.EMPTY_ID);
@@ -214,6 +214,8 @@ import android.widget.TextView;
 	}
 	
 	private void showInterruptDialog() {
+		if (!isCurrentAcivity())
+			return;
 		BaseInfoDialog interruptDialog = new BaseInfoDialog(getString(R.string.attention), getString(R.string.dialog_interrupt));
 		interruptDialog.show(getSupportFragmentManager(), "interruptDialog");
 	}
@@ -223,6 +225,8 @@ import android.widget.TextView;
 	}
 	
 	private void showLicenseOverDialog() {
+		if (!isCurrentAcivity())
+			return;
 		BaseInfoDialog licenseOverDialog = new BaseInfoDialog(getString(R.string.attention), getString(R.string.dialog_license_over));
 		licenseOverDialog.setCancelable(false);
 		licenseOverDialog.show(getSupportFragmentManager(), "licenseOverDialog");
@@ -234,6 +238,8 @@ import android.widget.TextView;
 	}
 	
 	private void showNewVersionAvilableDialog() {
+		if (!isCurrentAcivity())
+			return;
 		DialogFragment newVersionDialog = new BaseDialog(getString(R.string.dialog_new_version), getString(R.string.dialog_update_program));
 		newVersionDialog.setCancelable(false);
 		newVersionDialog.show(getSupportFragmentManager(), "newVersionDialog");
@@ -247,6 +253,12 @@ import android.widget.TextView;
 	        }
 	    }
 	    return false;
+	}
+	
+	private boolean isCurrentAcivity() {
+		ActivityManager am = (ActivityManager)getBaseContext().getSystemService(Context.ACTIVITY_SERVICE);
+		ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
+		return cn.getClassName().equals(SynchronizationActivity.class.getName());
 	}
 	
 }

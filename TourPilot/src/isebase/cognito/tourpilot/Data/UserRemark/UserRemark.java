@@ -98,53 +98,53 @@ public class UserRemark extends BaseObject {
         	checkboxes += 4;
         if (chkOther) 
         	checkboxes += 8;
-        setDate(new Date());
+        setDate(DateUtils.getSynchronizedTime());
         setName(strRemark);
     }
 
-    public UserRemark(String strInitString) {
-    	clear();
-        StringParser initString = new StringParser(strInitString);
-        initString.next(";");
-        setId(Integer.parseInt(initString.next(";")));
-        setPatientID(Integer.parseInt(initString.next(";")));
-        setDate(new Date(Long.parseLong(initString.next(";"))));
-        setCheckboxes(Integer.parseInt(initString.next(";")));
-        setName(initString.next(";"));
-        setServerTime(initString.next(";").equals("True"));
-        setWasSent(initString.next().equals("True"));
-    }  
+//    public UserRemark(String strInitString) {
+//    	clear();
+//        StringParser initString = new StringParser(strInitString);
+//        initString.next(";");
+//        setId(Integer.parseInt(initString.next(";")));
+//        setPatientID(Integer.parseInt(initString.next(";")));
+//        setDate(new Date(Long.parseLong(initString.next(";"))));
+//        setCheckboxes(Integer.parseInt(initString.next(";")));
+//        setName(initString.next(";"));
+//        setServerTime(initString.next(";").equals("True"));
+//        setWasSent(initString.next().equals("True"));
+//    }  
     
-    public String toString(){
-		if (!isServerTime() && Option.Instance().isTimeSynchronised())
-		{
-			setDate(DateUtils.getSynchronizedTime(getDate()));
-			setServerTime(true);
-		}
-		HelperFactory.getHelper().getUserRemarkDAO().save(this);
-        String strValue = new String("O;");
-        strValue += getId() + ";";
-        strValue += getPatientID() + ";";
-        strValue += String.valueOf(DateUtils.getLocalTime(getDate())) + ";";
-        strValue += getCheckboxes() + ";";
-        strValue += getName() + ";";
-        strValue += (isServerTime() ? "True" : "False") + ";";
-        strValue += (getWasSent() ? "True" : "False");
-        return strValue;
-    }    
+//    public String toString(){
+//		if (!isServerTime() && Option.Instance().isTimeSynchronised())
+//		{
+//			setDate(DateUtils.getSynchronizedTime(getDate()));
+//			setServerTime(true);
+//		}
+//		HelperFactory.getHelper().getUserRemarkDAO().save(this);
+//        String strValue = new String("O;");
+//        strValue += getId() + ";";
+//        strValue += getPatientID() + ";";
+//        strValue += String.valueOf(getDate()) + ";";
+//        strValue += getCheckboxes() + ";";
+//        strValue += getName() + ";";
+//        strValue += (isServerTime() ? "True" : "False") + ";";
+//        strValue += (getWasSent() ? "True" : "False");
+//        return strValue;
+//    }    
     
     public String getDone()
     {
-		if (!isServerTime() && Option.Instance().isTimeSynchronised())
-		{
-			setDate(DateUtils.getSynchronizedTime(getDate()));
-			setServerTime(true);
-			HelperFactory.getHelper().getUserRemarkDAO().save(this);
-		}
+//		if (!isServerTime() && Option.Instance().isTimeSynchronised())
+//		{
+//			setDate(DateUtils.getSynchronizedTime(getDate()));
+//			setServerTime(true);
+//			HelperFactory.getHelper().getUserRemarkDAO().save(this);
+//		}
         String strValue = new String("O;");
         strValue += getWorkerID() + ";";
         strValue += getPatientID() + ";";
-        strValue += DateUtils.getLocalTime(getDate()) + ";";
+        strValue += DateUtils.toDateTime(getDate()) + ";";
         strValue += getCheckboxes() + ";";
         strValue += getName() + ";";
         strValue += getCheckedIDs();

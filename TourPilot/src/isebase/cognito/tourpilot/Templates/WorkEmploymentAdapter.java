@@ -1,6 +1,7 @@
 package isebase.cognito.tourpilot.Templates;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import java.util.List;
@@ -38,6 +39,7 @@ public class WorkEmploymentAdapter extends ArrayAdapter<IJob>{
 			
 			employmentHolder.tvWorkEmploymentTime = (TextView) row.findViewById(R.id.tvWorkEmploymentTime);
 			employmentHolder.tvWorkEmploymentTime.setText(jobs.get(position).time());
+			
 			
 			if(jobs.get(position).isDone())
 				employmentHolder.tvWorkEmploymentName.setTextColor(StaticResources.getBaseContext().getResources().getColor(R.color.active));

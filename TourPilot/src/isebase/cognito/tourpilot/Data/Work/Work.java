@@ -187,7 +187,7 @@ public class Work extends BaseObject implements IJob {
 	}
 	
 	public String getTime() {
-		return DateUtils.HourMinutesFormat.format(getStartTime());
+		return DateUtils.HourMinutesFormat.format(getStartTime()) + "\n" + DateUtils.HourMinutesFormat.format(getStopTime());
 	}
 
 	@Override

@@ -124,6 +124,10 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 		return patientRemark;
 	}
 	
+	public TasksFragment() {
+		
+	}
+	
 	public TasksFragment(TasksAssessementsActivity instance) {
 		activity = instance;
 	}
@@ -165,7 +169,7 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 		case ACTIVITY_VERIFICATION_CODE:
 			if(resultCode == activity.RESULT_OK) {
 				saveData(true);
-				
+				saveQuestionSetting();
 				ConnectivityManager cm = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
 				NetworkInfo ni = cm.getActiveNetworkInfo();
 				
@@ -411,8 +415,6 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	public void setTaskState(Task task) {
 		task.setRealDate(DateUtils.getSynchronizedTime());
 		task.setServerTime(Option.Instance().isTimeSynchronised());
-		if (task.getIsAdditionalTask())
-			task.setPlanDate(startTask.getRealDate());
 		if (!startTask.getManualDate().equals(DateUtils.EmptyDate))
 			task.setManualDate(DateUtils.getAverageDate(startTask.getManualDate(), endTask.getManualDate()));
 		if(!(task.getQuality() < 1 || task.getQuality() > 7)) {
@@ -773,6 +775,12 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 		HelperFactory.getHelper().getTaskDAO().save(endTask);
 	}
 	
-	
+	private void saveQuestionSetting() {
+		QuestionSetting questionSetting = HelperFactory.getHelper().getQuestionSettingDAO().load(employment.getId());
+		if (questionSetting == null)
+			return;
+		questionSetting.setWasSent(true);
+		HelperFactory.getHelper().getQuestionSettingDAO().save(questionSetting);
+	}
 	
 }

@@ -81,13 +81,7 @@ public class IntervalInputDialog extends BaseDialog  {
 				
 				if(getStartTotalMinute() > getStopTotalMinute())
 					setHourMinutes(tpStopTime.getCurrentHour(), tpStopTime.getCurrentMinute());
-								
-				/*
-				if (hourOfDay < minHour || hourOfDay > maxHour || hourOfDay > tpStopTime.getCurrentHour())
-					tpStartTime.setCurrentHour(minHour);
-				if (hourOfDay == minHour && minute < minMinute || hourOfDay == tpStopTime.getCurrentHour() && minute > tpStopTime.getCurrentMinute())
-					tpStartTime.setCurrentMinute(minMinute);
-				*/				
+	
 			}
 		});
 	    
@@ -119,12 +113,7 @@ public class IntervalInputDialog extends BaseDialog  {
 				
 				if(getStartTotalMinute() > getStopTotalMinute())
 					setHourMinutes(tpStartTime.getCurrentHour(), tpStartTime.getCurrentMinute());
-				
-				/*
-				if (hourOfDay < minHour || hourOfDay > maxHour || hourOfDay < tpStartTime.getCurrentHour())
-					tpStopTime.setCurrentHour(maxHour);
-				if (hourOfDay == maxHour && minute > maxMinute || hourOfDay == tpStartTime.getCurrentHour() && minute < tpStartTime.getCurrentMinute())
-					tpStopTime.setCurrentMinute(maxMinute);*/
+
 			}
 		});
 	    

@@ -1,10 +1,18 @@
 package isebase.cognito.tourpilot.Gps.Service;
 
+import java.util.Date;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import isebase.cognito.tourpilot.Activity.PatientsActivity;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.WayPoint.WayPoint;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
+import isebase.cognito.tourpilot.Utils.DateUtils;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -19,6 +27,8 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 
 public class GPSLogger extends Service implements LocationListener {
 
@@ -76,6 +86,12 @@ public class GPSLogger extends Service implements LocationListener {
 	private double prevLon;
 	
 	private WayPoint currentWayPoint;
+	
+	ScheduledExecutorService scheduleTaskExecutor;
+	
+	NotificationManager mNotificationManager;
+	
+	int notification = -1;
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 
@@ -198,6 +214,16 @@ public class GPSLogger extends Service implements LocationListener {
 			// Register ourselves for location updates
 			lmgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 			lmgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+			
+			scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
+
+			// This schedule a runnable task every 2 minutes
+			scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
+			  public void run() {
+			    saveCoordinates();
+			  }
+			}, 0, 10, TimeUnit.SECONDS); // CHECK
+			
 			super.onCreate();
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -228,8 +254,11 @@ public class GPSLogger extends Service implements LocationListener {
 	        unregisterReceiver(receiver);
 	        
 	        // Cancel any existing notification
+
+	        mNotificationManager.cancel(19901213);
+	        mNotificationManager.cancelAll();
 	        stopNotifyBackgroundService();
-	
+	        scheduleTaskExecutor.shutdownNow();
 	        super.onDestroy();
     	} catch(Exception e) {
     		e.printStackTrace();
@@ -248,30 +277,7 @@ public class GPSLogger extends Service implements LocationListener {
 	@Override
 	public void onLocationChanged(Location location) {
 		try {
-	        isGpsEnabled = true;
-	        
-	        if (Option.Instance().gpsStartTime - System.nanoTime() > (2 * 60 * 60 * 1000000000)) {
-	        	stopSelf();
-	        }
-
-	        if(((lastGPSTimestamp + gpsLoggingInterval) < System.currentTimeMillis()) /*&& (System.currentTimeMillis() - lastGPSTimestamp) > 6000*/){
-
-	            lastGPSTimestamp = System.currentTimeMillis(); // save the time of this fix
-	    
-	            lastLocation = location;
-	            lastNbSatellites = countSatellites();
-	            if (previousTime != 0 && (System.currentTimeMillis() - previousTime < 10000))
-	            	return;
-    			if (((location.getLatitude() != prevLat || location.getLongitude() != prevLon) && lastLocation.getAccuracy() < 25))
-    			{
-    				StaticResources.setBaseContext(this);
-        			currentWayPoint = new WayPoint(Option.Instance().getWorkerID(), Option.Instance().getPilotTourID(), lastLocation, lastNbSatellites);
-    				HelperFactory.getHelper().getWayPointDAO().save(currentWayPoint);
-    				prevLat = currentWayPoint.getLatitude();
-    				prevLon = currentWayPoint.getLongitude();
-    				previousTime = System.currentTimeMillis();
-    			}
-	        }
+			lastLocation = location;
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -309,19 +315,16 @@ public class GPSLogger extends Service implements LocationListener {
 	@Override
 	public void onProviderDisabled(String provider) {
 		isGpsEnabled = false;
-
 	}
 
 	@Override
 	public void onProviderEnabled(String provider) {
 		isGpsEnabled = true;
-
 	}
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 		// TODO Auto-generated method stub
-
 	}
 	
 
@@ -339,6 +342,75 @@ public class GPSLogger extends Service implements LocationListener {
      */
     public boolean isTracking() {
             return isTracking;
+    }
+    
+    private void saveCoordinates() {
+        if (Option.Instance().gpsStartTime - System.nanoTime() > (2 * 60 * 60 * 1000000000)) {
+        	stopSelf();        	
+        }
+        if(((lastGPSTimestamp + gpsLoggingInterval) < System.currentTimeMillis())){
+            lastGPSTimestamp = System.currentTimeMillis(); // save the time of this fix
+//            lastNbSatellites = countSatellites();
+            if (!lmgr.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+				HelperFactory.getHelper().getWayPointDAO().save(new WayPoint(Option.Instance().getWorkerID(), Option.Instance().getPilotTourID(), 900));
+				if (notification != 0) {
+					notification = 0;
+					drawGPSNotification();
+				}
+            	return;
+            }
+            if (lastLocation == null || (lastLocation.getProvider().equals(LocationManager.GPS_PROVIDER) && lastLocation.getAccuracy() >= 25)) {
+				HelperFactory.getHelper().getWayPointDAO().save(new WayPoint(Option.Instance().getWorkerID(), Option.Instance().getPilotTourID(), 901));
+				if (notification != 0) {
+					notification = 0;
+					drawGPSNotification();
+				}
+            	return;
+            }
+			if ((lastLocation.getLatitude() != prevLat || lastLocation.getLongitude() != prevLon))
+			{
+				if (notification != 1) {
+					notification = 1;
+					drawGPSNotification();
+				}
+				StaticResources.setBaseContext(this);
+    			currentWayPoint = new WayPoint(Option.Instance().getWorkerID(), Option.Instance().getPilotTourID(), lastLocation, lastNbSatellites);
+				HelperFactory.getHelper().getWayPointDAO().save(currentWayPoint);
+				prevLat = lastLocation.getLatitude();
+				prevLon = lastLocation.getLongitude();
+				previousTime = System.currentTimeMillis();
+			}
+        }
+    }
+    
+    private void drawGPSNotification() {
+		NotificationCompat.Builder mBuilder =
+		        new NotificationCompat.Builder(this)
+		        .setSmallIcon(notification == 1 ? isebase.cognito.tourpilot.R.drawable.gg : isebase.cognito.tourpilot.R.drawable.gr)
+		        .setContentTitle("TourPilot")
+		        .setContentText("GPS is not getting coordinates");
+		
+		Intent resultIntent = new Intent(this, PatientsActivity.class);
+
+		// The stack builder object will contain an artificial back stack for the
+		// started Activity.
+		// This ensures that navigating backward from the Activity leads out of
+		// your application to the Home screen.
+		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+		// Adds the back stack for the Intent (but not the Intent itself)
+		stackBuilder.addParentStack(PatientsActivity.class);
+		// Adds the Intent that starts the Activity to the top of the stack
+		stackBuilder.addNextIntent(resultIntent);
+		PendingIntent resultPendingIntent =
+		        stackBuilder.getPendingIntent(
+		            0,
+		            PendingIntent.FLAG_UPDATE_CURRENT
+		        );
+		mBuilder.setContentIntent(resultPendingIntent);
+		mNotificationManager =
+		    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		// mId allows you to update the notification later on.
+		mNotificationManager.notify(19901213, mBuilder.build());
     }
 
 }

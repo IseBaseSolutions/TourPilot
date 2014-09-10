@@ -484,10 +484,14 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 
 		StringBuffer stringBuffer = new StringBuffer();
 		GZIPInputStream zis = new GZIPInputStream(is);
-		while (zis.available() != 0) {
-			if(isTerminated)
-				return "";
-			stringBuffer.append((char) zis.read());
+		try {
+			while (zis.available() != 0) {
+				if(isTerminated)
+					return "";
+				stringBuffer.append((char) zis.read());
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 		return stringBuffer.toString();
 	}

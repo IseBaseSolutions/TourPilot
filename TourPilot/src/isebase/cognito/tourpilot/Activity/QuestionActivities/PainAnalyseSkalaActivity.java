@@ -97,9 +97,7 @@ public class PainAnalyseSkalaActivity extends Activity {
 		newEmployment = HelperFactory.getHelper().getEmploymentDAO().load((int)Option.Instance().getEmploymentID());
 		patient = HelperFactory.getHelper().getPatientDAO().load(newEmployment.getPatientID());
 
-
-//		List<Answer> answers = HelperFactory.getHelper().getAnswerDAO().loadByCategoryID(category.getId());
-		List<Answer> answers = HelperFactory.getHelper().getAnswerDAO().loadByCategoryIDAndType(category.getId(), Category.type.schmerzermittlung);
+		List<Answer> answers = HelperFactory.getHelper().getAnswerDAO().loadPainAnaliseAnswers();
 		if (answers.size() > 0)
 			answer = answers.get(0);
 	}
@@ -233,7 +231,7 @@ public class PainAnalyseSkalaActivity extends Activity {
 	private void setAnswerCheckBoxes(RadioGroup radioGroup, String answer) {
 		String[] answers = answer.split("/");
 		for (int i = 0; i < answers.length; i++)
-			((CheckBox)radioGroup.getChildAt(i)).setChecked(true);
+			((CheckBox)radioGroup.getChildAt(Integer.parseInt(answers[i]))).setChecked(true);
 	}
 	
 	private String[] getGrades() {
@@ -504,7 +502,8 @@ public class PainAnalyseSkalaActivity extends Activity {
 		answer.setAddInfo(additionalInfo);
 		answer.setAnswerKey(answerKey);
 		HelperFactory.getHelper().getAnswerDAO().save(answer);
-		HelperFactory.getHelper().getAnsweredCategoryDAO().save(new AnsweredCategory(category.getId(), Option.Instance().getEmploymentID()));
+		if (HelperFactory.getHelper().getAnsweredCategoryDAO().loadByCategoryID(category.getId()) == null)
+			HelperFactory.getHelper().getAnsweredCategoryDAO().save(new AnsweredCategory(category.getId(), Option.Instance().getEmploymentID()));
 		onBackPressed();
 	}
 	

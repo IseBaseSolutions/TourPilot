@@ -176,7 +176,7 @@ public class Employment extends BaseObject implements IJob {
 	}
 
 	public String getTime() {
-		return DateUtils.HourMinutesFormat.format(startTime());
+		return DateUtils.HourMinutesFormat.format(startTime()) + "\n" + DateUtils.HourMinutesFormat.format(stopTime());
 	}
 		
 	@Override
@@ -196,9 +196,7 @@ public class Employment extends BaseObject implements IJob {
         for (Task task : tasks)
         {
     		if (!task.isServerTime() && Option.Instance().isTimeSynchronised()) {
-            	task.setRealDate(Option.Instance().isTimeSynchronised() 
-            			? task.getRealDate() 
-            			: DateUtils.getSynchronizedTime(task.getRealDate()));
+//            	task.setRealDate(DateUtils.getSynchronizedTime(task.getRealDate()));
             	task.setServerTime(true);
     			if (task.isFirstTask())	{
     		        EmploymentInterval emplInt = HelperFactory.getHelper().getEmploymentIntervalDAO().load(getId());
@@ -310,16 +308,28 @@ public class Employment extends BaseObject implements IJob {
 
 	@Override
 	public Date startTime() {
-		return getStartTime().equals(DateUtils.EmptyDate) ? getDate() : getStartTime();
+		return getStartTime().equals(DateUtils.EmptyDate) ? getPlanStartTime() : getStartTime();
 	}
 
 	@Override
 	public Date stopTime() {
-		return getStopTime().equals(DateUtils.EmptyDate) ? getDate() : getStopTime();
+		return getStopTime().equals(DateUtils.EmptyDate) ? getPlanStopTime() : getStopTime();
 	}
 	
 	public boolean isWork() {
 		return getPatientID() > 999900;
+	}
+	
+	private Date getPlanStartTime() {
+		if (tasks == null || tasks.size() == 0)
+			return getDate();
+		return getFirstTask().getPlanDate();
+	}
+	
+	private Date getPlanStopTime() {
+		if (tasks == null || tasks.size() == 0)
+			return getDate();
+		return getLastTask().getPlanDate();
 	}
 
 }

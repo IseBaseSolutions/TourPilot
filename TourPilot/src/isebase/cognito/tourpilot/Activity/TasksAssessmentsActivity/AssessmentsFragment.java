@@ -9,6 +9,7 @@ import isebase.cognito.tourpilot.Activity.QuestionActivities.QuestionsActivity;
 import isebase.cognito.tourpilot.Data.Answer.Answer;
 import isebase.cognito.tourpilot.Data.AnsweredCategory.AnsweredCategory;
 import isebase.cognito.tourpilot.Data.Category.Category;
+import isebase.cognito.tourpilot.Data.Category.Category.type;
 import isebase.cognito.tourpilot.Data.ExtraCategory.ExtraCategory;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
@@ -57,6 +58,10 @@ public class AssessmentsFragment extends Fragment {
 	List<Question> relatedQuestions;
 	List<Answer> relatedAnswers;
 	
+	public AssessmentsFragment() {
+		
+	}
+	
 	public AssessmentsFragment(TasksAssessementsActivity instance) {
 		activity = instance;
 	}
@@ -99,7 +104,7 @@ public class AssessmentsFragment extends Fragment {
 			return;
 		allCategoriesCount = HelperFactory.getHelper().getCategoryDAO().load().size();
 		categories = HelperFactory.getHelper().getCategoryDAO().loadByQuestionSettings(questionSetting);		
-		answeredCategories = HelperFactory.getHelper().getAnsweredCategoryDAO().LoadByEmploymentID((int)Option.Instance().getEmploymentID());
+		answeredCategories = HelperFactory.getHelper().getAnsweredCategoryDAO().LoadByEmploymentID(activity.tasksFragment.employment.getId());
 		employmentCategories.clear();
 		relatedQuestionSettings = HelperFactory.getHelper().getRelatedQuestionSettingDAO().load();
 		relatedQuestions = HelperFactory.getHelper().getQuestionDAO().loadByRelatedQuestionSettings(relatedQuestionSettings);
@@ -115,6 +120,11 @@ public class AssessmentsFragment extends Fragment {
 					if (relatedObject.answer != -1)
 						continue;
 					ids.add(relatedObject.id);
+					for(int i = 0; i < answeredCategories.size(); i++)
+						if (answeredCategories.get(i).getCategoryID() == relatedObject.id) {
+							answeredCategories.remove(i);
+							break;
+						}
 				}
 			}
 		}
@@ -131,6 +141,15 @@ public class AssessmentsFragment extends Fragment {
 		for(AnsweredCategory answeredCategory : answeredCategories)
 			if (answeredCategory.getCategoryID() == category.getId())
 				return true;
+		if (category.getCategoryType() == type.normal) {
+			List<Question> questions = HelperFactory.getHelper().getQuestionDAO().loadActualsByCategory(category.getId());
+			if (questions.size() > 0)
+				return false;
+			AnsweredCategory newAnsweredCategory = new AnsweredCategory(category.getId(), Option.Instance().getEmploymentID());
+			HelperFactory.getHelper().getAnsweredCategoryDAO().save(newAnsweredCategory);
+			answeredCategories.add(newAnsweredCategory);
+			return true;
+		}
 		return false;
 	}
 	

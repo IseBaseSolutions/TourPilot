@@ -160,6 +160,7 @@
     <string name="dialog_braden_point_marking">Sie haben die dekubitusgefährdete Stellen nicht markiert.</string>
     <string name="dialog_kontraktur_point_marking">Sie haben die Lokalisation der Kontraktur nicht markiert.</string>
     <string name="dialog_related_questions">Bevor Sie die Assessments erfassen, beantworten Sie bitte die Fragen, die eine Beziehung mit anderen Fragen haben.</string>
+	<string name="dialog_no_connection_sync">Internetverbindung fehlt. Kein Datenabgleich möglich.</string>
 
     <!-- Errors -->
     <string name="err_not_db_file">Wählen Sie bitte die Datei mit der Erweiterung .db</string>

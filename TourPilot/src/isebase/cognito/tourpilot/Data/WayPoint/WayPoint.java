@@ -1,9 +1,13 @@
 package isebase.cognito.tourpilot.Data.WayPoint;
 
+import java.util.Date;
+
 import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.Connection.ServerCommandParser;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Utils.DateUtils;
 import android.location.Location;
+import android.location.LocationManager;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
@@ -117,7 +121,10 @@ public class WayPoint extends BaseObject {
 		try {
 			setWorkerID(workerID);
 			setPilotTourID(pilotTourID);
-	    	setLatitude(location.getLatitude());
+//			setLatitude((location.getProvider() == LocationManager.GPS_PROVIDER && location.getAccuracy() < 25) 
+//					? location.getLatitude() 
+//							: 1001);
+			setLatitude(location.getLatitude());
 	    	setLongitude(location.getLongitude());
 	    	setNbSatellites(nbSatellites);
 	        if (location.hasAltitude()) {
@@ -128,6 +135,19 @@ public class WayPoint extends BaseObject {
 	        	setAccuracy(location.getAccuracy());
 	        }
 	        setTime(location.getTime());
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public WayPoint(int workerID, long pilotTourID, int x) {
+		try {
+			setWorkerID(workerID);
+			setPilotTourID(pilotTourID);
+	    	setLatitude(x);
+	    	setLongitude(x);
+	    	setNbSatellites(nbSatellites);
+	        setTime(new Date().getTime());
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

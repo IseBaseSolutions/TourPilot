@@ -10,6 +10,7 @@ import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
 import isebase.cognito.tourpilot.Dialogs.BaseDialogListener;
 import isebase.cognito.tourpilot.Dialogs.BaseInfoDialog;
+import isebase.cognito.tourpilot.Gps.Service.GPSLogger;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Templates.PilotToursAdapter;
 import isebase.cognito.tourpilot.Utils.DataBaseUtils;
@@ -17,7 +18,10 @@ import isebase.cognito.tourpilot.Utils.DataBaseUtils;
 import java.util.Collections;
 import java.util.List;
 
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -110,8 +114,9 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 		NetworkInfo ni = cm.getActiveNetworkInfo();
 		if (ni != null) {
 			startSyncActivity();
+			return;
 		}
-		noConectionDialog = new BaseInfoDialog("There is no connection!", "Please turn on internet!");
+		noConectionDialog = new BaseInfoDialog(getString(R.string.attention), getString(R.string.dialog_no_connection_sync));
 		noConectionDialog.show(getSupportFragmentManager(), "noConectionDialog");
 
 	}
@@ -125,6 +130,8 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	}
 	
 	private void logOut() {
+		if (isMyServiceRunning(GPSLogger.class))
+			stopService(new Intent(this, GPSLogger.class));
 		clearPersonalOptions();
 		startWorkersActivity();
 	}
@@ -154,6 +161,7 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 		if(dialog.getTag().equals("dialogBack")) {
 //			saveTourActivity(false);
 			logOut();
+			
 		}
 		else if (dialog.getTag().equals("clearDatabase")) {
 			clearDB();
@@ -193,14 +201,25 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 			protected void onPostExecute(Void result) {
 //				pbClearDB.setVisibility(View.INVISIBLE);
 //				syncButton.setEnabled(true);
+				Option.Instance().clearSelected();
+				startWorkersActivity();
 			}
 		}.execute();
-		startWorkersActivity();
 	}
 	
 //	private void saveTourActivity(boolean state) {
 //		Option.Instance().setTourActivity(state);
 //		Option.Instance().save();
 //	}
+	
+	private boolean isMyServiceRunning(Class<?> serviceClass) {
+	    ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+	    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+	        if (serviceClass.getName().equals(service.service.getClassName())) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
 	
 }

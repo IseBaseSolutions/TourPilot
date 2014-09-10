@@ -4,6 +4,7 @@ import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Dialogs.InfoBaseDialog;
+import isebase.cognito.tourpilot.Dialogs.MicurasPortDialog;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Utils.DataBaseUtils;
 import android.os.AsyncTask;
@@ -33,6 +34,10 @@ public class OptionsFragment extends Fragment {
 	public DialogFragment versionFragmentDialog;
 	public DialogFragment noConnectionDialog;
 	public DialogFragment noIPEnteredDialog;
+	public boolean isMicuraVersion = false;
+	public boolean isNHKVersion = false;
+	public boolean isImpulseVersion = false;
+	public DialogFragment micurasPortDialog;
 	
 	public WorkerOptionActivity activity;
 	
@@ -90,6 +95,14 @@ public class OptionsFragment extends Fragment {
 	private void fillUp() {
 		etServerIP.setText(Option.Instance().getServerIP());
 		etServerPort.setText(String.valueOf(Option.Instance().getServerPort()));
+		if (isNHKVersion && Option.Instance().getServerIP().equals("")) {
+			etServerIP.setText("mde.cognito-service.de");
+			etServerPort.setText("4448");
+		}
+		if (isImpulseVersion && Option.Instance().getServerIP().equals("")) {
+			etServerIP.setText("imem.dyndns.biz");
+			etServerPort.setText("4448");
+		}
 		etPhoneNumber.setText(Option.Instance().getPhoneNumber());
 		initControlsState();
 	}
@@ -156,9 +169,10 @@ public class OptionsFragment extends Fragment {
 	private void initDialogs() {
 		versionFragmentDialog = new InfoBaseDialog(
 			getString(R.string.menu_program_info), 
-			String.format("%s %s\n%s %s"
+			String.format("%s %s - %d\n%s %s"
 					, getString(R.string.program_version)
 					, Option.Instance().getVersion()
+					, Option.Instance().getVersionCode()
 					, getString(R.string.data_base_version)
 					, HelperFactory.getHelper().getReadableDatabase().getVersion())
 			);
@@ -168,6 +182,12 @@ public class OptionsFragment extends Fragment {
 		noConnectionDialog = new InfoBaseDialog(
 				getString(R.string.dialog_connection_problems),
 				getString(R.string.dialog_no_connection));
+		if (isMicuraVersion && Option.Instance().getServerIP().equals("")) {
+			micurasPortDialog = new MicurasPortDialog();
+			micurasPortDialog.show(getFragmentManager(), "micurasPortDialog");
+			micurasPortDialog.setCancelable(false);
+			etServerIP.setText("server.micura.de");
+		}
 	}
 	
 }

@@ -2,6 +2,9 @@ package isebase.cognito.tourpilot.Data.Task;
 
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectDAO;
+import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.DataBase.HelperFactory;
+import isebase.cognito.tourpilot.Utils.DateUtils;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,9 +22,24 @@ public class TaskDAO extends BaseObjectDAO<Task> {
 	}
 	
 	public void createTasks(List<AdditionalTask> additionalTasks){
-		List<Task> addedAdditionalTasks = new ArrayList<Task>(); 
-		for(AdditionalTask additionalTask : additionalTasks)
-			addedAdditionalTasks.add(new Task(additionalTask));
+		List<Task> addedAdditionalTasks = new ArrayList<Task>();
+		List<Task> tasks = HelperFactory.getHelper().getTaskDAO().load(Task.EMPLOYMENT_ID_FIELD, String.valueOf(Option.Instance().getEmploymentID()));
+		Task normalTask = null;
+		for (Task task : tasks) {
+			if (!task.isFirstTask() && !task.isLastTask()) {
+				normalTask = task;
+				break;
+			}
+		}
+		for(AdditionalTask additionalTask : additionalTasks) {
+			Task createdTask = null;
+			if (normalTask != null)
+				createdTask = new Task(additionalTask, normalTask.getPlanDate());
+			else
+				createdTask = new Task(additionalTask, DateUtils.getSynchronizedTime());
+			addedAdditionalTasks.add(createdTask);
+		}
+
 		save(addedAdditionalTasks);
 	}
 	

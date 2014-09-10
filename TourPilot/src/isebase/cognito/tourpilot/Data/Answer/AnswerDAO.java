@@ -96,6 +96,21 @@ public class AnswerDAO extends BaseObjectDAO<Answer> {
 		}
 		return new ArrayList<Answer>();
 	}
+	
+	public List<Answer> loadPainAnaliseAnswers() {
+		QueryBuilder<Answer, Integer> queryBuilder = queryBuilder();
+		try {
+			return queryBuilder
+					.where()
+					.eq(Answer.EMPLOYMENT_ID_FIELD,
+							Option.Instance().getEmploymentID()).and()
+					.eq(Answer.CATEGORY_ID_FIELD, 13).and()
+					.eq(Answer.QUESTION_ID_FIELD, -1).query();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return new ArrayList<Answer>();
+	}
 
 	// public List<Answer> loadByType(Category.type type) {
 	// if (type == type.normal) {

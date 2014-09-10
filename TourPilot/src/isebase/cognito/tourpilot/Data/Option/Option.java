@@ -4,6 +4,7 @@ import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
+import android.content.pm.PackageInfo;
 import android.telephony.TelephonyManager;
 
 import com.j256.ormlite.field.DataType;
@@ -28,9 +29,11 @@ public class Option {
 	public static final String SERVER_TIME_DIFFERENCE_FIELD = "server_time_difference";
 	public static final String IS_LOCK_OPTIONS_FIELD = "lock_options";
 	public static final String IS_WORKER_PHONES_FIELD = "is_worker_phones";
+	public static final String IS_SKIPPING_PFLEGE_OK = "is_skipping_pflege_ok";
+	
 	public static boolean testMode = false;
 	
-	public static long gpsStartTime;
+	public long gpsStartTime;
 	private Worker worker;
 	private TelephonyManager phoneManager = StaticResources.phoneManager;
 	private static Option instance;
@@ -162,6 +165,17 @@ public class Option {
 		return isAuto;
 	}
 	
+	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_SKIPPING_PFLEGE_OK)
+	private boolean isSkippingPflegeOK;
+	
+	public void setIsSkippingPflegeOK(boolean isSkippingPflegeOK) {
+		this.isSkippingPflegeOK = isSkippingPflegeOK;
+	}
+
+	public boolean getIsSkippingPflegeOK() {
+		return isSkippingPflegeOK;
+	}
+	
 //	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_WORKER_ACTIVITY_FIELD)
 //	private boolean isWorkerActivity;
 //	
@@ -257,12 +271,24 @@ public class Option {
 
 	public String getVersion() {
 		try {
-			return StaticResources.getBaseContext().getPackageManager().
-					getPackageInfo(StaticResources.getBaseContext().getPackageName(), 0).versionName;
+			PackageInfo packageInfo = StaticResources.getBaseContext().getPackageManager().
+			getPackageInfo(StaticResources.getBaseContext().getPackageName(), 0);
+			return packageInfo.versionName;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return "";
+	}
+	
+	public int getVersionCode() {
+		try {
+			PackageInfo packageInfo = StaticResources.getBaseContext().getPackageManager().
+			getPackageInfo(StaticResources.getBaseContext().getPackageName(), 0);
+			return packageInfo.versionCode;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
 	}
 
 	public String getPhoneNumber() {
