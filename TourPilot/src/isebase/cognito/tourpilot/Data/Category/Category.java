@@ -1,12 +1,12 @@
 package isebase.cognito.tourpilot.Data.Category;
 
-import com.j256.ormlite.table.DatabaseTable;
-
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Utils.NCryptor;
 import isebase.cognito.tourpilot.Utils.StringParser;
+
+import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "Categories")
 public class Category extends BaseObject {

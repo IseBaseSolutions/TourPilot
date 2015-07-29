@@ -1,6 +1,7 @@
 package isebase.cognito.tourpilot.Activity.QuestionActivities;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Data.Answer.Answer;
 import isebase.cognito.tourpilot.Data.AnsweredCategory.AnsweredCategory;
 import isebase.cognito.tourpilot.Data.Category.Category;
@@ -11,7 +12,6 @@ import isebase.cognito.tourpilot.Data.Relative.Relative;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
 
 import java.util.List;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -29,7 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class PainAnalyseSkalaActivity extends Activity {
+public class PainAnalyseSkalaActivity extends BaseActivity {
 
 	Category category;
 	Patient patient;
@@ -86,7 +86,6 @@ public class PainAnalyseSkalaActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         return false;
     }
-	
     private void setTitle() {
     	setTitle(R.string.pain_analyse);
     }

@@ -37,6 +37,9 @@ public class OptionsFragment extends Fragment {
 	public boolean isMicuraVersion = false;
 	public boolean isNHKVersion = false;
 	public boolean isImpulseVersion = false;
+	public boolean isHansenVersion = false;
+	public boolean isTestVersion = false;
+	public boolean isClient114 = false;
 	public DialogFragment micurasPortDialog;
 	
 	public WorkerOptionActivity activity;
@@ -67,7 +70,7 @@ public class OptionsFragment extends Fragment {
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+			Bundle savedInstanceState) {		
 		rootView = inflater.inflate(
 				R.layout.activity_options, container, false);
 		initControls();
@@ -83,7 +86,7 @@ public class OptionsFragment extends Fragment {
 	}
 	
 	
-	private void initControls() {		
+	private void initControls() {
 		etServerIP = (EditText) rootView.findViewById(R.id.etServerIP);
 		etServerPort = (EditText) rootView.findViewById(R.id.etServerPort);
 		etPhoneNumber = (EditText) rootView.findViewById(R.id.etPhoneNumber);
@@ -102,6 +105,18 @@ public class OptionsFragment extends Fragment {
 		if (isImpulseVersion && Option.Instance().getServerIP().equals("")) {
 			etServerIP.setText("imem.dyndns.biz");
 			etServerPort.setText("4448");
+		}
+		if (isHansenVersion && Option.Instance().getServerIP().equals("")) {
+			etServerIP.setText("85.183.42.165");
+			etServerPort.setText("4448");
+		}
+		if (isTestVersion && Option.Instance().getServerIP().equals("")) {
+			etServerIP.setText("192.168.1.1");
+			etServerPort.setText("4449");
+		}
+		if (isClient114 && Option.Instance().getServerIP().equals("")) {
+			etServerIP.setText("85.16.72.214");
+			etServerPort.setText("4449");
 		}
 		etPhoneNumber.setText(Option.Instance().getPhoneNumber());
 		initControlsState();

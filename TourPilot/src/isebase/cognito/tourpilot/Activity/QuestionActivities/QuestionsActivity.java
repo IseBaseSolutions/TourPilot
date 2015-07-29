@@ -1,7 +1,6 @@
 package isebase.cognito.tourpilot.Activity.QuestionActivities;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Activity.ToursActivity;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Activity.TasksAssessmentsActivity.TasksAssessementsActivity;
 import isebase.cognito.tourpilot.Data.Answer.Answer;
@@ -64,10 +63,12 @@ public class QuestionsActivity extends BaseActivity implements BaseDialogListene
 		setVisibility();
 	}
 	
+	
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 		if (!category.getName().equals("Kontrakturrisikoerfassung"))
 			return false;
+		
     	getMenuInflater().inflate(R.menu.kontraktur_picture_info, menu);
         return true;
     }
@@ -146,7 +147,8 @@ public class QuestionsActivity extends BaseActivity implements BaseDialogListene
 			answerRadioButtonClicked(questionHolder, answerIndex);
 		if (questions.size() > 0 || isCategoryAnswered())
 			return;
-		HelperFactory.getHelper().getAnsweredCategoryDAO().save(new AnsweredCategory(category.getId(), Option.Instance().getEmploymentID()));
+		if (HelperFactory.getHelper().getAnsweredCategoryDAO().loadByCategoryID(category.getId()) == null)
+			HelperFactory.getHelper().getAnsweredCategoryDAO().save(new AnsweredCategory(category.getId(), Option.Instance().getEmploymentID()));
 		if (!category.getName().equals("Kontrakturrisikoerfassung"))
 			onBackPressed();
 		else {

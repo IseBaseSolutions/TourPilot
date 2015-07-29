@@ -253,7 +253,6 @@ public class KontrakturView extends View {
 		canvas.drawText("Betroffen(Bewegung eingeschrönkt/Gelenk", radius*4*zoomIndex, (int)(legendSize/1.6)*zoomIndex + radius*zoomIndex/2, paint);
 		canvas.drawText("unbeweglich)", radius*4*zoomIndex, (int)(legendSize/1.6)*zoomIndex + radius*2*zoomIndex, paint);
 		
-		
 		paint.setColor(getResources().getColor(R.color.green));		
 		canvas.drawCircle(radius*2*zoomIndex, legendSize/8*zoomIndex, radius*zoomIndex, paint);
 		paint.setColor(getResources().getColor(R.color.blue));		

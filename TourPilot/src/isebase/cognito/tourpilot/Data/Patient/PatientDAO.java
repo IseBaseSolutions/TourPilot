@@ -106,6 +106,7 @@ public class PatientDAO extends BaseObjectDAO<Patient> {
 	private String getSelectString() {
 		String strSelect = "";
 		strSelect += "t1." + Patient.SURNAME_FIELD + ", ";
+		strSelect += "t1." + Patient.BIRTH_DATE_FIELD + ", ";
 		strSelect += "t1." + Patient.SEX_FIELD + ", ";
 		strSelect += "t1." + Patient.RELATIVES_ID_FIELD + ", ";
 		strSelect += "t1." + Patient.DOCTORS_ID_FIELD + ", ";

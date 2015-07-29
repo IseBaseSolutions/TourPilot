@@ -17,6 +17,7 @@ import isebase.cognito.tourpilot.Data.RelatedQuestionSetting.RelatedQuestionSett
 import isebase.cognito.tourpilot.Data.Relative.Relative;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
+import isebase.cognito.tourpilot.Data.TourOncomingInfo.TourOncomingInfo;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemark;
 import isebase.cognito.tourpilot.Data.Work.Work;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
@@ -46,6 +47,7 @@ public class RecievedObjectSaver {
 	public List<QuestionSetting> questionSettingsToSave = new ArrayList<QuestionSetting>();	
 	public List<CustomRemark> customRemarksToSave = new ArrayList<CustomRemark>();
 	public List<RelatedQuestionSetting> relatedQuestionSettingsToSave = new ArrayList<RelatedQuestionSetting>();	
+	public List<TourOncomingInfo> tourOncomingInfoToSave = new ArrayList<TourOncomingInfo>();	
 	
 	public List<Integer> workersToDelete = new ArrayList<Integer>();
 	public List<Integer> userRemarksToDelete = new ArrayList<Integer>();
@@ -66,6 +68,7 @@ public class RecievedObjectSaver {
 	public List<Integer> questionSettingsToDelete = new ArrayList<Integer>();	
 	public List<Integer> customRemarksToDelete = new ArrayList<Integer>();
 	public List<Integer> relatedQuestionSettingsToDelete = new ArrayList<Integer>();
+	public List<Integer> tourOncomingInfoToDelete = new ArrayList<Integer>();	
 
 //	public static final char FREE_TOPIC = '<';
 //	public static final char FREE_QUESTION = '>';
@@ -117,6 +120,8 @@ public class RecievedObjectSaver {
 			HelperFactory.getHelper().getCustomRemarkDAO().save(customRemarksToSave);
 		if (relatedQuestionSettingsToSave.size() > 0)
 			HelperFactory.getHelper().getRelatedQuestionSettingDAO().save(relatedQuestionSettingsToSave);
+		if (tourOncomingInfoToSave.size() > 0)
+			HelperFactory.getHelper().getTourOncomingInfoDAO().save(tourOncomingInfoToSave);
 
 		if (workersToDelete.size() > 0)
 			HelperFactory.getHelper().getWorkerDAO().deleteByIds(workersToDelete);
@@ -156,6 +161,8 @@ public class RecievedObjectSaver {
 			HelperFactory.getHelper().getCustomRemarkDAO().deleteByIds(customRemarksToDelete);
 		if (relatedQuestionSettingsToDelete.size() > 0)
 			HelperFactory.getHelper().getRelatedQuestionSettingDAO().deleteByIds(relatedQuestionSettingsToDelete);
+		if (tourOncomingInfoToDelete.size() > 0)
+			HelperFactory.getHelper().getTourOncomingInfoDAO().deleteByIds(tourOncomingInfoToDelete);
 		clear();
 	}
 	
@@ -217,6 +224,8 @@ public class RecievedObjectSaver {
 		if (relatedQuestionSettingsToSave.size() > 0)
 			relatedQuestionSettingsToSave.clear();
 		
+		if (tourOncomingInfoToSave.size() > 0)
+			tourOncomingInfoToSave.clear();
 		
 		if (workersToDelete.size() > 0)
 			workersToDelete.clear();
@@ -274,6 +283,10 @@ public class RecievedObjectSaver {
 		
 		if (relatedQuestionSettingsToDelete.size() > 0)
 			relatedQuestionSettingsToDelete.clear();
+		
+		if (tourOncomingInfoToDelete.size() > 0)
+			tourOncomingInfoToDelete.clear();
+		
 	}
 	
 

@@ -37,7 +37,6 @@ public class PilotToursAdapter extends ArrayAdapter<PilotTour>{
 		row = inflater.inflate(layoutResourceId, parent, false);
 		
 		PilotTour pilotTour = tours.get(position);
-		
 		employmentHolder.tvTourDate = (TextView) row.findViewById(R.id.tvTourDate);
 		employmentHolder.tvTourDate.setText(DateUtils.WeekDateFormat.format(pilotTour.getPlanDate()));
 		

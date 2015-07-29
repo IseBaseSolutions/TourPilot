@@ -4,10 +4,10 @@ import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.AddressPatientActivity;
 import isebase.cognito.tourpilot.Activity.DoctorsActivity;
 import isebase.cognito.tourpilot.Activity.ManualInputActivity;
-import isebase.cognito.tourpilot.Activity.UserRemarksActivity;
 import isebase.cognito.tourpilot.Activity.PatientsActivity;
 import isebase.cognito.tourpilot.Activity.RelativesActivity;
 import isebase.cognito.tourpilot.Activity.SynchronizationActivity;
+import isebase.cognito.tourpilot.Activity.UserRemarksActivity;
 import isebase.cognito.tourpilot.Activity.VerificationActivity;
 import isebase.cognito.tourpilot.Activity.AdditionalTasks.CatalogsActivity;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
@@ -15,14 +15,15 @@ import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Diagnose.Diagnose;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentInterval;
-import isebase.cognito.tourpilot.Data.Information.InformationDAO;
 import isebase.cognito.tourpilot.Data.Information.Information;
+import isebase.cognito.tourpilot.Data.Information.InformationDAO;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.PatientRemark.PatientRemark;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
 import isebase.cognito.tourpilot.Data.QuestionSetting.QuestionSetting;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
+import isebase.cognito.tourpilot.Data.TourOncomingInfo.TourOncomingInfo;
 import isebase.cognito.tourpilot.Data.Work.Work;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
@@ -100,6 +101,8 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	private List<Information> infos;
 
 	private PatientRemark patientRemark;
+	
+	public TourOncomingInfo workersInfo;
 
 	public DialogFragment startEmploymentDialog;
 	private BaseDialog clearAllTasksDialog;
@@ -131,7 +134,7 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	public TasksFragment(TasksAssessementsActivity instance) {
 		activity = instance;
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -270,6 +273,7 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 		diagnose = HelperFactory.getHelper().getDiagnoseDAO().load(employment.getPatientID());
 		pilotTour = HelperFactory.getHelper().getPilotTourDAO().loadPilotTour(Option.Instance().getPilotTourID());
 		worker = HelperFactory.getHelper().getWorkerDAO().load(Option.Instance().getWorkerID());
+		workersInfo = HelperFactory.getHelper().getTourOncomingInfoDAO().LoadByOwnerID(employment.getId(), 2);
 		initHeadTasks();		
 	}
 	
@@ -309,8 +313,14 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 		}			
 		if (!employment.isWork())
 		{
-			saveData(false);
-			checkLeavingState();
+			if (!Option.Instance().getIsSkippingPflegeOK()) {
+				saveData(false);
+				checkLeavingState();
+			}
+			else {
+				saveData(false);
+				startVerificationActivity(ACTIVITY_VERIFICATION_CODE, IS_FLEGE_OK);
+			}
 		}
 		else
 		{

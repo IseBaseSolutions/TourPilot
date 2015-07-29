@@ -35,7 +35,7 @@ public class ActualWorkersActivity extends BaseActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);	
 		setContentView(R.layout.activity_actual_workers);
 		reloadData();
 		initControls();
@@ -75,7 +75,7 @@ public class ActualWorkersActivity extends BaseActivity {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int selectedIndex,
 					long arg3) {
 				selectedWorker = adapter.getItem(selectedIndex);
-				if (selectedWorker != null)
+				if (selectedWorker != null && selectedWorker.isSendingInfoAllowed())
 					showWorkerPhoneNumberDialog();
 			}
 			

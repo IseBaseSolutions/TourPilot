@@ -48,7 +48,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             boolean isLastChild, View convertView, ViewGroup parent) {
         final String answerName = (String) getChild(groupPosition, childPosition);
         LayoutInflater inflater = context.getLayoutInflater();
- 
         if (convertView == null) {
             convertView = inflater.inflate(isebase.cognito.tourpilot.R.layout.row_braden_answer_template, null);
         } 

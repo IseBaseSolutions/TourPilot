@@ -1,10 +1,10 @@
 package isebase.cognito.tourpilot.Data.SelectionPeriod;
 
-import java.util.Date;
-
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
+
+import java.util.Date;
 
 public class SelectionPeriod implements IJob {
 

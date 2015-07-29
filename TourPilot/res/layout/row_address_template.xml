@@ -16,6 +16,16 @@
         android:textSize="@dimen/text_size_big" />
     
     <TextView
+        android:id="@+id/tvBirthDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal|center"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="15dp"
+        android:visibility="gone"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <TextView
         android:id="@+id/tvAddressName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

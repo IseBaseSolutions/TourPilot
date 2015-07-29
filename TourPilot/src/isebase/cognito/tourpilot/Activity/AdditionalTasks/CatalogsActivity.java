@@ -45,7 +45,7 @@ public class CatalogsActivity extends BaseActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		return false;
 	}
-
+	
 	private void reloadData(){
 		newEmployment = HelperFactory.getHelper().getEmploymentDAO().load((int)Option.Instance().getEmploymentID());
 
@@ -66,7 +66,12 @@ public class CatalogsActivity extends BaseActivity {
 		Bundle bundle = intentFlege.getExtras();
 		if(bundle == null)
 			super.onBackPressed();
-		
+		else {
+			HelperFactory.getHelper().getEmploymentDAO().delete((int)Option.Instance().getEmploymentID());
+			Option.Instance().setEmploymentID(BaseObject.EMPTY_ID);
+			super.onBackPressed();
+		}
+			
 	}
 		
 	private void fillUpTitle(){

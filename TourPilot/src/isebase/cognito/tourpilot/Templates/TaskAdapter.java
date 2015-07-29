@@ -34,7 +34,6 @@ public class TaskAdapter extends ArrayAdapter<Task> {
 		TasktHolder taskHolder = new TasktHolder();
 		LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 		row = inflater.inflate(layoutResourceId, parent, false);
-
 		taskHolder.task = tasks.get(position);
 		taskHolder.tvTaskText = (TextView) row.findViewById(R.id.tvTaskName);
 		taskHolder.btTaskState = (ImageView) row.findViewById(R.id.btChangeTaskState);		

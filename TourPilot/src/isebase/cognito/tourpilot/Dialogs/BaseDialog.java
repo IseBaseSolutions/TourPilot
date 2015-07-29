@@ -1,7 +1,7 @@
 package isebase.cognito.tourpilot.Dialogs;
 
-import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
+import android.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;

@@ -27,7 +27,7 @@ public class PatientsDialog extends BaseDialog {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-
+	
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity())
 				.setTitle(title)

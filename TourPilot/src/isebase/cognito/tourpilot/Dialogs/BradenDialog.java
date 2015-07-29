@@ -61,7 +61,6 @@ public class BradenDialog extends DialogFragment{
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
-		
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View view = inflater.inflate(R.layout.dialog_braden, null);
 		adb.setView(view);
@@ -114,7 +113,6 @@ public class BradenDialog extends DialogFragment{
 	}
 	
 	private void fillUp() {
-
 		if (answerName.equals(StaticResources.getBaseContext().getString(R.string.braden_answer_0_0)))
 			fillUpDialog(1,1,0);
 		if (answerName.equals(StaticResources.getBaseContext().getString(R.string.braden_answer_0_1)))

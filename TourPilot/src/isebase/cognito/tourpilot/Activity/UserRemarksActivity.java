@@ -5,8 +5,8 @@ import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Data.CustomRemark.CustomRemark;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.Data.UserRemark.UserRemark;
 import isebase.cognito.tourpilot.Data.UserRemark.RemarksComparer;
+import isebase.cognito.tourpilot.Data.UserRemark.UserRemark;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
 
 import java.util.Arrays;
@@ -32,7 +32,7 @@ public class UserRemarksActivity extends BaseActivity {
 	
 	private LinearLayout llCustomRemarks;
 	private boolean viewMode;
-
+ 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		try {

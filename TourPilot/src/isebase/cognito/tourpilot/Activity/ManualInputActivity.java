@@ -69,13 +69,15 @@ public class ManualInputActivity extends BaseActivity implements BaseDialogListe
         ListView lvJobs = (ListView) findViewById(R.id.lvJobs);
         lvJobs.setAdapter(adapter);
         lvJobs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+					long arg3) {
                 if ((jobs.get(position) instanceof Employment) || (jobs.get(position) instanceof Work))
-                        return;
-                intervalInputDialog.setSelectedPeriod((SelectionPeriod) jobs.get(position));
-                intervalInputDialog.show(getSupportFragmentManager(), "intervalDialog");
-            }
+                    return;
+	            intervalInputDialog.setSelectedPeriod((SelectionPeriod) jobs.get(position));
+	            intervalInputDialog.show(getSupportFragmentManager(), "intervalDialog");		
+			}
         });
     }
 
@@ -169,7 +171,7 @@ public class ManualInputActivity extends BaseActivity implements BaseDialogListe
         		new Date(),
         		additionalWork.getId(),
         		Option.Instance().getPilotTourID(),
-        		additionalWork.getName());
+        		additionalWork.getName(), Option.Instance().getWorkerID());
     	work.setPatientIDs(patientsDialog.getSelectedPatientIDs());
         work.setIsDone(true);
         HelperFactory.getHelper().getWorkDAO().save(work);

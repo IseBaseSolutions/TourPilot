@@ -10,6 +10,7 @@ import isebase.cognito.tourpilot.Data.Information.InformationDAO;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
+import isebase.cognito.tourpilot.Data.TourOncomingInfo.TourOncomingInfo;
 import isebase.cognito.tourpilot.Data.Work.Work;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
@@ -67,7 +68,8 @@ public class PatientsActivity extends BaseActivity implements
 	private BaseInfoDialog noConnectionDialog;
 
 	private LocationManager locationManager;
-
+	private TourOncomingInfo workersInfo;
+	private TourOncomingInfo carsInfo;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		try {
@@ -100,6 +102,8 @@ public class PatientsActivity extends BaseActivity implements
 		MenuItem illnessTourMenu = menu.findItem(R.id.action_illness_tours);
 		MenuItem allPatientsMenu = menu.findItem(R.id.action_show_all_patients);
 		MenuItem actualWorkers = menu.findItem(R.id.action_actual_workers);
+		MenuItem workersInfo = menu.findItem(R.id.workers_info);
+		MenuItem carsInfo = menu.findItem(R.id.cars_info);
 		commonTourMenu.setEnabled(false);
 		tourInfoMenu.setEnabled(false);
 		additionalWork.setEnabled(false);
@@ -112,6 +116,8 @@ public class PatientsActivity extends BaseActivity implements
 			allPatientsMenu.setEnabled(true);
 		}
 		tourInfoMenu.setEnabled(infos.size() != 0);
+		workersInfo.setEnabled(this.workersInfo != null);
+		carsInfo.setEnabled(this.carsInfo != null);
 		actualWorkers.setEnabled(Option.Instance().isWorkerPhones());
 		return true;
 	}
@@ -142,6 +148,12 @@ public class PatientsActivity extends BaseActivity implements
 			return true;
 		case R.id.action_actual_workers:
 			startWorkersAdditionalInfoActivity();
+			return true;
+		case R.id.workers_info:
+			startTourOncomingInfo(workersInfo.getId());
+			return true;
+		case R.id.cars_info:
+			startTourOncomingInfo(carsInfo.getId());
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -211,6 +223,8 @@ public class PatientsActivity extends BaseActivity implements
 		loadJobs();
 		worker = HelperFactory.getHelper().getWorkerDAO()
 				.load(Option.Instance().getWorkerID());
+		workersInfo = HelperFactory.getHelper().getTourOncomingInfoDAO().LoadByOwnerID(pilotTour.getId(), 0);
+		carsInfo = HelperFactory.getHelper().getTourOncomingInfoDAO().LoadByOwnerID(pilotTour.getId(), 1);
 	}
 
 	private void loadJobs() {
@@ -324,6 +338,13 @@ public class PatientsActivity extends BaseActivity implements
 		Intent workersAdditionalInfoActivity = new Intent(
 				getApplicationContext(), ActualWorkersActivity.class);
 		startActivity(workersAdditionalInfoActivity);
+	}
+	
+	private void startTourOncomingInfo(int id) {
+		Intent tourOncomingInfoActivity = new Intent(
+				getApplicationContext(), TourOncomingInfoActivity.class);
+		tourOncomingInfoActivity.putExtra("id", id);
+		startActivity(tourOncomingInfoActivity);
 	}
 
 	private void showTourInfos(boolean isFromMenu) {

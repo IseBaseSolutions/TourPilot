@@ -50,6 +50,8 @@ import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Task.TaskDAO;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
 import isebase.cognito.tourpilot.Data.Tour.TourDAO;
+import isebase.cognito.tourpilot.Data.TourOncomingInfo.TourOncomingInfo;
+import isebase.cognito.tourpilot.Data.TourOncomingInfo.TourOncomingInfoDAO;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemark;
 import isebase.cognito.tourpilot.Data.UserRemark.UserRemarkDAO;
 import isebase.cognito.tourpilot.Data.WayPoint.WayPoint;
@@ -65,6 +67,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 //import com.example.ormtest.DatabaseHelper;
@@ -81,7 +85,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 	// с каждым увеличением версии, при нахождении в устройстве БД с предыдущей
 	// версией будет выполнен метод onUpgrade();
-	private static final int DATABASE_VERSION = 23;
+	private static final int DATABASE_VERSION = 30;
 
 	// ссылки на DAO соответсвующие сущностям, хранимым в БД
 	// private GoalDAO goalDao = null;
@@ -114,6 +118,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private WorkDAO workDao = null;
 	private WorkerDAO workerDao = null;
 	private RelatedQuestionSettingDAO relatedQuestionSettingDao = null;
+	private TourOncomingInfoDAO tourOncomingInfoDAO = null;
 	
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -127,7 +132,39 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, ConnectionSource arg1, int oldVer,
 			int newVer) {
-		clearAllData();
+//		clearAllData();
+		try {
+			db.execSQL("ALTER TABLE Options ADD COLUMN is_skipping_pflege_ok SMALLINT");
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		try {
+			db.execSQL("ALTER TABLE Patients ADD COLUMN birth_date VARCHAR");
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		try {
+			db.execSQL("ALTER TABLE Workers ADD COLUMN is_sending_info_allowed SMALLINT");
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		try {
+			TableUtils.createTable(connectionSource, TourOncomingInfo.class);
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		try {
+			db.execSQL("ALTER TABLE Works ADD COLUMN worker_id LONG");
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		try {
+			db.execSQL(String.format(" UPDATE Works " +
+							" SET worker_id = %d " +
+							" WHERE worker_id = 0 ", Option.Instance().getWorkerID()));
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 	
 	public void createDataTables() {
@@ -161,6 +198,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.createTable(connectionSource, UserRemark.class);
 			TableUtils.createTable(connectionSource, WayPoint.class);
 			TableUtils.createTable(connectionSource, RelatedQuestionSetting.class);
+			TableUtils.createTable(connectionSource, TourOncomingInfo.class);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -197,6 +235,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.dropTable(connectionSource, WayPoint.class, true);
 			TableUtils.dropTable(connectionSource, Work.class, true);
 			TableUtils.dropTable(connectionSource, RelatedQuestionSetting.class, true);
+			TableUtils.dropTable(connectionSource, TourOncomingInfo.class, true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -230,6 +269,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.clearTable(connectionSource, Answer.class);
 			TableUtils.clearTable(connectionSource, AnsweredCategory.class);
 			TableUtils.clearTable(connectionSource, ExtraCategory.class);
+			TableUtils.clearTable(connectionSource, TourOncomingInfo.class);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -492,6 +532,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public RelatedQuestionSettingDAO getRelatedQuestionSettingDAO() {
 		try {
 			return relatedQuestionSettingDao == null ? relatedQuestionSettingDao = new RelatedQuestionSettingDAO(getConnectionSource(), RelatedQuestionSetting.class) : relatedQuestionSettingDao;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public TourOncomingInfoDAO getTourOncomingInfoDAO() {
+		try {
+			return tourOncomingInfoDAO == null ? tourOncomingInfoDAO = new TourOncomingInfoDAO(getConnectionSource(), TourOncomingInfo.class) : tourOncomingInfoDAO;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

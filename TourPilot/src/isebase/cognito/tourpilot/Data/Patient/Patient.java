@@ -29,6 +29,8 @@ public class Patient extends BaseObject implements IAddressable {
 
 	public static final int ADDITIONAL_WORK_CODE = 999900;
 	
+	public static final String BIRTH_DATE_FIELD = "birth_date";
+	
 	public Address address;
 	
 	@DatabaseField(dataType = DataType.INTEGER, columnName = ADDRESS_ID_FIELD)
@@ -141,6 +143,17 @@ public class Patient extends BaseObject implements IAddressable {
 		this.btyp_sa = btyp_sa;
 	}
 	
+	@DatabaseField(dataType = DataType.STRING, columnName = BIRTH_DATE_FIELD)
+	private String birthdate;	
+	
+	public String getBirthdate() {
+		return birthdate;
+	}
+
+	public void setBirthdate(String birthdate) {
+		this.birthdate = birthdate;
+	}
+
 	public boolean isAdditionalWork(){
 		return getId() > ADDITIONAL_WORK_CODE;
 	}
@@ -156,20 +169,21 @@ public class Patient extends BaseObject implements IAddressable {
 	public Patient(String[] resultArray) {
 		clear();
 		setSurname(resultArray[0]);
-		setSex(resultArray[1]);
-		setStrRelativeIDs(resultArray[2]);
-		setStrDoctorsIDs(resultArray[3]);
-		setSA(Integer.parseInt(resultArray[4]));
-		setPR(Integer.parseInt(resultArray[5]));
-		setIsAdditional(resultArray[6].equals("1"));
-		setPK(Integer.parseInt(resultArray[7]));
-		setKK(Integer.parseInt(resultArray[8]));
-		setAddressID(Integer.parseInt(resultArray[9]));
-		setName(resultArray[10]);
-		setId(Integer.parseInt(resultArray[11]));
-		setCheckSum(Long.parseLong(resultArray[12]));
-		setServerTime(resultArray[13].equals("1"));
-		setWasSent(resultArray[14].equals("1"));
+		setBirthdate(resultArray[1]);
+		setSex(resultArray[2]);
+		setStrRelativeIDs(resultArray[3]);
+		setStrDoctorsIDs(resultArray[4]);
+		setSA(Integer.parseInt(resultArray[5]));
+		setPR(Integer.parseInt(resultArray[6]));
+		setIsAdditional(resultArray[7].equals("1"));
+		setPK(Integer.parseInt(resultArray[8]));
+		setKK(Integer.parseInt(resultArray[9]));
+		setAddressID(Integer.parseInt(resultArray[10]));
+		setName(resultArray[11]);
+		setId(Integer.parseInt(resultArray[12]));
+		setCheckSum(Long.parseLong(resultArray[13]));
+		setServerTime(resultArray[14].equals("1"));
+		setWasSent(resultArray[15].equals("1"));
 	}
 	
 	public Patient(String initString) {
@@ -192,6 +206,7 @@ public class Patient extends BaseObject implements IAddressable {
 		address.setPhone(parsingString.next(";"));
 		address.setPrivatePhone(parsingString.next(";"));
 		address.setMobilePhone(parsingString.next(";"));
+		setBirthdate(parsingString.next(";"));
 		
 		setKK(parseInt(parsingString.next("+")));
 		setPK(parseInt(parsingString.next("+")));
@@ -253,7 +268,7 @@ public class Patient extends BaseObject implements IAddressable {
 		setPK(EMPTY_ID);
 		setSA(EMPTY_ID);
 		setPR(EMPTY_ID);
-		
+		setBirthdate("");
 	}
 
 	@Override

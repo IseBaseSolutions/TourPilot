@@ -199,7 +199,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 				StringParser stringParser = new StringParser(recievedStatus);
 				String msg = stringParser.next("\0");
 				Option.Instance().setIsAuto(msg.contains("1"));
-//				msg.contains("skippflegeok");
+				Option.Instance().setIsSkippingPflegeOK(msg.contains("SkipPflegeOk"));
 				Option.Instance().setWorkerPhones(msg.contains("WorkersInfo"));
 				if (stringParser.contains(ServerCommandParser.SERVER_CURRENT_VERSION))
 					conStatus.serverCommandParser.parseElement(stringParser.next("\0"), false);
@@ -357,22 +357,6 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		strDone += HelperFactory.getHelper().getUserRemarkDAO().getDone();
 		strDone += HelperFactory.getHelper().getEmploymentVerificationDAO().getDone();
 		strDone += HelperFactory.getHelper().getWayPointDAO().getDone();
-		// strDone += CMergedEmploymentTimes.Instance().GetDone(); // Andrew
-		//
-		// strDone += CCoordinates.Instance().GetDone(); // Andrew
-
-		// String patAnswers[] =
-		// CPatientAnswers.Instance().GetDone().split("\0");
-		// ArrayList<String> patAnsw = new ArrayList<String>();
-		// for (int i = 0; i < patAnswers.length; i++) {
-		// if (!patAnsw.contains(patAnswers[i]))
-		// patAnsw.add(patAnswers[i]);
-		// }
-		// for (String str : patAnsw) {
-		// strDone += str + "\0";
-		// }
-		//
-		// strDone += CFreeAnswers.Instance().GetDone();
 		return strMsg + strDone;
 	}
 
@@ -401,7 +385,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 			strMsg += "x" + (userIsPresent ? HelperFactory.getHelper().getQuestionSettingDAO().getCheckSumByRequest() : 0) + "\0.\0";
 		}
 		strMsg += "?" + HelperFactory.getHelper().getRelatedQuestionSettingDAO().getCheckSumByRequest() + "\0.\0";
-		
+		strMsg += "+" + (userIsPresent ? HelperFactory.getHelper().getTourOncomingInfoDAO().getCheckSumByRequest() : 0) + "\0.\0";
 //		strMsg += ">" + CFreeQuestions.Instance().getCheckSums() + "\0.\0";
 //		strMsg += "<" + CFreeTopics.Instance().getCheckSums() + "\0.\0";
 //		strMsg += "*" + (userIsPresent ? CFreeQuestionSettings.Instance().getCheckSums() : 0) + "\0.\0";
@@ -419,6 +403,8 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 //			strMsg += CFreeTopics.Instance().forServer();
 //		if (strNeedSend.length() > 15 && strNeedSend.charAt(15) == '1')
 //			strMsg += CFreeQuestions.Instance().forServer();
+		if (strNeedSend.length() > 16 && strNeedSend.charAt(17) == '1')
+			strMsg += HelperFactory.getHelper().getTourOncomingInfoDAO().forServer();
 		if (strNeedSend.length() > 16 && strNeedSend.charAt(16) == '1')
 			strMsg += HelperFactory.getHelper().getRelatedQuestionSettingDAO().forServer();
 		if (strNeedSend.length() > 15 && strNeedSend.charAt(15) == '1')
@@ -481,7 +467,6 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 			} catch (InterruptedException ex) {
 				ex.printStackTrace();
 			}
-
 		StringBuffer stringBuffer = new StringBuffer();
 		GZIPInputStream zis = new GZIPInputStream(is);
 		try {

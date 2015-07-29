@@ -39,12 +39,12 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	private List<PilotTour> pilotTours;
 	BaseInfoDialog noConectionDialog;
 	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		try {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_tours);
-//			saveTourActivity(true);
 			reloadData();		
 			fillUpTitle();
 			fillUp();
@@ -159,13 +159,11 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog) {
 		if(dialog.getTag().equals("dialogBack")) {
-//			saveTourActivity(false);
 			logOut();
 			
 		}
 		else if (dialog.getTag().equals("clearDatabase")) {
 			clearDB();
-//			saveTourActivity(false);
 		}
 	}
 
@@ -173,7 +171,7 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	public void onDialogNegativeClick(DialogFragment dialog) {
 		
 	}
-
+	
 	private void clearDatabase(){
 		BaseDialog dialog = new BaseDialog(getString(R.string.attention), 
 				getString(R.string.dialog_clear_database));

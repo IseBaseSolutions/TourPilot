@@ -62,7 +62,11 @@ public class AddressAdapter<T extends IAddressable> extends ArrayAdapter<T> {
 		
 		addressHolder.tvAddressName = (TextView) row.findViewById(R.id.tvAddressName);		
 		addressHolder.tvAddressName.setText(addressHolder.address.getAddress().getAddressData());
-
+		if (addressHolder.address instanceof Patient) {
+			addressHolder.tvBirthDate = (TextView) row.findViewById(R.id.tvBirthDate);
+			addressHolder.tvBirthDate.setVisibility(View.VISIBLE);
+			addressHolder.tvBirthDate.setText(((Patient)addressHolder.address).getBirthdate());
+		}
 		
 		TableLayout tablePhones = (TableLayout)row.findViewById(R.id.tablePhones);
 		if (addressHolder.address instanceof Doctor && !((Doctor)addressHolder.address).getNote().equals(""))
@@ -156,6 +160,7 @@ public class AddressAdapter<T extends IAddressable> extends ArrayAdapter<T> {
 		TextView tvMobilePhone;
 		
 		TextView tvAddressName;
+		TextView tvBirthDate;
 	}
 	
 	public void onCallPhone(View view) {		

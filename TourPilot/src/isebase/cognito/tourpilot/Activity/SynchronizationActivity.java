@@ -46,10 +46,11 @@ import android.widget.TextView;
  	private SynchronizationHandler syncHandler;
  	
  	/** Override **/
- 	
+
  	@Override
  	protected void onCreate(Bundle savedInstanceState) {
  		super.onCreate(savedInstanceState);
+
  		setContentView(R.layout.activity_synchronization);
  		initControls();
  		initAdapter();
@@ -160,10 +161,11 @@ import android.widget.TextView;
 			finish();
 		}
 	}
-	
+
 	/** Internal **/
 	
 	private void initControls() {
+		
 		lvConnectionLog = (ListView) findViewById(R.id.lvSyncText);
 		progressBar = (ProgressBar) findViewById(R.id.pbSync);
 		progressText = (TextView)findViewById(R.id.tvProgress);

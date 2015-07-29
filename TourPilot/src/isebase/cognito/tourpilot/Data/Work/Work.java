@@ -28,6 +28,7 @@ public class Work extends BaseObject implements IJob {
 	public static final String MANUAL_TIME_FIELD = "manual_time";
 	public static final String PATIENTS_ID_FIELD = "patient_ids";
 	public static final String IS_DONE_FIELD = "is_done";
+	public static final String WORKER_ID = "worker_id";
 	
 	@DatabaseField(dataType = DataType.INTEGER, columnName = ADDITIONAL_WORK_ID_FIELD)
 	private int additionalWorkID;
@@ -50,6 +51,19 @@ public class Work extends BaseObject implements IJob {
 	public void setPilotTourID(long pilotTourID) {
 		this.pilotTourID = pilotTourID;
 	}
+	
+	
+	@DatabaseField(dataType = DataType.LONG, columnName = WORKER_ID)
+	private long workerID;
+	
+	public long getWorkerID() {
+		return workerID;
+	}
+
+	public void setWorkerID(long workerID) {
+		this.workerID = workerID;
+	}
+	
 	
 	@DatabaseField(dataType = DataType.DATE_LONG, columnName = START_TIME_FIELD)
     private Date startTime;
@@ -131,16 +145,17 @@ public class Work extends BaseObject implements IJob {
     	clear();
     }
 	
-    public Work(Date startDate, int addWorkID, long pilotTourID, String name)
+    public Work(Date startDate, int addWorkID, long pilotTourID, String name, int workerID)
     {
     	clear();
         setStartTime(startDate);
         setAdditionalWorkID(addWorkID);
         setPilotTourID(pilotTourID);
         setName(name);
+        setWorkerID(workerID);
     }
     
-    public Work(Date startDate, Date stopDate, Date manualtime, int addWorkID, long pilotTourID, String name)
+    public Work(Date startDate, Date stopDate, Date manualtime, int addWorkID, long pilotTourID, String name, int workerID)
     {
     	clear();
         setStartTime(startDate);
@@ -149,6 +164,7 @@ public class Work extends BaseObject implements IJob {
         setAdditionalWorkID(addWorkID);
         setPilotTourID(pilotTourID);
         setName(name);
+        setWorkerID(workerID);
     }
 
     
@@ -162,7 +178,7 @@ public class Work extends BaseObject implements IJob {
 			HelperFactory.getHelper().getWorkDAO().save(this);
 		}
         String strValue = new String(ServerCommandParser.WORK + ";");
-        strValue += Option.Instance().getWorkerID() + ";";
+        strValue += getWorkerID() + ";";
         strValue += DateUtils.toDateTime(getStartTime()) + ";";
         strValue += DateUtils.toDateTime(getStopTime()) + ";";
         strValue += getAdditionalWorkID() + ";";

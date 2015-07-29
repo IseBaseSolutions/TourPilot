@@ -11,7 +11,6 @@ import isebase.cognito.tourpilot.Utils.Utilizer;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -27,7 +26,7 @@ public class EmploymentDAO extends BaseObjectDAO<Employment> {
 	}
 	
 	public void createEmployments() {
-		String firstStr = "'%beginn%'";
+		String firstStr = "'%Anfang%'";
 		String strSQL = String.format("INSERT INTO %3$s" +
 				"(_id, patient_id, name, was_sent, checksum, is_server_time" +
 				", pilot_tour_id, date, tour_id, is_done, start_time, stop_time, day_part) SELECT " +
@@ -47,7 +46,7 @@ public class EmploymentDAO extends BaseObjectDAO<Employment> {
 				"FROM %1$s t1 " +
 				"INNER JOIN %2$s t2 on t1.patient_id = t2._id " +
 				"LEFT JOIN %4$s t3 on t1.employment_id = t3._id " +
-				"WHERE t1.name like %5$s GROUP BY t1.employment_id"
+				"WHERE t1.leistungs like %5$s GROUP BY t1.employment_id"
 				, HelperFactory.getHelper().getTaskDAO().getTableInfo().getTableName()
 				, HelperFactory.getHelper().getPatientDAO().getTableInfo().getTableName()
 				, tableInfo.getTableName()
@@ -147,7 +146,7 @@ public class EmploymentDAO extends BaseObjectDAO<Employment> {
 
     
     public static Employment createEmployment(Patient patient) {
-    	int id = 0;
+    	int id = 1;
     	while (HelperFactory.getHelper().getEmploymentDAO().load(id) != null)
     		id++;
     	Employment employment = new Employment();

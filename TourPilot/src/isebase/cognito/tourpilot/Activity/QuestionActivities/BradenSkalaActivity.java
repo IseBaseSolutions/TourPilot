@@ -105,7 +105,6 @@ public class BradenSkalaActivity extends BaseActivity implements BaseDialogListe
 		answerNumber = childPosition;
 		leavingDialog = new BaseDialog(getString(R.string.attention), getString(R.string.dialog_braden_point_marking));
     }
-    
     public void setQuestions() {
         questionsName.add(getString(R.string.braden_question_0));
         questionsName.add(getString(R.string.braden_question_1));

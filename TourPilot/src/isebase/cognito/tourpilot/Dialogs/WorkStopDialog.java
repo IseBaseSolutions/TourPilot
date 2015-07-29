@@ -20,7 +20,7 @@ public class WorkStopDialog extends BaseDialog {
 		this.title = title;
 		this.startTime = startTime;
 	}
-	
+
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity())

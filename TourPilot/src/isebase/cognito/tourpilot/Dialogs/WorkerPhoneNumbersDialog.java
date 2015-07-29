@@ -11,8 +11,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -48,7 +48,7 @@ public class WorkerPhoneNumbersDialog extends DialogFragment {
 	}
 	
 	private String[] getPhoneNumbers() {
-		List<String> phoneNumbersList = new ArrayList<String>();		
+		List<String> phoneNumbersList = new ArrayList<String>();
 		if (!worker.getWorkPhone().equals(""))
 			phoneNumbersList.add(StaticResources.getBaseContext().getString(R.string.phone) + " " + worker.getWorkPhone());
 		if (!worker.getPrivatePhone().equals(""))

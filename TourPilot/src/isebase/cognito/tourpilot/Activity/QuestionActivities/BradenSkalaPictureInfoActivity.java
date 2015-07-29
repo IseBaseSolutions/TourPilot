@@ -41,7 +41,6 @@ public class BradenSkalaPictureInfoActivity extends BaseActivity implements Base
 	Employment employment;
 	
 	int patientID;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,10 +59,6 @@ public class BradenSkalaPictureInfoActivity extends BaseActivity implements Base
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-//		case R.id.action_zoom:		
-//			bradenSkalaView.zoomIndex = bradenSkalaView.zoomIndex == 1 ? 2 : 1;
-//			bradenSkalaView.invalidate();
-//			return true;
 		case R.id.action_undo:
 			if (bradenSkalaView.points.size() > 0 && !employment.isDone()) {
 				bradenSkalaView.points.remove(bradenSkalaView.points.size() - 1);

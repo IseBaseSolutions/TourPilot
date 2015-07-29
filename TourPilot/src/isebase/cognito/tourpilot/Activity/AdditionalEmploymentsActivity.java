@@ -6,8 +6,8 @@ import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Connection.ConnectionAsyncTask;
 import isebase.cognito.tourpilot.Connection.ConnectionStatus;
 import isebase.cognito.tourpilot.Data.AdditionalEmployment.AdditionalEmployment;
-import isebase.cognito.tourpilot.Data.Employment.EmploymentDAO;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
+import isebase.cognito.tourpilot.Data.Employment.EmploymentDAO;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
@@ -81,8 +81,7 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 			noPatientsDialog.show(getSupportFragmentManager(), "noPatientsDialog");			
 			getSupportFragmentManager().executePendingTransactions();
 			return;
-		}
-		
+		}	
 		listView = (ListView) findViewById(R.id.lvAddEmployments);
 		switch(additionalEmploymentsMode) {
 		case getAP:
@@ -145,9 +144,7 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 		case removeCP: 
 			requestForServer = "REMOVE_CTP;";
 			break;
-		case getAP:
-			//requestForServer = "GET_ALL;";
-			//break;
+		default:
 			return;
 		}
 		requestForServer += tourID + getPatientsStr() + ";";
@@ -304,7 +301,7 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 	
 	private void startCatalogsActivity() {
 		Intent catalogsActivity = new Intent(getApplicationContext(), CatalogsActivity.class);
-		catalogsActivity.putExtra("disableBack", true);
+		catalogsActivity.putExtra("additionalEmployment", true);
 		startActivity(catalogsActivity);
 	}
 	

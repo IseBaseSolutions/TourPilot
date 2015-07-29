@@ -3,6 +3,7 @@ package isebase.cognito.tourpilot.Data.AdditionalTask;
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
+
 public class Catalog {
 	
 	public enum eCatalogType{

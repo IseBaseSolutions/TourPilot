@@ -68,7 +68,6 @@ public class ResizedImage {
 		canvas.drawBitmap(image, r1, new Rect(r2.left * zoomIndex, r2.top
 				* zoomIndex, r2.right * zoomIndex, r2.bottom * zoomIndex),
 				paint);
-
 		for (KontrakturPoint activePoint : activePoints) {
 			paint.setColor(StaticResources
 					.getBaseContext()
@@ -97,8 +96,8 @@ public class ResizedImage {
 			int x1 = getResizedX(point.x, zoomIndex);
 			int y1 = getResizedY(point.y, zoomIndex);
 			int r = getRadius(zoomIndex);
-			if (x1 - r /** 2 * zoomIndex*/ < x && x1 + r /** 2 * zoomIndex*/ > x
-					&& y1 - r /** 2 * zoomIndex*/ < y && y1 + r /** 2 * zoomIndex*/ > y) {
+			if (x1 - r < x && x1 + r > x
+					&& y1 - r < y && y1 + r > y) {
 				point.state = point.state == 0 ? 1 : point.state == 1 ? 2 : 0;
 				return point;
 			}

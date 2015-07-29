@@ -48,9 +48,10 @@ public class IntervalInputDialog extends BaseDialog  {
 	public void setSelectedPeriod(SelectionPeriod selectedPeriod) {
 		this.selectedPeriod = selectedPeriod;
 	}
-	
+
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		setMinMaxTime();
+		
 	    View customView = getActivity().getLayoutInflater().inflate(R.layout.custom_time_picker, null);
 
 	    tpStartTime = (TimePicker) customView.findViewById(R.id.tpStartTime);

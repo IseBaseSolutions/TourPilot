@@ -19,12 +19,15 @@ import isebase.cognito.tourpilot.Data.RelatedQuestionSetting.RelatedQuestionSett
 import isebase.cognito.tourpilot.Data.Relative.Relative;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.Data.Tour.Tour;
+import isebase.cognito.tourpilot.Data.TourOncomingInfo.TourOncomingInfo;
 import isebase.cognito.tourpilot.Data.Worker.Worker;
 import isebase.cognito.tourpilot.EventHandle.SynchronizationHandler;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 
 import java.util.Date;
 import java.util.List;
+
+
 //import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 //import isebase.cognito.tourpilot.Data.Question.Category.Category;
 //import isebase.cognito.tourpilot.Data.Question.Link.Link;
@@ -67,6 +70,7 @@ public class ServerCommandParser {
 	public static final char CUSTOM_REMARK = '#';
 	public static final char WAY_POINT = 'C';
 	public static final char RELATED_QUESTION_SETTING = '?';
+	public static final char TOUR_ONCOMING_INFO = '+';
 
 	private SynchronizationHandler syncHandler;
 
@@ -248,7 +252,14 @@ public class ServerCommandParser {
 			} else
 				addToDeleteList(RecievedObjectSaver.Instance().relatedQuestionSettingsToDelete, getIDFromStr(commandLine));
 			break;
-
+		case TOUR_ONCOMING_INFO:
+			if (commandActionType == NEED_TO_ADD) {
+				TourOncomingInfo item = new TourOncomingInfo(commandLine);
+				RecievedObjectSaver.Instance().tourOncomingInfoToSave.add(item);
+				syncHandler.onProgressUpdate(item.getName() + " OK");
+			} else
+				addToDeleteList(RecievedObjectSaver.Instance().tourOncomingInfoToDelete, getIDFromStr(commandLine));
+			break;
 		default:
 			break;
 		}

@@ -1,6 +1,7 @@
 package isebase.cognito.tourpilot.Activity.QuestionActivities;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Data.Answer.Answer;
 import isebase.cognito.tourpilot.Data.AnsweredCategory.AnsweredCategory;
 import isebase.cognito.tourpilot.Data.Category.Category;
@@ -16,7 +17,6 @@ import isebase.cognito.tourpilot.Templates.QuestionAdapter.QuestionHolder;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -25,7 +25,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-public class RelatedQuestionsActivity extends Activity {
+public class RelatedQuestionsActivity extends BaseActivity {
 
 	QuestionAdapter questionAdapter;
 	ListView lvRelatedQuestions;
@@ -41,7 +41,8 @@ public class RelatedQuestionsActivity extends Activity {
 		reloadData();
 		fillUp();
 	}
-
+	
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		return false;

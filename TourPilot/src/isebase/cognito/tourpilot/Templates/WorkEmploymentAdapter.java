@@ -1,10 +1,11 @@
 package isebase.cognito.tourpilot.Templates;
 
 import isebase.cognito.tourpilot.R;
-import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.DataInterfaces.Job.IJob;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
+
 import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;

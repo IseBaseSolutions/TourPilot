@@ -22,6 +22,7 @@ public class Worker extends BaseObject {
 	public static final String PHONE_FIELD = "phone";
 	public static final String PRIVATE_PHONE_FIELD = "private_phone";
 	public static final String MOBILE_PHONE_FIELD = "mobile_phone";
+	public static final String IS_SENDING_INFO_ALLOWED = "is_sending_info_allowed";
 
 	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_USE_GPS_FIELD)
 	private boolean isUseGPS;
@@ -43,6 +44,17 @@ public class Worker extends BaseObject {
 
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
+	}
+	
+	@DatabaseField(dataType = DataType.BOOLEAN, columnName = IS_SENDING_INFO_ALLOWED)
+	private boolean isSendingInfoAllowed;	
+
+	public boolean isSendingInfoAllowed() {
+		return isSendingInfoAllowed;
+	}
+
+	public void setSendingInfoAllowed(boolean isSendingInfoAllowed) {
+		this.isSendingInfoAllowed = isSendingInfoAllowed;
 	}
 
 	@DatabaseField(dataType = DataType.DATE_LONG, columnName = ACTUAL_DATE_FIELD)
@@ -105,10 +117,11 @@ public class Worker extends BaseObject {
         setId(Integer.parseInt(initString.next(";")));
         setName(initString.next(";"));
         setUseGPS(Integer.parseInt(initString.next(";")) == 1 ? true : false);
-        setActive(Integer.parseInt(initString.next(";")) == 1 ? true : false);
+        setActive(Integer.parseInt(initString.next(";")) == 1 ? true : false);  
         setPrivatePhone(initString.next(";"));
         setWorkPhone(initString.next(";"));
-        setMobilePhone(initString.next("~"));
+        setMobilePhone(initString.next(";"));
+        setSendingInfoAllowed(Integer.parseInt(initString.next("~")) == 1 ? true : false);
         setCheckSum(Long.parseLong(initString.next()));
         setActualDate(_actualDate);
     }
@@ -119,6 +132,7 @@ public class Worker extends BaseObject {
 		setUseGPS(false);
     	setActualDate(new Date());
         setActive(false);
+        setSendingInfoAllowed(false);
         setWorkPhone("");
         setMobilePhone("");
         setPrivatePhone("");

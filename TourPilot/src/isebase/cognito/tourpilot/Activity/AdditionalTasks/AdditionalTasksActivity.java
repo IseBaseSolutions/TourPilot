@@ -2,18 +2,16 @@ package isebase.cognito.tourpilot.Activity.AdditionalTasks;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseTimeSyncActivity;
-import isebase.cognito.tourpilot.Data.AdditionalTask.Catalog;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
-import isebase.cognito.tourpilot.Data.AdditionalTask.Catalog.eCatalogType;
-import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectComparer;
+import isebase.cognito.tourpilot.Data.AdditionalTask.Catalog;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectComparer;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Task.Task;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Templates.AdditionalTaskAdapter;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -97,10 +95,9 @@ public class AdditionalTasksActivity extends BaseTimeSyncActivity {
 	
 	private void reloadData() {
 		int catalogType = getIntent().getIntExtra("catalog_type", BaseObject.EMPTY_ID);
-		catalog = new Catalog(eCatalogType.values()[catalogType]);	
+		catalog = new Catalog(Catalog.eCatalogType.values()[catalogType]);	
 
 		Patient patient = HelperFactory.getHelper().getEmploymentDAO().loadAll((int)Option.Instance().getEmploymentID()).getPatient();
-//		Patient patient = HelperFactory.getHelper().getPatientDAO().load(HelperFactory.getHelper().getEmploymentDAO().load((int)Option.Instance().getEmploymentID()).getPatientID());
 		
 		switch (catalog.getCatalogType()) {
 			case btyp_kk:

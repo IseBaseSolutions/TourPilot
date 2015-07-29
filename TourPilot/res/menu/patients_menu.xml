@@ -27,7 +27,13 @@
 		android:title="@string/menu_all_patients"/>  
     <item
         android:id="@+id/tour_info"
-        android:title="@string/menu_info" />    
+        android:title="@string/menu_info" />
+    <item
+        android:id="@+id/workers_info"
+        android:title="@string/menu_workers_tour_info" />    
+    <item
+        android:id="@+id/cars_info"
+        android:title="@string/menu_cars_info" />        
     <item
         android:id="@+id/action_actual_workers"
         android:title="@string/menu_actual_workers" />

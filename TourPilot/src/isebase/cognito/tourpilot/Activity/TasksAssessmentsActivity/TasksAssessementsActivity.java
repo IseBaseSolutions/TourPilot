@@ -1,8 +1,10 @@
 package isebase.cognito.tourpilot.Activity.TasksAssessmentsActivity;
 
 import isebase.cognito.tourpilot.R;
+import isebase.cognito.tourpilot.Activity.TourOncomingInfoActivity;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseTimeSyncActivity;
 import isebase.cognito.tourpilot.Activity.QuestionActivities.RelatedQuestionsActivity;
+import isebase.cognito.tourpilot.Activity.WorkersOptionActivity.WorkerOptionActivity.SectionsPagerAdapter;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;
@@ -48,7 +50,6 @@ public class TasksAssessementsActivity extends BaseTimeSyncActivity implements B
 	TasksAssessementsActivity instance;
 	
 	boolean hasQuestions;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -86,6 +87,7 @@ public class TasksAssessementsActivity extends BaseTimeSyncActivity implements B
 		MenuItem relativesMenu = menu.findItem(R.id.relatives);
 		MenuItem notesMenu = menu.findItem(R.id.notes);
 		MenuItem extraAssessments = menu.findItem(R.id.extraAssessments);
+		MenuItem workersInfo = menu.findItem(R.id.workers_info);
 		infoMenu.setEnabled(tasksFragment.getInfos().size() != 0);
 		commentsMenu.setEnabled(!(tasksFragment.getPatientRemark() == null || tasksFragment.getPatientRemark().getName().length() == 0));
 		diagnoseMenu.setEnabled(!(tasksFragment.getDiagnose() == null || tasksFragment.getDiagnose().getName().length() == 0));
@@ -110,6 +112,7 @@ public class TasksAssessementsActivity extends BaseTimeSyncActivity implements B
 			doctorsMenu.setEnabled(false);
 			relativesMenu.setEnabled(false);	
 		}
+		workersInfo.setEnabled(tasksFragment.workersInfo != null);
 		return true;
 	}
 	
@@ -152,6 +155,9 @@ public class TasksAssessementsActivity extends BaseTimeSyncActivity implements B
 			return true;
 		case R.id.diagnose:
 			tasksFragment.showDiagnose();
+			return true;
+		case R.id.workers_info:
+			startTourOncomingInfo(tasksFragment.workersInfo.getId());
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -297,6 +303,13 @@ public class TasksAssessementsActivity extends BaseTimeSyncActivity implements B
 	        }
 	    }
 	    return false;
+	}
+	
+	private void startTourOncomingInfo(int id) {
+		Intent tourOncomingInfoActivity = new Intent(
+				getApplicationContext(), TourOncomingInfoActivity.class);
+		tourOncomingInfoActivity.putExtra("id", id);
+		startActivity(tourOncomingInfoActivity);
 	}
 
 }

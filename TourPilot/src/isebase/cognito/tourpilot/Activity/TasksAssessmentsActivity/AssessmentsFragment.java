@@ -12,7 +12,6 @@ import isebase.cognito.tourpilot.Data.Category.Category;
 import isebase.cognito.tourpilot.Data.Category.Category.type;
 import isebase.cognito.tourpilot.Data.ExtraCategory.ExtraCategory;
 import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Question.Question;
 import isebase.cognito.tourpilot.Data.QuestionSetting.QuestionSetting;
 import isebase.cognito.tourpilot.Data.RelatedQuestionSetting.RelatedQuestionSetting;
@@ -108,7 +107,9 @@ public class AssessmentsFragment extends Fragment {
 		employmentCategories.clear();
 		relatedQuestionSettings = HelperFactory.getHelper().getRelatedQuestionSettingDAO().load();
 		relatedQuestions = HelperFactory.getHelper().getQuestionDAO().loadByRelatedQuestionSettings(relatedQuestionSettings);
-		relatedAnswers = HelperFactory.getHelper().getAnswerDAO().loadByRelatedQuestionSettings(relatedQuestionSettings);
+		relatedAnswers = HelperFactory.getHelper().getAnswerDAO().loadByRelatedQuestionSettings(relatedQuestionSettings);	
+		
+		
 		List<Integer> ids = new ArrayList<Integer>();
 		for (Answer relatedAnswer : relatedAnswers) {
 			for (RelatedQuestionSetting relatedQuestionSetting : relatedQuestionSettings) {
@@ -145,6 +146,8 @@ public class AssessmentsFragment extends Fragment {
 			List<Question> questions = HelperFactory.getHelper().getQuestionDAO().loadActualsByCategory(category.getId());
 			if (questions.size() > 0)
 				return false;
+			if (HelperFactory.getHelper().getAnsweredCategoryDAO().loadByCategoryID(category.getId()) != null)
+				return true;
 			AnsweredCategory newAnsweredCategory = new AnsweredCategory(category.getId(), Option.Instance().getEmploymentID());
 			HelperFactory.getHelper().getAnsweredCategoryDAO().save(newAnsweredCategory);
 			answeredCategories.add(newAnsweredCategory);

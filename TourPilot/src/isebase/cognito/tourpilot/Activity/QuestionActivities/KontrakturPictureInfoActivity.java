@@ -67,7 +67,6 @@ public class KontrakturPictureInfoActivity extends BaseActivity implements BaseD
     }
 	
 	private void initComponents() {
-		
 		view = (KontrakturView) findViewById(R.id.kontraktur_view);
 		horizontalScrollView = (HorizontalScrollView) findViewById(R.id.horizontal_scroll_view);
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);

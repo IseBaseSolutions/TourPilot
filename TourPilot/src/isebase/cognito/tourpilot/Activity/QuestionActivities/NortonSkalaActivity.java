@@ -57,7 +57,6 @@ public class NortonSkalaActivity extends BaseActivity implements BaseDialogListe
 
 	private void reloadData() {
 		category = HelperFactory.getHelper().getCategoryDAO().loadByCategoryName(getString(R.string.norton));
-//		answers = HelperFactory.getHelper().getAnswerDAO().loadByCategoryID(category.getId());
 		answers = HelperFactory.getHelper().getAnswerDAO().loadByCategoryIDAndType(category.getId(), Category.type.norton);
 		isCategoryAnswered = HelperFactory.getHelper().getAnsweredCategoryDAO().loadByCategoryID(category.getId()) != null;
 		newEmployment = HelperFactory.getHelper().getEmploymentDAO().loadAll((int)Option.Instance().getEmploymentID());

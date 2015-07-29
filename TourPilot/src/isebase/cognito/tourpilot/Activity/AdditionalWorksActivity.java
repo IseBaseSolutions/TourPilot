@@ -69,13 +69,15 @@ public class AdditionalWorksActivity extends BaseTimeSyncActivity implements Bas
 				this, android.R.layout.simple_list_item_1, additionalWorks);
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1,
-					int position, long arg3) {
+			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+					long arg3) {
 				addWork = additionalWorks.get(position);
 				workInputDialog = new WorkTypeDialog(addWork.getName());
 				workInputDialog.show(getSupportFragmentManager(), "addWorkDialog");
 			}
+			
 		});
 	}
 
@@ -111,7 +113,8 @@ public class AdditionalWorksActivity extends BaseTimeSyncActivity implements Bas
 		}
 		if (dialog == workInputDialog)
 		{
-			work = new Work(DateUtils.getSynchronizedTime(), addWork.getId(), Option.Instance().getPilotTourID(), addWork.getName());
+			work = new Work(DateUtils.getSynchronizedTime(), addWork.getId(), 
+					Option.Instance().getPilotTourID(), addWork.getName(), Option.Instance().getWorkerID());
 //			work.setServerTime(Option.Instance().isTimeSynchronised());
 			work.setServerTime(true);
 			HelperFactory.getHelper().getWorkDAO().save(work);

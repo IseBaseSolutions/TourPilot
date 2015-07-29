@@ -1,16 +1,16 @@
 package isebase.cognito.tourpilot.Gps.Service;
 
-import java.util.Date;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
+import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.PatientsActivity;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.WayPoint.WayPoint;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
-import isebase.cognito.tourpilot.Utils.DateUtils;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -97,59 +97,7 @@ public class GPSLogger extends Service implements LocationListener {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-//			Toast toast = Toast.makeText(StaticResources.getBaseContext(), "Received intent " + intent.getAction(), Toast.LENGTH_SHORT);
-//			toast.show();
-//
-//			if (OSMTracker.INTENT_TRACK_WP.equals(intent.getAction())) {
-//				// Track a way point
-//				Bundle extras = intent.getExtras();
-//				if (extras != null) {
-//					// because of the gps logging interval our last fix could be
-//					// very old
-//					// so we'll request the last known location from the gps
-//					// provider
-//					lastLocation = lmgr
-//							.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-//					if (lastLocation != null) {
-//						Long trackId = extras.getLong(WayPoint.TrackIDField);
-//						String uuid = extras
-//								.getString(OSMTracker.INTENT_KEY_UUID);
-//						String name = extras
-//								.getString(OSMTracker.INTENT_KEY_NAME);
-//						String link = extras
-//								.getString(OSMTracker.INTENT_KEY_LINK);
-////						WayPoint wayPoint = new WayPoint(trackId, lastLocation,
-////								lastNbSatellites, name, link, uuid);
-//					}
-//				}
-//			} else if (OSMTracker.INTENT_UPDATE_WP.equals(intent.getAction())) {
-//				// Update an existing waypoint
-//				Bundle extras = intent.getExtras();
-//				if (extras != null) {
-//					Long trackId = extras.getLong(WayPoint.TrackIDField);
-//					String uuid = extras.getString(OSMTracker.INTENT_KEY_UUID);
-//					String name = extras.getString(OSMTracker.INTENT_KEY_NAME);
-//					String link = extras.getString(OSMTracker.INTENT_KEY_LINK);
-//					//dataHelper.updateWayPoint(trackId, uuid, name, link);
-//				}
-//			} else if (OSMTracker.INTENT_DELETE_WP.equals(intent.getAction())) {
-//				// Delete an existing waypoint
-//				Bundle extras = intent.getExtras();
-//				if (extras != null) {
-//					String uuid = extras.getString(OSMTracker.INTENT_KEY_UUID);
-//					//dataHelper.deleteWayPoint(uuid);
-//				}
-//			} else if (OSMTracker.INTENT_START_TRACKING.equals(intent
-//					.getAction())) {
-//				Bundle extras = intent.getExtras();
-//				if (extras != null) {
-//					Long trackId = extras.getLong(WayPoint.TrackIDField);
-//					startTracking(trackId);
-//				}
-//			} else if (OSMTracker.INTENT_STOP_TRACKING.equals(intent
-//					.getAction())) {
-//				stopTrackingAndSave();
-//			}
+
 		}
 	};
 
@@ -160,24 +108,15 @@ public class GPSLogger extends Service implements LocationListener {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-//		Toast toast = Toast.makeText(StaticResources.getBaseContext(), "Service onBind()", Toast.LENGTH_SHORT);
-//		toast.show();
 		return binder;
 	}
 
 	@Override
 	public boolean onUnbind(Intent intent) {
-//		Toast toast = Toast.makeText(StaticResources.getBaseContext(), "Service onUnbind()", Toast.LENGTH_SHORT);
-//		toast.show();
-		// If we aren't currently tracking we can
-		// stop ourselves
+
 		if (!isTracking) {
-//			toast = Toast.makeText(StaticResources.getBaseContext(), "Service self-stopping", Toast.LENGTH_SHORT);
-//			toast.show();
 			stopSelf();
 		}
-
-		// We don't want onRebind() to be called, so return false.
 		return false;
 	}
 
@@ -367,7 +306,7 @@ public class GPSLogger extends Service implements LocationListener {
 				}
             	return;
             }
-			if ((lastLocation.getLatitude() != prevLat || lastLocation.getLongitude() != prevLon))
+			if ((lastLocation.getLatitude() != prevLat || lastLocation.getLongitude() != prevLon) && lastLocation.getProvider().equals(LocationManager.GPS_PROVIDER))
 			{
 				if (notification != 1) {
 					notification = 1;
@@ -384,9 +323,10 @@ public class GPSLogger extends Service implements LocationListener {
     }
     
     private void drawGPSNotification() {
+
 		NotificationCompat.Builder mBuilder =
 		        new NotificationCompat.Builder(this)
-		        .setSmallIcon(notification == 1 ? isebase.cognito.tourpilot.R.drawable.gg : isebase.cognito.tourpilot.R.drawable.gr)
+		        .setSmallIcon(notification == 1 ? R.drawable.gg : R.drawable.gr)
 		        .setContentTitle("TourPilot")
 		        .setContentText("GPS is not getting coordinates");
 		

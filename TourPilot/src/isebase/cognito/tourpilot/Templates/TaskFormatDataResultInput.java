@@ -2,11 +2,11 @@ package isebase.cognito.tourpilot.Templates;
 
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import android.graphics.Color;
+import android.support.v4.view.ViewPager.LayoutParams;
 import android.text.InputFilter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.LinearLayout.LayoutParams;
 
 public class TaskFormatDataResultInput {
 	
@@ -28,7 +28,7 @@ public class TaskFormatDataResultInput {
 	}
 	
 	private InputFilter[] FilterArray = new InputFilter[1];
-	
+
 	private LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 			LayoutParams.MATCH_PARENT,
 			LayoutParams.MATCH_PARENT, 1.0f);
