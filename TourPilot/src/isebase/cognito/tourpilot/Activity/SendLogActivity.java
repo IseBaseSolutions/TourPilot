@@ -23,6 +23,8 @@ import android.widget.TextView;
 
 public class SendLogActivity extends Activity implements OnClickListener {
 
+	//Hello new user!
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
