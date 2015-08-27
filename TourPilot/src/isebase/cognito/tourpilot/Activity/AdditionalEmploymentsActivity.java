@@ -6,6 +6,7 @@ import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
 import isebase.cognito.tourpilot.Connection.ConnectionAsyncTask;
 import isebase.cognito.tourpilot.Connection.ConnectionStatus;
 import isebase.cognito.tourpilot.Data.AdditionalEmployment.AdditionalEmployment;
+import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Employment.EmploymentDAO;
 import isebase.cognito.tourpilot.Data.Option.Option;
@@ -24,9 +25,12 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -38,7 +42,7 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 	private SynchronizationHandler syncHandler;
 	private ConnectionStatus connectionStatus;
 	private ConnectionAsyncTask connectionTask;
-	
+		
 	ListView listView;
 	
 	List<AdditionalEmployment> addEmployments = new ArrayList<AdditionalEmployment>();
@@ -173,7 +177,7 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 	
 	public void btOkClick(View view) {
 		if (additionalEmploymentsMode == eAdditionalPatientsMode.getAP)
-		{
+		{			
 			createAdditionalEmployment();
 			startCatalogsActivity();
 			return;
@@ -246,7 +250,7 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 		pbSync = (ProgressBar) findViewById(R.id.pbSync);
 		btOK = (Button) findViewById(R.id.btOK);
 	}
-
+	
 	private void initDialogs() {
 		noPatientsDialog = new BaseInfoDialog(getString(R.string.dialog_empty_tour), getString(R.string.dialog_no_patients));
 		noPatientsDialog.setCancelable(false);
@@ -296,13 +300,12 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 		}
 		Employment employment = EmploymentDAO.createEmployment(patient);
 		Option.Instance().setEmploymentID(employment.getId());
-		Option.Instance().save();
+		Option.Instance().save();		
 	}
 	
 	private void startCatalogsActivity() {
 		Intent catalogsActivity = new Intent(getApplicationContext(), CatalogsActivity.class);
 		catalogsActivity.putExtra("additionalEmployment", true);
 		startActivity(catalogsActivity);
-	}
-	
+	}	
 }

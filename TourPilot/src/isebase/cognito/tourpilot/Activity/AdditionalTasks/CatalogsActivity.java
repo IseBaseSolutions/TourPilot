@@ -67,8 +67,11 @@ public class CatalogsActivity extends BaseActivity {
 		if(bundle == null)
 			super.onBackPressed();
 		else {
-			HelperFactory.getHelper().getEmploymentDAO().delete((int)Option.Instance().getEmploymentID());
+			int employmentID = (int)Option.Instance().getEmploymentID();
+			HelperFactory.getHelper().getEmploymentDAO().delete(employmentID);
+			HelperFactory.getHelper().getTaskDAO().deleteByEmploymentID(employmentID);
 			Option.Instance().setEmploymentID(BaseObject.EMPTY_ID);
+			Option.Instance().save();
 			super.onBackPressed();
 		}
 			

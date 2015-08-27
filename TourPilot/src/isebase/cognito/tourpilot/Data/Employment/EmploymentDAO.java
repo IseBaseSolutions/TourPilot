@@ -166,6 +166,6 @@ public class EmploymentDAO extends BaseObjectDAO<Employment> {
     	Task endtTask = new Task(patient, employment.getId(), employment.getTourID(), false);
     	HelperFactory.getHelper().getTaskDAO().save(endtTask);
     	return employment;
-    }
-
+    }   
 }
+    

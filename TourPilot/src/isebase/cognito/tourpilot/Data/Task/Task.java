@@ -48,6 +48,14 @@ public class Task extends BaseObject {
 	public eTaskState getState() {
 		return taskState;
 	}
+	
+	public boolean IsDone(){
+		return taskState == eTaskState.Done;
+	}
+	
+	public boolean UnDone(){
+		return !IsDone();
+	}
 
 	public void setState(eTaskState taskState) {
 		this.taskState = taskState;

@@ -2,6 +2,7 @@ package isebase.cognito.tourpilot.Activity;
 
 import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseActivity;
+import isebase.cognito.tourpilot.Connection.ConnectionAsyncTask;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.PilotTour.PilotTour;
@@ -85,7 +86,7 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 
 	@Override
 	public void onBackPressed() {
-		showDialogLogout();
+		logoutWorker();
 	}
 	
 	public void fillUp() {
@@ -106,9 +107,9 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	}
 
 	public void btlogOutClick(View view) {
-		showDialogLogout();
+		logoutWorker();
 	}
-
+	
 	public void btStartSyncClick(View view) {
 		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo ni = cm.getActiveNetworkInfo();
@@ -119,6 +120,22 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 		noConectionDialog = new BaseInfoDialog(getString(R.string.attention), getString(R.string.dialog_no_connection_sync));
 		noConectionDialog.show(getSupportFragmentManager(), "noConectionDialog");
 
+	}
+	
+	private void logoutWorker(){
+		if(!isDoneItemsPresent())
+			return;
+		showDialogLogout();
+	}
+	
+	private Boolean isDoneItemsPresent(){		 
+		String doneItems = ConnectionAsyncTask.getDoneStr();
+		if(doneItems == "")
+			return true;		
+		BaseInfoDialog dialog = new BaseInfoDialog(getString(R.string.attention), getString(R.string.dialog_do_sync));
+		dialog.show(getSupportFragmentManager(), "dialogDoSync");		
+		return false;
+		
 	}
 
 	private void showDialogLogout(){
@@ -160,7 +177,6 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	public void onDialogPositiveClick(DialogFragment dialog) {
 		if(dialog.getTag().equals("dialogBack")) {
 			logOut();
-			
 		}
 		else if (dialog.getTag().equals("clearDatabase")) {
 			clearDB();

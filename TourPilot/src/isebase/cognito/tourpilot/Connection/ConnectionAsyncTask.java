@@ -341,7 +341,11 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		}
 	}
 
-	private String getDataToSend() {
+	private String getDataToSend() {		
+		return getHeaderStr() + getDoneStr();
+	}
+	
+	private String getHeaderStr(){
 		String strMsg = new String("U;");
 		strMsg += Option.Instance().getWorkerID() +";";
 		strMsg += Option.Instance().getPrevWorkerID() + ";:";
@@ -350,6 +354,10 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		strMsg += Option.Instance().getVersion() + "\0R;";
 			strMsg += "0";
 		strMsg += "\0x1\0";
+		return strMsg;
+	}
+	
+	public static String getDoneStr(){
 		String strDone = "";
 		strDone += HelperFactory.getHelper().getEmploymentDAO().getDone();
 		strDone += HelperFactory.getHelper().getWorkDAO().getDone();
@@ -357,7 +365,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		strDone += HelperFactory.getHelper().getUserRemarkDAO().getDone();
 		strDone += HelperFactory.getHelper().getEmploymentVerificationDAO().getDone();
 		strDone += HelperFactory.getHelper().getWayPointDAO().getDone();
-		return strMsg + strDone;
+		return strDone;
 	}
 
 	private String getStrChecksums() {

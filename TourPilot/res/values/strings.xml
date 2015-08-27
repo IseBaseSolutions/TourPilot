@@ -144,6 +144,7 @@
     <string name="dialog_connection_problems">Verbindungsstörungen</string>
     <string name="dialog_leaving_patient">Pflege OK?</string>
     <string name="dialog_proof_logout">Möchten Sie sich wirklich abmelden?</string>
+    <string name="dialog_do_sync">Sie haben erfasste aber nicht gesendete Einsätze. Vor der Abmeldung muss eine Synchronisation durchgeführt werden.</string>
     <string name="dialog_comments">Bemerkungen</string>
     <string name="dialog_no_patients">Keine Patienten vorhanden</string>
     <string name="dialog_empty_tour">Die Tour ist leer</string>

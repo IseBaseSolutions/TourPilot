@@ -644,10 +644,14 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	}
 
 	private void saveData(Boolean clearEmployment){
-		if(endTask.getState() != eTaskState.Done && !isEmploymentDone()) {
+		if(endTask.UnDone() && !isEmploymentDone()) {
 			endTask.setRealDate(DateUtils.getSynchronizedTime());
 			endTask.setState(eTaskState.Done);
 			endTask.setServerTime(Option.Instance().isTimeSynchronised());
+			if(isAnyDone()){
+				startTask.setState(eTaskState.Done);
+				HelperFactory.getHelper().getTaskDAO().save(startTask);
+			}				
 			HelperFactory.getHelper().getTaskDAO().save(endTask);
 			fillUpEndTask();			
 		}
@@ -777,6 +781,16 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 			btStartTask.setEnabled(false);
 			btEndTask.setEnabled(false);
 		}
+	}
+	
+	private boolean isAnyDone(){
+		List<Task> tasksExceptFirstAndLast = new ArrayList<Task>(tasks);
+		tasksExceptFirstAndLast.remove(startTask);
+		tasksExceptFirstAndLast.remove(endTask);
+		for(Task task : tasksExceptFirstAndLast)
+			if(task.IsDone())
+				return true;
+		return false;
 	}
 	
 	private void clearEndTask() {
