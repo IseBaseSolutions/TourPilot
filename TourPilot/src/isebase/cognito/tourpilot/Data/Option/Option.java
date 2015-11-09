@@ -22,6 +22,7 @@ public class Option {
 	public static final String WORK_ID_FIELD = "work_id";
 	public static final String SERVER_IP_FIELD = "server_ip";
 	public static final String SERVER_PORT_FIELD = "server_port";
+	public static final String PHONE_NUMBER_FIELD = "phone_number";
 	public static final String IS_AUTO_FIELD = "is_auto";
 	public static final String IS_WORKER_ACTIVITY_FIELD = "is_worker_activity";
 	public static final String IS_TOUR_ACTIVITY_FIELD = "is_tour_activity";
@@ -258,6 +259,7 @@ public class Option {
 		setServerPort(4448);		
 		setServerIP("");
 		setPin("");
+		setPhoneNumber("");
 		clearSelected();
 	}
 
@@ -290,10 +292,20 @@ public class Option {
 		}
 		return -1;
 	}
+	
+	@DatabaseField(dataType = DataType.STRING, columnName = PHONE_NUMBER_FIELD)
+	private String phoneNumber;
 
 	public String getPhoneNumber() {
-		return phoneManager.getLine1Number() == null ? "" : phoneManager
-				.getLine1Number().toString();
+		return phoneNumber != null && !phoneNumber.isEmpty()				
+				? phoneNumber
+				: phoneManager.getLine1Number() == null 
+					? "" 
+					: phoneManager.getLine1Number().toString();
+	}
+	
+	public void setPhoneNumber(String number){
+		this.phoneNumber = number;		
 	}
 
 	public String getDeviceID() {

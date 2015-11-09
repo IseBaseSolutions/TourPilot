@@ -17,7 +17,9 @@ import isebase.cognito.tourpilot.Templates.PilotToursAdapter;
 import isebase.cognito.tourpilot.Utils.DataBaseUtils;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -125,7 +127,18 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	private void logoutWorker(){
 		if(!isDoneItemsPresent())
 			return;
-		showDialogLogout();
+		
+		HashMap<String,String> msgDict = new HashMap<String,String>();
+		if(!Option.Instance().getPin().isEmpty())
+			msgDict.put("removePin", getString(R.string.dialog_remove_pin));
+		msgDict.put("dialogBack", getString(R.string.dialog_proof_logout));			
+		for(String key : msgDict.keySet()){
+			BaseDialog dialog = new BaseDialog(
+					getString(R.string.attention)
+					, msgDict.get(key));
+			dialog.show(getSupportFragmentManager(), key);
+			getSupportFragmentManager().executePendingTransactions();
+		}
 	}
 	
 	private Boolean isDoneItemsPresent(){		 
@@ -134,17 +147,8 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 			return true;		
 		BaseInfoDialog dialog = new BaseInfoDialog(getString(R.string.attention), getString(R.string.dialog_do_sync));
 		dialog.show(getSupportFragmentManager(), "dialogDoSync");		
-		return false;
-		
-	}
-
-	private void showDialogLogout(){
-		BaseDialog dialog = new BaseDialog(
-				getString(R.string.attention)
-				,getString(R.string.dialog_proof_logout));
-		dialog.show(getSupportFragmentManager(), "dialogBack");
-		getSupportFragmentManager().executePendingTransactions();
-	}
+		return false;		
+	}	
 	
 	private void logOut() {
 		if (isMyServiceRunning(GPSLogger.class))
@@ -179,13 +183,16 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 			logOut();
 		}
 		else if (dialog.getTag().equals("clearDatabase")) {
-			clearDB();
+			clearDB();			
 		}
 	}
 
 	@Override
 	public void onDialogNegativeClick(DialogFragment dialog) {
-		
+		if(dialog.getTag().equals("removePin")){
+			Option.Instance().setPin("");
+			Option.Instance().save();
+		}
 	}
 	
 	private void clearDatabase(){

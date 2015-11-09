@@ -213,6 +213,8 @@ public class WorkerOptionActivity extends BaseActivity implements
 		Option.Instance().setServerPort(
 				Integer.parseInt(optionsFragment.etServerPort.getText()
 						.toString()));
+		Option.Instance().setPhoneNumber(optionsFragment.etPhoneNumber.getText()
+				.toString().trim());
 		Option.Instance().setPrevWorkerID(BaseObject.EMPTY_ID);
 		Option.Instance().setWorkerID(BaseObject.EMPTY_ID);
 	}

@@ -79,15 +79,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 	private static final String TAG = DatabaseHelper.class.getSimpleName();
 
-	// имя файла базы данных который будет храниться в
+	// пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ
 	// /data/data/APPNAME/DATABASE_NAME.db
 	private static final String DATABASE_NAME = "TourPilot.db";
 
-	// с каждым увеличением версии, при нахождении в устройстве БД с предыдущей
-	// версией будет выполнен метод onUpgrade();
-	private static final int DATABASE_VERSION = 30;
+	// пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ onUpgrade();
+	private static final int DATABASE_VERSION = 31;
 
-	// ссылки на DAO соответсвующие сущностям, хранимым в БД
+	// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ DAO пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅ
 	// private GoalDAO goalDao = null;
 	private AdditionalTaskDAO additionalTaskDao = null;
 	private AdditionalWorkDAO additionalWorkDao = null;
@@ -162,6 +162,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			db.execSQL(String.format(" UPDATE Works " +
 							" SET worker_id = %d " +
 							" WHERE worker_id = 0 ", Option.Instance().getWorkerID()));
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		try {
+			db.execSQL("ALTER TABLE Options ADD COLUMN phone_number VARCHAR");
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
@@ -547,7 +552,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		return null;
 	}
 
-	// выполняется при закрытии приложения
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	@Override
 	public void close() {
 		super.close();
