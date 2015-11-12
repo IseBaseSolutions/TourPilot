@@ -133,43 +133,47 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, ConnectionSource arg1, int oldVer,
 			int newVer) {
 //		clearAllData();
-		try {
-			db.execSQL("ALTER TABLE Options ADD COLUMN is_skipping_pflege_ok SMALLINT");
-		} catch(Exception ex) {
-			ex.printStackTrace();
+		if(oldVer < 30){
+			try {
+				db.execSQL("ALTER TABLE Options ADD COLUMN is_skipping_pflege_ok SMALLINT");
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}
+			try {
+				db.execSQL("ALTER TABLE Patients ADD COLUMN birth_date VARCHAR");
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}
+			try {
+				db.execSQL("ALTER TABLE Workers ADD COLUMN is_sending_info_allowed SMALLINT");
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}
+			try {
+				TableUtils.createTable(connectionSource, TourOncomingInfo.class);
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}
+			try {
+				db.execSQL("ALTER TABLE Works ADD COLUMN worker_id LONG");
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}
+			try {
+				db.execSQL(String.format(" UPDATE Works " +
+								" SET worker_id = %d " +
+								" WHERE worker_id = 0 ", Option.Instance().getWorkerID()));
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}	
 		}
-		try {
-			db.execSQL("ALTER TABLE Patients ADD COLUMN birth_date VARCHAR");
-		} catch(Exception ex) {
-			ex.printStackTrace();
-		}
-		try {
-			db.execSQL("ALTER TABLE Workers ADD COLUMN is_sending_info_allowed SMALLINT");
-		} catch(Exception ex) {
-			ex.printStackTrace();
-		}
-		try {
-			TableUtils.createTable(connectionSource, TourOncomingInfo.class);
-		} catch(Exception ex) {
-			ex.printStackTrace();
-		}
-		try {
-			db.execSQL("ALTER TABLE Works ADD COLUMN worker_id LONG");
-		} catch(Exception ex) {
-			ex.printStackTrace();
-		}
-		try {
-			db.execSQL(String.format(" UPDATE Works " +
-							" SET worker_id = %d " +
-							" WHERE worker_id = 0 ", Option.Instance().getWorkerID()));
-		} catch(Exception ex) {
-			ex.printStackTrace();
-		}
-		try {
-			db.execSQL("ALTER TABLE Options ADD COLUMN phone_number VARCHAR");
-		} catch(Exception ex) {
-			ex.printStackTrace();
-		}
+		if(newVer == 31){
+			try {
+				db.execSQL("ALTER TABLE Options ADD COLUMN phone_number VARCHAR");
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}	
+		}		
 	}
 	
 	public void createDataTables() {

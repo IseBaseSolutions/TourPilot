@@ -103,7 +103,7 @@ public class OptionsFragment extends Fragment {
 			etServerPort.setText("4448");
 		}
 		if (isImpulseVersion && Option.Instance().getServerIP().equals("")) {
-			etServerIP.setText("imem.dyndns.biz");
+			etServerIP.setText("impulse.rz-24.de");
 			etServerPort.setText("4448");
 		}
 		if (isHansenVersion && Option.Instance().getServerIP().equals("")) {
