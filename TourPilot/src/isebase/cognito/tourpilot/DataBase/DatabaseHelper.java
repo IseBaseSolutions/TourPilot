@@ -64,11 +64,10 @@ import isebase.cognito.tourpilot.Data.Worker.WorkerDAO;
 import java.sql.SQLException;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
-import com.j256.ormlite.field.DataType;
-import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 //import com.example.ormtest.DatabaseHelper;
@@ -133,47 +132,58 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, ConnectionSource arg1, int oldVer,
 			int newVer) {
 //		clearAllData();
-		if(oldVer < 30){
-			try {
-				db.execSQL("ALTER TABLE Options ADD COLUMN is_skipping_pflege_ok SMALLINT");
-			} catch(Exception ex) {
-				ex.printStackTrace();
-			}
-			try {
-				db.execSQL("ALTER TABLE Patients ADD COLUMN birth_date VARCHAR");
-			} catch(Exception ex) {
-				ex.printStackTrace();
-			}
-			try {
-				db.execSQL("ALTER TABLE Workers ADD COLUMN is_sending_info_allowed SMALLINT");
-			} catch(Exception ex) {
-				ex.printStackTrace();
-			}
-			try {
+		addColumnIfNotExist(db, "Options", "is_skipping_pflege_ok", "SMALLINT");
+		addColumnIfNotExist(db, "Patients", "birth_date", "VARCHAR");				
+		addColumnIfNotExist(db, "Workers", "is_sending_info_allowed", "SMALLINT");
+		addColumnIfNotExist(db, "Works", "worker_id", "LONG");
+		addColumnIfNotExist(db, "Options", "phone_number", "VARCHAR");
+		
+		try {								
+			if(!tableExist(db, "TourOncomingInfo"))
 				TableUtils.createTable(connectionSource, TourOncomingInfo.class);
-			} catch(Exception ex) {
-				ex.printStackTrace();
-			}
-			try {
-				db.execSQL("ALTER TABLE Works ADD COLUMN worker_id LONG");
-			} catch(Exception ex) {
-				ex.printStackTrace();
-			}
-			try {
-				db.execSQL(String.format(" UPDATE Works " +
-								" SET worker_id = %d " +
-								" WHERE worker_id = 0 ", Option.Instance().getWorkerID()));
-			} catch(Exception ex) {
-				ex.printStackTrace();
-			}	
+		} catch(Exception ex) {
+			ex.printStackTrace();
 		}
-		if(newVer == 31){
-			try {
-				db.execSQL("ALTER TABLE Options ADD COLUMN phone_number VARCHAR");
-			} catch(Exception ex) {
+		
+		try {
+			db.execSQL(String.format("UPDATE Works " +
+							" SET worker_id = %d " +
+							" WHERE worker_id = 0 ", Option.Instance().getWorkerID()));
+		} catch(Exception ex) {
 				ex.printStackTrace();
-			}	
+		}				
+	}
+	
+	private void addColumnIfNotExist(SQLiteDatabase db, String tableName, String colName, String colType){
+		if(db == null || tableName == null || colName == null 
+				|| colType == null || tableName.isEmpty()|| colName.isEmpty() || colType.isEmpty())
+			return;
+		
+		try {
+			if(!tableExist(db, tableName))
+				return;
+			String sqlStr = String.format("SELECT * FROM %s WHERE 0", tableName);
+			Cursor curs = db.rawQuery(sqlStr, null);
+			int colIndx = curs.getColumnIndex(colName);		
+			sqlStr = String.format("ALTER TABLE %s ADD COLUMN %s %s", tableName, colName, colType);
+			if(colIndx == -1)
+				db.execSQL(sqlStr);				
+		} catch(Exception ex) {
+			ex.printStackTrace();
 		}		
+	}
+	
+	private Boolean tableExist(SQLiteDatabase db, String dbTableName){
+		Boolean retVal;
+		try {
+			String strSQL =  String.format("SELECT name FROM sqlite_master WHERE type='table' AND name='%s'", dbTableName);
+			retVal = db.rawQuery(strSQL, null).getCount() > 0;			
+			
+		} catch(Exception ex) {
+			retVal = false;
+			ex.printStackTrace();
+		}
+		return retVal;
 	}
 	
 	public void createDataTables() {
