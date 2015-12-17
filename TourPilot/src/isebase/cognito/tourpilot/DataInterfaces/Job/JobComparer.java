@@ -1,7 +1,5 @@
 package isebase.cognito.tourpilot.DataInterfaces.Job;
 
-import isebase.cognito.tourpilot.Utils.DateUtils;
-
 import java.util.Comparator;
 
 /**

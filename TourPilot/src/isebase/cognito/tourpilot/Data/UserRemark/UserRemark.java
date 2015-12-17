@@ -2,11 +2,7 @@ package isebase.cognito.tourpilot.Data.UserRemark;
 
 import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.Data.Option.Option;
-import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Utils.DateUtils;
-import isebase.cognito.tourpilot.Utils.StringParser;
-
 import java.util.Date;
 
 import com.j256.ormlite.field.DataType;

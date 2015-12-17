@@ -155,8 +155,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	}
 	
 	private void addColumnIfNotExist(SQLiteDatabase db, String tableName, String colName, String colType){
+		//if(db == null || tableName == null || colName == null 
+		//		|| colType == null || tableName.isEmpty()|| colName.isEmpty() || colType.isEmpty())
 		if(db == null || tableName == null || colName == null 
-				|| colType == null || tableName.isEmpty()|| colName.isEmpty() || colType.isEmpty())
+				|| colType == null || tableName == "" || colName == "" || colType == "")
 			return;
 		
 		try {

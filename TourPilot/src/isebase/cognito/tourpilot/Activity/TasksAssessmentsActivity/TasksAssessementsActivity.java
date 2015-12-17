@@ -4,7 +4,6 @@ import isebase.cognito.tourpilot.R;
 import isebase.cognito.tourpilot.Activity.TourOncomingInfoActivity;
 import isebase.cognito.tourpilot.Activity.BaseActivities.BaseTimeSyncActivity;
 import isebase.cognito.tourpilot.Activity.QuestionActivities.RelatedQuestionsActivity;
-import isebase.cognito.tourpilot.Activity.WorkersOptionActivity.WorkerOptionActivity.SectionsPagerAdapter;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Dialogs.BaseDialog;

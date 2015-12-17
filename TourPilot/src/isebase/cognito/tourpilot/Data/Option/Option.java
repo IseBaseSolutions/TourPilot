@@ -297,7 +297,7 @@ public class Option {
 	private String phoneNumber;
 
 	public String getPhoneNumber() {
-		return phoneNumber != null && !phoneNumber.isEmpty()				
+		return phoneNumber != null && phoneNumber != ""				
 				? phoneNumber
 				: phoneManager.getLine1Number() == null 
 					? "" 

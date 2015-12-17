@@ -5,9 +5,7 @@ import java.util.Date;
 import isebase.cognito.tourpilot.Connection.SentObjectVerification;
 import isebase.cognito.tourpilot.Connection.ServerCommandParser;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.Utils.DateUtils;
 import android.location.Location;
-import android.location.LocationManager;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;

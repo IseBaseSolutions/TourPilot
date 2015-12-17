@@ -43,9 +43,9 @@ public class WorkEmploymentAdapter extends ArrayAdapter<IJob>{
 			
 			
 			if(jobs.get(position).isDone())
-				employmentHolder.tvWorkEmploymentName.setTextColor(StaticResources.getBaseContext().getResources().getColor(R.color.active));
+				employmentHolder.tvWorkEmploymentName.setTextColor(StaticResources.getBaseContext().getResources().getColor(R.color.yellow));
 			if(jobs.get(position).wasSent())
-				employmentHolder.tvWorkEmploymentName.setTextColor(StaticResources.getBaseContext().getResources().getColor(R.color.synchronize));
+				employmentHolder.tvWorkEmploymentName.setTextColor(StaticResources.getBaseContext().getResources().getColor(R.color.green));
 		
 			row.setTag(employmentHolder);
 			return row;

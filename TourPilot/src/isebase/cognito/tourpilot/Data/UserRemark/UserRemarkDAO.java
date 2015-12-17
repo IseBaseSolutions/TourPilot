@@ -2,7 +2,6 @@ package isebase.cognito.tourpilot.Data.UserRemark;
 
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectDAO;
-import isebase.cognito.tourpilot.Data.Task.Task;
 
 import java.sql.SQLException;
 

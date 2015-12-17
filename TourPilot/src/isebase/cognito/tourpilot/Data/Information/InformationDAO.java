@@ -1,6 +1,5 @@
 package isebase.cognito.tourpilot.Data.Information;
 
-import isebase.cognito.tourpilot.Data.Answer.Answer;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectDAO;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;

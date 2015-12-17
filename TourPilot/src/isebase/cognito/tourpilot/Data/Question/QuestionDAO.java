@@ -1,7 +1,6 @@
 package isebase.cognito.tourpilot.Data.Question;
 
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectDAO;
-import isebase.cognito.tourpilot.Data.Employment.Employment;
 import isebase.cognito.tourpilot.Data.Option.Option;
 import isebase.cognito.tourpilot.Data.QuestionSetting.QuestionSetting;
 import isebase.cognito.tourpilot.Data.RelatedQuestionSetting.RelatedQuestionSetting;

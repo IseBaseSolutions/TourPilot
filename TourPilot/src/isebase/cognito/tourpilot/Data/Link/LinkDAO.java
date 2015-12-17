@@ -1,10 +1,6 @@
 package isebase.cognito.tourpilot.Data.Link;
 
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectDAO;
-import isebase.cognito.tourpilot.Data.Employment.Employment;
-import isebase.cognito.tourpilot.Data.EmploymentInterval.EmploymentInterval;
-import isebase.cognito.tourpilot.DataBase.HelperFactory;
-import isebase.cognito.tourpilot.Utils.Utilizer;
 
 import java.sql.SQLException;
 import java.util.List;

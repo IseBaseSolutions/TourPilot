@@ -3,7 +3,6 @@
     <item
         android:id="@+id/action_set_kontraktur_points"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="Lokalisation"/>
+        android:title="Lokalisation" android:showAsAction="never"/>
 
 </menu>

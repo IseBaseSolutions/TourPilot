@@ -19,7 +19,6 @@ import isebase.cognito.tourpilot.Utils.DataBaseUtils;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -129,7 +128,7 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 			return;
 		
 		HashMap<String,String> msgDict = new HashMap<String,String>();
-		if(!Option.Instance().getPin().isEmpty())
+		if(Option.Instance().getPin() != "")
 			msgDict.put("removePin", getString(R.string.dialog_remove_pin));
 		msgDict.put("dialogBack", getString(R.string.dialog_proof_logout));			
 		for(String key : msgDict.keySet()){

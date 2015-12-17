@@ -1,11 +1,6 @@
 package isebase.cognito.tourpilot.Data.RelatedQuestionSetting;
 
-import isebase.cognito.tourpilot.Data.Answer.Answer;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
-import isebase.cognito.tourpilot.Data.Category.Category;
-import isebase.cognito.tourpilot.Data.Patient.Patient;
-import isebase.cognito.tourpilot.Data.Question.Question;
-import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Utils.StringParser;
 
 import java.util.ArrayList;

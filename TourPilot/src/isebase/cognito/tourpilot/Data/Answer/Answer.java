@@ -6,9 +6,6 @@ import isebase.cognito.tourpilot.Data.Patient.Patient;
 import isebase.cognito.tourpilot.Data.Question.IQuestionable;
 import isebase.cognito.tourpilot.Data.Question.Question;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;

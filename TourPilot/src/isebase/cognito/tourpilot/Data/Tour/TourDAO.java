@@ -1,9 +1,6 @@
 package isebase.cognito.tourpilot.Data.Tour;
 
 import java.sql.SQLException;
-import java.util.List;
-
-import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectDAO;

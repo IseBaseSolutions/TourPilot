@@ -6,14 +6,17 @@ import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.StaticResources.StaticResources;
 import isebase.cognito.tourpilot.Utils.StringParser;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Date;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.Inflater;
+import java.util.zip.InflaterInputStream;
 
+//import android.R.string;
 import android.os.AsyncTask;
 
 public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
@@ -309,7 +312,8 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		int timeoutCount = 120000;
 		long startTime = new Date().getTime();
 		long currentTime = startTime;
-		while (currentTime - startTime < timeoutCount) {
+		
+		while (currentTime - startTime < timeoutCount) {			
 			if(isTerminated)
 				return "";
 			int av = 0;
@@ -321,7 +325,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 					currentTime = new Date().getTime();
 					continue;
 				}
-			}
+			}			
 			while (av != 0) {
 				byte[] charI = { (byte) is.read() };
 				retVal += new String(charI, "cp1252");
@@ -453,40 +457,38 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 	}
 
 	public void writePack(OutputStream os, String strToWrite)
-			throws IOException {
-		GZIPOutputStream zos = new GZIPOutputStream(os);
+			throws IOException {		
+		DeflaterOutputStream dos = null;
 		try {
-			zos.write(strToWrite.getBytes());
-			zos.finish();
+			dos = new DeflaterOutputStream(os);
+			dos.write(strToWrite.getBytes());
+			dos.finish();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public String readPack(InputStream is) throws IOException, InterruptedException {
-		int counter = 0;
-		int timeoutSeconds = 120;
-		while (is.available() == 0)
-			try {
-				if(isTerminated || counter >= timeoutSeconds)
+	public String readPack(InputStream is) throws IOException, InterruptedException {			
+	
+		int bytesRead = 0;
+		InflaterInputStream in = null;
+		byte[] contents = new byte[2*1024];
+		byte[] buf = new byte[2*1024];
+	    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	    String result = "";
+	    try {
+	    	in = new InflaterInputStream(is, new Inflater(true));
+	    	contents = new byte[in.available()];
+	        while((bytesRead = in.read(buf, 0, contents.length)) != -1){
+	        	if(isTerminated)
 					return "";
-				Thread.sleep(1000);
-				counter++;
-			} catch (InterruptedException ex) {
-				ex.printStackTrace();
-			}
-		StringBuffer stringBuffer = new StringBuffer();
-		GZIPInputStream zis = new GZIPInputStream(is);
-		try {
-			while (zis.available() != 0) {
-				if(isTerminated)
-					return "";
-				stringBuffer.append((char) zis.read());
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		return stringBuffer.toString();
+	        	baos.write(buf, 0, bytesRead);
+	        }
+	        result = baos.toString("cp1252");
+	    } catch (IOException e) {	       
+	        e.printStackTrace();
+	    }	    
+	    return result;
 	}
 	
 	private boolean additionalPatientsSync() {

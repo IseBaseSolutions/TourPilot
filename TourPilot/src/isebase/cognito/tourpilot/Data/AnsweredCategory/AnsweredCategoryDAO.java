@@ -1,8 +1,6 @@
 package isebase.cognito.tourpilot.Data.AnsweredCategory;
 
-import isebase.cognito.tourpilot.Data.BaseObject.BaseObject;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectDAO;
-import isebase.cognito.tourpilot.Data.ExtraCategory.ExtraCategory;
 import isebase.cognito.tourpilot.Data.Option.Option;
 
 import java.sql.SQLException;
