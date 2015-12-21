@@ -141,7 +141,7 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	}
 	
 	private Boolean isDoneItemsPresent(){		 
-		String doneItems = ConnectionAsyncTask.getDoneStr();
+		String doneItems = ConnectionAsyncTask.getDoneStr(false);
 		if(doneItems == "")
 			return true;		
 		BaseInfoDialog dialog = new BaseInfoDialog(getString(R.string.attention), getString(R.string.dialog_do_sync));

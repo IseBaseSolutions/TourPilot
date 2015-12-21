@@ -346,7 +346,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 	}
 
 	private String getDataToSend() {		
-		return getHeaderStr() + getDoneStr();
+		return getHeaderStr() + getDoneStr(true);
 	}
 	
 	private String getHeaderStr(){
@@ -361,14 +361,15 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 		return strMsg;
 	}
 	
-	public static String getDoneStr(){
+	public static String getDoneStr(Boolean checkWp){
 		String strDone = "";
 		strDone += HelperFactory.getHelper().getEmploymentDAO().getDone();
 		strDone += HelperFactory.getHelper().getWorkDAO().getDone();
 		strDone += HelperFactory.getHelper().getAnswerDAO().getDone();
 		strDone += HelperFactory.getHelper().getUserRemarkDAO().getDone();
 		strDone += HelperFactory.getHelper().getEmploymentVerificationDAO().getDone();
-		strDone += HelperFactory.getHelper().getWayPointDAO().getDone();
+		if (checkWp)
+			strDone += HelperFactory.getHelper().getWayPointDAO().getDone();
 		return strDone;
 	}
 
