@@ -30,8 +30,8 @@ public class BaseDialog extends DialogFragment{
 	public BaseDialog(String title, String message){
 		this.title = title;
 		this.message = message;
-		this.positiveName = StaticResources.getBaseContext().getString(R.string.ok);
-		this.negativeName = StaticResources.getBaseContext().getString(R.string.cancel);
+		this.positiveName = StaticResources.getBaseContext().getString(isebase.cognito.tourpilot.R.string.ok);		
+		this.negativeName = StaticResources.getBaseContext().getString(isebase.cognito.tourpilot.R.string.cancel);
 		
 	}	
 	public BaseDialog(String title, String message, String positiveName, String negativeName){
