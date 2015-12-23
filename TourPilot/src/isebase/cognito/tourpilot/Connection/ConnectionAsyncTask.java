@@ -338,6 +338,7 @@ public class ConnectionAsyncTask extends AsyncTask<Void, Boolean, Void> {
 
 	private void writeToStream(OutputStream os, String text) {
 		try {
+			text = "[DEFLATER]" + text;
 			os.write(text.getBytes());
 			os.flush();
 		} catch (Exception e) {
