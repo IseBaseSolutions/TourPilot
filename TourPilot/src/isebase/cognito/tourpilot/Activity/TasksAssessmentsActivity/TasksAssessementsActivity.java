@@ -273,6 +273,9 @@ public class TasksAssessementsActivity extends BaseTimeSyncActivity implements B
 			Intent relatedQuestionsActivity = new Intent(getBaseContext(), RelatedQuestionsActivity.class);
 			startActivity(relatedQuestionsActivity);
 		}
+		else if(dialog.getTag().equals("dialogDateCompare")){
+			tasksFragment.startTask();
+		}
 	}
 
 	@Override

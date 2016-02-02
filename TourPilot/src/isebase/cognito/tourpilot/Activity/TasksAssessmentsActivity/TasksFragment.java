@@ -90,6 +90,8 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	public final static int ACTIVITY_USERREMARKS_CODE = 0;
 	public final static int ACTIVITY_VERIFICATION_CODE = 1;
 	
+	public final static String EMPLOYMENTS_ALLOWED_TIME = "04:00"; 
+	
 	public final static int SIMPLE_MODE = 0;
 	public final static int SYNC_MODE = 1;
 	public final static int NO_SYNC_MODE = 2;
@@ -278,6 +280,24 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 	}
 	
 	public void btStartTaskTimerClick(View view) {
+		Date currentTime = DateUtils.parseTimeOnly(DateUtils.GetServerDateTime());
+		Date watchedTime = DateUtils.parseTimeOnly(DateUtils.parseTime(EMPLOYMENTS_ALLOWED_TIME));
+		Date currentDate = DateUtils.getTodayDateOnly();
+		Date planDate = DateUtils.getDateOnly(pilotTour.getPlanDate());
+		if (startTask.getRealDate().equals(DateUtils.EmptyDate) 
+				&& currentDate.getTime() > planDate.getTime() 
+				&& currentTime.getTime() > watchedTime.getTime()){		
+			String message = "Sie wollen den Einsatz vom " + DateUtils.DateFormat.format(planDate) 
+							+ " beginnen, das aktuelle Datum ist " + DateUtils.DateFormat.format(currentDate) 
+							+ ". Möchten Sie den Vorgang fortsetzen?";
+			BaseDialog dialog = new BaseDialog(getString(R.string.attention), message);
+			dialog.show(getFragmentManager(), "dialogDateCompare");
+			getFragmentManager().executePendingTransactions();			
+		} else
+			startTask();		
+	}
+	
+	public void startTask(){
 		if (!startTask.getRealDate().equals(DateUtils.EmptyDate))
 			clearAllTasksDialog.show(getFragmentManager(), "clearAllTasksDialog");
 		else
@@ -601,7 +621,10 @@ public class TasksFragment extends Fragment implements BaseDialogListener {
 		}
 		else if (dialog.getTag().equals("clearAllTasksDialog")) {
 			updateStartTime();
-		}		
+		}
+		else if(dialog.getTag().equals("dialogDateCompare")){
+			startTask();
+		}
 	}
 
 	@Override

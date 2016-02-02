@@ -132,9 +132,7 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 			msgDict.put("removePin", getString(R.string.dialog_remove_pin));
 		msgDict.put("dialogBack", getString(R.string.dialog_proof_logout));			
 		for(String key : msgDict.keySet()){
-			BaseDialog dialog = new BaseDialog(
-					getString(R.string.attention)
-					, msgDict.get(key));
+			BaseDialog dialog = new BaseDialog(getString(R.string.attention), msgDict.get(key));
 			dialog.show(getSupportFragmentManager(), key);
 			getSupportFragmentManager().executePendingTransactions();
 		}

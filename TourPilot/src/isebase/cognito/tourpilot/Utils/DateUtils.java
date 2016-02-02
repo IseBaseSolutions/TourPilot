@@ -55,6 +55,16 @@ public class DateUtils {
 		return retVal;	
     }
     
+    public static Date parseTimeOnly(Date date){
+    	Date retVal = date;
+    	try {
+    		retVal = HourMinutesSecondsFormat.parse(HourMinutesSecondsFormat.format(date));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return retVal;    	
+    }
+    
 	private static long timeDiff = 0L;
 	
 	public static Date GetServerDateTime() {
@@ -132,4 +142,11 @@ public class DateUtils {
 		return DateUtils.millisecondsToMinutes(timeStop.getTime() - timeStart.getTime());
 	}
     
+    public static Date parseTime(String timeString) {        
+        try {        	
+            return HourMinutesFormat.parse(timeString);
+        } catch (java.text.ParseException e) {
+        	return new Date(0);
+        }
+     }    
 }
