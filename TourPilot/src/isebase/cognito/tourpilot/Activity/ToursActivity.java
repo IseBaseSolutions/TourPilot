@@ -36,6 +36,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.common.base.Strings;
+
 public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	
 	private List<PilotTour> pilotTours;
@@ -124,11 +126,11 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 	}
 	
 	private void logoutWorker(){
-		if(!isDoneItemsPresent())
+		if(isAnyItemsNotSended())
 			return;
 		
 		HashMap<String,String> msgDict = new HashMap<String,String>();
-		if(Option.Instance().getPin() != "")
+		if(!Strings.isNullOrEmpty(Option.Instance().getPin()))
 			msgDict.put("removePin", getString(R.string.dialog_remove_pin));
 		msgDict.put("dialogBack", getString(R.string.dialog_proof_logout));			
 		for(String key : msgDict.keySet()){
@@ -138,13 +140,13 @@ public class ToursActivity extends BaseActivity implements BaseDialogListener{
 		}
 	}
 	
-	private Boolean isDoneItemsPresent(){		 
-		String doneItems = ConnectionAsyncTask.getDoneStr(false);
-		if(doneItems == "")
-			return true;		
+	private Boolean isAnyItemsNotSended(){		 
+		String doneItems = ConnectionAsyncTask.getDoneStr(false).toString();
+		if(Strings.isNullOrEmpty(doneItems))
+			return false;
 		BaseInfoDialog dialog = new BaseInfoDialog(getString(R.string.attention), getString(R.string.dialog_do_sync));
 		dialog.show(getSupportFragmentManager(), "dialogDoSync");		
-		return false;		
+		return true;		
 	}	
 	
 	private void logOut() {

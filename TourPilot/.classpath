@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="libs/android-support-v4.jar"/>
 	<classpathentry kind="lib" path="libs/ormlite-android-4.48.jar"/>
 	<classpathentry kind="lib" path="libs/ormlite-core-4.48.jar"/>
+	<classpathentry kind="lib" path="libs/com.google.guava_1.6.0.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

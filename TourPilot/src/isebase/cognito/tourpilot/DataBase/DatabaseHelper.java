@@ -67,6 +67,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.google.common.base.Strings;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
@@ -155,10 +156,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	}
 	
 	private void addColumnIfNotExist(SQLiteDatabase db, String tableName, String colName, String colType){
-		//if(db == null || tableName == null || colName == null 
-		//		|| colType == null || tableName.isEmpty()|| colName.isEmpty() || colType.isEmpty())
-		if(db == null || tableName == null || colName == null 
-				|| colType == null || tableName == "" || colName == "" || colType == "")
+		if(db == null
+				|| Strings.isNullOrEmpty(tableName) 
+				|| Strings.isNullOrEmpty(colName)
+				|| Strings.isNullOrEmpty(colType))
 			return;
 		
 		try {
