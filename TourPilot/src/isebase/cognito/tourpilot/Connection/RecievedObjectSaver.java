@@ -98,8 +98,13 @@ public class RecievedObjectSaver {
 			HelperFactory.getHelper().getDoctorODA().save(doctorsToSave);
 		if (patientsToSave.size() > 0)
 			HelperFactory.getHelper().getPatientDAO().save(patientsToSave);
-		if (tasksToSave.size() > 0)
-			HelperFactory.getHelper().getTaskDAO().save(tasksToSave);
+		if (tasksToSave.size() > 0){
+			//HelperFactory.getHelper().getTaskDAO().save(tasksToSave);
+			List<Task> comparedTasksToSave = HelperFactory.getHelper().getTaskDAO().CompareWithExistedTasks(tasksToSave);
+			if(comparedTasksToSave.size() > 0)
+				HelperFactory.getHelper().getTaskDAO().save(comparedTasksToSave);
+		}
+			
 		if (additionalWorksToSave.size() > 0)
 			HelperFactory.getHelper().getAdditionalWorkDAO().save(additionalWorksToSave);
 		if (worksToSave.size() > 0)

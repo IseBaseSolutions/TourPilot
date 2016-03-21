@@ -393,5 +393,16 @@ public class Task extends BaseObject {
     public boolean isFirstTask() {
     	return getLeistungs().contains("Anfang");
     }
+    
+    public boolean isTaskEquals(Task inputTask){
+    
+    	if(inputTask != null && getEmploymentID() == inputTask.getEmploymentID()
+				&& getPatientID() == inputTask.getPatientID()
+				&& getTourID() == inputTask.getTourID()
+				&& getLeistungs().equals(inputTask.getLeistungs())
+				&& getCheckSum() == inputTask.getCheckSum())
+    		return true;
+    	return false;
+    }
 
 }

@@ -3,14 +3,14 @@ package isebase.cognito.tourpilot.Data.Task;
 import isebase.cognito.tourpilot.Data.AdditionalTask.AdditionalTask;
 import isebase.cognito.tourpilot.Data.BaseObject.BaseObjectDAO;
 import isebase.cognito.tourpilot.Data.Option.Option;
+import isebase.cognito.tourpilot.Data.Task.Task.eTaskState;
 import isebase.cognito.tourpilot.DataBase.HelperFactory;
 import isebase.cognito.tourpilot.Utils.DateUtils;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.j256.ormlite.stmt.DeleteBuilder;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 
 public class TaskDAO extends BaseObjectDAO<Task> {
@@ -59,6 +59,42 @@ public class TaskDAO extends BaseObjectDAO<Task> {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}	
+	
+	public List<Task> CompareWithExistedTasks(List<Task> items){
+		List<Task> retVal = new ArrayList<Task>();
+		retVal.addAll(items);
+		try {		
+			QueryBuilder<Task, Integer> queryBuilder = queryBuilder();
+			queryBuilder.where().in(Task.EMPLOYMENT_ID_FIELD, getEmploymentsIDs(items));
+			List<Task> existedTasks = queryBuilder.query();
+			for(Task item : items){
+				for(Task existedTask : existedTasks){
+					if(item.isTaskEquals(existedTask) && existedTask.getState() != eTaskState.Empty && existedTask.getWasSent())
+					{
+						if (retVal.contains(item))
+							retVal.remove(item);
+						existedTask.setWasSent(false);
+						retVal.add(existedTask);
+					}
+				}
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return retVal;
 	}
-
+	
+	private String getEmploymentsIDs(List<Task> items){
+		
+		String retVal = "";
+		if(items == null)
+			return retVal;
+		for(Task item : items)
+			retVal += String.format("%s%s" 
+					, retVal.equals("") ? "" : ", "
+					, item.getEmploymentID());
+		
+		return retVal;
+	}
 }
