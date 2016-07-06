@@ -5,7 +5,7 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"    
+    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".AdditionalEmploymentsActivity" >
 
     <ProgressBar
@@ -17,14 +17,23 @@
         android:layout_centerVertical="true"
         android:visibility="invisible" />
     
+    <EditText
+        android:id="@+id/etAddEmploymentsFilter"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:hint="@string/search"
+        android:visibility="invisible"/>
     <ListView
         android:id="@+id/lvAddEmployments"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
+        android:layout_below="@+id/etAddEmploymentsFilter"
         android:layout_above="@+id/btOK"
-        android:layout_centerHorizontal="true">
+        android:cacheColorHint="@color/transparent">
+        <requestFocus />
     </ListView>
-
+    
     <Button
         android:id="@+id/btOK"
         android:layout_width="fill_parent"

@@ -58,7 +58,8 @@
         android:id="@+id/lvTasksList"
         android:layout_width="match_parent"
         android:layout_height="312dp"
-        android:layout_weight="0.26" />
+        android:layout_weight="0.26"
+        android:cacheColorHint="@color/transparent" />
 
     <LinearLayout
         android:layout_width="match_parent"

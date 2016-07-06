@@ -21,7 +21,8 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_above="@+id/btSaveAddTask"
-        android:layout_below="@+id/etAddTasksFilter" >
+        android:layout_below="@+id/etAddTasksFilter" 
+        android:cacheColorHint="@color/transparent">
         <requestFocus />
     </ListView>
 

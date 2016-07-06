@@ -24,9 +24,12 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -48,6 +51,7 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 	DialogFragment noPatientsDialog;
 	ProgressBar pbSync;
 	public Button btOK;	
+	private EditText etFilter;
 	
 	AdditionalEmploymentAdapter employmentAdapter;
 	AdditionalPatientAdapter patientAdapter;
@@ -85,8 +89,10 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 		listView = (ListView) findViewById(R.id.lvAddEmployments);
 		switch(additionalEmploymentsMode) {
 		case getAP:
+			etFilter.setVisibility(View.VISIBLE);
 			patientAdapter = new AdditionalPatientAdapter(this, R.layout.row_single_additional_employment_emplate, addPatients);
 			listView.setAdapter(patientAdapter);
+			initPatientsFilter();
 			break;
 		default:
 			btOK.setEnabled(true);
@@ -94,6 +100,28 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 			listView.setAdapter(employmentAdapter);
 			break;
 		}
+	}
+	
+	private void initPatientsFilter() {
+		EditText etFilter = (EditText) findViewById(R.id.etAddEmploymentsFilter);
+		etFilter.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void afterTextChanged(Editable text) {
+				
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1,
+					int arg2, int arg3) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2,int arg3) {
+				patientAdapter.getFilter().filter(arg0);
+			}
+			
+		});
 	}
 	
 	private void setMode() {
@@ -245,6 +273,7 @@ public class AdditionalEmploymentsActivity extends BaseActivity implements BaseD
 	private void initControls() {
 		pbSync = (ProgressBar) findViewById(R.id.pbSync);
 		btOK = (Button) findViewById(R.id.btOK);
+		etFilter = (EditText) findViewById(R.id.etAddEmploymentsFilter);
 	}
 	
 	private void initDialogs() {

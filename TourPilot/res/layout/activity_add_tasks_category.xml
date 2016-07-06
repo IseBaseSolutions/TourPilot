@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_above="@+id/btAddTasksCategoriesBack"
-        android:layout_below="@+id/tvAddTasksCategories" >
+        android:layout_below="@+id/tvAddTasksCategories"
+        android:cacheColorHint="@color/transparent" >
 
     </ListView>
 </RelativeLayout>

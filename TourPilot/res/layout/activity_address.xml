@@ -12,7 +12,8 @@
     <ListView
         android:id="@+id/lvListPatientAdrress"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:cacheColorHint="@color/transparent" >
     </ListView>
 
 </LinearLayout>

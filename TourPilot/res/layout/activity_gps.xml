@@ -15,7 +15,8 @@
         android:layout_above="@+id/btStartGPS"
         android:choiceMode="singleChoice"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" >
+        android:layout_alignParentTop="true" 
+        android:cacheColorHint="@color/transparent">
     </ListView>
 
     <Button

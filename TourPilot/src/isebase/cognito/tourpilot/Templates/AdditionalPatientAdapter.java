@@ -15,23 +15,28 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.RadioButton;
 
-public class AdditionalPatientAdapter extends ArrayAdapter<Patient>{
+public class AdditionalPatientAdapter extends ArrayAdapter<Patient> implements Filterable{
 
-	private List<AdditionalPatientHolder> additionalPatientHolders = new ArrayList<AdditionalPatientAdapter.AdditionalPatientHolder>();
+	private List<AdditionalPatientHolder> patients;
+	private List<AdditionalPatientHolder> filteredPatients;
 	private AdditionalPatientHolder lastCheckedAdditionalPatientHolder;
 	private int layoutResourceId;
 	private Context context;
-	private Button btOK; 
+	private Button btOK;
 	
 	public AdditionalPatientAdapter(Context context, int layoutResourceId, List<Patient> additionalPatients) {
 		super(context, layoutResourceId, additionalPatients);
 		
 		this.layoutResourceId = layoutResourceId;
 		this.context = context;
+		patients = new ArrayList<AdditionalPatientHolder>();
 		for (Patient additionalPatient : additionalPatients)
-			additionalPatientHolders.add(new AdditionalPatientHolder(additionalPatient));
+			patients.add(new AdditionalPatientHolder(additionalPatient));
+		filteredPatients = patients;
 		initControls();
 	}
 	
@@ -40,12 +45,14 @@ public class AdditionalPatientAdapter extends ArrayAdapter<Patient>{
 		View row = convertView;
 		LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 		row = inflater.inflate(layoutResourceId, parent, false);
-		AdditionalPatientHolder additionalPatientHolder = additionalPatientHolders.get(position);
+		
+		AdditionalPatientHolder additionalPatientHolder = filteredPatients.get(position);
 		additionalPatientHolder.rdbAdditionalPatient = (RadioButton) row.findViewById(R.id.rdb);
 		additionalPatientHolder.rdbAdditionalPatient.setTag(additionalPatientHolder);
 		additionalPatientHolder.rdbAdditionalPatient.setOnCheckedChangeListener(onCheckboxCheckedListener);
 		additionalPatientHolder.rdbAdditionalPatient.setText(additionalPatientHolder.additionalPatient.getFullName());
 		additionalPatientHolder.rdbAdditionalPatient.setChecked(additionalPatientHolder == lastCheckedAdditionalPatientHolder);
+		
 		return row;
 	}
 	
@@ -63,21 +70,52 @@ public class AdditionalPatientAdapter extends ArrayAdapter<Patient>{
 		}
 	};	
 	
-	public class AdditionalPatientHolder {
-		public Patient additionalPatient;
+	public class AdditionalPatientHolder {		
 		public RadioButton rdbAdditionalPatient;
 		
+		public Patient additionalPatient;
 		public AdditionalPatientHolder(Patient additionalPatient) {
 			this.additionalPatient = additionalPatient;
 		}
 	}
-	
+		
 	public Patient getSelectedAdditionalPatient() {
 		return lastCheckedAdditionalPatientHolder.additionalPatient;
 	}
 	
 	private void initControls() {
 		btOK = (Button) ((Activity) context).findViewById(R.id.btOK);
+	}
+	
+	@Override
+    public Filter getFilter() {
+        Filter filter = new Filter() {
+	        @Override
+	        @SuppressWarnings("unchecked")
+	        protected void publishResults(CharSequence constraint, FilterResults results) {
+	        	filteredPatients = (List<AdditionalPatientHolder>) results.values;
+	            notifyDataSetChanged();
+	        }
+	
+	        @Override
+	        protected FilterResults performFiltering(CharSequence constraint) {
+	            FilterResults results = new FilterResults();
+	            List<AdditionalPatientHolder> filteredPatients = new ArrayList<AdditionalPatientHolder>();
+	            constraint = constraint.toString().toLowerCase();
+	            for (AdditionalPatientHolder patient : patients) 
+	                if (patient.additionalPatient.getFullName().toLowerCase().startsWith(constraint.toString()))
+	                	filteredPatients.add(patient);	
+	            results.count = filteredPatients.size();
+	            results.values = filteredPatients;	
+	            return results;
+        	}
+        };
+        return filter;
+    }
+	
+	@Override
+	public int getCount () {
+	    return filteredPatients.size();
 	}
 
 }

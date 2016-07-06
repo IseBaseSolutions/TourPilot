@@ -14,7 +14,8 @@
 	    android:layout_height="match_parent"
 	    android:layout_above="@+id/btSync"
 	    android:layout_alignParentLeft="true"
-	    android:layout_alignParentTop="true" >
+	    android:layout_alignParentTop="true"
+	    android:cacheColorHint="@color/transparent" >
 
 	</ListView>
 
