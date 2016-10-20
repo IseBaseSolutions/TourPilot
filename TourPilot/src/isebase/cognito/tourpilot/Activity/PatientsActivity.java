@@ -66,7 +66,7 @@ public class PatientsActivity extends BaseActivity implements
 	private BaseDialog dialogStartNavigation;
 	private BaseDialog dialogGPSEnabling;
 	private BaseInfoDialog noConnectionDialog;
-
+	
 	private LocationManager locationManager;
 	private TourOncomingInfo workersInfo;
 	private TourOncomingInfo carsInfo;
@@ -362,8 +362,8 @@ public class PatientsActivity extends BaseActivity implements
 	@Override
 	public void onDialogPositiveClick(DialogFragment dialog) {
 		if (dialog.getTag() == "dialogStartNavigation") {
-			GpsNavigator.startGpsNavigation(getPatientAdress());
 			startTasksActivity();
+			GpsNavigator.startGpsNavigation(getPatientAdress());			
 		} else if (dialog.getTag() == "dialogGPSEnabling") {
 			Intent myIntent = new Intent(
 					Settings.ACTION_LOCATION_SOURCE_SETTINGS);
